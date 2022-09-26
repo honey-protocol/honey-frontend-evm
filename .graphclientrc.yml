@@ -1,0 +1,9 @@
+# .graphclientrc.yml
+sources:
+  - name: htoken-sample
+    handler:
+      graphql:
+        endpoint: https://api.thegraph.com/subgraphs/name/bowtiedfirefox/htoken-sample
+
+documents:
+  - ./graphql/**/*.graphql
