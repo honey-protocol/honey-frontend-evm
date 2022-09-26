@@ -1,0 +1,8 @@
+fragment CouponData on Coupon {
+	collateralID
+	couponID
+	underlyingTokenAddr
+	collateralTokenAddr
+	hTokenAddr
+	amount
+}

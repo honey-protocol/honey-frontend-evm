@@ -1,0 +1,11 @@
+query ActiveCouponQuery($first: Int = 100) {
+	coupons(first: $first, orderBy: underlyingTokenAddr, orderDirection: desc, where: { active: true }) {
+		...CouponData
+	}
+}
+
+query ActiveCouponByCollectionQuery($HERC20ContractAddress: String!, $first: Int = 100) {
+	coupons(first: $first, orderBy: underlyingTokenAddr, orderDirection: desc, where: { active: true, hTokenAddr: $HERC20ContractAddress }) {
+		...CouponData
+	}
+}
