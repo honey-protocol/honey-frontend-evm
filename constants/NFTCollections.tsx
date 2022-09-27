@@ -1,0 +1,94 @@
+import { envName } from "./service";
+
+function getCollections() {
+  if (envName == "dev") {
+    return [
+      {
+        name: "BAYC",
+        icon: "/nfts/bayc.jpg",
+        erc20Name: "USDC",
+        erc20Icon: "/erc20/USDCIcon.png",
+        unit: "mwei",
+        ERC721ContractAddress: "0x66ba090ed8e3d76680f25fd924c90f662daf0369",
+        ERC20ContractAddress: "0xdBe9E49029A4046B672E714Cc2247CF62BF16187",
+        HERC20ContractAddress: "0xD615319aC770d83C17479ab7fBeb6f3fc480694a",
+        htokenHelperContractAddress: "0x3591ad04FA48a27FC825bD125Ab30A2feb269dbc",
+        hivemindContractAddress: "0xf98fAd7334ea0337f5a6576722dcdA1504C43fc1",
+        oracleContractAddress: "0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163",
+      },
+      {
+        name: "BAYC",
+        icon: "/nfts/bayc.jpg",
+        erc20Name: "BTC",
+        erc20Icon: "/erc20/BitCoinIcon.png",
+        unit: "ether",
+        ERC721ContractAddress: "0x66ba090ed8e3d76680f25fd924c90f662daf0369",
+        ERC20ContractAddress: "0xdBe9E49029A4046B672E714Cc2247CF62BF16187",
+        HERC20ContractAddress: "0x3FEF6473947cF6f383ef069327039c7d7a6070C6",
+        htokenHelperContractAddress: "0x3591ad04FA48a27FC825bD125Ab30A2feb269dbc",
+        hivemindContractAddress: "0xf98fAd7334ea0337f5a6576722dcdA1504C43fc1",
+        oracleContractAddress: "0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163",
+      },
+      {
+        name: "AZUKI",
+        icon: "/nfts/azuki.jpg",
+        erc20Name: "WETH",
+        erc20Icon: "/erc20/WethIcon.png",
+        unit: "ether",
+        ERC721ContractAddress: "0x060e5b59ad1095f643271f7b4dd492a9636e0812",
+        ERC20ContractAddress: "0x20C27c2f53da9704817bc71453064B5726650F64",
+        HERC20ContractAddress: "0x45481Ab91D3e2A2748D08A2F6d5e86B58889D22e",
+        htokenHelperContractAddress: "0x3591ad04FA48a27FC825bD125Ab30A2feb269dbc",
+        hivemindContractAddress: "0xf98fAd7334ea0337f5a6576722dcdA1504C43fc1",
+        oracleContractAddress: "0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163",
+      }
+    ] as collection[]
+  } else if (envName == "prod") {
+    // change this prod farm when we go to prod
+    return [
+      {
+        name: "BAYC",
+        icon: "/nfts/bayc.jpg",
+        erc20Name: "USDC",
+        erc20Icon: "/erc20/USDCIcon.png",
+        unit: "mwei",
+        ERC721ContractAddress: "0x66ba090ed8e3d76680f25fd924c90f662daf0369",
+        ERC20ContractAddress: "0xdBe9E49029A4046B672E714Cc2247CF62BF16187",
+        HERC20ContractAddress: "0xD615319aC770d83C17479ab7fBeb6f3fc480694a",
+        htokenHelperContractAddress: "0x3591ad04FA48a27FC825bD125Ab30A2feb269dbc",
+        hivemindContractAddress: "0xf98fAd7334ea0337f5a6576722dcdA1504C43fc1",
+        oracleContractAddress: "0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163",
+      },
+      {
+        name: "BAYC",
+        icon: "/nfts/bayc.jpg",
+        erc20Name: "BTC",
+        erc20Icon: "/erc20/BitCoinIcon.png",
+        unit: "ether",
+        ERC721ContractAddress: "0x66ba090ed8e3d76680f25fd924c90f662daf0369",
+        ERC20ContractAddress: "0xdBe9E49029A4046B672E714Cc2247CF62BF16187",
+        HERC20ContractAddress: "0x3FEF6473947cF6f383ef069327039c7d7a6070C6",
+        htokenHelperContractAddress: "0x3591ad04FA48a27FC825bD125Ab30A2feb269dbc",
+        hivemindContractAddress: "0xf98fAd7334ea0337f5a6576722dcdA1504C43fc1",
+        oracleContractAddress: "0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163",
+      },
+      {
+        name: "AZUKI",
+        icon: "/nfts/azuki.jpg",
+        erc20Name: "WETH",
+        erc20Icon: "/erc20/WethIcon.png",
+        unit: "ether",
+        ERC721ContractAddress: "0x060e5b59ad1095f643271f7b4dd492a9636e0812",
+        ERC20ContractAddress: "0x20C27c2f53da9704817bc71453064B5726650F64",
+        HERC20ContractAddress: "0x45481Ab91D3e2A2748D08A2F6d5e86B58889D22e",
+        htokenHelperContractAddress: "0x3591ad04FA48a27FC825bD125Ab30A2feb269dbc",
+        hivemindContractAddress: "0xf98fAd7334ea0337f5a6576722dcdA1504C43fc1",
+        oracleContractAddress: "0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163",
+      }
+    ] as collection[]
+  } else {
+    return [] as collection[]
+  }
+}
+
+export const collections: collection[] = getCollections()
