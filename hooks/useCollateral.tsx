@@ -1,4 +1,4 @@
-import MoralisType from "moralis";
+import MoralisType from "moralis-v1";
 import { useQuery } from "react-query";
 import { queryKeys } from "../helpers/queryHelper";
 import { defaultCacheStaleTime } from "../constants/constant";

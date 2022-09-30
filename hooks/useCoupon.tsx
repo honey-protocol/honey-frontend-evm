@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import MoralisType from 'moralis';
+import MoralisType from 'moralis-v1';
 import { getBorrowFromCoupon } from './useHerc20';
 import { useQuery } from "react-query";
 import { queryKeys } from "../helpers/queryHelper";

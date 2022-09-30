@@ -1,5 +1,5 @@
 import React from "react";
-import Moralis from "moralis";
+import Moralis from "moralis-v1";
 import { basePath, chain, confirmedBlocks } from "../constants/service";
 import { fromWei } from "web3-utils";
 

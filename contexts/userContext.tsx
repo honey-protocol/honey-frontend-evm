@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useState } from "react";
-import MoralisType from "moralis";
+import MoralisType from "moralis-v1";
 
 interface UserContextState {
   currentUser: MoralisType.User | null,

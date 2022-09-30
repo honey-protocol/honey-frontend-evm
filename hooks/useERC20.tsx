@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import Moralis from "moralis";
+import Moralis  from "moralis-v1";
 import { fromWei} from "web3-utils";
 import { basePath, chain, confirmedBlocks } from "../constants/service";
-import MoralisType from "moralis";
+import MoralisType from "moralis-v1";
 import { safeToWei } from "../helpers/repayHelper";
 import { useQuery } from "react-query";
 import { queryKeys } from "../helpers/queryHelper";
