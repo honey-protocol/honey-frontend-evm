@@ -7,6 +7,7 @@ interface LoanFlowState {
   setIsLoading: (isLoading: boolean) => void
   setNFTId: (NFTId: string) => void
   setHERC20ContractAddr: (HERC20ContractAddr: string) => void
+  reset: () => void
 }
 
 const useLoanFlowStore = create<LoanFlowState>()((set) => ({
@@ -16,4 +17,11 @@ const useLoanFlowStore = create<LoanFlowState>()((set) => ({
   setIsLoading: (isLoading: boolean) => set((state) => ({isLoading: isLoading})),
   setNFTId: (NFTId: string) => set((state) => ({NFTId: NFTId})),
   setHERC20ContractAddr: (HERC20ContractAddr: string) => set((state) => ({HERC20ContractAddr: HERC20ContractAddr})),
+  reset: () => set(() => ({
+    HERC20ContractAddr: "",
+    NFTId: "",
+    isLoading: false,
+  })),
 }))
+
+export default useLoanFlowStore

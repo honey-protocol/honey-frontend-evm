@@ -7,10 +7,24 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UserProvider } from '../contexts/userContext';
 import { QueryClientProvider, QueryClient } from "react-query";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import useLoanFlowStore from "../store/loanFlowStore";
 
 const queryClient = new QueryClient()
 
 function MyApp({Component, pageProps}: AppProps) {
+  const router = useRouter()
+  useEffect(() => {
+    const handleRouteChange = (url: any, {shallow}: any) => {
+      const resetLoanFlowStore = useLoanFlowStore((state) => state.reset)
+      resetLoanFlowStore()
+    }
+    router.events.on('routeChangeStart', handleRouteChange)
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+    }
+  }, [])
   return (
     <ThemeProvider defaultMode="dark" defaultAccent="red">
       <QueryClientProvider client={queryClient}>
