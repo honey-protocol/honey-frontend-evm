@@ -12,7 +12,6 @@ export const chartArea = style({
 });
 
 export const actionModuleContainer = style({
-  minWidth: '380px',
   '@media': {
     'screen and (max-width: 1280px)': {
       order: -1

@@ -42,7 +42,8 @@ export const avatarContainer = style({
 
 globalStyle(`${avatarContainer} > div`, {
   width: 'auto',
-  marginRight: '.5em'
+  marginRight: '.5em',
+  textAlign: 'center'
 });
 
 export const cardMenuContainer = style({
@@ -69,13 +70,6 @@ export const lineDivider = style({
 });
 
 // Styles for loan modal - should become a component in component folder with JSX and CSS logic
-export const avatarWrapper = style({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  marginTop: '2em'
-});
-
 export const mainComponentWrapper = style({
   borderBottomLeftRadius: '1px',
   borderBottomRightRadius: '1px'
@@ -99,13 +93,8 @@ globalStyle(`${cardMenuContainer} > div`, {
   justifyContent: 'center'
 });
 
-export const loanCardsContainer = style({
-  display: 'grid',
-  gridTemplateColumns: '2fr 1fr',
-  gridGap: 20,
-  '@media': {
-    'screen and (min-width: 860px)': {
-      gridTemplateColumns: '2fr 1fr'
-    }
-  }
+export const loanWrapper = style({
+  background: 'rgb(20, 20, 20)',
+  borderRadius: '1rem',
+  padding: '2rem',
 });

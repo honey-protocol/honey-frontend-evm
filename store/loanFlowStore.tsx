@@ -13,7 +13,7 @@ const useLoanFlowStore = create<LoanFlowState>()((set) => ({
   HERC20ContractAddr: "",
   NFTId: "",
   isLoading: false,
-  setIsLoading: (isLoading) => set((state) => ({isLoading: isLoading})),
-  setNFTId: (NFTId) => set((state) => ({NFTId: NFTId})),
-  setHERC20ContractAddr: (HERC20ContractAddr) => set((state) => ({HERC20ContractAddr: HERC20ContractAddr})),
+  setIsLoading: (isLoading: boolean) => set((state) => ({isLoading: isLoading})),
+  setNFTId: (NFTId: string) => set((state) => ({NFTId: NFTId})),
+  setHERC20ContractAddr: (HERC20ContractAddr: string) => set((state) => ({HERC20ContractAddr: HERC20ContractAddr})),
 }))
