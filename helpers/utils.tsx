@@ -26,3 +26,11 @@ export function BnToDecimal(val: BN | undefined, decimal: number, precision: num
 export function BnDivided(val: BN, a: number, b: number) {
   return val.div(new BN(a ** b)).toNumber();
 }
+
+export const formatAddress = (address: any) => {
+  if (!address) return null;
+  return `${address.slice(0, 4)}...${address.slice(
+    address.length - 4,
+    address.length
+  )}`;
+}
