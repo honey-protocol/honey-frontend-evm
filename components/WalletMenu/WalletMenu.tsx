@@ -1,50 +1,74 @@
 import { Dropdown, Menu, Space, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import * as styles from './WalletMenu.css';
 import { DownIcon } from 'icons/DownIcon';
 import { formatAddress } from 'helpers/utils';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 import { WalletIcon } from 'icons/WalletIcon';
+import { useMoralis } from "react-moralis";
+import { UserContext } from "../../contexts/userContext";
 
-const { Title, Text } = Typography;
+const {Title} = Typography;
 
 const WalletMenu = () => {
+  const {authenticate, user, logout} = useMoralis();
+  const [walletAddress, setWalletAddress] = useState<string>("");
+  const {currentUser, setCurrentUser} = useContext(UserContext);
 
-  // const walletAddress = wallet?.publicKey.toString();
-  const walletAddress = "0X2345"
-  //
-  function handleClick(e: any) {
-    // if (e.key == '4') disconnect();
-    console.log("login")
-  }
+  useEffect(() => {
+    setWalletAddress(user?.get('ethAddress') || ('' as string));
+  }, [currentUser]);
+
+  const connect = async () => {
+    if (!currentUser) {
+      try {
+        await authenticate({signingMessage: 'Authorize linking of your wallet'})
+        console.log('logged in user:', user?.get('ethAddress'));
+        //todo wait till we integrate with cache
+
+        // await queryClient.invalidateQueries(['user'])
+        // await queryClient.invalidateQueries(['nft'])
+        // await queryClient.invalidateQueries(['coupons'])
+        setCurrentUser(user);
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  };
+  const disconnect = async () => {
+    await logout;
+    console.log('log out:', user?.get('ethAddress'));
+    setCurrentUser(null);
+  };
+
 
   const menu = (
     <Menu
-      onClick={handleClick}
+      onClick={disconnect}
       selectable
       items={[
         {
-          key: '4',
+          key: 'disconnect',
           label: 'Disconnect'
         }
       ]}
     />
   );
-  return !walletAddress ? (
-    <HoneyButton variant="primary" icon={<WalletIcon />} >
+  return !currentUser ? (
+    <HoneyButton variant="primary" icon={<WalletIcon/>} onClick={connect}>
       CONNECT WALLET
     </HoneyButton>
   ) : (
     <Dropdown overlay={menu}>
       <a onClick={e => e.preventDefault()}>
         <Space size="small" align="center">
-          <div className={styles.phantomIcon} />
+          <div className={styles.phantomIcon}/>
           <Space size={0} direction="vertical">
             <Title level={4} className={styles.title}>
               {formatAddress(walletAddress)}
             </Title>
           </Space>
-          <DownIcon />
+          <DownIcon/>
         </Space>
       </a>
     </Dropdown>
