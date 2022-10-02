@@ -5,6 +5,7 @@ import 'degen/styles';
 import '../styles/globals.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { accentSequence, ThemeAccent } from 'helpers/themes/theme-utils';
 import { UserProvider } from '../contexts/userContext';
 import { QueryClientProvider, QueryClient } from "react-query";
 import { useRouter } from "next/router";
@@ -13,11 +14,17 @@ import useLoanFlowStore from "../store/loanFlowStore";
 
 const queryClient = new QueryClient()
 
+const defaultAccent: ThemeAccent = accentSequence[0];
+const storedAccent =
+  typeof window !== 'undefined'
+    ? (localStorage.getItem('accent') as ThemeAccent)
+    : undefined;
+
 function MyApp({Component, pageProps}: AppProps) {
   const router = useRouter()
+  const resetLoanFlowStore = useLoanFlowStore((state) => state.reset)
   useEffect(() => {
     const handleRouteChange = (url: any, {shallow}: any) => {
-      const resetLoanFlowStore = useLoanFlowStore((state) => state.reset)
       resetLoanFlowStore()
     }
     router.events.on('routeChangeStart', handleRouteChange)
@@ -26,7 +33,7 @@ function MyApp({Component, pageProps}: AppProps) {
     }
   }, [])
   return (
-    <ThemeProvider defaultMode="dark" defaultAccent="red">
+    <ThemeProvider defaultMode="dark" defaultAccent={storedAccent || defaultAccent}>
       <QueryClientProvider client={queryClient}>
         <MoralisProvider
           appId={process.env.NEXT_PUBLIC_APP_ID as string}
