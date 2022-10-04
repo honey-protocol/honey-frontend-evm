@@ -31,6 +31,7 @@ function MyApp({Component, pageProps}: AppProps) {
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <ThemeProvider defaultMode="dark" defaultAccent={storedAccent || defaultAccent}>

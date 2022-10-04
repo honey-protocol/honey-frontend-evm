@@ -31,7 +31,7 @@ interface HoneySliderProps {
   onChange?: (value: number) => void;
 }
 
-const { formatPercent: fp, formatSol: fs } = formatNumber;
+const {formatPercent: fp, formatERC20: fs} = formatNumber;
 
 export const HoneySlider: FC<HoneySliderProps> = ({
   maxValue,
@@ -62,8 +62,8 @@ export const HoneySlider: FC<HoneySliderProps> = ({
   const riskColor = isDanger
     ? vars.colors.red
     : isRisky
-    ? vars.colors.brownLight
-    : vars.colors.green;
+      ? vars.colors.brownLight
+      : vars.colors.green;
 
   const handleChange = (value: number) => {
     if (isReadonly) return;
@@ -76,11 +76,11 @@ export const HoneySlider: FC<HoneySliderProps> = ({
   const preparedLabels = isReadonly
     ? undefined
     : getPositionedLabels({
-        lastLabelValue: maxAvailablePosition,
-        maxLeftSliderValue: minAvailableValue,
-        maxValue,
-        labels
-      });
+      lastLabelValue: maxAvailablePosition,
+      maxLeftSliderValue: minAvailableValue,
+      maxValue,
+      labels
+    });
 
   return (
     <div className={styles.rangeContainer}>
@@ -103,7 +103,7 @@ export const HoneySlider: FC<HoneySliderProps> = ({
               ? styles.enabledWarningBackgroundSlider
               : styles.enabledBackgroundSlider
           )}
-          handleStyle={{ display: 'none' }}
+          handleStyle={{display: 'none'}}
           trackStyle={{
             backgroundColor: riskColor
           }}
@@ -113,7 +113,7 @@ export const HoneySlider: FC<HoneySliderProps> = ({
       </div>
       <div
         className={styles.sliderWrapper}
-        style={{ width: `${availablePosition * 100}%` }}
+        style={{width: `${availablePosition * 100}%`}}
       >
         {!isReadonly && (
           <div className={styles.sliderHeader.secondary}>
@@ -128,12 +128,12 @@ export const HoneySlider: FC<HoneySliderProps> = ({
           }}
           handleStyle={
             isReadonly
-              ? { display: 'none' }
+              ? {display: 'none'}
               : {
-                  background: vars.colors.white,
-                  borderColor: riskColor,
-                  zIndex: 9
-                }
+                background: vars.colors.white,
+                borderColor: riskColor,
+                zIndex: 9
+              }
           }
           value={currentSliderValue}
           onChange={handleChange}
@@ -143,14 +143,14 @@ export const HoneySlider: FC<HoneySliderProps> = ({
       {unavailablePosition > 0 && (
         <div
           className={styles.sliderWrapper}
-          style={{ width: `${unavailablePosition * 100}%` }}
+          style={{width: `${unavailablePosition * 100}%`}}
         >
           {!isReadonly && (
             <div className={styles.sliderHeader.secondary}>{fs(maxValue)}</div>
           )}
           <Slider
             className={c(styles.slider, styles.disabledBackgroundSlider)}
-            handleStyle={{ display: 'none' }}
+            handleStyle={{display: 'none'}}
             disabled
           />
         </div>

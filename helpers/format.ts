@@ -87,7 +87,7 @@ export const formatNumber = {
    * Works as formatNumber.format but adds ◎ at the start of the string
    * @param val
    */
-  formatSol: (val?: number) => {
+  formatERC20: (val?: number) => {
     return `◎ ${formatNumber.format(val)}`;
   },
 

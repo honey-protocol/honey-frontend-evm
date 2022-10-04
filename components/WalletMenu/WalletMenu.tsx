@@ -17,6 +17,7 @@ const WalletMenu = () => {
 
   useEffect(() => {
     setWalletAddress(user?.get('ethAddress') || ('' as string));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const connect = async () => {
