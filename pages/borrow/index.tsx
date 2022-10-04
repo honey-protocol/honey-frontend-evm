@@ -4,7 +4,7 @@ import HoneyTable from '../../components/HoneyTable/HoneyTable';
 import { ColumnType } from 'antd/lib/table';
 import * as style from '../../styles/markets.css';
 import useLoanFlowStore from "../../store/loanFlowStore";
-import { HoneyTableColumnType, MarketTableRow } from "../../types/markets";
+import { HoneyTableColumnType, MarketTablePosition, MarketTableRow } from "../../types/markets";
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import _ from "lodash";
 import SearchInput from "../../components/SearchInput/SearchInput";
@@ -18,6 +18,9 @@ import { ColumnTitleProps } from "antd/lib/table/interface";
 import useWindowSize from "../../hooks/useWindowSize";
 import { TABLET_BP } from "../../constants/breakpoints";
 import { formatNumber } from "../../helpers/format";
+import HoneyTableNameCell from "../../components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell";
+import HoneyTableRow from "../../components/HoneyTable/HoneyTableRow/HoneyTableRow";
+import { InfoBlock } from "../../components/InfoBlock/InfoBlock";
 
 const {formatPercent: fp, formatERC20: fs} = formatNumber
 const Markets: NextPage = () => {
@@ -57,6 +60,7 @@ const Markets: NextPage = () => {
     [tableData]
   );
   /*    End filter function         */
+  //todo finish toggle
   const MyCollectionsToggle = () => {
   }
   // <div className={style.toggle}>
@@ -93,7 +97,7 @@ const Markets: NextPage = () => {
                 <div className={style.logoWrapper}>
                   <div className={style.collectionLogo}>
                     <HexaBoxContainer>
-                      <Image src={honeyEyes}/>
+                      <Image src={honeyEyes} alt='nft icon'/>
                     </HexaBoxContainer>
                   </div>
                 </div>
@@ -190,6 +194,197 @@ const Markets: NextPage = () => {
       ].filter(column => !column.hidden),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isMyCollectionsFilterEnabled, tableData, searchQuery, windowWidth]
+  );
+
+  const columnsMobile: ColumnType<MarketTableRow>[] = useMemo(
+    () => [
+      {
+        width: columnsWidth[0],
+        dataIndex: 'name',
+        key: 'name',
+        render: (name: string, row: MarketTableRow) => {
+          return (
+            <>
+              <HoneyTableNameCell
+                leftSide={
+                  <>
+                    <div className={style.logoWrapper}>
+                      <div className={style.collectionLogo}>
+                        <HexaBoxContainer>
+                          <Image src={honeyEyes} alt='nft icon'/>
+                        </HexaBoxContainer>
+                      </div>
+                    </div>
+                    <div className={style.nameCellMobile}>
+                      <div className={style.collectionName}>{name}</div>
+                      <div className={style.rateCellMobile}>
+                        {fp(row.rate * 100)}
+                      </div>
+                    </div>
+                  </>
+                }
+                rightSide={
+                  <div className={style.buttonsCell}>
+                    <HoneyButton variant="text">
+                      View <div className={style.arrowIcon}/>
+                    </HoneyButton>
+                  </div>
+                }
+              />
+
+              <HoneyTableRow>
+                <div className={style.rateCell}>{fp(row.rate * 100)}</div>
+                <div className={style.availableCell}>{fs(row.available)}</div>
+              </HoneyTableRow>
+            </>
+          );
+        }
+      }
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isMyCollectionsFilterEnabled, tableData, searchQuery]
+  );
+
+  const expandColumns: ColumnType<MarketTablePosition>[] = [
+    {
+      dataIndex: 'name',
+      width: columnsWidth[0],
+      render: (name, record) => (
+        <div className={style.expandedRowNameCell}>
+          <div className={style.expandedRowIcon}/>
+          <div className={style.collectionLogo}>
+            <HexaBoxContainer>
+              <Image src={honeyEyes} alt='nft icon'/>
+            </HexaBoxContainer>
+          </div>
+          <div className={style.nameCellText}>
+            <div className={style.collectionName}>{name}</div>
+            <div className={style.risk.safe}>
+              <span className={style.valueCell}>{"fp(loanToValue)"}</span>{' '}
+              <span className={style.riskText}>Risk lvl</span>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      dataIndex: 'debt',
+      width: columnsWidth[1],
+      render: debt => (
+        <div className={style.expandedRowCell}>
+          <InfoBlock title={'Debt:'} value={fs(debt)}/>
+        </div>
+      )
+    },
+    {
+      dataIndex: 'allowance',
+      width: columnsWidth[2],
+      render: allowance => (
+        <div className={style.expandedRowCell}>
+          <InfoBlock title={'Allowance:'} value={fs(allowance)}/>
+        </div>
+      )
+    },
+    {
+      dataIndex: 'value',
+      width: columnsWidth[3],
+      render: value => (
+        <div className={style.expandedRowCell}>
+          <InfoBlock title={'Value:'} value={"fs(nftPrice)"}/>
+        </div>
+      )
+    },
+    {
+      width: columnsWidth[4],
+      title: '',
+      render: () => (
+        <div className={style.buttonsCell}>
+          <HoneyButton variant="text">
+            Manage <div className={style.arrowRightIcon}/>
+          </HoneyButton>
+        </div>
+      )
+    }
+  ];
+
+  const expandColumnsMobile: ColumnType<MarketTablePosition>[] = [
+    {
+      dataIndex: 'name',
+      render: (name, record) => (
+        <div className={style.expandedRowNameCell}>
+          <div className={style.expandedRowIcon}/>
+          <div className={style.collectionLogo}>
+            <HexaBoxContainer>
+              <Image src={honeyEyes} alt='nft icon'/>
+            </HexaBoxContainer>
+          </div>
+          <div className={style.nameCellText}>
+            <div className={style.collectionNameMobile}>{name}</div>
+            <div className={style.risk.safe}>
+              <span className={style.valueCell}>{"fp(loanToValue)"}</span>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      dataIndex: 'debt',
+      render: debt => (
+        <div className={style.expandedRowCell}>
+          <InfoBlock title={'Debt:'} value={"fs(userDebt)"}/>
+        </div>
+      )
+    },
+    {
+      dataIndex: 'available',
+      render: available => (
+        <div className={style.expandedRowCell}>
+          <InfoBlock title={'Allowance:'} value={"fs(nftPrice * MAX_LTV)"}/>
+        </div>
+      )
+    },
+    {
+      title: '',
+      width: '50px',
+      render: () => (
+        <div className={style.buttonsCell}>
+          <HoneyButton variant="text">
+            <div className={style.arrowRightIcon}/>
+          </HoneyButton>
+        </div>
+      )
+    }
+  ];
+
+  const ExpandedTableFooter = () => (
+    <div className={style.expandedSection}>
+      <div className={style.expandedSectionFooter}>
+        <div className={style.expandedRowIcon}/>
+        <div className={style.collectionLogo}>
+          <HexaBoxContainer variant="gray">
+            <div className={style.lampIconStyle}/>
+          </HexaBoxContainer>
+        </div>
+        <div className={style.footerText}>
+          <span className={style.footerTitle}>
+            You can’t add one more NFT to this market
+          </span>
+          <span className={style.footerDescription}>
+            Choose another market or connect another wallet
+          </span>
+        </div>
+      </div>
+      <div className={style.footerButton}>
+        <HoneyButton
+          className={style.mobileConnectButton}
+          variant="secondary"
+          isFluid={windowWidth < TABLET_BP}
+        >
+          <div className={style.swapWalletIcon}/>
+          Connect another wallet
+        </HoneyButton>
+      </div>
+    </div>
   );
 
 
