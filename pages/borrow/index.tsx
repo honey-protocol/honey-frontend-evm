@@ -5,7 +5,7 @@ import { ColumnType } from 'antd/lib/table';
 import * as style from '../../styles/markets.css';
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { HoneyTableColumnType, MarketTablePosition, MarketTableRow } from "../../types/markets";
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import _ from "lodash";
 import SearchInput from "../../components/SearchInput/SearchInput";
 import Image from 'next/image';
@@ -14,19 +14,46 @@ import HoneyButton from "../../components/HoneyButton/HoneyButton";
 import classNames from 'classnames';
 import HexaBoxContainer from "../../components/HexaBoxContainer/HexaBoxContainer";
 import { getColumnSortStatus } from "../../helpers/tableUtils";
-import { ColumnTitleProps } from "antd/lib/table/interface";
+import { ColumnTitleProps, Key as antdKey } from 'antd/lib/table/interface';
 import useWindowSize from "../../hooks/useWindowSize";
 import { TABLET_BP } from "../../constants/breakpoints";
 import { formatNumber } from "../../helpers/format";
 import HoneyTableNameCell from "../../components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell";
 import HoneyTableRow from "../../components/HoneyTable/HoneyTableRow/HoneyTableRow";
 import { InfoBlock } from "../../components/InfoBlock/InfoBlock";
+import { Typography } from 'antd';
+import { pageDescription, pageTitle } from "../../styles/common.css";
+import HoneyContent from "../../components/HoneyContent/HoneyContent";
+import EmptyStateDetails from "../../components/EmptyStateDetails/EmptyStateDetails";
 
 const {formatPercent: fp, formatERC20: fs} = formatNumber
 const Markets: NextPage = () => {
   const [tableData, setTableData] = useState<MarketTableRow[]>([]);
   const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
+  const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
   const {width: windowWidth} = useWindowSize();
+
+  /*    Begin inset data into table */
+  useEffect(() => {
+    const mockData: MarketTableRow[] = [
+      {
+        key: '0',
+        name: 'Honey Eyes',
+        rate: 0.1,
+        // validated available to be totalMarketDeposits
+        available: 0,
+        // validated value to be totalMarkDeposits + totalMarketDebt
+        value: 0,
+        allowance: 0,
+        positions: [],
+        debt: 0
+      }
+    ];
+
+    setTableData(mockData);
+    setTableDataFiltered(mockData);
+  }, []);
+
   /*    Begin filter function       */
   const [searchQuery, setSearchQuery] = useState('');
   const [tableDataFiltered, setTableDataFiltered] = useState<MarketTableRow[]>(
@@ -59,10 +86,21 @@ const Markets: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [tableData]
   );
-  /*    End filter function         */
+  /*    End filter function            */
+  /*    begin mobile function          */
+  const [isMobileSidebarVisible, setShowMobileSidebar] = useState(false);
+  const showMobileSidebar = () => {
+    setShowMobileSidebar(true);
+    document.body.classList.add('disable-scroll');
+  };
+
+  const hideMobileSidebar = () => {
+    setShowMobileSidebar(false);
+    document.body.classList.remove('disable-scroll');
+  };
+  /* end   mobile function          */
   //todo finish toggle
-  const MyCollectionsToggle = () => {
-  }
+  const MyCollectionsToggle = () => null
   // <div className={style.toggle}>
   //   <HoneyToggle
   //     checked={isMyCollectionsFilterEnabled}
@@ -71,7 +109,7 @@ const Markets: NextPage = () => {
   //   <span className={style.toggleText}>my collections</span>
   // </div>
 
-
+  /* being table components         */
   const SearchForm = () => {
     return (
       <SearchInput
@@ -386,22 +424,140 @@ const Markets: NextPage = () => {
       </div>
     </div>
   );
+  /* end table components              */
 
 
   return (
     <LayoutRedesign>
-      <div className={style.hideTablet}>
-        <HoneyTable
-          hasRowsShadow={true}
-          tableLayout="fixed"
-          columns={columns}
-          dataSource={tableDataFiltered}
-          pagination={false}
-          className={classNames(style.table, {
-            [style.emptyTable]: !tableDataFiltered.length
-          })}
-        />
+      <div>
+        <Typography.Title className={pageTitle}>Borrow</Typography.Title>
+        <Typography.Text className={pageDescription}>
+          Get instant liquidity using your NFTs as collateral
+          {' '}
+        </Typography.Text>
       </div>
+      <HoneyContent>
+        <div className={style.mobileTableHeader}>
+          <div className={style.mobileRow}>
+            <SearchForm/>
+          </div>
+          <div className={style.mobileRow}>
+            <MyCollectionsToggle/>
+          </div>
+        </div>
+
+        <div className={style.hideTablet}>
+          <HoneyTable
+            hasRowsShadow={true}
+            tableLayout="fixed"
+            columns={columns}
+            dataSource={tableDataFiltered}
+            pagination={false}
+            className={classNames(style.table, {
+              [style.emptyTable]: !tableDataFiltered.length
+            })}
+            expandable={{
+              // we use our own custom expand column
+              showExpandColumn: false,
+              onExpand: (expanded, row) =>
+                setExpandedRowKeys(expanded ? [row.key] : []),
+              expandedRowKeys,
+              expandedRowRender: record => {
+                return (
+                  <>
+                    <div>
+                      <div
+                        className={style.expandSection}
+                        onClick={showMobileSidebar}
+                      >
+                        <div className={style.dashedDivider}/>
+                        <HoneyTable
+                          tableLayout="fixed"
+                          className={style.expandContentTable}
+                          columns={expandColumns}
+                          dataSource={record.positions}
+                          pagination={false}
+                          showHeader={false}
+                          footer={
+                            record.positions.length
+                              ? ExpandedTableFooter
+                              : undefined
+                          }
+                        />
+                      </div>
+                    </div>
+                  </>
+                );
+              }
+            }}
+          />
+        </div>
+
+        <div className={style.showTablet}>
+          <HoneyTable
+            hasRowsShadow={true}
+            tableLayout="fixed"
+            columns={columnsMobile}
+            dataSource={tableDataFiltered}
+            pagination={false}
+            showHeader={false}
+            className={classNames(style.table, {
+              [style.emptyTable]: !tableDataFiltered.length
+            })}
+            expandable={{
+              // we use our own custom expand column
+              showExpandColumn: false,
+              onExpand: (expanded, row) =>
+                setExpandedRowKeys(expanded ? [row.key] : []),
+              expandedRowKeys,
+              expandedRowRender: record => {
+                return (
+                  <>
+                    <div>
+                      <div
+                        className={style.expandSection}
+                        onClick={showMobileSidebar}
+                      >
+                        <div className={style.dashedDivider}/>
+                        <HoneyTable
+                          className={style.expandContentTable}
+                          columns={expandColumnsMobile}
+                          dataSource={record.positions}
+                          pagination={false}
+                          showHeader={false}
+                          footer={
+                            record.positions.length
+                              ? ExpandedTableFooter
+                              : undefined
+                          }
+                        />
+                      </div>
+                    </div>
+                  </>
+                );
+              }
+            }}
+          />
+        </div>
+        {!tableDataFiltered.length &&
+        (isMyCollectionsFilterEnabled ? (
+          <div className={style.emptyStateContainer}>
+            <EmptyStateDetails
+              icon={<div className={style.docIcon}/>}
+              title="You didn’t use any collections yet"
+              description="Turn off the filter my collection and choose any collection to borrow money"
+            />
+          </div>
+        ) : (
+          <div className={style.emptyStateContainer}>
+            <EmptyStateDetails
+              icon={<div className={style.docIcon}/>}
+              title="No collections to display"
+              description="Turn off all filters and clear search inputs"
+            />
+          </div>
+        ))}
+      </HoneyContent>
 
     </LayoutRedesign>
   );
