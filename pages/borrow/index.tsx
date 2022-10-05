@@ -47,6 +47,18 @@ const Markets: NextPage = () => {
         allowance: 0,
         positions: [],
         debt: 0
+      },
+      {
+        key: '1',
+        name: 'Honey evil Eyes',
+        rate: 0.1,
+        // validated available to be totalMarketDeposits
+        available: 0,
+        // validated value to be totalMarkDeposits + totalMarketDebt
+        value: 0,
+        allowance: 0,
+        positions: [],
+        debt: 0
       }
     ];
 
@@ -459,9 +471,9 @@ const Markets: NextPage = () => {
             expandable={{
               // we use our own custom expand column
               showExpandColumn: false,
-              onExpand: (expanded, row) =>
-                setExpandedRowKeys(expanded ? [row.key] : []),
-              expandedRowKeys,
+              onExpand: (expanded, row) => {
+                setExpandedRowKeys(expanded ? [row.key] : [])
+              },
               expandedRowRender: record => {
                 return (
                   <>
@@ -507,9 +519,9 @@ const Markets: NextPage = () => {
             expandable={{
               // we use our own custom expand column
               showExpandColumn: false,
-              onExpand: (expanded, row) =>
-                setExpandedRowKeys(expanded ? [row.key] : []),
-              expandedRowKeys,
+              onExpand: (expanded, row) => {
+                setExpandedRowKeys(expanded ? [row.key] : [])
+              },
               expandedRowRender: record => {
                 return (
                   <>
