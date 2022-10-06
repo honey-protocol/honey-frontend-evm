@@ -5,7 +5,7 @@ import { ColumnType } from 'antd/lib/table';
 import * as style from '../../styles/markets.css';
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { HoneyTableColumnType, MarketTablePosition, MarketTableRow } from "../../types/markets";
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, ReactChild, ReactFragment, ReactPortal, useCallback, useEffect, useMemo, useState } from "react";
 import _ from "lodash";
 import SearchInput from "../../components/SearchInput/SearchInput";
 import Image from 'next/image';
@@ -38,9 +38,9 @@ const Markets: NextPage = () => {
     const mockData: MarketTableRow[] = [
       {
         key: '0',
-        name: 'Honey Eyes',
+        name: 'BAYC',
         icon: "/nfts/bayc.jpg",
-        erc20Icon: "",
+        erc20Icon: "/erc20/USDCIcon.png",
         rate: 0.1,
         // validated available to be totalMarketDeposits
         available: 0,
@@ -60,9 +60,9 @@ const Markets: NextPage = () => {
       },
       {
         key: '1',
-        name: 'Honey evil Eyes',
+        name: 'Evil BAYC',
         icon: "/nfts/bayc.jpg",
-        erc20Icon: "",
+        erc20Icon: "/erc20/USDCIcon.png",
         rate: 0.1,
         // validated available to be totalMarketDeposits
         available: 0,
@@ -151,19 +151,26 @@ const Markets: NextPage = () => {
         {
           width: columnsWidth[0],
           title: SearchForm,
-          dataIndex: 'name',
+          dataIndex: ['name', 'icon', 'erc20Icon'],
           key: 'name',
-          render: (name: string) => {
+          render: (text: string, row: MarketTableRow) => {
             return (
               <div className={style.nameCell}>
                 <div className={style.logoWrapper}>
                   <div className={style.collectionLogo}>
                     <HexaBoxContainer>
-                      <Image src={honeyEyes} alt='nft icon'/>
+                      <Image src={row['icon']} layout='fill' alt='nft icon'/>
                     </HexaBoxContainer>
                   </div>
                 </div>
-                <div className={style.collectionName}>{name}</div>
+                <div className={style.logoWrapper}>
+                  <div className={style.collectionLogo}>
+                    <HexaBoxContainer>
+                      <Image src={row['erc20Icon']} layout='fill' alt='nft icon'/>
+                    </HexaBoxContainer>
+                  </div>
+                </div>
+                <div className={style.collectionName}>{row["name"]}</div>
               </div>
             );
           }
@@ -262,9 +269,9 @@ const Markets: NextPage = () => {
     () => [
       {
         width: columnsWidth[0],
-        dataIndex: 'name',
+        dataIndex: ['name', 'icon', 'erc20Icon'],
         key: 'name',
-        render: (name: string, row: MarketTableRow) => {
+        render: (text: string, row: MarketTableRow) => {
           return (
             <>
               <HoneyTableNameCell
@@ -273,12 +280,19 @@ const Markets: NextPage = () => {
                     <div className={style.logoWrapper}>
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
-                          <Image src={honeyEyes} alt='nft icon'/>
+                          <Image src={row['icon']} layout='fill' alt='nft icon'/>
+                        </HexaBoxContainer>
+                      </div>
+                    </div>
+                    <div className={style.logoWrapper}>
+                      <div className={style.collectionLogo}>
+                        <HexaBoxContainer>
+                          <Image src={row['erc20Icon']} layout='fill' alt='nft icon'/>
                         </HexaBoxContainer>
                       </div>
                     </div>
                     <div className={style.nameCellMobile}>
-                      <div className={style.collectionName}>{name}</div>
+                      <div className={style.collectionName}>{row['name']}</div>
                       <div className={style.rateCellMobile}>
                         {fp(row.rate * 100)}
                       </div>
