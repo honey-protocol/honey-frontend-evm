@@ -4,6 +4,8 @@ import { ColumnType } from 'antd/lib/table';
 export type MarketTableRow = {
   key: string;
   name: string;
+  icon: string;
+  erc20Icon: string;
   rate: number;
   debt: number;
   allowance: number;

@@ -39,18 +39,30 @@ const Markets: NextPage = () => {
       {
         key: '0',
         name: 'Honey Eyes',
+        icon: "/nfts/bayc.jpg",
+        erc20Icon: "",
         rate: 0.1,
         // validated available to be totalMarketDeposits
         available: 0,
         // validated value to be totalMarkDeposits + totalMarketDebt
         value: 0,
         allowance: 0,
-        positions: [],
+        positions: [
+          {
+            name: "happy"
+          },
+          {
+            name: "dog"
+          }
+
+        ],
         debt: 0
       },
       {
         key: '1',
         name: 'Honey evil Eyes',
+        icon: "/nfts/bayc.jpg",
+        erc20Icon: "",
         rate: 0.1,
         // validated available to be totalMarketDeposits
         available: 0,
@@ -310,7 +322,7 @@ const Markets: NextPage = () => {
           <div className={style.nameCellText}>
             <div className={style.collectionName}>{name}</div>
             <div className={style.risk.safe}>
-              <span className={style.valueCell}>{"fp(loanToValue)"}</span>{' '}
+              <span className={style.valueCell}>{"0"}</span>{' '}
               <span className={style.riskText}>Risk lvl</span>
             </div>
           </div>
@@ -340,7 +352,7 @@ const Markets: NextPage = () => {
       width: columnsWidth[3],
       render: value => (
         <div className={style.expandedRowCell}>
-          <InfoBlock title={'Value:'} value={"fs(nftPrice)"}/>
+          <InfoBlock title={'Value:'} value={'0'}/>
         </div>
       )
     },
@@ -371,7 +383,7 @@ const Markets: NextPage = () => {
           <div className={style.nameCellText}>
             <div className={style.collectionNameMobile}>{name}</div>
             <div className={style.risk.safe}>
-              <span className={style.valueCell}>{"fp(loanToValue)"}</span>
+              <span className={style.valueCell}>{0}</span>
             </div>
           </div>
         </div>
@@ -381,7 +393,7 @@ const Markets: NextPage = () => {
       dataIndex: 'debt',
       render: debt => (
         <div className={style.expandedRowCell}>
-          <InfoBlock title={'Debt:'} value={"fs(userDebt)"}/>
+          <InfoBlock title={'Debt:'} value={'0'}/>
         </div>
       )
     },
@@ -389,7 +401,7 @@ const Markets: NextPage = () => {
       dataIndex: 'available',
       render: available => (
         <div className={style.expandedRowCell}>
-          <InfoBlock title={'Allowance:'} value={"fs(nftPrice * MAX_LTV)"}/>
+          <InfoBlock title={'Allowance:'} value={'0'}/>
         </div>
       )
     },
@@ -471,9 +483,9 @@ const Markets: NextPage = () => {
             expandable={{
               // we use our own custom expand column
               showExpandColumn: false,
-              onExpand: (expanded, row) => {
-                setExpandedRowKeys(expanded ? [row.key] : [])
-              },
+              onExpand: (expanded, row) =>
+                setExpandedRowKeys(expanded ? [row.key] : []),
+              expandedRowKeys,
               expandedRowRender: record => {
                 return (
                   <>
@@ -519,9 +531,9 @@ const Markets: NextPage = () => {
             expandable={{
               // we use our own custom expand column
               showExpandColumn: false,
-              onExpand: (expanded, row) => {
-                setExpandedRowKeys(expanded ? [row.key] : [])
-              },
+              onExpand: (expanded, row) =>
+                setExpandedRowKeys(expanded ? [row.key] : []),
+              expandedRowKeys,
               expandedRowRender: record => {
                 return (
                   <>
