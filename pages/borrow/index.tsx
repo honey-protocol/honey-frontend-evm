@@ -5,7 +5,17 @@ import { ColumnType } from 'antd/lib/table';
 import * as style from '../../styles/markets.css';
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { HoneyTableColumnType, MarketTablePosition, MarketTableRow } from "../../types/markets";
-import { ChangeEvent, ReactChild, ReactFragment, ReactPortal, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  ReactChild,
+  ReactFragment,
+  ReactPortal,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
 import _ from "lodash";
 import SearchInput from "../../components/SearchInput/SearchInput";
 import Image from 'next/image';
@@ -25,57 +35,23 @@ import { Typography } from 'antd';
 import { pageDescription, pageTitle } from "../../styles/common.css";
 import HoneyContent from "../../components/HoneyContent/HoneyContent";
 import EmptyStateDetails from "../../components/EmptyStateDetails/EmptyStateDetails";
+import { UserContext } from "../../contexts/userContext";
+import { useMarket } from "../../hooks/useCollection";
+import { collections } from "../../constants/NFTCollections";
 
 const {formatPercent: fp, formatERC20: fs} = formatNumber
 const Markets: NextPage = () => {
+  const {currentUser, setCurrentUser} = useContext(UserContext);
   const [tableData, setTableData] = useState<MarketTableRow[]>([]);
   const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
   const {width: windowWidth} = useWindowSize();
 
   /*    Begin inset data into table */
+  const marketData = useMarket(currentUser, collections)
   useEffect(() => {
-    const mockData: MarketTableRow[] = [
-      {
-        key: '0',
-        name: 'BAYC',
-        icon: "/nfts/bayc.jpg",
-        erc20Icon: "/erc20/USDCIcon.png",
-        rate: 0.1,
-        // validated available to be totalMarketDeposits
-        available: 0,
-        // validated value to be totalMarkDeposits + totalMarketDebt
-        value: 0,
-        allowance: 0,
-        positions: [
-          {
-            name: "happy"
-          },
-          {
-            name: "dog"
-          }
-
-        ],
-        debt: 0
-      },
-      {
-        key: '1',
-        name: 'Evil BAYC',
-        icon: "/nfts/bayc.jpg",
-        erc20Icon: "/erc20/USDCIcon.png",
-        rate: 0.1,
-        // validated available to be totalMarketDeposits
-        available: 0,
-        // validated value to be totalMarkDeposits + totalMarketDebt
-        value: 0,
-        allowance: 0,
-        positions: [],
-        debt: 0
-      }
-    ];
-
-    setTableData(mockData);
-    setTableDataFiltered(mockData);
+    setTableData(marketData);
+    setTableDataFiltered(marketData);
   }, []);
 
   /*    Begin filter function       */
