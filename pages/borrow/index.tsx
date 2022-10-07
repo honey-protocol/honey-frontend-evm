@@ -46,6 +46,8 @@ const Markets: NextPage = () => {
   const [tableData, setTableData] = useState<MarketTableRow[]>([]);
   const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
+  const setHERC20ContractAddr = useLoanFlowStore((state) => state.setHERC20ContractAddr)
+  const HERC20ContractAddr = useLoanFlowStore((state) => state.HERC20ContractAddr)
   const {width: windowWidth} = useWindowSize();
 
   /*    Begin inset data into table */
@@ -88,10 +90,11 @@ const Markets: NextPage = () => {
     [tableData]
   );
   /*    End filter function            */
-  /*    begin mobile function          */
+  /*    begin sidebar interaction function          */
   const [isMobileSidebarVisible, setShowMobileSidebar] = useState(false);
   const showMobileSidebar = () => {
     setShowMobileSidebar(true);
+    console.log(`==> ${HERC20ContractAddr}`)
     document.body.classList.add('disable-scroll');
   };
 
@@ -99,7 +102,7 @@ const Markets: NextPage = () => {
     setShowMobileSidebar(false);
     document.body.classList.remove('disable-scroll');
   };
-  /* end   mobile function          */
+  /* end sidebar interaction function          */
   //todo finish toggle
   const MyCollectionsToggle = () => null
   // <div className={style.toggle}>
@@ -420,10 +423,10 @@ const Markets: NextPage = () => {
         </div>
         <div className={style.footerText}>
           <span className={style.footerTitle}>
-            You can’t add one more NFT to this market
+            You can add one more NFT to this market
           </span>
           <span className={style.footerDescription}>
-            Choose another market or connect another wallet
+            Choose another NFT from same collection
           </span>
         </div>
       </div>
@@ -434,7 +437,7 @@ const Markets: NextPage = () => {
           isFluid={windowWidth < TABLET_BP}
         >
           <div className={style.swapWalletIcon}/>
-          Connect another wallet
+          Choose Another NFT
         </HoneyButton>
       </div>
     </div>
@@ -474,8 +477,10 @@ const Markets: NextPage = () => {
             expandable={{
               // we use our own custom expand column
               showExpandColumn: false,
-              onExpand: (expanded, row) =>
-                setExpandedRowKeys(expanded ? [row.key] : []),
+              onExpand: (expanded, row) => {
+                console.log("here2")
+                setExpandedRowKeys(expanded ? [row.key] : [])
+              },
               expandedRowKeys,
               expandedRowRender: record => {
                 return (
@@ -493,11 +498,7 @@ const Markets: NextPage = () => {
                           dataSource={record.positions}
                           pagination={false}
                           showHeader={false}
-                          footer={
-                            record.positions.length
-                              ? ExpandedTableFooter
-                              : undefined
-                          }
+                          footer={ExpandedTableFooter}
                         />
                       </div>
                     </div>
@@ -522,8 +523,10 @@ const Markets: NextPage = () => {
             expandable={{
               // we use our own custom expand column
               showExpandColumn: false,
-              onExpand: (expanded, row) =>
-                setExpandedRowKeys(expanded ? [row.key] : []),
+              onExpand: (expanded, row) =>{
+                setHERC20ContractAddr(row.key)
+                setExpandedRowKeys(expanded ? [row.key] : [])
+              },
               expandedRowKeys,
               expandedRowRender: record => {
                 return (
@@ -540,11 +543,7 @@ const Markets: NextPage = () => {
                           dataSource={record.positions}
                           pagination={false}
                           showHeader={false}
-                          footer={
-                            record.positions.length
-                              ? ExpandedTableFooter
-                              : undefined
-                          }
+                          footer={ ExpandedTableFooter}
                         />
                       </div>
                     </div>
