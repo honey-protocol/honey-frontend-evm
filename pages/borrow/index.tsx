@@ -39,6 +39,8 @@ import { UserContext } from "../../contexts/userContext";
 import { useMarket } from "../../hooks/useCollection";
 import { collections } from "../../constants/NFTCollections";
 import HoneySider from "../../components/HoneySider/HoneySider";
+import { LoanWorkFlowType } from "../../types/workflows";
+import MarketsSidebar from "../../components/MarketsSidebar/MarketsSidebar";
 
 const {formatPercent: fp, formatERC20: fs} = formatNumber
 const Markets: NextPage = () => {
@@ -48,7 +50,6 @@ const Markets: NextPage = () => {
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
   const setHERC20ContractAddr = useLoanFlowStore((state) => state.setHERC20ContractAddr)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
-  const HERC20ContractAddr = useLoanFlowStore((state) => state.HERC20ContractAddr)
   const {width: windowWidth} = useWindowSize();
 
   /*    Begin inset data into table */
@@ -94,7 +95,7 @@ const Markets: NextPage = () => {
   /*    begin sidebar interaction function          */
   const [isMobileSidebarVisible, setShowMobileSidebar] = useState(false);
   const initDepositNFTFlow = () => {
-    setWorkflow("depositNFT")
+    setWorkflow(LoanWorkFlowType.depositNFT)
     setShowMobileSidebar(true);
     document.body.classList.add('disable-scroll');
   }
@@ -578,6 +579,9 @@ const Markets: NextPage = () => {
       </HoneyContent>
       <HoneySider isMobileSidebarVisible={isMobileSidebarVisible}>
         {/* borrow repay module */}
+        <MarketsSidebar
+          hideMobileSidebar={hideMobileSidebar}
+        />
 
       </HoneySider>
 
