@@ -47,6 +47,7 @@ const Markets: NextPage = () => {
   const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
   const setHERC20ContractAddr = useLoanFlowStore((state) => state.setHERC20ContractAddr)
+  const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
   const HERC20ContractAddr = useLoanFlowStore((state) => state.HERC20ContractAddr)
   const {width: windowWidth} = useWindowSize();
 
@@ -92,9 +93,13 @@ const Markets: NextPage = () => {
   /*    End filter function            */
   /*    begin sidebar interaction function          */
   const [isMobileSidebarVisible, setShowMobileSidebar] = useState(false);
+  const initDepositNFTFlow = () => {
+    setWorkflow("depositNFT")
+    setShowMobileSidebar(true);
+    document.body.classList.add('disable-scroll');
+  }
   const showMobileSidebar = () => {
     setShowMobileSidebar(true);
-    console.log(`==> ${HERC20ContractAddr}`)
     document.body.classList.add('disable-scroll');
   };
 
@@ -432,6 +437,7 @@ const Markets: NextPage = () => {
       </div>
       <div className={style.footerButton}>
         <HoneyButton
+          onClick={initDepositNFTFlow}
           className={style.mobileConnectButton}
           variant="secondary"
           isFluid={windowWidth < TABLET_BP}
@@ -478,7 +484,7 @@ const Markets: NextPage = () => {
               // we use our own custom expand column
               showExpandColumn: false,
               onExpand: (expanded, row) => {
-                console.log("here2")
+                setHERC20ContractAddr(row.key)
                 setExpandedRowKeys(expanded ? [row.key] : [])
               },
               expandedRowKeys,
@@ -488,7 +494,6 @@ const Markets: NextPage = () => {
                     <div>
                       <div
                         className={style.expandSection}
-                        onClick={showMobileSidebar}
                       >
                         <div className={style.dashedDivider}/>
                         <HoneyTable
@@ -523,7 +528,7 @@ const Markets: NextPage = () => {
             expandable={{
               // we use our own custom expand column
               showExpandColumn: false,
-              onExpand: (expanded, row) =>{
+              onExpand: (expanded, row) => {
                 setHERC20ContractAddr(row.key)
                 setExpandedRowKeys(expanded ? [row.key] : [])
               },
@@ -534,7 +539,6 @@ const Markets: NextPage = () => {
                     <div>
                       <div
                         className={style.expandSection}
-                        onClick={showMobileSidebar}
                       >
                         <div className={style.dashedDivider}/>
                         <HoneyTable
@@ -543,7 +547,7 @@ const Markets: NextPage = () => {
                           dataSource={record.positions}
                           pagination={false}
                           showHeader={false}
-                          footer={ ExpandedTableFooter}
+                          footer={ExpandedTableFooter}
                         />
                       </div>
                     </div>

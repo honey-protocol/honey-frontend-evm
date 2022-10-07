@@ -8,6 +8,7 @@ interface LoanFlowState {
   setIsLoading: (isLoading: boolean) => void
   setNFTId: (NFTId: string) => void
   setHERC20ContractAddr: (HERC20ContractAddr: string) => void
+  //workflow can be "depositNFT" or "loanOrBorrow"
   setWorkflow: (workflow: string) => void
   reset: () => void
 }
