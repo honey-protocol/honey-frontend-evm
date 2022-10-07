@@ -39,6 +39,7 @@
     "react-query": "^3.39.1",
     "react-toastify": "^8.2.0",
     "recharts": "^2.1.9",
+    "sharp": "^0.31.1",
     "web3": "^1.7.1",
     "yarn": "^1.22.18",
     "zustand": "^4.1.1"

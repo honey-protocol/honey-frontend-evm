@@ -38,6 +38,7 @@ import EmptyStateDetails from "../../components/EmptyStateDetails/EmptyStateDeta
 import { UserContext } from "../../contexts/userContext";
 import { useMarket } from "../../hooks/useCollection";
 import { collections } from "../../constants/NFTCollections";
+import HoneySider from "../../components/HoneySider/HoneySider";
 
 const {formatPercent: fp, formatERC20: fs} = formatNumber
 const Markets: NextPage = () => {
@@ -572,6 +573,10 @@ const Markets: NextPage = () => {
           </div>
         ))}
       </HoneyContent>
+      <HoneySider isMobileSidebarVisible={isMobileSidebarVisible}>
+        {/* borrow repay module */}
+
+      </HoneySider>
 
     </LayoutRedesign>
   );
