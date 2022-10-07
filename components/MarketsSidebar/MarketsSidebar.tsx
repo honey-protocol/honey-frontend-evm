@@ -45,6 +45,7 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
         // await queryClient.invalidateQueries(['coupons'])
         setCurrentUser(user);
         setIsSidebarVisibleInMobile(false)
+        document.body.classList.remove('disable-scroll');
       } catch (e) {
         console.log(e)
       }
