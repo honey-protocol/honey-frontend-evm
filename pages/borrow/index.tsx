@@ -41,6 +41,7 @@ import { collections } from "../../constants/NFTCollections";
 import HoneySider from "../../components/HoneySider/HoneySider";
 import { LoanWorkFlowType } from "../../types/workflows";
 import MarketsSidebar from "../../components/MarketsSidebar/MarketsSidebar";
+import useDisplayStore from "../../store/displayStore";
 
 const {formatPercent: fp, formatERC20: fs} = formatNumber
 const Markets: NextPage = () => {
@@ -50,6 +51,8 @@ const Markets: NextPage = () => {
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
   const setHERC20ContractAddr = useLoanFlowStore((state) => state.setHERC20ContractAddr)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
+  const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile)
+  const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
   const {width: windowWidth} = useWindowSize();
 
   /*    Begin inset data into table */
@@ -96,18 +99,10 @@ const Markets: NextPage = () => {
   const [isMobileSidebarVisible, setShowMobileSidebar] = useState(false);
   const initDepositNFTFlow = () => {
     setWorkflow(LoanWorkFlowType.depositNFT)
-    setShowMobileSidebar(true);
+    setIsSidebarVisibleInMobile(true)
     document.body.classList.add('disable-scroll');
   }
-  const showMobileSidebar = () => {
-    setShowMobileSidebar(true);
-    document.body.classList.add('disable-scroll');
-  };
 
-  const hideMobileSidebar = () => {
-    setShowMobileSidebar(false);
-    document.body.classList.remove('disable-scroll');
-  };
   /* end sidebar interaction function          */
   //todo finish toggle
   const MyCollectionsToggle = () => null
@@ -577,10 +572,9 @@ const Markets: NextPage = () => {
           </div>
         ))}
       </HoneyContent>
-      <HoneySider isMobileSidebarVisible={isMobileSidebarVisible}>
+      <HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
         {/* borrow repay module */}
         <MarketsSidebar
-          hideMobileSidebar={hideMobileSidebar}
         />
 
       </HoneySider>

@@ -8,6 +8,7 @@ import { UserContext } from "../../contexts/userContext";
 import { useMoralis } from "react-moralis";
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { LoanWorkFlowType } from "../../types/workflows";
+import useDisplayStore from "../../store/displayStore";
 
 const {Text} = Typography;
 
@@ -18,6 +19,7 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
     hideMobileSidebar,
   } = props;
   const workflow = useLoanFlowStore((state) => state.workflow)
+  const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
   /*  begin tab function            */
   const [activeTab, setActiveTab] = useState<Tab>('borrow');
   const handleTabChange = (tabKey: string) => {
@@ -42,6 +44,7 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
         // await queryClient.invalidateQueries(['nft'])
         // await queryClient.invalidateQueries(['coupons'])
         setCurrentUser(user);
+        setIsSidebarVisibleInMobile(false)
       } catch (e) {
         console.log(e)
       }
