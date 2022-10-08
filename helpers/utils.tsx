@@ -34,3 +34,7 @@ export const formatAddress = (address: any) => {
     address.length
   )}`;
 }
+
+export const RoundHalfDown = (val: number, decimals: number = 2): number => {
+  return Math.floor(val * 10 ** decimals) / 10 ** decimals;
+};

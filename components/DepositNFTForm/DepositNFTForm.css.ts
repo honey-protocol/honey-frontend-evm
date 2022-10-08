@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { typography, vars } from '../../styles/theme.css';
 
-export const borrowForm = style({
+export const depositNFTForm = style({
   width: '100%',
   height: '100%',
   display: 'flex',
