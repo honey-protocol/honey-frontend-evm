@@ -527,6 +527,7 @@ const Markets: NextPage = () => {
               showExpandColumn: false,
               onExpand: (expanded, row) => {
                 setHERC20ContractAddr(row.key)
+                setWorkflow(LoanWorkFlowType.none)
                 setExpandedRowKeys(expanded ? [row.key] : [])
               },
               expandedRowKeys,
