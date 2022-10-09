@@ -1,50 +1,50 @@
 import { MAX_LTV } from 'constants/loan';
 import { RoundHalfDown } from 'helpers/utils';
-import React from 'react';
+import React, { useState } from 'react';
 import NftCard from '../NftCard/NftCard';
-import { NftCardProps } from '../NftCard/types';
 import * as style from './NftList.css';
 import cs from 'classnames';
 
 type NftListProps = {
-  data: NftCardProps[];
-  selectNFT: (name: string, img: string, mint: any) => void;
-  nftPrice: any;
-  selectedNFTMint: string | undefined;
+  data: NFT[];
+  selectNFT: (nft: NFT) => void;
+  nftPrice: number;
 };
 
 const NftList = (props: NftListProps) => {
-  const { data, selectNFT, nftPrice, selectedNFTMint } = props;
+  const {data, selectNFT, nftPrice} = props;
+  const [selectedNFTId, setSelectedNFTId] = useState<string | null>(null);
 
-  function handleClick(item: any) {
-    console.log('item--', item);
-    selectNFT(item.name, item.image, item.mint);
+  function handleClick(nft: NFT) {
+    setSelectedNFTId(nft.id)
+    selectNFT(nft);
   }
 
   return (
     <div className={style.nftsListContainer}>
       {data &&
-        data.map(
-          (item, index) =>
-            item.name.includes('When') && (
-              <div
-                className={cs(style.listItem, {
-                  [style.selectedListItem]: item.mint === selectedNFTMint
-                })}
-                key={item.name}
-              >
-                <NftCard
-                  onClick={() => handleClick(item)}
-                  {...item}
-                  hasBorder={
-                    index !== data.length - 1 || item.mint === selectedNFTMint
-                  }
-                  text={`◎ ${nftPrice.toFixed(2)} value`}
-                  buttonText={RoundHalfDown(nftPrice * MAX_LTV, 4).toString()}
-                />
-              </div>
-            )
-        )}
+      data.map(
+        (item, index) =>
+          (
+            <div
+              className={cs(style.listItem, {
+                [style.selectedListItem]: item.id === selectedNFTId
+              })}
+              key={item.id}
+            >
+              <NftCard
+                id={item.id}
+                onClick={() => handleClick(item)}
+                nft={item}
+                hasBorder={
+                  index !== data.length - 1 || item.id === selectedNFTId
+                }
+                text={`◎ ${nftPrice.toFixed(2)} value`}
+                buttonText={RoundHalfDown(nftPrice * MAX_LTV, 4).toString()}
+              />
+            </div>
+          )
+      )}
     </div>
   );
 };

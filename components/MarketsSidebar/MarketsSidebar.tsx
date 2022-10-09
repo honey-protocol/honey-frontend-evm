@@ -9,6 +9,7 @@ import { useMoralis } from "react-moralis";
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { LoanWorkFlowType } from "../../types/workflows";
 import useDisplayStore from "../../store/displayStore";
+import DepositNFTForm from "../DepositNFTForm/DepositNFTForm";
 
 const {Text} = Typography;
 
@@ -69,7 +70,11 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
             btnTitle="CONNECT WALLET"
             onBtnClick={connect}
           />
-        ) : (<></>)
+        ) :(workflow == LoanWorkFlowType.depositNFT)?(
+          <>
+            <DepositNFTForm/>
+          </>
+          ): (<></>)
         }
       </HoneyTabs>
     </div>
