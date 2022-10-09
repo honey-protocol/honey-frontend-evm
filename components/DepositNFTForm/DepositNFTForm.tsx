@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import * as styles from './DepositNFTForm.css';
@@ -17,15 +17,48 @@ import useDisplayStore from "../../store/displayStore";
 import SidebarScroll from "../SidebarScroll/SidebarScroll";
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { LoanWorkFlowType } from "../../types/workflows";
+import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
+import { UserContext } from "../../contexts/userContext";
+import { useQueryClient } from "react-query";
+import { useFetchNFTByUserByCollection, useIsNFTApproved } from "../../hooks/useNFT";
+import { useGetNFTPrice } from "../../hooks/useHtokenHelper";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
 const DepositNFTForm = (props: DepositNFTProps) => {
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
+  const {currentUser, setCurrentUser} = useContext(UserContext);
+  const queryClient = useQueryClient();
+  const walletPublicKey: string = currentUser?.get("ethAddress") || ""
+  const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr)
+  const {nftContractAddress, htokenHelperContractAddress, unit} = getContractsByHTokenAddr(HERC20ContractAddress)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
-  const [isNftSelected, setIsNftSelected] = useState(false);
   const [selectedNft, setSelectedNft] = useState<NFT | null>(null);
   const {toast, ToastComponent} = useToast();
+
+  const [availableNFTs, isLoadingNFT] = useFetchNFTByUserByCollection(currentUser, nftContractAddress);
+  const [nftState, setNFTState] = useState('WAIT_FOR_APPROVAL');
+  const [isNFTApproved, isLoadingApproval] = useIsNFTApproved(nftContractAddress, HERC20ContractAddress, selectedNft?.tokenId || '')
+  // const [nftValue, isLoadingNFTValue] = useGetNFTPrice(htokenHelperContractAddress, HERC20ContractAddress, unit)
+
+  useEffect(() => {
+    if (isNFTApproved)
+      setNFTState('WAIT_FOR_DEPOSIT')
+    else
+      setNFTState('WAIT_FOR_APPROVAL')
+  }, [selectedNft]);
+
+  const buttonTitle = () => {
+    if (nftState == 'WAIT_FOR_APPROVAL') return 'Approve';
+    else if (nftState == 'WAIT_FOR_DEPOSIT') return 'Deposit NFT';
+    else return 'View position';
+  };
+
+  // useEffect(()=> {
+  //   toast.processing()
+  //   toast.success("hello")
+  // },
+  //   []);
 
 
   // set selection state and render (or not) detail nft
@@ -41,23 +74,23 @@ const DepositNFTForm = (props: DepositNFTProps) => {
     //   await executeDepositNFT(selectedNft.mint, toast);
   };
 
-  const availableNFTs: Array<NFT> = [
-    {
-      id: "1",
-      name: "abc",
-      image: "/nfts/bayc.jpg",
-      tokenId: "1",
-      contractAddress: "xx"
-
-    },
-    {
-      id: "2",
-      name: "eye",
-      image: "/nfts/bayc.jpg",
-      tokenId: "3",
-      contractAddress: "xx"
-    }
-  ]
+  // const availableNFTs: Array<NFT> = [
+  //   {
+  //     id: "1",
+  //     name: "abc",
+  //     image: "/nfts/bayc.jpg",
+  //     tokenId: "1",
+  //     contractAddress: "xx"
+  //
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "eye",
+  //     image: "/nfts/bayc.jpg",
+  //     tokenId: "3",
+  //     contractAddress: "xx"
+  //   }
+  // ]
 
 
   const renderContent = () => {
@@ -98,7 +131,9 @@ const DepositNFTForm = (props: DepositNFTProps) => {
             variant="primary" isFluid
             disabled={selectedNft == null}
             onClick={handleDepositNFT}>
-            Deposit NFT
+            <>
+              {buttonTitle()}
+            </>
           </HoneyButton>
         </div>
       </div>
