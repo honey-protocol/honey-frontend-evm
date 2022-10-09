@@ -6,7 +6,6 @@ import { formatNumber } from '../../helpers/format';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 import HexaBoxContainer from 'components/HexaBoxContainer/HexaBoxContainer';
 import NftList from '../NftList/NftList';
-import { NftCardProps } from '../NftCard/types';
 import { DepositNFTProps } from './types';
 import { toastResponse } from 'helpers/loanHelpers';
 import imagePlaceholder from 'public/images/imagePlaceholder.png';
@@ -17,30 +16,21 @@ import cs from 'classnames';
 import useDisplayStore from "../../store/displayStore";
 import SidebarScroll from "../SidebarScroll/SidebarScroll";
 
-const { format: f, formatPercent: fp, formatERC20: fs, parse: p } = formatNumber;
-
-interface NFT {
-  name: string;
-  img: string;
-  mint: string;
-}
+const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
 const DepositNFTForm = (props: DepositNFTProps) => {
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
-  const {
-  } = props;
+  const {} = props;
 
 
   const [isNftSelected, setIsNftSelected] = useState(false);
   const [selectedNft, setSelectedNft] = useState<NFT | null>(null);
-  const { toast, ToastComponent } = useToast();
-
-
+  const {toast, ToastComponent} = useToast();
 
 
   // set selection state and render (or not) detail nft
-  const selectNFT = (name: string, img: string, mint?: any) => {
-    setSelectedNft({ name, img, mint });
+  const selectNFT = (nft: NFT) => {
+    setSelectedNft(nft);
   };
 
 
@@ -51,23 +41,36 @@ const DepositNFTForm = (props: DepositNFTProps) => {
     //   await executeDepositNFT(selectedNft.mint, toast);
   };
 
+  const availableNFTs: Array<NFT> = [
+    {
+      id: "1",
+      name: "abc",
+      image: "/nfts/bayc.jpg",
+      tokenId: "1",
+      contractAddress: "xx"
 
-
+    },
+    {
+      id: "2",
+      name: "eye",
+      image: "/nfts/bayc.jpg",
+      tokenId: "3",
+      contractAddress: "xx"
+    }
+  ]
 
 
   const renderContent = () => {
-      return (
-        <>
-          <div className={styles.newBorrowingTitle}>Choose NFT</div>
-          <NftList
-            nftPrice="100"
-            data={[]}
-            // data={availableNFTs}
-            selectNFT={selectNFT}
-            selectedNFTMint={selectedNft?.mint}
-          />
-        </>
-      );
+    return (
+      <>
+        <div className={styles.newBorrowingTitle}>Choose NFT</div>
+        <NftList
+          nftPrice={100}
+          data={availableNFTs}
+          selectNFT={selectNFT}
+        />
+      </>
+    );
   };
 
   const handleCancel = () => {
@@ -77,8 +80,8 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 
   const renderFooter = () => {
     return toast?.state ? (
-      <ToastComponent />
-    ) :  (
+      <ToastComponent/>
+    ) : (
       <div className={styles.buttons}>
         <div className={styles.smallCol}>
           <HoneyButton
