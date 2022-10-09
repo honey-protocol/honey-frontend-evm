@@ -9,7 +9,7 @@ export function getContractsByHTokenAddr(HERC20ContractAddr: string) {
   const collection = collections.find(
     collection => caseInsensitiveCompare(collection.HERC20ContractAddress, HERC20ContractAddr)
   );
-  const HERC20ContractAddress = collection?.HERC20ContractAddress || ''
+  const ERC20ContractAddress = collection?.ERC20ContractAddress || ''
   const hivemindContractAddress = collection?.hivemindContractAddress || ''
   const nftContractAddress = collection?.ERC721ContractAddress || ''
   const htokenHelperContractAddress = collection?.htokenHelperContractAddress || ''
@@ -17,15 +17,16 @@ export function getContractsByHTokenAddr(HERC20ContractAddr: string) {
   const icon = collection?.icon || ''
   const erc20Name = collection?.erc20Name || ''
   const erc20Icon = collection?.erc20Icon || ''
-  const unit = collection?.unit || ''
+  const unit = collection?.unit || "ether"
   return {
     name: name,
     icon: icon,
     erc20Name: erc20Name,
     erc20Icon: erc20Icon,
-    HERC20ContractAddress: HERC20ContractAddress,
+    ERC20ContractAddress: ERC20ContractAddress,
     hivemindContractAddress: hivemindContractAddress,
     nftContractAddress: nftContractAddress,
     htokenHelperContractAddress: htokenHelperContractAddress,
+    unit: unit,
   }
 }
