@@ -42,7 +42,8 @@ const DepositNFTForm = (props: DepositNFTProps) => {
       setNFTState('WAIT_FOR_DEPOSIT')
     else
       setNFTState('WAIT_FOR_APPROVAL')
-  }, [selectedNft]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedNft, isNFTApproved]);
 
   useEffect(() => {
     if (isLoadingNFT || isLoadingApproval) {
@@ -50,6 +51,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
     } else {
       toast.clear()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoadingNFT, isLoadingApproval]);
 
   const buttonTitle = () => {
@@ -88,7 +90,6 @@ const DepositNFTForm = (props: DepositNFTProps) => {
     } catch (err) {
       console.error(err);
       toast.error('Sorry! Transaction failed');
-    } finally {
     }
   };
 
