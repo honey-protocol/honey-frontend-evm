@@ -7,11 +7,13 @@ import HoneyButton from 'components/HoneyButton/HoneyButton';
 import { WalletIcon } from 'icons/WalletIcon';
 import { useMoralis } from "react-moralis";
 import { UserContext } from "../../contexts/userContext";
+import { useQueryClient } from "react-query";
 
 const {Title} = Typography;
 
 const WalletMenu = () => {
   const {authenticate, user, logout} = useMoralis();
+  const queryClient = useQueryClient();
   const [walletAddress, setWalletAddress] = useState<string>("");
   const {currentUser, setCurrentUser} = useContext(UserContext);
 
@@ -25,11 +27,9 @@ const WalletMenu = () => {
       try {
         await authenticate({signingMessage: 'Authorize linking of your wallet'})
         console.log('logged in user:', user?.get('ethAddress'));
-        //todo wait till we integrate with cache
-
-        // await queryClient.invalidateQueries(['user'])
-        // await queryClient.invalidateQueries(['nft'])
-        // await queryClient.invalidateQueries(['coupons'])
+        await queryClient.invalidateQueries(['user'])
+        await queryClient.invalidateQueries(['nft'])
+        await queryClient.invalidateQueries(['coupons'])
         setCurrentUser(user);
       } catch (e) {
         console.log(e)

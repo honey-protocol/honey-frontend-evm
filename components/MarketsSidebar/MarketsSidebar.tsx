@@ -9,6 +9,7 @@ import { useMoralis } from "react-moralis";
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { LoanWorkFlowType } from "../../types/workflows";
 import useDisplayStore from "../../store/displayStore";
+import { useQueryClient } from "react-query";
 import DepositNFTForm from "../DepositNFTForm/DepositNFTForm";
 
 const {Text} = Typography;
@@ -21,6 +22,7 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
   } = props;
   const workflow = useLoanFlowStore((state) => state.workflow)
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
+  const queryClient = useQueryClient();
   /*  begin tab function            */
   const [activeTab, setActiveTab] = useState<Tab>('borrow');
   const handleTabChange = (tabKey: string) => {
@@ -39,11 +41,9 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
       try {
         await authenticate({signingMessage: 'Authorize linking of your wallet'})
         console.log('logged in user:', user?.get('ethAddress'));
-        //todo wait till we integrate with cache
-
-        // await queryClient.invalidateQueries(['user'])
-        // await queryClient.invalidateQueries(['nft'])
-        // await queryClient.invalidateQueries(['coupons'])
+        await queryClient.invalidateQueries(['user'])
+        await queryClient.invalidateQueries(['nft'])
+        await queryClient.invalidateQueries(['coupons'])
         setCurrentUser(user);
         setIsSidebarVisibleInMobile(false)
         document.body.classList.remove('disable-scroll');
