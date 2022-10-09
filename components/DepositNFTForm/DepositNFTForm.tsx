@@ -15,14 +15,14 @@ import useToast from 'hooks/useToast';
 import cs from 'classnames';
 import useDisplayStore from "../../store/displayStore";
 import SidebarScroll from "../SidebarScroll/SidebarScroll";
+import useLoanFlowStore from "../../store/loanFlowStore";
+import { LoanWorkFlowType } from "../../types/workflows";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
 const DepositNFTForm = (props: DepositNFTProps) => {
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
-  const {} = props;
-
-
+  const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
   const [isNftSelected, setIsNftSelected] = useState(false);
   const [selectedNft, setSelectedNft] = useState<NFT | null>(null);
   const {toast, ToastComponent} = useToast();
@@ -75,6 +75,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 
   const handleCancel = () => {
     setIsSidebarVisibleInMobile(false)
+    setWorkflow(LoanWorkFlowType.none)
     document.body.classList.remove('disable-scroll');
   };
 
@@ -93,7 +94,10 @@ const DepositNFTForm = (props: DepositNFTProps) => {
           </HoneyButton>
         </div>
         <div className={styles.bigCol}>
-          <HoneyButton variant="primary" isFluid onClick={handleDepositNFT}>
+          <HoneyButton
+            variant="primary" isFluid
+            disabled={selectedNft == null}
+            onClick={handleDepositNFT}>
             Deposit NFT
           </HoneyButton>
         </div>
