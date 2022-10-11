@@ -16,7 +16,8 @@ export type MarketTableRow = {
 
 export type MarketTablePosition = {
   name: string;
-  image?: string;
+  tokenId: string;
+  image: string;
   riskLvl?: number;
   debt?: number;
   available?: number;

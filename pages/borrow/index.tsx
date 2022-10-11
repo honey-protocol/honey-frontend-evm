@@ -19,7 +19,6 @@ import {
 import _ from "lodash";
 import SearchInput from "../../components/SearchInput/SearchInput";
 import Image from 'next/image';
-import honeyEyes from '/public/nfts/honeyEyes.png';
 import HoneyButton from "../../components/HoneyButton/HoneyButton";
 import classNames from 'classnames';
 import HexaBoxContainer from "../../components/HexaBoxContainer/HexaBoxContainer";
@@ -304,18 +303,19 @@ const Markets: NextPage = () => {
 
   const expandColumns: ColumnType<MarketTablePosition>[] = [
     {
-      dataIndex: 'name',
+      dataIndex: ['name', 'image', 'tokenId'],
+      key: 'tokenId',
       width: columnsWidth[0],
-      render: (name, record) => (
+      render: (text: string, row) => (
         <div className={style.expandedRowNameCell}>
           <div className={style.expandedRowIcon}/>
           <div className={style.collectionLogo}>
             <HexaBoxContainer>
-              <Image src={honeyEyes} alt='nft icon'/>
+              <Image src={row['image']} layout='fill' alt='nft icon'/>
             </HexaBoxContainer>
           </div>
           <div className={style.nameCellText}>
-            <div className={style.collectionName}>{name}</div>
+            <div className={style.collectionName}>{row['name']}</div>
             <div className={style.risk.safe}>
               <span className={style.valueCell}>{"0"}</span>{' '}
               <span className={style.riskText}>Risk lvl</span>
@@ -366,17 +366,18 @@ const Markets: NextPage = () => {
 
   const expandColumnsMobile: ColumnType<MarketTablePosition>[] = [
     {
-      dataIndex: 'name',
-      render: (name, record) => (
+      dataIndex: ['name', 'image', 'tokenId'],
+      key: 'tokenId',
+      render: (text, row) => (
         <div className={style.expandedRowNameCell}>
           <div className={style.expandedRowIcon}/>
           <div className={style.collectionLogo}>
             <HexaBoxContainer>
-              <Image src={honeyEyes} alt='nft icon'/>
+              <Image src={row['image']} layout='fill' alt='nft icon'/>
             </HexaBoxContainer>
           </div>
           <div className={style.nameCellText}>
-            <div className={style.collectionNameMobile}>{name}</div>
+            <div className={style.collectionNameMobile}>{row['name']}</div>
             <div className={style.risk.safe}>
               <span className={style.valueCell}>{0}</span>
             </div>
