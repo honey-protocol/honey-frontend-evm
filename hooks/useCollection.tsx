@@ -55,7 +55,7 @@ export function usePositions(HERC20ContractAddress: string, ERC721ContractAddres
   const {data: couponList, isLoading: isLoadingCoupons, isFetching: isFetchCoupons} = useQuery(
     queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey),
     () => {
-      if (walletPublicKey != "") {
+      if (walletPublicKey != "" && HERC20ContractAddress != "") {
         return getUserCoupons({HERC20ContractAddress, userAddress: walletPublicKey, unit})
       } else {
         return [] as Array<coupon>
@@ -65,7 +65,7 @@ export function usePositions(HERC20ContractAddress: string, ERC721ContractAddres
       onSuccess: onGetCouponsSuccess,
       onError: onGetCouponsError,
       retry: false,
-      staleTime: defaultCacheStaleTime
+      staleTime: defaultCacheStaleTime,
     }
   )
 
@@ -76,18 +76,22 @@ export function usePositions(HERC20ContractAddress: string, ERC721ContractAddres
       return {
         queryKey: queryKeys.NFTDetail(ERC721ContractAddress, coupon.NFTId),
         queryFn: async () => {
-          try {
-            const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, coupon.NFTId)
-            const result: MarketTablePosition = {
-              // id: `${metaData.name}-${metaData.token_id}`, //id will be name-tokenId
-              name: metaData.name,
-              image: getImageUrlFromMetaData(metaData.metadata || ""),
-              tokenId: metaData.token_id,
+          if (walletPublicKey != "" && ERC721ContractAddress != "") {
+            try {
+              const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, coupon.NFTId)
+              const result: MarketTablePosition = {
+                // id: `${metaData.name}-${metaData.token_id}`, //id will be name-tokenId
+                name: metaData.name,
+                image: getImageUrlFromMetaData(metaData.metadata || ""),
+                tokenId: metaData.token_id,
+              }
+              return result
+            } catch (e) {
+              console.error("Error fetching market position with error")
+              console.error(e)
+              return defaultPosition
             }
-            return result
-          } catch (e) {
-            console.error("Error fetching market position with error")
-            console.error(e)
+          } else {
             return defaultPosition
           }
         },
@@ -99,7 +103,7 @@ export function usePositions(HERC20ContractAddress: string, ERC721ContractAddres
   )
   const isLoadingPosition = results.some(query => query.isLoading)
   const isFetchingPosition = results.some(query => query.isFetching)
-  const positions = results.map(result => result.data || defaultPosition)
+  const positions = results.map(result => result.data || defaultPosition).filter(position => position.image != "")
 
   return [positions, isLoadingPosition || isFetchingPosition || isLoadingCoupons || isFetchCoupons]
 

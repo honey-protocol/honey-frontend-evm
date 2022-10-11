@@ -35,12 +35,13 @@ import { pageDescription, pageTitle } from "../../styles/common.css";
 import HoneyContent from "../../components/HoneyContent/HoneyContent";
 import EmptyStateDetails from "../../components/EmptyStateDetails/EmptyStateDetails";
 import { UserContext } from "../../contexts/userContext";
-import { useMarket } from "../../hooks/useCollection";
+import { useMarket, usePositions } from "../../hooks/useCollection";
 import { collections } from "../../constants/NFTCollections";
 import HoneySider from "../../components/HoneySider/HoneySider";
 import { LoanWorkFlowType } from "../../types/workflows";
 import MarketsSidebar from "../../components/MarketsSidebar/MarketsSidebar";
 import useDisplayStore from "../../store/displayStore";
+import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 
 const {formatPercent: fp, formatERC20: fs} = formatNumber
 const Markets: NextPage = () => {
@@ -48,19 +49,24 @@ const Markets: NextPage = () => {
   const [tableData, setTableData] = useState<MarketTableRow[]>([]);
   const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
+  const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr)
   const setHERC20ContractAddr = useLoanFlowStore((state) => state.setHERC20ContractAddr)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
   const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile)
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
   const {width: windowWidth} = useWindowSize();
+  const {nftContractAddress, unit} = getContractsByHTokenAddr(HERC20ContractAddress)
 
-  /*    Begin inset data into table */
+  /*    Begin insert data into table */
   const marketData = useMarket(currentUser, collections)
   useEffect(() => {
     setTableData(marketData);
     setTableDataFiltered(marketData);
   }, []);
 
+  const [positions, isLoadingPositions] = usePositions(HERC20ContractAddress, nftContractAddress, currentUser, unit)
+
+  /*   End insert data into table */
   /*    Begin filter function       */
   const [searchQuery, setSearchQuery] = useState('');
   const [tableDataFiltered, setTableDataFiltered] = useState<MarketTableRow[]>(
@@ -498,7 +504,7 @@ const Markets: NextPage = () => {
                           tableLayout="fixed"
                           className={style.expandContentTable}
                           columns={expandColumns}
-                          dataSource={record.positions}
+                          dataSource={positions}
                           pagination={false}
                           showHeader={false}
                           footer={ExpandedTableFooter}
@@ -543,7 +549,7 @@ const Markets: NextPage = () => {
                         <HoneyTable
                           className={style.expandContentTable}
                           columns={expandColumnsMobile}
-                          dataSource={record.positions}
+                          dataSource={positions}
                           pagination={false}
                           showHeader={false}
                           footer={ExpandedTableFooter}
