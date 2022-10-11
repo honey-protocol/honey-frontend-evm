@@ -52,6 +52,7 @@ const Markets: NextPage = () => {
   const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr)
   const setHERC20ContractAddr = useLoanFlowStore((state) => state.setHERC20ContractAddr)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
+  const setNFTId = useLoanFlowStore((state) => state.setNFTId)
   const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile)
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
   const {width: windowWidth} = useWindowSize();
@@ -104,6 +105,13 @@ const Markets: NextPage = () => {
   const [isMobileSidebarVisible, setShowMobileSidebar] = useState(false);
   const initDepositNFTFlow = () => {
     setWorkflow(LoanWorkFlowType.depositNFT)
+    setIsSidebarVisibleInMobile(true)
+    document.body.classList.add('disable-scroll');
+  }
+
+  const initLoanOrBorrowFlow = (tokenId: string) => {
+    setNFTId(tokenId)
+    setWorkflow(LoanWorkFlowType.loanOrBorrow)
     setIsSidebarVisibleInMobile(true)
     document.body.classList.add('disable-scroll');
   }
@@ -358,11 +366,15 @@ const Markets: NextPage = () => {
       )
     },
     {
+      dataIndex: 'tokenId',
       width: columnsWidth[4],
       title: '',
-      render: () => (
+      render: tokenId => (
         <div className={style.buttonsCell}>
-          <HoneyButton variant="text">
+          <HoneyButton
+            variant="text"
+            onClick={e => initLoanOrBorrowFlow(tokenId)}
+          >
             Manage <div className={style.arrowRightIcon}/>
           </HoneyButton>
         </div>
@@ -408,11 +420,16 @@ const Markets: NextPage = () => {
       )
     },
     {
+      dataIndex: 'tokenId',
       title: '',
       width: '50px',
-      render: () => (
+      render: tokenId => (
         <div className={style.buttonsCell}>
-          <HoneyButton variant="text">
+          <HoneyButton
+            variant="text"
+            onClick={e => initLoanOrBorrowFlow(tokenId)}
+          >
+            {'Manage'}
             <div className={style.arrowRightIcon}/>
           </HoneyButton>
         </div>

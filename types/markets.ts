@@ -11,7 +11,6 @@ export type MarketTableRow = {
   allowance: number;
   available: number;
   value: number;
-  positions: Array<MarketTablePosition>;
 };
 
 export type MarketTablePosition = {

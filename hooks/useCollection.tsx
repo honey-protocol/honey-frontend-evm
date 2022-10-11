@@ -25,18 +25,6 @@ export function useMarket(user: MoralisType.User | null, collections: collection
         allowance: 0,
         available: 0,
         value: 0,
-        positions: [
-          {
-            name: "cat",
-            tokenId: "1",
-            image: "/nfts/bayc.jpg"
-          },
-          {
-            name: "dog",
-            tokenId: "2",
-            image: "/nfts/bayc.jpg"
-          }
-        ],
       }
       return market
     }
