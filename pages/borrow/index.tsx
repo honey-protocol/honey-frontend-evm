@@ -53,6 +53,7 @@ const Markets: NextPage = () => {
   const setHERC20ContractAddr = useLoanFlowStore((state) => state.setHERC20ContractAddr)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
   const setNFTId = useLoanFlowStore((state) => state.setNFTId)
+  const setCouponId = useLoanFlowStore((state) => state.setCouponId)
   const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile)
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
   const {width: windowWidth} = useWindowSize();
@@ -109,8 +110,9 @@ const Markets: NextPage = () => {
     document.body.classList.add('disable-scroll');
   }
 
-  const initLoanOrBorrowFlow = (tokenId: string) => {
+  const initLoanOrBorrowFlow = (tokenId: string, couponId: string) => {
     setNFTId(tokenId)
+    setCouponId(couponId)
     setWorkflow(LoanWorkFlowType.loanOrBorrow)
     setIsSidebarVisibleInMobile(true)
     document.body.classList.add('disable-scroll');
@@ -366,14 +368,15 @@ const Markets: NextPage = () => {
       )
     },
     {
-      dataIndex: 'tokenId',
+      dataIndex: ['tokenId', 'couponId'],
+      key: 'tokenId',
       width: columnsWidth[4],
       title: '',
-      render: tokenId => (
+      render: (text, row) => (
         <div className={style.buttonsCell}>
           <HoneyButton
             variant="text"
-            onClick={e => initLoanOrBorrowFlow(tokenId)}
+            onClick={e => initLoanOrBorrowFlow(row['tokenId'], row['couponId'])}
           >
             Manage <div className={style.arrowRightIcon}/>
           </HoneyButton>
@@ -420,14 +423,15 @@ const Markets: NextPage = () => {
       )
     },
     {
-      dataIndex: 'tokenId',
+      dataIndex: ['tokenId', 'couponId'],
+      key: 'tokenId',
       title: '',
       width: '50px',
-      render: tokenId => (
+      render: (text, row) => (
         <div className={style.buttonsCell}>
           <HoneyButton
             variant="text"
-            onClick={e => initLoanOrBorrowFlow(tokenId)}
+            onClick={e => initLoanOrBorrowFlow(row['tokenId'], row['couponId'])}
           >
             {'Manage'}
             <div className={style.arrowRightIcon}/>

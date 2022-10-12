@@ -11,6 +11,7 @@ const defaultPosition: MarketTablePosition = {
   name: "",
   image: "",
   tokenId: "",
+  couponId: "",
 }
 
 export function useMarket(user: MoralisType.User | null, collections: collection[]): MarketTableRow[] {
@@ -72,6 +73,7 @@ export function usePositions(HERC20ContractAddress: string, ERC721ContractAddres
                 name: metaData.name,
                 image: getImageUrlFromMetaData(metaData.metadata || ""),
                 tokenId: metaData.token_id,
+                couponId: coupon.couponId,
               }
               return result
             } catch (e) {
