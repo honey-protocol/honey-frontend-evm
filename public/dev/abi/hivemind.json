@@ -50,7 +50,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "contract HTokenI",
         "name": "_hToken",
         "type": "address"
@@ -202,7 +202,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "contract HTokenI",
         "name": "_hToken",
         "type": "address"
@@ -315,6 +315,25 @@
       }
     ],
     "name": "RoleRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_oldThreshold",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_newThreshold",
+        "type": "uint256"
+      }
+    ],
+    "name": "ThresholdUpdated",
     "type": "event"
   },
   {
@@ -457,6 +476,19 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_newThreshold",
+        "type": "uint256"
+      }
+    ],
+    "name": "_setUpdateThreshold",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "contract HTokenI",
         "name": "_hToken",
         "type": "address"
@@ -561,25 +593,6 @@
     "inputs": [
       {
         "internalType": "contract HTokenI",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "borrowPaused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
         "name": "_hToken",
         "type": "address"
       },
@@ -641,19 +654,6 @@
   },
   {
     "inputs": [],
-    "name": "getAllMarkets",
-    "outputs": [
-      {
-        "internalType": "contract HTokenI[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "getAllMarketsLength",
     "outputs": [
       {
@@ -679,6 +679,25 @@
         "internalType": "contract HTokenI[]",
         "name": "",
         "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      }
+    ],
+    "name": "getCollateralFactor",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -836,6 +855,77 @@
     "inputs": [
       {
         "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralId",
+        "type": "uint256"
+      }
+    ],
+    "name": "liquidationAllowed",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      }
+    ],
+    "name": "marketExists",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "marketPausedInfo",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "borrowPaused",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "transferPaused",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "redeemPaused",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "liquidationPaused",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
         "name": "",
         "type": "address"
       }
@@ -902,25 +992,6 @@
     ],
     "name": "redeemAllowed",
     "outputs": [],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "redeemPaused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -1012,25 +1083,6 @@
     ],
     "name": "transferAllowed",
     "outputs": [],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "transferPaused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
     "stateMutability": "view",
     "type": "function"
   },

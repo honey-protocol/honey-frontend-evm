@@ -2,6 +2,7 @@ export const queryKeys = {
   // statistic for each farm
   asset: (HERC20ContractAddress: string) => ['asset', HERC20ContractAddress] as const,
   nftPriceInUSD: (HERC20ContractAddress: string) => ['nft', 'price', HERC20ContractAddress] as const,
+  maxBorrow: (HERC20ContractAddress: string) => ['nft', 'maxBorrow', HERC20ContractAddress] as const,
   maxBorrowFromNFT: (HERC20ContractAddress: string, ERC721ContractAddress: string, userAddress: string, NFTTokenId: string) => ['nft', 'maxBorrow', HERC20ContractAddress, ERC721ContractAddress, userAddress, NFTTokenId] as const,
   borrowAmount: (HERC20ContractAddress: string, NFTTokenId: string) => ['nft', 'borrow', HERC20ContractAddress, NFTTokenId] as const,
   // NFT section

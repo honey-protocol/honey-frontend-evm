@@ -98,12 +98,12 @@ export async function getNFTPriceInUSD(htokenHelperContractAddress: string, HERC
   return nftPrice
 }
 
-export function useGetNFTPrice(
+export function useGetNFTPriceInUSD(
   htokenHelperContractAddress: string,
   HERC20ContractAddress: string,
   unit: Unit
 ): [string, boolean] {
-  const onSuccess  = (data: string) => {
+  const onSuccess = (data: string) => {
     return data
   }
   const onError = (data: string) => {
@@ -163,4 +163,48 @@ export async function getUnderlyingPriceInUSD(htokenHelperContractAddress: strin
   const result: any = await Moralis.Web3API.native.runContractFunction(options)
   const erc20PriceInUSD = fromWei(result, unit)
   return erc20PriceInUSD
+}
+
+export async function getMaxBorrowableAmount(htokenHelperContractAddress: string, HERC20ContractAddress: string, hivemindContractAddress: string, unit: Unit) {
+  const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
+  const options = {
+    chain: chain,
+    address: htokenHelperContractAddress,
+    function_name: "getMaxBorrowableAmount",
+    abi: ABI,
+    params: {_hToken: HERC20ContractAddress, _hivemind: hivemindContractAddress},
+  }
+
+  // @ts-ignore
+  const result: any = await Moralis.Web3API.native.runContractFunction(options)
+  const maxBorrowableAmount = fromWei(result, unit)
+  return maxBorrowableAmount
+}
+
+export function useGetMaxBorrowableAmount(
+  htokenHelperContractAddress: string,
+  HERC20ContractAddress: string,
+  hivemindContractAddress: string,
+  unit: Unit
+): [string, boolean] {
+  const onSuccess = (data: string) => {
+    return data
+  }
+  const onError = (data: string) => {
+    return '0'
+  }
+
+  const {data: amount, isLoading, isFetching} = useQuery(
+    queryKeys.maxBorrow(HERC20ContractAddress),
+    () =>
+      getMaxBorrowableAmount(htokenHelperContractAddress, HERC20ContractAddress, hivemindContractAddress, unit),
+    {
+      onSuccess,
+      onError,
+      retry: false,
+      staleTime: defaultCacheStaleTime
+    }
+  )
+
+  return [amount || '0', isLoading || isFetching];
 }
