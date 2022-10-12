@@ -5,6 +5,7 @@ import MoralisType from "moralis-v1";
 import { useQuery } from "react-query";
 import { queryKeys } from "../helpers/queryHelper";
 import { defaultCacheStaleTime } from "../constants/constant";
+import { BN } from "bn.js";
 
 export async function getSupplyBalance(htokenHelperContractAddress: string, HERC20ContractAddress: string, address: string, unit: Unit) {
   const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
@@ -196,8 +197,9 @@ export function useGetMaxBorrowableAmount(
 
   const {data: amount, isLoading, isFetching} = useQuery(
     queryKeys.maxBorrow(HERC20ContractAddress),
-    () =>
-      getMaxBorrowableAmount(htokenHelperContractAddress, HERC20ContractAddress, hivemindContractAddress, unit),
+    () => {
+      return getMaxBorrowableAmount(htokenHelperContractAddress, HERC20ContractAddress, hivemindContractAddress, unit)
+    },
     {
       onSuccess,
       onError,
@@ -207,4 +209,72 @@ export function useGetMaxBorrowableAmount(
   )
 
   return [amount || '0', isLoading || isFetching];
+}
+
+export function useGetNFTPrice(
+  htokenHelperContractAddress: string,
+  HERC20ContractAddress: string,
+  unit: Unit
+): [number, boolean] {
+  const onGetUnderlyingPriceSuccess = (data: string) => {
+    return data
+  }
+  const onGetUnderlyingPriceError = (data: string) => {
+    return '0'
+  }
+
+  const {
+    data: underlyingPriceInUSD,
+    isLoading: isLoadingGetUnderlyingPrice,
+    isFetching: isFetchingGetUnderlyingPrice
+  } = useQuery(
+    queryKeys.underlyingPriceInUSD(HERC20ContractAddress),
+    () => {
+      if (htokenHelperContractAddress != "" && HERC20ContractAddress != "") {
+        return getUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
+      } else {
+        return ""
+      }
+    },
+    {
+      onSuccess: onGetUnderlyingPriceSuccess,
+      onError: onGetUnderlyingPriceError,
+      retry: false,
+      staleTime: defaultCacheStaleTime
+    }
+  )
+
+  const onGetNFTPriceSuccess = (data: string) => {
+    return data
+  }
+  const onGetNFTPriceError = (data: string) => {
+    return '0'
+  }
+
+  const {data: nftPriceInUSD, isLoading: isLoadingGetNFTPrice, isFetching: isFetchingNFTPrice} = useQuery(
+    queryKeys.nftPriceInUSD(HERC20ContractAddress),
+    () => {
+      if (htokenHelperContractAddress != "" && HERC20ContractAddress != "") {
+        return getNFTPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
+      } else {
+        return "0"
+
+      }
+    },
+    {
+      onSuccess: onGetNFTPriceSuccess,
+      onError: onGetNFTPriceError,
+      retry: false,
+      staleTime: defaultCacheStaleTime
+    }
+  )
+  if ((nftPriceInUSD || '0') != '0' && (underlyingPriceInUSD || '0') != '0') {
+    const underlyingPrice = parseFloat(underlyingPriceInUSD || '0')
+    const nftPrice = parseFloat(nftPriceInUSD || '0')
+    const result = nftPrice / underlyingPrice
+    return [result, isLoadingGetUnderlyingPrice || isFetchingGetUnderlyingPrice || isLoadingGetNFTPrice || isFetchingNFTPrice];
+  } else {
+    const result = 0
+    return [result, isLoadingGetUnderlyingPrice || isFetchingGetUnderlyingPrice || isLoadingGetNFTPrice || isFetchingNFTPrice];
+  }
 }

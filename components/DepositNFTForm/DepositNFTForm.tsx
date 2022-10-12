@@ -14,7 +14,7 @@ import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import { UserContext } from "../../contexts/userContext";
 import { useMutation, useQueryClient } from "react-query";
 import { useFetchNFTByUserByCollection, useIsNFTApproved } from "../../hooks/useNFT";
-import { useGetNFTPriceInUSD } from "../../hooks/useHtokenHelper";
+import { useGetNFTPrice, useGetNFTPriceInUSD } from "../../hooks/useHtokenHelper";
 import { depositNFTCollateral } from "../../hooks/useHerc20";
 import { queryKeys } from "../../helpers/queryHelper";
 import getDepositNFTApproval from "../../hooks/useERC721";
@@ -35,7 +35,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
   const [availableNFTs, isLoadingNFT] = useFetchNFTByUserByCollection(currentUser, nftContractAddress);
   const [nftState, setNFTState] = useState('WAIT_FOR_APPROVAL');
   const [isNFTApproved, isLoadingApproval] = useIsNFTApproved(nftContractAddress, HERC20ContractAddress, selectedNft?.tokenId || '')
-  const [nftValue, isLoadingNFTValue] = useGetNFTPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
+  const [nftValue, isLoadingNFTValue] = useGetNFTPrice(htokenHelperContractAddress, HERC20ContractAddress, unit)
 
   useEffect(() => {
     if (isNFTApproved)
@@ -119,7 +119,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
         <div className={styles.newBorrowingTitle}>Choose NFT</div>
         <NftList
           //todo use price from oracle
-          nftPrice={parseInt(nftValue)}
+          nftPrice={nftValue}
           data={availableNFTs}
           selectNFT={selectNFT}
         />
