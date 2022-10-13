@@ -31,15 +31,8 @@ interface NFT {
 
 const BorrowForm = (props: BorrowProps) => {
   const {
-    availableNFTs,
-    openPositions,
-    nftPrice,
-    executeDepositNFT,
-    executeBorrow,
     userAllowance,
     userDebt,
-    loanToValue,
-    hideMobileSidebar
   } = props;
 
   const [valueUSD, setValueUSD] = useState<number>(0);
@@ -52,6 +45,8 @@ const BorrowForm = (props: BorrowProps) => {
 
   // Only for test purposes
   // const isNftSelected = true;
+  const nftPrice =1000
+  const loanToValue = 0.7
 
   const borrowedValue = userDebt;
   const maxValue = userAllowance;
@@ -115,15 +110,15 @@ const BorrowForm = (props: BorrowProps) => {
 
 
   // if user has an open position, we need to be able to click on the position and borrow against it
-  useEffect(() => {
-    if (openPositions?.length) {
-      const { name, image, mint } = openPositions[0];
-      setSelectedNft({ name, img: image, mint });
-      setIsNftSelected(true);
-      setHasOpenPosition(true);
-    }
-  }, [openPositions, availableNFTs]);
-
+  //
+  //useEffect(() => {
+    //   if (openPositions?.length) {
+    //     const { name, image, mint } = openPositions[0];
+    //     setSelectedNft({ name, img: image, mint });
+    //     setIsNftSelected(true);
+    //     setHasOpenPosition(true);
+    //   }
+    // }, []);
   const handleDepositNFT = async () => {
     // if (selectedNft && selectedNft.mint.length < 1)
     //   return toastResponse('ERROR', 'Please select an NFT', 'ERROR');
@@ -132,10 +127,7 @@ const BorrowForm = (props: BorrowProps) => {
     handleSliderChange(0);
   };
 
-  const handleBorrow = async () => {
-    await executeBorrow(valueSOL, toast);
-    handleSliderChange(0);
-  };
+
 
   useEffect(() => {}, [selectedNft]);
   const liqPercent =
@@ -443,9 +435,9 @@ const BorrowForm = (props: BorrowProps) => {
   };
 
   const handleCancel = () => {
-    if (typeof hideMobileSidebar === 'function') {
-      hideMobileSidebar();
-    }
+    // if (typeof hideMobileSidebar === 'function') {
+    //   hideMobileSidebar();
+    // }
   };
 
   const renderFooter = () => {
@@ -463,7 +455,7 @@ const BorrowForm = (props: BorrowProps) => {
             variant="primary"
             disabled={isBorrowButtonDisabled()}
             isFluid
-            onClick={handleBorrow}
+            onClick={e => {}}
           >
             Borrow
           </HoneyButton>
