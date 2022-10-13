@@ -106,12 +106,12 @@ export const getUserCoupons = async ({HERC20ContractAddress, userAddress, unit}:
     address: HERC20ContractAddress,
     function_name: "getUserCoupons",
     abi: ABI,
-    params: {_account: userAddress},
+    params: {_user: userAddress},
   }
   // @ts-ignore
   const results: Array<any> = await Moralis.Web3API.native.runContractFunction(options)
   const coupons = results.map((result) => {
-    const [id, active, collateralId, borrowAmount, index, owner] = result
+    const [id, active, owner, collateralId, borrowAmount, index] = result
     const userCoupon: coupon = {
       NFTId: collateralId,
       borrowAmount: fromWei(borrowAmount, unit),
@@ -119,6 +119,7 @@ export const getUserCoupons = async ({HERC20ContractAddress, userAddress, unit}:
       index: index,
       couponId: id
     }
+    console.log(`user coupon ${JSON.stringify(userCoupon)}`)
     return userCoupon
   })
   return coupons.filter((coupon) => coupon.active)
