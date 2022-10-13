@@ -24,14 +24,16 @@ export const InputsBlock: FC<InputsBlockProps> = ({
   onChangeFirstInput,
   onChangeSecondInput,
   maxValue = Infinity,
+  //todo we should pass them as jsx element instead of hardcoding
   delimiterIcon = (
     <div className={styles.delimiterIcon}>
-      <Image src={EqualIcon} />
+      <Image src={EqualIcon} alt={"equal icon"}/>
     </div>
   ),
+  //todo change to generic erc20 icon
   firstInputAddon = (
     <>
-      <Image src={SOLIcon} /> <span>SOL</span>
+      <Image src={SOLIcon} alt={"erc20 icon"}/> <span>SOL</span>
     </>
   ),
   secondInputAddon = <> USD </>
