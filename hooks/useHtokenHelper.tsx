@@ -1,11 +1,10 @@
 import { basePath, chain } from "../constants/service";
 import Moralis from "moralis-v1";
-import { fromWei, Unit } from "web3-utils";
 import MoralisType from "moralis-v1";
+import { fromWei, Unit } from "web3-utils";
 import { useQuery } from "react-query";
 import { queryKeys } from "../helpers/queryHelper";
 import { defaultCacheStaleTime } from "../constants/constant";
-import { BN } from "bn.js";
 
 export async function getSupplyBalance(htokenHelperContractAddress: string, HERC20ContractAddress: string, address: string, unit: Unit) {
   const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
@@ -125,6 +124,21 @@ export function useGetNFTPriceInUSD(
   return [amount || '0', isLoading || isFetching];
 }
 
+export async function getNFTPrice(htokenHelperContractAddress: string, HERC20ContractAddress: string) {
+  const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
+  const options = {
+    chain: chain,
+    address: htokenHelperContractAddress,
+    function_name: "getFloorPriceInUnderlying",
+    abi: ABI,
+    params: {_hToken: HERC20ContractAddress},
+  }
+
+  // @ts-ignore
+  const result: any = await Moralis.Web3API.native.runContractFunction(options)
+  return parseInt(result) / 10000.0
+}
+
 export async function getAssets(htokenHelperContractAddress: string, HERC20ContractAddress: string, unit: Unit) {
   const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
   const options = {
@@ -166,39 +180,41 @@ export async function getUnderlyingPriceInUSD(htokenHelperContractAddress: strin
   return erc20PriceInUSD
 }
 
-export async function getMaxBorrowableAmount(htokenHelperContractAddress: string, HERC20ContractAddress: string, hivemindContractAddress: string, unit: Unit) {
+export async function getMaxBorrowableAmount(htokenHelperContractAddress: string, HERC20ContractAddress: string, hivemindContractAddress: string) {
   const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
   const options = {
     chain: chain,
     address: htokenHelperContractAddress,
-    function_name: "getMaxBorrowableAmount",
+    function_name: "getMaxBorrowableAmountInUnderlying",
     abi: ABI,
     params: {_hToken: HERC20ContractAddress, _hivemind: hivemindContractAddress},
   }
 
   // @ts-ignore
   const result: any = await Moralis.Web3API.native.runContractFunction(options)
-  const maxBorrowableAmount = fromWei(result, unit)
-  return maxBorrowableAmount
+  return parseInt(result) / 10000.0
 }
 
 export function useGetMaxBorrowableAmount(
   htokenHelperContractAddress: string,
   HERC20ContractAddress: string,
-  hivemindContractAddress: string,
-  unit: Unit
-): [string, boolean] {
-  const onSuccess = (data: string) => {
+  hivemindContractAddress: string
+): [number, boolean] {
+  const onSuccess = (data: number) => {
     return data
   }
   const onError = (data: string) => {
-    return '0'
+    return 0
   }
 
   const {data: amount, isLoading, isFetching} = useQuery(
     queryKeys.maxBorrow(HERC20ContractAddress),
     () => {
-      return getMaxBorrowableAmount(htokenHelperContractAddress, HERC20ContractAddress, hivemindContractAddress, unit)
+      if (htokenHelperContractAddress != "" && HERC20ContractAddress != "" && hivemindContractAddress != "") {
+        return getMaxBorrowableAmount(htokenHelperContractAddress, HERC20ContractAddress, hivemindContractAddress)
+      } else {
+        return 0
+      }
     },
     {
       onSuccess,
@@ -208,73 +224,32 @@ export function useGetMaxBorrowableAmount(
     }
   )
 
-  return [amount || '0', isLoading || isFetching];
+  return [amount || 0, isLoading || isFetching];
 }
 
 export function useGetNFTPrice(
   htokenHelperContractAddress: string,
   HERC20ContractAddress: string,
-  unit: Unit
 ): [number, boolean] {
-  const onGetUnderlyingPriceSuccess = (data: string) => {
+  const onSuccess = (data: number) => {
     return data
   }
-  const onGetUnderlyingPriceError = (data: string) => {
-    return '0'
+  const onError = (data: string) => {
+    return 0
   }
 
-  const {
-    data: underlyingPriceInUSD,
-    isLoading: isLoadingGetUnderlyingPrice,
-    isFetching: isFetchingGetUnderlyingPrice
-  } = useQuery(
-    queryKeys.underlyingPriceInUSD(HERC20ContractAddress),
+  const {data: amount, isLoading, isFetching} = useQuery(
+    queryKeys.nftPrice(HERC20ContractAddress),
     () => {
-      if (htokenHelperContractAddress != "" && HERC20ContractAddress != "") {
-        return getUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
-      } else {
-        return ""
-      }
+      return getNFTPrice(htokenHelperContractAddress, HERC20ContractAddress)
     },
     {
-      onSuccess: onGetUnderlyingPriceSuccess,
-      onError: onGetUnderlyingPriceError,
+      onSuccess,
+      onError,
       retry: false,
       staleTime: defaultCacheStaleTime
     }
   )
 
-  const onGetNFTPriceSuccess = (data: string) => {
-    return data
-  }
-  const onGetNFTPriceError = (data: string) => {
-    return '0'
-  }
-
-  const {data: nftPriceInUSD, isLoading: isLoadingGetNFTPrice, isFetching: isFetchingNFTPrice} = useQuery(
-    queryKeys.nftPriceInUSD(HERC20ContractAddress),
-    () => {
-      if (htokenHelperContractAddress != "" && HERC20ContractAddress != "") {
-        return getNFTPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
-      } else {
-        return "0"
-
-      }
-    },
-    {
-      onSuccess: onGetNFTPriceSuccess,
-      onError: onGetNFTPriceError,
-      retry: false,
-      staleTime: defaultCacheStaleTime
-    }
-  )
-  if ((nftPriceInUSD || '0') != '0' && (underlyingPriceInUSD || '0') != '0') {
-    const underlyingPrice = parseFloat(underlyingPriceInUSD || '0')
-    const nftPrice = parseFloat(nftPriceInUSD || '0')
-    const result = nftPrice / underlyingPrice
-    return [result, isLoadingGetUnderlyingPrice || isFetchingGetUnderlyingPrice || isLoadingGetNFTPrice || isFetchingNFTPrice];
-  } else {
-    const result = 0
-    return [result, isLoadingGetUnderlyingPrice || isFetchingGetUnderlyingPrice || isLoadingGetNFTPrice || isFetchingNFTPrice];
-  }
+  return [amount || 0, isLoading || isFetching];
 }

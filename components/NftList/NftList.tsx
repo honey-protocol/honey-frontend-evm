@@ -9,10 +9,11 @@ type NftListProps = {
   data: NFT[];
   selectNFT: (nft: NFT) => void;
   nftPrice: number;
+  buttonText: string;
 };
 
 const NftList = (props: NftListProps) => {
-  const {data, selectNFT, nftPrice} = props;
+  const {data, selectNFT, nftPrice, buttonText} = props;
   const [selectedNFTId, setSelectedNFTId] = useState<string | null>(null);
 
   function handleClick(nft: NFT) {
@@ -40,7 +41,7 @@ const NftList = (props: NftListProps) => {
                   index !== data.length - 1 || item.id === selectedNFTId
                 }
                 text={`◎ ${nftPrice.toFixed(2)} value`}
-                buttonText={RoundHalfDown(nftPrice * MAX_LTV, 4).toString()}
+                buttonText={buttonText}
               />
             </div>
           )

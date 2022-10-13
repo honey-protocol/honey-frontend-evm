@@ -78,6 +78,19 @@
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "DENOMINATOR",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "contract PriceOracleI",
@@ -357,6 +370,25 @@
         "type": "address"
       }
     ],
+    "name": "getFloorPriceInUnderlying",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      }
+    ],
     "name": "getMarketOraclePrices",
     "outputs": [
       {
@@ -386,7 +418,31 @@
         "type": "address"
       }
     ],
-    "name": "getMaxBorrowableAmount",
+    "name": "getMaxBorrowableAmountInUSD",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "internalType": "contract HivemindI",
+        "name": "_hivemind",
+        "type": "address"
+      }
+    ],
+    "name": "getMaxBorrowableAmountInUnderlying",
     "outputs": [
       {
         "internalType": "uint256",
