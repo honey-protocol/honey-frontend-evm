@@ -81,7 +81,7 @@ export function useGetUnderlyingBalance(
   return [amount || '0', isLoading || isFetching];
 }
 
-
+//todo refactor the rest of service with 10^4 precision
 export async function getNFTPriceInUSD(htokenHelperContractAddress: string, HERC20ContractAddress: string, unit: Unit) {
   const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
   const options = {
@@ -178,6 +178,39 @@ export async function getUnderlyingPriceInUSD(htokenHelperContractAddress: strin
   const result: any = await Moralis.Web3API.native.runContractFunction(options)
   const erc20PriceInUSD = fromWei(result, unit)
   return erc20PriceInUSD
+}
+
+export function useGetUnderlyingPriceInUSD(
+  htokenHelperContractAddress: string,
+  HERC20ContractAddress: string,
+  unit: Unit,
+): [number, boolean] {
+  const onSuccess = (data: string) => {
+    return data
+  }
+  const onError = (data: string) => {
+    return "0"
+  }
+
+  const {data: amount, isLoading, isFetching} = useQuery(
+    queryKeys.underlyingPriceInUSD(HERC20ContractAddress),
+    () => {
+      if (htokenHelperContractAddress != "" && HERC20ContractAddress != "") {
+        return getUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
+      } else {
+        return "0"
+      }
+    },
+    {
+      onSuccess,
+      onError,
+      retry: false,
+      staleTime: defaultCacheStaleTime
+    }
+  )
+  const result = parseInt(amount || '0')
+
+  return [result, isLoading || isFetching];
 }
 
 export async function getMaxBorrowableAmount(htokenHelperContractAddress: string, HERC20ContractAddress: string, hivemindContractAddress: string) {

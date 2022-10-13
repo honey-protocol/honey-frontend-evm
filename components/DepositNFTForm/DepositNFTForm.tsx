@@ -18,8 +18,6 @@ import { useGetMaxBorrowableAmount, useGetNFTPrice, useGetNFTPriceInUSD } from "
 import { depositNFTCollateral } from "../../hooks/useHerc20";
 import { queryKeys } from "../../helpers/queryHelper";
 import getDepositNFTApproval from "../../hooks/useERC721";
-import { RoundHalfDown } from "../../helpers/utils";
-import { MAX_LTV } from "../../constants/loan";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -121,7 +119,6 @@ const DepositNFTForm = (props: DepositNFTProps) => {
       <>
         <div className={styles.newBorrowingTitle}>Choose NFT</div>
         <NftList
-          //todo use price from oracle
           nftPrice={nftValue}
           data={availableNFTs}
           selectNFT={selectNFT}
