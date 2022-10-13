@@ -109,89 +109,9 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "error",
-        "type": "string"
-      }
-    ],
-    "name": "Unexpected",
-    "type": "error"
-  },
-  {
     "inputs": [],
     "name": "WrongParams",
     "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint32",
-            "name": "id",
-            "type": "uint32"
-          },
-          {
-            "internalType": "uint8",
-            "name": "active",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "collateralId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "borrowAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "interestPerToken",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
-          }
-        ],
-        "indexed": false,
-        "internalType": "struct HToken.Coupon",
-        "name": "_activeCoupon",
-        "type": "tuple"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_debtPrior",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_interestAccumulated",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_interestPerTokenPrior",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_interestPerTokenCurrent",
-        "type": "uint256"
-      }
-    ],
-    "name": "AccrueCouponInterest",
-    "type": "event"
   },
   {
     "anonymous": false,
@@ -203,7 +123,7 @@
         "type": "uint256"
       }
     ],
-    "name": "AdminFeesWithdrew",
+    "name": "AdminFeesWithdrawn",
     "type": "event"
   },
   {
@@ -235,7 +155,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "_borrower",
         "type": "address"
@@ -266,15 +186,15 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "_initiator",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "_liqudidator",
+        "name": "_liquidator",
         "type": "address"
       },
       {
@@ -297,7 +217,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "_initiator",
         "type": "address"
@@ -316,7 +236,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "_initiator",
         "type": "address"
@@ -335,13 +255,82 @@
     "anonymous": false,
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "id",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "active",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "interestIndex",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct HTokenInternal.Coupon",
+        "name": "_activeCoupon",
+        "type": "tuple"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_debtPrior",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_interestAccumulated",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_interestIndexPrior",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_interestIndexCurrent",
+        "type": "uint256"
+      }
+    ],
+    "name": "CouponInterestAccrued",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
       }
     ],
-    "name": "HiveFeesWithdrew",
+    "name": "HiveFeesWithdrawn",
     "type": "event"
   },
   {
@@ -356,7 +345,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_interestPerToken",
+        "name": "_interestIndex",
         "type": "uint256"
       },
       {
@@ -375,48 +364,11 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "_liquidator",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_borrower",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_repayAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_hTokenCollateral",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_seizeTokens",
-        "type": "uint256"
-      }
-    ],
-    "name": "LiquidateBorrow",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
         "name": "_initiator",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "_borrower",
         "type": "address"
@@ -441,38 +393,19 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "_oldReceiver",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "_newReceiver",
         "type": "address"
       }
     ],
     "name": "NewContract",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "contract InterestRateModelI",
-        "name": "_oldInterestRateModel",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "contract InterestRateModelI",
-        "name": "_newInterestRateModel",
-        "type": "address"
-      }
-    ],
-    "name": "NewMarketInterestRateModel",
     "type": "event"
   },
   {
@@ -535,6 +468,19 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProtocolFeesWithdrawn",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "_initiator",
         "type": "address"
@@ -548,7 +494,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_redeemTokens",
+        "name": "_tokensWithdrawn",
         "type": "uint256"
       },
       {
@@ -568,6 +514,12 @@
         "indexed": true,
         "internalType": "address",
         "name": "_payer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_borrower",
         "type": "address"
       },
       {
@@ -602,9 +554,9 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "_benefactor",
+        "name": "_supplier",
         "type": "address"
       },
       {
@@ -629,7 +581,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "_admin",
+        "name": "_supplier",
         "type": "address"
       },
       {
@@ -820,7 +772,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "_initiator",
         "type": "address"
@@ -840,7 +792,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_totalHtokenSupply",
+        "name": "_totalhTokenSupply",
         "type": "uint256"
       }
     ],
@@ -851,7 +803,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "_initiator",
         "type": "address"
@@ -859,7 +811,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_amountWithdrawn",
+        "name": "_redeemAmount",
         "type": "uint256"
       },
       {
@@ -931,10 +883,49 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "LIQUIDATOR_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MARKET_ADMIN",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "SUPPLIER",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "_addAmount",
         "type": "uint256"
       }
     ],
@@ -1029,6 +1020,19 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "_withdrawProtocolFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "accrualBlockNumber",
     "outputs": [
@@ -1045,6 +1049,25 @@
     "inputs": [],
     "name": "accrueInterest",
     "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_collateralId",
+        "type": "uint256"
+      }
+    ],
+    "name": "accrueInterestToCollateral",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -1218,6 +1241,11 @@
         "type": "uint8"
       },
       {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "collateralId",
         "type": "uint256"
@@ -1229,13 +1257,8 @@
       },
       {
         "internalType": "uint256",
-        "name": "interestPerToken",
+        "name": "interestIndex",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1327,9 +1350,9 @@
     "name": "decimals",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "",
-        "type": "uint256"
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -1446,6 +1469,11 @@
             "type": "uint8"
           },
           {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
             "internalType": "uint256",
             "name": "collateralId",
             "type": "uint256"
@@ -1457,17 +1485,12 @@
           },
           {
             "internalType": "uint256",
-            "name": "interestPerToken",
+            "name": "interestIndex",
             "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
           }
         ],
-        "internalType": "struct HToken.Coupon[]",
-        "name": "depositedCoupons",
+        "internalType": "struct HTokenInternal.Coupon[]",
+        "name": "",
         "type": "tuple[]"
       }
     ],
@@ -1497,11 +1520,11 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_collateralId",
+        "name": "_couponId",
         "type": "uint256"
       }
     ],
-    "name": "getBorrowFromCoupon",
+    "name": "getBorrowByCouponId",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1567,6 +1590,11 @@
             "type": "uint8"
           },
           {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
             "internalType": "uint256",
             "name": "collateralId",
             "type": "uint256"
@@ -1578,16 +1606,11 @@
           },
           {
             "internalType": "uint256",
-            "name": "interestPerToken",
+            "name": "interestIndex",
             "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
           }
         ],
-        "internalType": "struct HToken.Coupon",
+        "internalType": "struct HTokenInternal.Coupon",
         "name": "",
         "type": "tuple"
       }
@@ -1618,7 +1641,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_account",
+        "name": "_user",
         "type": "address"
       }
     ],
@@ -1637,6 +1660,11 @@
             "type": "uint8"
           },
           {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
             "internalType": "uint256",
             "name": "collateralId",
             "type": "uint256"
@@ -1648,16 +1676,11 @@
           },
           {
             "internalType": "uint256",
-            "name": "interestPerToken",
+            "name": "interestIndex",
             "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
           }
         ],
-        "internalType": "struct HToken.Coupon[]",
+        "internalType": "struct HTokenInternal.Coupon[]",
         "name": "",
         "type": "tuple[]"
       }
@@ -1774,7 +1797,7 @@
   },
   {
     "inputs": [],
-    "name": "interestPerToken",
+    "name": "initialExchangeRateMantissa",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1787,7 +1810,20 @@
   },
   {
     "inputs": [],
-    "name": "interestPerTokenStored",
+    "name": "interestIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "interestIndexStored",
     "outputs": [
       {
         "internalType": "uint256",
@@ -2208,6 +2244,19 @@
   {
     "inputs": [],
     "name": "totalHiveFees",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalProtocolFees",
     "outputs": [
       {
         "internalType": "uint256",

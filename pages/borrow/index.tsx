@@ -508,8 +508,8 @@ const Markets: NextPage = () => {
               // we use our own custom expand column
               showExpandColumn: false,
               onExpand: (expanded, row) => {
-                setHERC20ContractAddr(row.key)
                 setWorkflow(LoanWorkFlowType.none)
+                setHERC20ContractAddr(row.key)
                 setExpandedRowKeys(expanded ? [row.key] : [])
               },
               expandedRowKeys,
@@ -554,8 +554,8 @@ const Markets: NextPage = () => {
               // we use our own custom expand column
               showExpandColumn: false,
               onExpand: (expanded, row) => {
-                setHERC20ContractAddr(row.key)
                 setWorkflow(LoanWorkFlowType.none)
+                setHERC20ContractAddr(row.key)
                 setExpandedRowKeys(expanded ? [row.key] : [])
               },
               expandedRowKeys,

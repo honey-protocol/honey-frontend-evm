@@ -11,6 +11,7 @@ import { LoanWorkFlowType } from "../../types/workflows";
 import useDisplayStore from "../../store/displayStore";
 import { useQueryClient } from "react-query";
 import DepositNFTForm from "../DepositNFTForm/DepositNFTForm";
+import BorrowForm from "../BorrowForm/BorrowForm";
 
 const {Text} = Typography;
 
@@ -70,11 +71,17 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
             btnTitle="CONNECT WALLET"
             onBtnClick={connect}
           />
-        ) :(workflow == LoanWorkFlowType.depositNFT)?(
+        ) : (workflow == LoanWorkFlowType.depositNFT) ? (
           <>
             <DepositNFTForm/>
           </>
-          ): (<></>)
+        ) : (workflow == LoanWorkFlowType.loanOrBorrow && activeTab == "borrow") ? (
+          <>
+            <BorrowForm
+              userAllowance={1000}
+              userDebt={60}
+            />
+          </>) : (<></>)
         }
       </HoneyTabs>
     </div>
