@@ -32,12 +32,6 @@ import { useGetBorrowAmount } from "../../hooks/useCoupon";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
-interface NFT {
-  name: string;
-  img: string;
-  mint: string;
-}
-
 const BorrowForm = (props: BorrowProps) => {
   const {
     userAllowance,
@@ -113,18 +107,18 @@ const BorrowForm = (props: BorrowProps) => {
     setSliderValue(usdValue / underlyingPrice);
   };
 
-  const handleSolInputChange = (solValue: number | undefined) => {
+  const handleUnderlyingInputChange = (UnderlyingValue: number | undefined) => {
     if (userAllowance == 0) return;
-    if (!solValue) {
+    if (!UnderlyingValue) {
       setValueUSD(0);
       setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
 
-    setValueUSD(solValue * underlyingPrice);
-    setValueUnderlying(solValue);
-    setSliderValue(solValue);
+    setValueUSD(UnderlyingValue * underlyingPrice);
+    setValueUnderlying(UnderlyingValue);
+    setSliderValue(UnderlyingValue);
   };
 
   const liqPercent =
@@ -252,7 +246,7 @@ const BorrowForm = (props: BorrowProps) => {
                   after the requested changes to the loan are approved.
                 </span>
               }
-              value={fp(( borrowedValue + newAdditionalDebt / nftPrice) * 100)}
+              value={fp((borrowedValue + newAdditionalDebt / nftPrice) * 100)}
               isDisabled={true}
             />
             <HoneySlider
@@ -412,7 +406,7 @@ const BorrowForm = (props: BorrowProps) => {
             firstInputValue={p(f(valueUSD))}
             secondInputValue={p(f(valueUnderlying))}
             onChangeFirstInput={handleUsdInputChange}
-            onChangeSecondInput={handleSolInputChange}
+            onChangeSecondInput={handleUnderlyingInputChange}
             maxValue={maxValue}
           />
         </div>
