@@ -157,7 +157,7 @@ export async function getBorrowFromCoupon(HERC20ContractAddress: string, NFTToke
   const options = {
     chain: chain,
     address: HERC20ContractAddress,
-    function_name: "getBorrowFromCoupon",
+    function_name: "getBorrowAmountForCollateral",
     abi: ABI,
     params: {_collateralId: NFTTokenId},
   }

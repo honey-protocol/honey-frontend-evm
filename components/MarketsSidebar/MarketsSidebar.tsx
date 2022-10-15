@@ -79,7 +79,6 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
           <>
             <BorrowForm
               userAllowance={1000}
-              userDebt={60}
             />
           </>) : (<></>)
         }
