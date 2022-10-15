@@ -68,7 +68,7 @@ const BorrowForm = (props: BorrowProps) => {
   const borrowedValue = parseFloat(borrowAmount)
   const loanToValue = borrowedValue / nftPrice
   const userAllowance = parseFloat(maxBorrowAmount) - borrowedValue;
-  const borrowFee = 0.015; // 1,5%
+  const borrowFee = 0.025; // 2,5%
 
   const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
   const newTotalDebt = newAdditionalDebt
@@ -89,6 +89,7 @@ const BorrowForm = (props: BorrowProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoadingNFT, isLoadingCollateralFactor, isLoadingNFTPrice, isLoadingUnderlyingPrice, isLoadingBorrowAmount, isLoadingMaxBorrow]);
 
+  /*   Begin hand slider function  */
   const handleSliderChange = (value: number) => {
     if (userAllowance <= 0) return;
     setSliderValue(value);
@@ -122,6 +123,7 @@ const BorrowForm = (props: BorrowProps) => {
     setValueUnderlying(UnderlyingValue);
     setSliderValue(UnderlyingValue);
   };
+  /*  end handle slider function   */
 
   const liqPercent =
     ((nftPrice - borrowedValue / collateralFactor) / nftPrice) * 100;
@@ -173,7 +175,7 @@ const BorrowForm = (props: BorrowProps) => {
                 borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
               }`}
               valueSize="normal"
-              isDisabled={borrowedValue == 0 ? true : false}
+              isDisabled={borrowedValue <= 0}
               title={
                 <span className={hAlign}>
                   Liquidation price <div className={questionIcon}/>
