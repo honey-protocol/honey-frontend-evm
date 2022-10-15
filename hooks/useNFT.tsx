@@ -8,7 +8,6 @@ import { getNFTApproved } from "./useERC721";
 import { useQueries, useQuery } from "react-query";
 import { queryKeys } from "../helpers/queryHelper";
 import { defaultCacheStaleTime } from "../constants/constant";
-import { getSupplyBalance } from "./useHtokenHelper";
 
 
 const defaultNFT: NFT = {
@@ -30,6 +29,41 @@ export async function getMetaDataFromNFTId(ERC721ContractAddress: string, NFTId:
   // @ts-ignore
   const result = await Moralis.Web3API.token.getTokenIdMetadata(options)
   return result
+}
+
+export function useGetMetaDataFromNFTId(ERC721ContractAddress: string, NFTId: string): [NFT, boolean] {
+  const onSuccess = (data: NFT) => {
+    return data
+  }
+  const onError = (data: string) => {
+    return defaultNFT
+  }
+  const {data: nft, isLoading, isFetching} = useQuery(
+    queryKeys.NFTDetail(ERC721ContractAddress, NFTId),
+    async () => {
+      if (ERC721ContractAddress != "" && NFTId != "") {
+        const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, NFTId)
+        const result: NFT = {
+          id: `${metaData.name}-${metaData.token_id}`, //id will be name-tokenId
+          name: metaData.name,
+          symbol: metaData.symbol,
+          image: getImageUrlFromMetaData(metaData.metadata || ""),
+          tokenId: metaData.token_id,
+          contractAddress: ERC721ContractAddress
+        }
+        return result
+      } else {
+        return defaultNFT
+      }
+    },
+    {
+      onSuccess,
+      onError,
+      retry: false,
+      staleTime: defaultCacheStaleTime
+    }
+  )
+  return [nft || defaultNFT, isLoading || isFetching];
 }
 
 export function useFetchNFTByUserCoupons(coupons: coupon[], ERC721ContractAddress: string): [Array<NFT>, boolean] {
