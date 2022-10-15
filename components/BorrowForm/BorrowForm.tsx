@@ -5,7 +5,6 @@ import { InputsBlock } from '../InputsBlock/InputsBlock';
 import { HoneySlider } from '../HoneySlider/HoneySlider';
 import * as styles from './BorrowForm.css';
 import { formatNumber } from '../../helpers/format';
-import honeyEyes from '/public/nfts/honeyEyes.png';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 import HexaBoxContainer from 'components/HexaBoxContainer/HexaBoxContainer';
 import NftList from '../NftList/NftList';
@@ -26,6 +25,7 @@ import { useQueryClient } from "react-query";
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import { LoanWorkFlowType } from "../../types/workflows";
+import { useGetCollateralFactor } from "../../hooks/useHivemind";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -49,7 +49,8 @@ const BorrowForm = (props: BorrowProps) => {
   const {
     nftContractAddress,
     htokenHelperContractAddress,
-    hivemindContractAddress
+    hivemindContractAddress,
+    unit,
   } = getContractsByHTokenAddr(HERC20ContractAddress)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
 
@@ -60,6 +61,8 @@ const BorrowForm = (props: BorrowProps) => {
   const [hasOpenPosition, setHasOpenPosition] = useState(false);
   const [sliderValue, setSliderValue] = useState(0);
   const {toast, ToastComponent} = useToast();
+
+  const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(hivemindContractAddress, HERC20ContractAddress, unit)
 
   // Only for test purposes
   // const isNftSelected = true;

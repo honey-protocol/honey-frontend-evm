@@ -53,3 +53,45 @@ export function useGetMaxBorrowAmountFromNFT(hivemindContractAddress: string, HE
   )
   return [amount || '0', isLoading || isFetching];
 }
+
+export async function getCollateralFactor(hivemindContractAddress: string, HERC20ContractAddress: string, unit: Unit) {
+  const ABI = await (await fetch(`${basePath}/abi/hivemind.json`)).json()
+  const options = {
+    chain: chain,
+    address: hivemindContractAddress,
+    function_name: "getCollateralFactor",
+    abi: ABI,
+    params: {
+      _hToken: HERC20ContractAddress,
+    },
+  }
+  // @ts-ignore
+  const result: any = await Moralis.Web3API.native.runContractFunction(options)
+  return parseFloat(fromWei(result, unit))
+}
+
+export function useGetCollateralFactor(hivemindContractAddress: string, HERC20ContractAddress: string, unit: Unit): [number, boolean] {
+  const onSuccess = (data: number) => {
+    return data
+  }
+  const onError = (data: string) => {
+    return '0'
+  }
+  const {data: amount, isLoading, isFetching} = useQuery(
+    queryKeys.collateralFactor(HERC20ContractAddress),
+    () => {
+      if (hivemindContractAddress != "" && HERC20ContractAddress != "") {
+        return getCollateralFactor(hivemindContractAddress, HERC20ContractAddress, unit)
+      } else {
+        return 0
+      }
+    },
+    {
+      onSuccess,
+      onError,
+      retry: false,
+      staleTime: defaultCacheStaleTime
+    }
+  )
+  return [amount || 0, isLoading || isFetching];
+}
