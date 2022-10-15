@@ -26,6 +26,7 @@ import useLoanFlowStore from "../../store/loanFlowStore";
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import { LoanWorkFlowType } from "../../types/workflows";
 import { useGetCollateralFactor } from "../../hooks/useHivemind";
+import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -46,6 +47,7 @@ const BorrowForm = (props: BorrowProps) => {
   const queryClient = useQueryClient();
   const walletPublicKey: string = currentUser?.get("ethAddress") || ""
   const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr)
+  const NFTId = useLoanFlowStore((state) => state.NFTId)
   const {
     nftContractAddress,
     htokenHelperContractAddress,
@@ -63,6 +65,7 @@ const BorrowForm = (props: BorrowProps) => {
   const {toast, ToastComponent} = useToast();
 
   const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(hivemindContractAddress, HERC20ContractAddress, unit)
+  const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId)
 
   // Only for test purposes
   // const isNftSelected = true;
@@ -163,13 +166,13 @@ const BorrowForm = (props: BorrowProps) => {
           <div className={styles.nftImage}>
             <HexaBoxContainer>
               <Image
-                src={selectedNft?.img || imagePlaceholder}
-                alt={`${selectedNft?.name}`}
+                src={nft.image || imagePlaceholder}
+                alt={nft.name}
                 layout="fill"
               />
             </HexaBoxContainer>
           </div>
-          <div className={styles.nftName}>{selectedNft?.name}</div>
+          <div className={styles.nftName}>{nft.name}</div>
         </div>
         <div className={styles.row}>
           <div className={styles.col}>
