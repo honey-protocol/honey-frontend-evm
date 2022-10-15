@@ -78,7 +78,6 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
         ) : (workflow == LoanWorkFlowType.loanOrBorrow && activeTab == "borrow") ? (
           <>
             <BorrowForm
-              userAllowance={1000}
             />
           </>) : (<></>)
         }
