@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { InfoBlock } from '../InfoBlock/InfoBlock';
 import { InputsBlock } from '../InputsBlock/InputsBlock';
@@ -20,8 +20,14 @@ import { hAlign } from 'styles/common.css';
 import { questionIcon } from 'styles/icons.css';
 import useToast from 'hooks/useToast';
 import cs from 'classnames';
+import useDisplayStore from "../../store/displayStore";
+import { UserContext } from "../../contexts/userContext";
+import { useQueryClient } from "react-query";
+import useLoanFlowStore from "../../store/loanFlowStore";
+import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
+import { LoanWorkFlowType } from "../../types/workflows";
 
-const { format: f, formatPercent: fp, formatERC20: fs, parse: p } = formatNumber;
+const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
 interface NFT {
   name: string;
@@ -35,17 +41,29 @@ const BorrowForm = (props: BorrowProps) => {
     userDebt,
   } = props;
 
+  const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
+  const {currentUser, setCurrentUser} = useContext(UserContext);
+  const queryClient = useQueryClient();
+  const walletPublicKey: string = currentUser?.get("ethAddress") || ""
+  const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr)
+  const {
+    nftContractAddress,
+    htokenHelperContractAddress,
+    hivemindContractAddress
+  } = getContractsByHTokenAddr(HERC20ContractAddress)
+  const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
+
   const [valueUSD, setValueUSD] = useState<number>(0);
   const [valueSOL, setValueSOL] = useState<number>(0);
   const [isNftSelected, setIsNftSelected] = useState(false);
   const [selectedNft, setSelectedNft] = useState<NFT | null>(null);
   const [hasOpenPosition, setHasOpenPosition] = useState(false);
   const [sliderValue, setSliderValue] = useState(0);
-  const { toast, ToastComponent } = useToast();
+  const {toast, ToastComponent} = useToast();
 
   // Only for test purposes
   // const isNftSelected = true;
-  const nftPrice =1000
+  const nftPrice = 1000
   const loanToValue = 0.7
 
   const borrowedValue = userDebt;
@@ -101,10 +119,10 @@ const BorrowForm = (props: BorrowProps) => {
   // set selection state and render (or not) detail nft
   const selectNFT = (name: string, img: string, mint?: any) => {
     if (hasOpenPosition == false) {
-      setSelectedNft({ name, img, mint });
+      setSelectedNft({name, img, mint});
     } else {
       setIsNftSelected(true);
-      setSelectedNft({ name, img, mint });
+      setSelectedNft({name, img, mint});
     }
   };
 
@@ -112,13 +130,13 @@ const BorrowForm = (props: BorrowProps) => {
   // if user has an open position, we need to be able to click on the position and borrow against it
   //
   //useEffect(() => {
-    //   if (openPositions?.length) {
-    //     const { name, image, mint } = openPositions[0];
-    //     setSelectedNft({ name, img: image, mint });
-    //     setIsNftSelected(true);
-    //     setHasOpenPosition(true);
-    //   }
-    // }, []);
+  //   if (openPositions?.length) {
+  //     const { name, image, mint } = openPositions[0];
+  //     setSelectedNft({ name, img: image, mint });
+  //     setIsNftSelected(true);
+  //     setHasOpenPosition(true);
+  //   }
+  // }, []);
   const handleDepositNFT = async () => {
     // if (selectedNft && selectedNft.mint.length < 1)
     //   return toastResponse('ERROR', 'Please select an NFT', 'ERROR');
@@ -128,8 +146,8 @@ const BorrowForm = (props: BorrowProps) => {
   };
 
 
-
-  useEffect(() => {}, [selectedNft]);
+  useEffect(() => {
+  }, [selectedNft]);
   const liqPercent =
     ((nftPrice - userDebt / liquidationThreshold) / nftPrice) * 100;
 
@@ -157,7 +175,7 @@ const BorrowForm = (props: BorrowProps) => {
               valueSize="big"
               title={
                 <span className={hAlign}>
-                  Estimated value <div className={questionIcon} />
+                  Estimated value <div className={questionIcon}/>
                 </span>
               }
               toolTipLabel={
@@ -184,7 +202,7 @@ const BorrowForm = (props: BorrowProps) => {
               isDisabled={userDebt == 0 ? true : false}
               title={
                 <span className={hAlign}>
-                  Liquidation price <div className={questionIcon} />
+                  Liquidation price <div className={questionIcon}/>
                 </span>
               }
               toolTipLabel={
@@ -222,7 +240,7 @@ const BorrowForm = (props: BorrowProps) => {
               }
               title={
                 <span className={hAlign}>
-                  Risk level <div className={questionIcon} />
+                  Risk level <div className={questionIcon}/>
                 </span>
               }
             />
@@ -240,7 +258,7 @@ const BorrowForm = (props: BorrowProps) => {
             <InfoBlock
               title={
                 <span className={hAlign}>
-                  New risk level <div className={questionIcon} />
+                  New risk level <div className={questionIcon}/>
                 </span>
               }
               toolTipLabel={
@@ -276,7 +294,7 @@ const BorrowForm = (props: BorrowProps) => {
             <InfoBlock
               title={
                 <span className={hAlign}>
-                  Debt <div className={questionIcon} />
+                  Debt <div className={questionIcon}/>
                 </span>
               }
               toolTipLabel={
@@ -299,7 +317,7 @@ const BorrowForm = (props: BorrowProps) => {
             <InfoBlock
               title={
                 <span className={hAlign}>
-                  New debt + fees <div className={questionIcon} />
+                  New debt + fees <div className={questionIcon}/>
                 </span>
               }
               toolTipLabel={
@@ -327,7 +345,7 @@ const BorrowForm = (props: BorrowProps) => {
               value={fs(userAllowance)}
               title={
                 <span className={hAlign}>
-                  Allowance <div className={questionIcon} />
+                  Allowance <div className={questionIcon}/>
                 </span>
               }
               toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
@@ -340,7 +358,7 @@ const BorrowForm = (props: BorrowProps) => {
               isDisabled
               title={
                 <span className={hAlign}>
-                  New allowance <div className={questionIcon} />
+                  New allowance <div className={questionIcon}/>
                 </span>
               }
               toolTipLabel={
@@ -360,8 +378,8 @@ const BorrowForm = (props: BorrowProps) => {
                 userAllowance - newAdditionalDebt < 0
                   ? 0
                   : !valueSOL
-                  ? userAllowance
-                  : userAllowance - newAdditionalDebt
+                    ? userAllowance
+                    : userAllowance - newAdditionalDebt
               )}
             />
           </div>
@@ -372,7 +390,7 @@ const BorrowForm = (props: BorrowProps) => {
               <InfoBlock
                 title={
                   <span className={hAlign}>
-                    Interest Rate <div className={questionIcon} />
+                    Interest Rate <div className={questionIcon}/>
                   </span>
                 }
                 toolTipLabel={
@@ -395,7 +413,7 @@ const BorrowForm = (props: BorrowProps) => {
                 isDisabled
                 title={
                   <span className={hAlign}>
-                    Borrow Fee <div className={questionIcon} />
+                    Borrow Fee <div className={questionIcon}/>
                   </span>
                 }
                 value={fs(valueSOL * borrowFee)}
@@ -435,14 +453,14 @@ const BorrowForm = (props: BorrowProps) => {
   };
 
   const handleCancel = () => {
-    // if (typeof hideMobileSidebar === 'function') {
-    //   hideMobileSidebar();
-    // }
+    setIsSidebarVisibleInMobile(false)
+    setWorkflow(LoanWorkFlowType.none)
+    document.body.classList.remove('disable-scroll');
   };
 
   const renderFooter = () => {
     return toast?.state ? (
-      <ToastComponent />
+      <ToastComponent/>
     ) : (
       <div className={styles.buttons}>
         <div className={styles.smallCol}>
@@ -455,7 +473,8 @@ const BorrowForm = (props: BorrowProps) => {
             variant="primary"
             disabled={isBorrowButtonDisabled()}
             isFluid
-            onClick={e => {}}
+            onClick={e => {
+            }}
           >
             Borrow
           </HoneyButton>

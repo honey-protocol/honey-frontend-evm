@@ -119,7 +119,6 @@ export const getUserCoupons = async ({HERC20ContractAddress, userAddress, unit}:
       index: index,
       couponId: id
     }
-    console.log(`user coupon ${JSON.stringify(userCoupon)}`)
     return userCoupon
   })
   return coupons.filter((coupon) => coupon.active)
