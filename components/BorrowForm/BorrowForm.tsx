@@ -7,10 +7,6 @@ import * as styles from './BorrowForm.css';
 import { formatNumber } from '../../helpers/format';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 import HexaBoxContainer from 'components/HexaBoxContainer/HexaBoxContainer';
-import NftList from '../NftList/NftList';
-import { NftCardProps } from '../NftCard/types';
-import { MAX_LTV } from '../../constants/loan';
-import { usdcAmount } from '../HoneyButton/HoneyButton.css';
 import { BorrowProps } from './types';
 import SidebarScroll from '../SidebarScroll/SidebarScroll';
 import imagePlaceholder from 'public/images/imagePlaceholder.png';
@@ -67,20 +63,21 @@ const BorrowForm = (props: BorrowProps) => {
     NFTId,
     unit
   );
-  // Only for test purposes
+
+  /* initial all financial value here */
   const borrowedValue = parseFloat(borrowAmount)
   const loanToValue = borrowedValue / nftPrice
-  const userAllowance = parseFloat(maxBorrowAmount);
+  const userAllowance = parseFloat(maxBorrowAmount) - borrowedValue;
   const borrowFee = 0.015; // 1,5%
 
   const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
   const newTotalDebt = newAdditionalDebt
     ? borrowedValue + newAdditionalDebt
     : borrowedValue;
+  /* end initial all  financial value here */
 
-  // Put your validators here
   const isBorrowButtonDisabled = () => {
-    return userAllowance == 0 ? true : false;
+    return userAllowance <= 0
   };
 
   useEffect(() => {
@@ -93,14 +90,14 @@ const BorrowForm = (props: BorrowProps) => {
   }, [isLoadingNFT, isLoadingCollateralFactor, isLoadingNFTPrice, isLoadingUnderlyingPrice, isLoadingBorrowAmount, isLoadingMaxBorrow]);
 
   const handleSliderChange = (value: number) => {
-    if (userAllowance == 0) return;
+    if (userAllowance <= 0) return;
     setSliderValue(value);
     setValueUSD(value * underlyingPrice);
     setValueUnderlying(value);
   };
 
   const handleUsdInputChange = (usdValue: number | undefined) => {
-    if (userAllowance == 0) return;
+    if (userAllowance <= 0) return;
     if (!usdValue) {
       setValueUSD(0);
       setValueUnderlying(0);
@@ -113,7 +110,7 @@ const BorrowForm = (props: BorrowProps) => {
   };
 
   const handleUnderlyingInputChange = (UnderlyingValue: number | undefined) => {
-    if (userAllowance == 0) return;
+    if (userAllowance <= 0) return;
     if (!UnderlyingValue) {
       setValueUSD(0);
       setValueUnderlying(0);
@@ -227,7 +224,7 @@ const BorrowForm = (props: BorrowProps) => {
               minAvailableValue={borrowedValue}
               maxSafePosition={0.3 - borrowedValue / 1000}
               dangerPosition={0.45 - borrowedValue / 1000}
-              maxAvailablePosition={MAX_LTV}
+              maxAvailablePosition={collateralFactor}
               isReadonly
             />
           </div>
@@ -260,7 +257,7 @@ const BorrowForm = (props: BorrowProps) => {
               minAvailableValue={borrowedValue}
               maxSafePosition={0.3 - borrowedValue / 1000}
               dangerPosition={0.45 - borrowedValue / 1000}
-              maxAvailablePosition={MAX_LTV}
+              maxAvailablePosition={collateralFactor}
               isReadonly
             />
           </div>
@@ -422,7 +419,7 @@ const BorrowForm = (props: BorrowProps) => {
           minAvailableValue={borrowedValue}
           maxSafePosition={0.3 - borrowedValue / 1000}
           dangerPosition={0.45 - borrowedValue / 1000}
-          maxAvailablePosition={MAX_LTV}
+          maxAvailablePosition={collateralFactor}
           onChange={handleSliderChange}
         />
       </>
