@@ -69,9 +69,8 @@ const BorrowForm = (props: BorrowProps) => {
   const [borrowAmount, isLoadingBorrowAmount] = useGetBorrowAmount(HERC20ContractAddress, NFTId, unit);
 
   // Only for test purposes
-  const loanToValue = 0.7
-
   const borrowedValue = parseFloat(borrowAmount)
+  const loanToValue = borrowedValue / nftPrice
   const maxValue = userAllowance;
   const borrowFee = 0.015; // 1,5%
 
@@ -253,7 +252,7 @@ const BorrowForm = (props: BorrowProps) => {
                   after the requested changes to the loan are approved.
                 </span>
               }
-              value={fp((loanToValue + newAdditionalDebt / nftPrice) * 100)}
+              value={fp(( borrowedValue + newAdditionalDebt / nftPrice) * 100)}
               isDisabled={true}
             />
             <HoneySlider
