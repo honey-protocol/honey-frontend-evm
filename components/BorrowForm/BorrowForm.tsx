@@ -27,6 +27,7 @@ import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import { LoanWorkFlowType } from "../../types/workflows";
 import { useGetCollateralFactor } from "../../hooks/useHivemind";
 import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
+import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtokenHelper";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -57,24 +58,24 @@ const BorrowForm = (props: BorrowProps) => {
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
 
   const [valueUSD, setValueUSD] = useState<number>(0);
-  const [valueSOL, setValueSOL] = useState<number>(0);
+  const [valueUnderlying, setValueUnderlying] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState(0);
   const {toast, ToastComponent} = useToast();
 
   const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(hivemindContractAddress, HERC20ContractAddress, unit)
   const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId)
+  const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(htokenHelperContractAddress, HERC20ContractAddress)
+  const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
 
   // Only for test purposes
-  const nftPrice = 1000
   const loanToValue = 0.7
 
   const borrowedValue = userDebt;
   const maxValue = userAllowance;
-  const solPrice = 32;
   const liquidationThreshold = 0.75;
   const borrowFee = 0.015; // 1,5%
 
-  const newAdditionalDebt = valueSOL * (1 + borrowFee);
+  const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
   const newTotalDebt = newAdditionalDebt
     ? userDebt + newAdditionalDebt
     : userDebt;
@@ -85,57 +86,47 @@ const BorrowForm = (props: BorrowProps) => {
   };
 
   useEffect(() => {
-    if (isLoadingNFT || isLoadingCollateralFactor) {
+    if (isLoadingNFT || isLoadingCollateralFactor || isLoadingNFTPrice || isLoadingUnderlyingPrice) {
       toast.processing()
     } else {
       toast.clear()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingNFT, isLoadingCollateralFactor]);
+  }, [isLoadingNFT, isLoadingCollateralFactor, isLoadingNFTPrice, isLoadingUnderlyingPrice]);
 
   const handleSliderChange = (value: number) => {
     if (userAllowance == 0) return;
     setSliderValue(value);
-    setValueUSD(value * solPrice);
-    setValueSOL(value);
+    setValueUSD(value * underlyingPrice);
+    setValueUnderlying(value);
   };
 
   const handleUsdInputChange = (usdValue: number | undefined) => {
     if (userAllowance == 0) return;
     if (!usdValue) {
       setValueUSD(0);
-      setValueSOL(0);
+      setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
     setValueUSD(usdValue);
-    setValueSOL(usdValue / solPrice);
-    setSliderValue(usdValue / solPrice);
+    setValueUnderlying(usdValue / underlyingPrice);
+    setSliderValue(usdValue / underlyingPrice);
   };
 
   const handleSolInputChange = (solValue: number | undefined) => {
     if (userAllowance == 0) return;
     if (!solValue) {
       setValueUSD(0);
-      setValueSOL(0);
+      setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
 
-    setValueUSD(solValue * solPrice);
-    setValueSOL(solValue);
+    setValueUSD(solValue * underlyingPrice);
+    setValueUnderlying(solValue);
     setSliderValue(solValue);
   };
-
-
-  const handleDepositNFT = async () => {
-    // if (selectedNft && selectedNft.mint.length < 1)
-    //   return toastResponse('ERROR', 'Please select an NFT', 'ERROR');
-    // if (selectedNft && selectedNft.mint.length > 1)
-    //   await executeDepositNFT(selectedNft.mint, toast);
-    handleSliderChange(0);
-  };
-
 
   const liqPercent =
     ((nftPrice - userDebt / liquidationThreshold) / nftPrice) * 100;
@@ -366,7 +357,7 @@ const BorrowForm = (props: BorrowProps) => {
               value={fs(
                 userAllowance - newAdditionalDebt < 0
                   ? 0
-                  : !valueSOL
+                  : !valueUnderlying
                     ? userAllowance
                     : userAllowance - newAdditionalDebt
               )}
@@ -405,7 +396,7 @@ const BorrowForm = (props: BorrowProps) => {
                     Borrow Fee <div className={questionIcon}/>
                   </span>
                 }
-                value={fs(valueSOL * borrowFee)}
+                value={fs(valueUnderlying * borrowFee)}
                 //TODO: add link to docs
                 toolTipLabel={
                   <span>
@@ -421,7 +412,7 @@ const BorrowForm = (props: BorrowProps) => {
           </div>
           <InputsBlock
             firstInputValue={p(f(valueUSD))}
-            secondInputValue={p(f(valueSOL))}
+            secondInputValue={p(f(valueUnderlying))}
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleSolInputChange}
             maxValue={maxValue}
