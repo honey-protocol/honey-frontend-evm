@@ -17,7 +17,7 @@ import useToast from 'hooks/useToast';
 import cs from 'classnames';
 import useDisplayStore from "../../store/displayStore";
 import { UserContext } from "../../contexts/userContext";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import { LoanWorkFlowType } from "../../types/workflows";
@@ -25,6 +25,8 @@ import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from "../../hook
 import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
 import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtokenHelper";
 import { useGetBorrowAmount } from "../../hooks/useCoupon";
+import { borrow } from "../../hooks/useHerc20";
+import { queryKeys } from "../../helpers/queryHelper";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -68,6 +70,7 @@ const BorrowForm = (props: BorrowProps) => {
   const borrowedValue = parseFloat(borrowAmount)
   const loanToValue = borrowedValue / nftPrice
   const userAllowance = parseFloat(maxBorrowAmount) - borrowedValue;
+  //todo use data from blockchain
   const borrowFee = 0.025; // 2,5%
 
   const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
@@ -124,6 +127,29 @@ const BorrowForm = (props: BorrowProps) => {
     setSliderValue(UnderlyingValue);
   };
   /*  end handle slider function   */
+  /*  begin handling borrow function */
+  const borrowMutation = useMutation(borrow)
+  const doBorrow = async () => {
+    try {
+      toast.processing()
+      await borrowMutation.mutateAsync({
+        HERC20ContractAddress,
+        NFTTokenId: nft.tokenId,
+        amount: valueUnderlying.toString(),
+        unit
+      })
+      console.log('borrow succeed');
+      await queryClient.invalidateQueries(queryKeys.maxBorrowFromNFT(HERC20ContractAddress, nftContractAddress, walletPublicKey, nft.tokenId))
+      await queryClient.invalidateQueries(queryKeys.borrowAmount(HERC20ContractAddress, nft.tokenId))
+      toast.success('Successful! Transaction complete');
+      handleSliderChange(0)
+    } catch (err: any) {
+      console.error(err);
+      toast.error('Sorry! Transaction failed');
+    }
+  };
+  /*  end handling borrow function */
+
 
   const liqPercent =
     ((nftPrice - borrowedValue / collateralFactor) / nftPrice) * 100;
@@ -449,8 +475,7 @@ const BorrowForm = (props: BorrowProps) => {
             variant="primary"
             disabled={isBorrowButtonDisabled()}
             isFluid
-            onClick={e => {
-            }}
+            onClick={doBorrow}
           >
             Borrow
           </HoneyButton>
