@@ -28,6 +28,7 @@ import { LoanWorkFlowType } from "../../types/workflows";
 import { useGetCollateralFactor } from "../../hooks/useHivemind";
 import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
 import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtokenHelper";
+import { useGetBorrowAmount } from "../../hooks/useCoupon";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -40,7 +41,6 @@ interface NFT {
 const BorrowForm = (props: BorrowProps) => {
   const {
     userAllowance,
-    userDebt,
   } = props;
 
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
@@ -66,19 +66,19 @@ const BorrowForm = (props: BorrowProps) => {
   const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId)
   const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(htokenHelperContractAddress, HERC20ContractAddress)
   const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
+  const [borrowAmount, isLoadingBorrowAmount] = useGetBorrowAmount(HERC20ContractAddress, NFTId, unit);
 
   // Only for test purposes
   const loanToValue = 0.7
 
-  const borrowedValue = userDebt;
+  const borrowedValue = parseFloat(borrowAmount)
   const maxValue = userAllowance;
-  const liquidationThreshold = 0.75;
   const borrowFee = 0.015; // 1,5%
 
   const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
   const newTotalDebt = newAdditionalDebt
-    ? userDebt + newAdditionalDebt
-    : userDebt;
+    ? borrowedValue + newAdditionalDebt
+    : borrowedValue;
 
   // Put your validators here
   const isBorrowButtonDisabled = () => {
@@ -86,13 +86,13 @@ const BorrowForm = (props: BorrowProps) => {
   };
 
   useEffect(() => {
-    if (isLoadingNFT || isLoadingCollateralFactor || isLoadingNFTPrice || isLoadingUnderlyingPrice) {
+    if (isLoadingNFT || isLoadingCollateralFactor || isLoadingNFTPrice || isLoadingUnderlyingPrice || isLoadingBorrowAmount) {
       toast.processing()
     } else {
       toast.clear()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingNFT, isLoadingCollateralFactor, isLoadingNFTPrice, isLoadingUnderlyingPrice]);
+  }, [isLoadingNFT, isLoadingCollateralFactor, isLoadingNFTPrice, isLoadingUnderlyingPrice, isLoadingBorrowAmount]);
 
   const handleSliderChange = (value: number) => {
     if (userAllowance == 0) return;
@@ -129,10 +129,9 @@ const BorrowForm = (props: BorrowProps) => {
   };
 
   const liqPercent =
-    ((nftPrice - userDebt / liquidationThreshold) / nftPrice) * 100;
+    ((nftPrice - borrowedValue / collateralFactor) / nftPrice) * 100;
 
   const renderContent = () => {
-
 
     return (
       <>
@@ -175,11 +174,11 @@ const BorrowForm = (props: BorrowProps) => {
           </div>
           <div className={styles.col}>
             <InfoBlock
-              value={`${fs(userDebt / liquidationThreshold)} ${
-                userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''
+              value={`${fs(borrowedValue / collateralFactor)} ${
+                borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
               }`}
               valueSize="normal"
-              isDisabled={userDebt == 0 ? true : false}
+              isDisabled={borrowedValue == 0 ? true : false}
               title={
                 <span className={hAlign}>
                   Liquidation price <div className={questionIcon}/>
@@ -290,7 +289,7 @@ const BorrowForm = (props: BorrowProps) => {
                   </a>
                 </span>
               }
-              value={fs(userDebt)}
+              value={fs(borrowedValue)}
             />
           </div>
           <div className={styles.col}>
