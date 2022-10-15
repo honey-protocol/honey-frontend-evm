@@ -25,7 +25,7 @@ import { useQueryClient } from "react-query";
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import { LoanWorkFlowType } from "../../types/workflows";
-import { useGetCollateralFactor } from "../../hooks/useHivemind";
+import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from "../../hooks/useHivemind";
 import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
 import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtokenHelper";
 import { useGetBorrowAmount } from "../../hooks/useCoupon";
@@ -33,9 +33,7 @@ import { useGetBorrowAmount } from "../../hooks/useCoupon";
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
 const BorrowForm = (props: BorrowProps) => {
-  const {
-    userAllowance,
-  } = props;
+  const {} = props;
 
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
   const {currentUser, setCurrentUser} = useContext(UserContext);
@@ -61,11 +59,18 @@ const BorrowForm = (props: BorrowProps) => {
   const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(htokenHelperContractAddress, HERC20ContractAddress)
   const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
   const [borrowAmount, isLoadingBorrowAmount] = useGetBorrowAmount(HERC20ContractAddress, NFTId, unit);
-
+  const [maxBorrowAmount, isLoadingMaxBorrow] = useGetMaxBorrowAmountFromNFT(
+    hivemindContractAddress,
+    HERC20ContractAddress,
+    nftContractAddress,
+    currentUser,
+    NFTId,
+    unit
+  );
   // Only for test purposes
   const borrowedValue = parseFloat(borrowAmount)
   const loanToValue = borrowedValue / nftPrice
-  const maxValue = userAllowance;
+  const userAllowance = parseFloat(maxBorrowAmount);
   const borrowFee = 0.015; // 1,5%
 
   const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
@@ -79,13 +84,13 @@ const BorrowForm = (props: BorrowProps) => {
   };
 
   useEffect(() => {
-    if (isLoadingNFT || isLoadingCollateralFactor || isLoadingNFTPrice || isLoadingUnderlyingPrice || isLoadingBorrowAmount) {
+    if (isLoadingNFT || isLoadingCollateralFactor || isLoadingNFTPrice || isLoadingUnderlyingPrice || isLoadingBorrowAmount || isLoadingMaxBorrow) {
       toast.processing()
     } else {
       toast.clear()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingNFT, isLoadingCollateralFactor, isLoadingNFTPrice, isLoadingUnderlyingPrice, isLoadingBorrowAmount]);
+  }, [isLoadingNFT, isLoadingCollateralFactor, isLoadingNFTPrice, isLoadingUnderlyingPrice, isLoadingBorrowAmount, isLoadingMaxBorrow]);
 
   const handleSliderChange = (value: number) => {
     if (userAllowance == 0) return;
@@ -407,7 +412,7 @@ const BorrowForm = (props: BorrowProps) => {
             secondInputValue={p(f(valueUnderlying))}
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleUnderlyingInputChange}
-            maxValue={maxValue}
+            maxValue={userAllowance}
           />
         </div>
 

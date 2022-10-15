@@ -176,6 +176,7 @@ export async function getUnderlyingPriceInUSD(htokenHelperContractAddress: strin
 
   // @ts-ignore
   const result: any = await Moralis.Web3API.native.runContractFunction(options)
+  //todo new contract would not need matissa conversion
   const erc20PriceInUSD = fromWei(result, unit)
   return erc20PriceInUSD
 }
