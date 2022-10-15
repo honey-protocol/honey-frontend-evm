@@ -58,9 +58,6 @@ const BorrowForm = (props: BorrowProps) => {
 
   const [valueUSD, setValueUSD] = useState<number>(0);
   const [valueSOL, setValueSOL] = useState<number>(0);
-  const [isNftSelected, setIsNftSelected] = useState(false);
-  const [selectedNft, setSelectedNft] = useState<NFT | null>(null);
-  const [hasOpenPosition, setHasOpenPosition] = useState(false);
   const [sliderValue, setSliderValue] = useState(0);
   const {toast, ToastComponent} = useToast();
 
@@ -68,7 +65,6 @@ const BorrowForm = (props: BorrowProps) => {
   const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId)
 
   // Only for test purposes
-  // const isNftSelected = true;
   const nftPrice = 1000
   const loanToValue = 0.7
 
@@ -87,6 +83,15 @@ const BorrowForm = (props: BorrowProps) => {
   const isBorrowButtonDisabled = () => {
     return userAllowance == 0 ? true : false;
   };
+
+  useEffect(() => {
+    if (isLoadingNFT || isLoadingCollateralFactor) {
+      toast.processing()
+    } else {
+      toast.clear()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoadingNFT, isLoadingCollateralFactor]);
 
   const handleSliderChange = (value: number) => {
     if (userAllowance == 0) return;
@@ -122,27 +127,7 @@ const BorrowForm = (props: BorrowProps) => {
     setSliderValue(solValue);
   };
 
-  // set selection state and render (or not) detail nft
-  const selectNFT = (name: string, img: string, mint?: any) => {
-    if (hasOpenPosition == false) {
-      setSelectedNft({name, img, mint});
-    } else {
-      setIsNftSelected(true);
-      setSelectedNft({name, img, mint});
-    }
-  };
 
-
-  // if user has an open position, we need to be able to click on the position and borrow against it
-  //
-  //useEffect(() => {
-  //   if (openPositions?.length) {
-  //     const { name, image, mint } = openPositions[0];
-  //     setSelectedNft({ name, img: image, mint });
-  //     setIsNftSelected(true);
-  //     setHasOpenPosition(true);
-  //   }
-  // }, []);
   const handleDepositNFT = async () => {
     // if (selectedNft && selectedNft.mint.length < 1)
     //   return toastResponse('ERROR', 'Please select an NFT', 'ERROR');
@@ -152,8 +137,6 @@ const BorrowForm = (props: BorrowProps) => {
   };
 
 
-  useEffect(() => {
-  }, [selectedNft]);
   const liqPercent =
     ((nftPrice - userDebt / liquidationThreshold) / nftPrice) * 100;
 
