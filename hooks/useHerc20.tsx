@@ -47,7 +47,6 @@ export const borrow = async ({
     abi: ABI,
     params: {_borrowAmount: safeToWei(amount, unit), _collateralId: NFTTokenId},
   }
-  console.log(`${HERC20ContractAddress}, ${NFTTokenId}, ${amount}`)
   const transaction = await Moralis.executeFunction(options)
   console.log(`transaction hash: ${transaction.hash}`);
 
