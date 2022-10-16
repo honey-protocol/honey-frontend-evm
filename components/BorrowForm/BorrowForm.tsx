@@ -27,6 +27,7 @@ import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtoke
 import { useGetBorrowAmount } from "../../hooks/useCoupon";
 import { borrow } from "../../hooks/useHerc20";
 import { queryKeys } from "../../helpers/queryHelper";
+import SOLIcon from "../InputsBlock/assets/SOL.svg";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -43,6 +44,8 @@ const BorrowForm = (props: BorrowProps) => {
     nftContractAddress,
     htokenHelperContractAddress,
     hivemindContractAddress,
+    erc20Icon,
+    erc20Name,
     unit,
   } = getContractsByHTokenAddr(HERC20ContractAddress)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
@@ -438,6 +441,11 @@ const BorrowForm = (props: BorrowProps) => {
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleUnderlyingInputChange}
             maxValue={userAllowance}
+            firstInputAddon={
+              <>
+                <Image src={erc20Icon} layout='fill' alt={"underlying icon"}/> <span>{erc20Name}</span>
+              </>
+            }
           />
         </div>
 

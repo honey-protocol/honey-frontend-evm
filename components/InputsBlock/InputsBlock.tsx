@@ -30,7 +30,6 @@ export const InputsBlock: FC<InputsBlockProps> = ({
       <Image src={EqualIcon} alt={"equal icon"}/>
     </div>
   ),
-  //todo change to generic erc20 icon
   firstInputAddon = (
     <>
       <Image src={SOLIcon} alt={"erc20 icon"}/> <span>SOL</span>
