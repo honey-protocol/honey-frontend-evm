@@ -18,6 +18,7 @@ export const queryKeys = {
   userTotalSupply: (walletPublicKey: string, HERC20ContractAddress: string) => ['user', 'totalSupply', walletPublicKey, HERC20ContractAddress] as const,
   userTotalPosition: (walletPublicKey: string, HERC20ContractAddress: string) => ['user', 'totalPosition', walletPublicKey, HERC20ContractAddress] as const,
   // user asset
+  userApproval: (walletPublicKey: string, ERC20ContractAddress: string, HERC20ContractAddress: string) => ['user', 'erc20', 'approval', walletPublicKey, ERC20ContractAddress, HERC20ContractAddress] as const,
   userBalance: (walletPublicKey: string, ERC20ContractAddress: string) => ['user', 'erc20', walletPublicKey, ERC20ContractAddress] as const,
   // liquidator related
   listCollateral: (HERC20ContractAddress: string) => ['collateral', 'list', HERC20ContractAddress] as const,
