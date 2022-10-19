@@ -12,6 +12,7 @@ import useDisplayStore from "../../store/displayStore";
 import { useQueryClient } from "react-query";
 import DepositNFTForm from "../DepositNFTForm/DepositNFTForm";
 import BorrowForm from "../BorrowForm/BorrowForm";
+import RepayForm from "../RepayForm/RepayForm";
 
 const {Text} = Typography;
 
@@ -78,6 +79,11 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
         ) : (workflow == LoanWorkFlowType.loanOrBorrow && activeTab == "borrow") ? (
           <>
             <BorrowForm
+            />
+          </>) : (workflow == LoanWorkFlowType.loanOrBorrow && activeTab == "repay") ? (
+          <>
+            <RepayForm
+              userDebt={0.1}
             />
           </>) : (<></>)
         }

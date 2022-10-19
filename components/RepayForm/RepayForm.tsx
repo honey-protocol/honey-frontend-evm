@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { InfoBlock } from '../InfoBlock/InfoBlock';
 import { InputsBlock } from '../InputsBlock/InputsBlock';
@@ -17,28 +17,46 @@ import { questionIcon } from 'styles/icons.css';
 import cs from 'classnames';
 import useToast from 'hooks/useToast';
 import { MAX_LTV } from 'constants/loan';
+import { LoanWorkFlowType } from "../../types/workflows";
+import useDisplayStore from "../../store/displayStore";
+import { UserContext } from "../../contexts/userContext";
+import { useQueryClient } from "react-query";
+import useLoanFlowStore from "../../store/loanFlowStore";
+import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
+import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
 
-const { format: f, formatPercent: fp, formatERC20: fs, parse: p } = formatNumber;
+const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
 const RepayForm = (props: RepayProps) => {
   const {
-    executeRepay,
-    openPositions,
-    nftPrice,
-    executeWithdrawNFT,
-    userAllowance,
-    userDebt,
-    userUSDCBalance,
-    loanToValue,
-    availableNFTs,
-    hideMobileSidebar,
-    changeTab
+    userDebt
   } = props;
+  const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
+  const {currentUser, setCurrentUser} = useContext(UserContext);
+  const queryClient = useQueryClient();
+  const walletPublicKey: string = currentUser?.get("ethAddress") || ""
+  const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr)
+  const NFTId = useLoanFlowStore((state) => state.NFTId)
+  const {
+    nftContractAddress,
+    htokenHelperContractAddress,
+    hivemindContractAddress,
+    erc20Icon,
+    erc20Name,
+    unit,
+  } = getContractsByHTokenAddr(HERC20ContractAddress)
+  const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
+  const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId)
 
   const [valueUSD, setValueUSD] = useState<number>();
   const [valueSOL, setValueSOL] = useState<number>();
   const [sliderValue, setSliderValue] = useState(0);
-  const { toast, ToastComponent } = useToast();
+  const {toast, ToastComponent} = useToast();
+
+  const loanToValue = 0.1
+  const userUSDCBalance = 0.5
+  const nftPrice = 1
+  const userAllowance = 0.6
 
   const maxValue = userDebt != 0 ? userDebt : userAllowance;
   const solPrice = 32;
@@ -86,26 +104,23 @@ const RepayForm = (props: RepayProps) => {
   };
 
   const onRepay = async (event: any) => {
-    if (userDebt == 0 && openPositions[0]) {
-      await executeWithdrawNFT(openPositions[0].mint, toast);
-      if (changeTab) {
-        changeTab('borrow');
-      }
-    } else {
-      await executeRepay(valueSOL || 0, toast);
-      handleSliderChange(0);
-    }
+    // if (userDebt == 0 && openPositions[0]) {
+    //   await executeWithdrawNFT(openPositions[0].mint, toast);
+    //   if (changeTab) {
+    //     changeTab('borrow');
+    //   }
+    // } else {
+    //   await executeRepay(valueSOL || 0, toast);
+    //   handleSliderChange(0);
+    // }
   };
 
-  useEffect(() => {}, [
-    openPositions,
-    userDebt,
-    userAllowance,
-    nftPrice,
-    loanToValue,
-    userUSDCBalance,
-    availableNFTs
-  ]);
+  const handleCancel = () => {
+    setIsSidebarVisibleInMobile(false)
+    setWorkflow(LoanWorkFlowType.none)
+    document.body.classList.remove('disable-scroll');
+  };
+
 
   const liqPercent = nftPrice
     ? ((nftPrice - userDebt / liquidationThreshold) / nftPrice) * 100
@@ -116,11 +131,11 @@ const RepayForm = (props: RepayProps) => {
       footer={
         <>
           {toast?.state ? (
-            <ToastComponent />
+            <ToastComponent/>
           ) : (
             <div className={styles.buttons}>
               <div className={styles.smallCol}>
-                <HoneyButton variant="secondary" onClick={hideMobileSidebar}>
+                <HoneyButton variant="secondary" onClick={handleCancel}>
                   Cancel
                 </HoneyButton>
               </div>
@@ -143,10 +158,10 @@ const RepayForm = (props: RepayProps) => {
         <div className={styles.nftInfo}>
           <div className={styles.nftImage}>
             <HexaBoxContainer>
-              <Image src={openPositions[0].image} layout="fill" />
+              <Image src={nft.image} layout="fill"/>
             </HexaBoxContainer>
           </div>
-          <div className={styles.nftName}>{openPositions[0].name}</div>
+          <div className={styles.nftName}>{nft.name}</div>
         </div>
         <div className={styles.row}>
           <div className={styles.col}>
@@ -155,7 +170,7 @@ const RepayForm = (props: RepayProps) => {
               valueSize="big"
               title={
                 <span className={hAlign}>
-                  Estimated value <div className={questionIcon} />
+                  Estimated value <div className={questionIcon}/>
                 </span>
               }
               toolTipLabel={
@@ -179,11 +194,11 @@ const RepayForm = (props: RepayProps) => {
                 userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''
               }`}
               valueSize="normal"
-              isDisabled={userDebt == 0 ? true : false}
+              isDisabled={userDebt == 0}
               title={
                 <span className={hAlign}>
                   Liquidation price
-                  <div className={questionIcon} />
+                  <div className={questionIcon}/>
                 </span>
               }
               toolTipLabel={
@@ -221,7 +236,7 @@ const RepayForm = (props: RepayProps) => {
               }
               title={
                 <span className={hAlign}>
-                  Risk level <div className={questionIcon} />
+                  Risk level <div className={questionIcon}/>
                 </span>
               }
             />
@@ -241,7 +256,7 @@ const RepayForm = (props: RepayProps) => {
               title={
                 <span className={hAlign}>
                   New risk level
-                  <div className={questionIcon} />
+                  <div className={questionIcon}/>
                 </span>
               }
               value={fp((newDebt / (nftPrice || 0)) * 100)}
@@ -279,7 +294,7 @@ const RepayForm = (props: RepayProps) => {
               title={
                 <span className={hAlign}>
                   Debt
-                  <div className={questionIcon} />
+                  <div className={questionIcon}/>
                 </span>
               }
               value={fs(userDebt)}
@@ -303,7 +318,7 @@ const RepayForm = (props: RepayProps) => {
               title={
                 <span className={hAlign}>
                   New debt
-                  <div className={questionIcon} />
+                  <div className={questionIcon}/>
                 </span>
               }
               value={fs(newDebt < 0 ? 0 : newDebt)}
@@ -331,7 +346,7 @@ const RepayForm = (props: RepayProps) => {
               value={fs(userAllowance)}
               title={
                 <span className={hAlign}>
-                  Allowance <div className={questionIcon} />
+                  Allowance <div className={questionIcon}/>
                 </span>
               }
               toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
@@ -345,7 +360,7 @@ const RepayForm = (props: RepayProps) => {
               title={
                 <span className={hAlign}>
                   New allowance
-                  <div className={questionIcon} />
+                  <div className={questionIcon}/>
                 </span>
               }
               value={fs(userAllowance + 0.9 * (valueSOL ?? 0))}
