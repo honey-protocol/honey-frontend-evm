@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { InfoBlock } from '../InfoBlock/InfoBlock';
 import { InputsBlock } from '../InputsBlock/InputsBlock';
@@ -126,34 +126,8 @@ const RepayForm = (props: RepayProps) => {
     ? ((nftPrice - userDebt / liquidationThreshold) / nftPrice) * 100
     : 0;
 
-  return (
-    <SidebarScroll
-      footer={
-        <>
-          {toast?.state ? (
-            <ToastComponent/>
-          ) : (
-            <div className={styles.buttons}>
-              <div className={styles.smallCol}>
-                <HoneyButton variant="secondary" onClick={handleCancel}>
-                  Cancel
-                </HoneyButton>
-              </div>
-              <div className={styles.bigCol}>
-                <HoneyButton
-                  variant="primary"
-                  disabled={isRepayButtonDisabled()}
-                  isFluid={true}
-                  onClick={onRepay}
-                >
-                  {userDebt > 0 ? 'Repay' : 'Claim NFT'}
-                </HoneyButton>
-              </div>
-            </div>
-          )}
-        </>
-      }
-    >
+  const renderContent = () => {
+    return (
       <div className={styles.repayForm}>
         <div className={styles.nftInfo}>
           <div className={styles.nftImage}>
@@ -412,6 +386,36 @@ const RepayForm = (props: RepayProps) => {
           onChange={handleSliderChange}
         />
       </div>
+    )
+  }
+
+  const renderFooter = () => {
+    return toast?.state ? (
+      <ToastComponent/>
+    ) : (
+      <div className={styles.buttons}>
+        <div className={styles.smallCol}>
+          <HoneyButton variant="secondary" onClick={handleCancel}>
+            Cancel
+          </HoneyButton>
+        </div>
+        <div className={styles.bigCol}>
+          <HoneyButton
+            variant="primary"
+            disabled={isRepayButtonDisabled()}
+            isFluid={true}
+            onClick={onRepay}
+          >
+            {userDebt > 0 ? 'Repay' : 'Claim NFT'}
+          </HoneyButton>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <SidebarScroll footer={renderFooter()}>
+      <div className={styles.repayForm}>{renderContent()}</div>
     </SidebarScroll>
   );
 };
