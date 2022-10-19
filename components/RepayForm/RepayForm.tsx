@@ -23,6 +23,8 @@ import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
 import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtokenHelper";
 import { useGetBorrowAmount } from "../../hooks/useCoupon";
+import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from "../../hooks/useHivemind";
+import { useGetUserBalance } from "../../hooks/useERC20";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -38,39 +40,49 @@ const RepayForm = (props: RepayProps) => {
     nftContractAddress,
     htokenHelperContractAddress,
     hivemindContractAddress,
+    ERC20ContractAddress,
     erc20Icon,
     erc20Name,
     unit,
   } = getContractsByHTokenAddr(HERC20ContractAddress)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
   const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId)
+  const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(hivemindContractAddress, HERC20ContractAddress, unit)
   const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(htokenHelperContractAddress, HERC20ContractAddress)
   const [borrowAmount, isLoadingBorrowAmount] = useGetBorrowAmount(HERC20ContractAddress, NFTId, unit);
+  const [maxBorrowAmount, isLoadingMaxBorrow] = useGetMaxBorrowAmountFromNFT(
+    hivemindContractAddress,
+    HERC20ContractAddress,
+    nftContractAddress,
+    currentUser,
+    NFTId,
+    unit
+  );
   const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
+  const [userBalance, isLoadingUserBalance] = useGetUserBalance(ERC20ContractAddress, currentUser, unit)
 
   const [valueUSD, setValueUSD] = useState<number>();
   const [valueUnderlying, setValueUnderlying] = useState<number>();
   const [sliderValue, setSliderValue] = useState(0);
   const {toast, ToastComponent} = useToast();
 
-  const userAllowance = 0.6
 
   const userDebt = parseFloat(borrowAmount);
+  const userAllowance = parseFloat(maxBorrowAmount) - userDebt;
   const loanToValue = userDebt / nftPrice
   const maxValue = userDebt != 0 ? userDebt : userAllowance;
-  const liquidationThreshold = 0.75;
-  const SOLBalance = 100;
+  const underlyingBalance = parseFloat(userBalance);
 
   const newDebt = userDebt - (valueUnderlying ? valueUnderlying : 0);
 
   useEffect(() => {
-    if (isLoadingNFT || isLoadingNFTPrice || isLoadingBorrowAmount || isLoadingUnderlyingPrice) {
+    if (isLoadingNFT || isLoadingNFTPrice || isLoadingBorrowAmount || isLoadingUnderlyingPrice || isLoadingCollateralFactor || isLoadingMaxBorrow || isLoadingUserBalance) {
       toast.processing()
     } else {
       toast.clear()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingNFT, isLoadingNFTPrice, isLoadingBorrowAmount, isLoadingUnderlyingPrice])
+  }, [isLoadingNFT, isLoadingNFTPrice, isLoadingBorrowAmount, isLoadingUnderlyingPrice, isLoadingCollateralFactor, isLoadingMaxBorrow, isLoadingUserBalance])
 
   // Put your validators here
   const isRepayButtonDisabled = () => {
@@ -95,17 +107,17 @@ const RepayForm = (props: RepayProps) => {
     setSliderValue(usdValue);
   };
 
-  const handleUnderlyingInputChange = (solValue: number | undefined) => {
-    if (!solValue) {
+  const handleUnderlyingInputChange = (underlyingValue: number | undefined) => {
+    if (!underlyingValue) {
       setValueUSD(0);
       setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
 
-    setValueUSD(solValue * underlyingPrice);
-    setValueUnderlying(solValue);
-    setSliderValue(solValue * underlyingPrice);
+    setValueUSD(underlyingValue * underlyingPrice);
+    setValueUnderlying(underlyingValue);
+    setSliderValue(underlyingValue * underlyingPrice);
   };
 
   const onRepay = async (event: any) => {
@@ -128,7 +140,7 @@ const RepayForm = (props: RepayProps) => {
 
 
   const liqPercent = nftPrice
-    ? ((nftPrice - userDebt / liquidationThreshold) / nftPrice) * 100
+    ? ((nftPrice - userDebt / collateralFactor) / nftPrice) * 100
     : 0;
 
   const renderContent = () => {
@@ -169,7 +181,7 @@ const RepayForm = (props: RepayProps) => {
           </div>
           <div className={styles.col}>
             <InfoBlock
-              value={`${fs(userDebt / liquidationThreshold)} ${
+              value={`${fs(userDebt / collateralFactor)} ${
                 userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''
               }`}
               valueSize="normal"
@@ -364,15 +376,15 @@ const RepayForm = (props: RepayProps) => {
           <div className={styles.row}>
             <div className={cs(styles.balance, styles.col)}>
               <InfoBlock
-                title={'Your SOL balance'}
-                value={fs(SOLBalance)}
+                title={'Your underlying balance'}
+                value={fs(underlyingBalance)}
               />
             </div>
             <div className={cs(styles.balance, styles.col)}>
               <InfoBlock
                 isDisabled
-                title={'NEW SOL balance'}
-                value={fs(SOLBalance - (valueUnderlying || 0))}
+                title={'NEW Underlying balance'}
+                value={fs(underlyingBalance - (valueUnderlying || 0))}
               />
             </div>
           </div>
