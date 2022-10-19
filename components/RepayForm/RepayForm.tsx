@@ -5,13 +5,10 @@ import { InputsBlock } from '../InputsBlock/InputsBlock';
 import { HoneySlider } from '../HoneySlider/HoneySlider';
 import * as styles from './RepayForm.css';
 import { formatNumber } from '../../helpers/format';
-import honeyEyes from '/public/nfts/honeyEyes.png';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 import HexaBoxContainer from '../HexaBoxContainer/HexaBoxContainer';
 import { RepayProps } from './types';
 import SidebarScroll from '../SidebarScroll/SidebarScroll';
-import { PublicKey } from '@solana/web3.js';
-import { isNil } from '../../helpers/utils';
 import { hAlign } from 'styles/common.css';
 import { questionIcon } from 'styles/icons.css';
 import cs from 'classnames';
@@ -128,7 +125,7 @@ const RepayForm = (props: RepayProps) => {
 
   const renderContent = () => {
     return (
-      <div className={styles.repayForm}>
+      <>
         <div className={styles.nftInfo}>
           <div className={styles.nftImage}>
             <HexaBoxContainer>
@@ -385,7 +382,7 @@ const RepayForm = (props: RepayProps) => {
           minAvailableValue={0}
           onChange={handleSliderChange}
         />
-      </div>
+      </>
     )
   }
 
