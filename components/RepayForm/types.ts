@@ -1,3 +1,1 @@
-export type RepayProps = {
-  userDebt: number;
-};
+export type RepayProps = {};

@@ -21,13 +21,13 @@ import { useQueryClient } from "react-query";
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
+import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtokenHelper";
+import { useGetBorrowAmount } from "../../hooks/useCoupon";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
 const RepayForm = (props: RepayProps) => {
-  const {
-    userDebt
-  } = props;
+  const {} = props;
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
   const {currentUser, setCurrentUser} = useContext(UserContext);
   const queryClient = useQueryClient();
@@ -44,25 +44,33 @@ const RepayForm = (props: RepayProps) => {
   } = getContractsByHTokenAddr(HERC20ContractAddress)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
   const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId)
+  const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(htokenHelperContractAddress, HERC20ContractAddress)
+  const [borrowAmount, isLoadingBorrowAmount] = useGetBorrowAmount(HERC20ContractAddress, NFTId, unit);
+  const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
 
   const [valueUSD, setValueUSD] = useState<number>();
   const [valueUnderlying, setValueUnderlying] = useState<number>();
   const [sliderValue, setSliderValue] = useState(0);
   const {toast, ToastComponent} = useToast();
 
-  const loanToValue = 0.1
-  const userUSDCBalance = 0.5
-  const nftPrice = 1
   const userAllowance = 0.6
 
+  const userDebt = parseFloat(borrowAmount);
+  const loanToValue = userDebt / nftPrice
   const maxValue = userDebt != 0 ? userDebt : userAllowance;
-  const solPrice = 32;
   const liquidationThreshold = 0.75;
   const SOLBalance = 100;
 
   const newDebt = userDebt - (valueUnderlying ? valueUnderlying : 0);
 
-  const borrowedValue = userDebt;
+  useEffect(() => {
+    if (isLoadingNFT || isLoadingNFTPrice || isLoadingBorrowAmount || isLoadingUnderlyingPrice) {
+      toast.processing()
+    } else {
+      toast.clear()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoadingNFT, isLoadingNFTPrice, isLoadingBorrowAmount, isLoadingUnderlyingPrice])
 
   // Put your validators here
   const isRepayButtonDisabled = () => {
@@ -71,7 +79,7 @@ const RepayForm = (props: RepayProps) => {
 
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
-    setValueUSD(value * solPrice);
+    setValueUSD(value * underlyingPrice);
     setValueUnderlying(value);
   };
 
@@ -83,7 +91,7 @@ const RepayForm = (props: RepayProps) => {
       return;
     }
     setValueUSD(usdValue);
-    setValueUnderlying(usdValue / solPrice);
+    setValueUnderlying(usdValue / underlyingPrice);
     setSliderValue(usdValue);
   };
 
@@ -95,9 +103,9 @@ const RepayForm = (props: RepayProps) => {
       return;
     }
 
-    setValueUSD(solValue * solPrice);
+    setValueUSD(solValue * underlyingPrice);
     setValueUnderlying(solValue);
-    setSliderValue(solValue * solPrice);
+    setSliderValue(solValue * underlyingPrice);
   };
 
   const onRepay = async (event: any) => {
@@ -215,9 +223,9 @@ const RepayForm = (props: RepayProps) => {
             <HoneySlider
               currentValue={0}
               maxValue={nftPrice || 0}
-              minAvailableValue={borrowedValue}
-              maxSafePosition={0.3 - borrowedValue / 1000}
-              dangerPosition={0.45 - borrowedValue / 1000}
+              minAvailableValue={userDebt}
+              maxSafePosition={0.3 - userDebt / 1000}
+              dangerPosition={0.45 - userDebt / 1000}
               maxAvailablePosition={MAX_LTV}
               isReadonly
             />
@@ -251,8 +259,8 @@ const RepayForm = (props: RepayProps) => {
               currentValue={0}
               maxValue={nftPrice || 0}
               minAvailableValue={newDebt}
-              maxSafePosition={0.3 - borrowedValue / 1000}
-              dangerPosition={0.45 - borrowedValue / 1000}
+              maxSafePosition={0.3 - userDebt / 1000}
+              dangerPosition={0.45 - userDebt / 1000}
               maxAvailablePosition={MAX_LTV}
               isReadonly
             />
