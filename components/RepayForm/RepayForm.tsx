@@ -46,7 +46,7 @@ const RepayForm = (props: RepayProps) => {
   const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId)
 
   const [valueUSD, setValueUSD] = useState<number>();
-  const [valueSOL, setValueSOL] = useState<number>();
+  const [valueUnderlying, setValueUnderlying] = useState<number>();
   const [sliderValue, setSliderValue] = useState(0);
   const {toast, ToastComponent} = useToast();
 
@@ -60,7 +60,7 @@ const RepayForm = (props: RepayProps) => {
   const liquidationThreshold = 0.75;
   const SOLBalance = 100;
 
-  const newDebt = userDebt - (valueSOL ? valueSOL : 0);
+  const newDebt = userDebt - (valueUnderlying ? valueUnderlying : 0);
 
   const borrowedValue = userDebt;
 
@@ -72,31 +72,31 @@ const RepayForm = (props: RepayProps) => {
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
     setValueUSD(value * solPrice);
-    setValueSOL(value);
+    setValueUnderlying(value);
   };
 
   const handleUsdInputChange = (usdValue: number | undefined) => {
     if (!usdValue) {
       setValueUSD(0);
-      setValueSOL(0);
+      setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
     setValueUSD(usdValue);
-    setValueSOL(usdValue / solPrice);
+    setValueUnderlying(usdValue / solPrice);
     setSliderValue(usdValue);
   };
 
-  const handleUsdcInputChange = (solValue: number | undefined) => {
+  const handleUnderlyingInputChange = (solValue: number | undefined) => {
     if (!solValue) {
       setValueUSD(0);
-      setValueSOL(0);
+      setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
 
     setValueUSD(solValue * solPrice);
-    setValueSOL(solValue);
+    setValueUnderlying(solValue);
     setSliderValue(solValue * solPrice);
   };
 
@@ -107,7 +107,7 @@ const RepayForm = (props: RepayProps) => {
     //     changeTab('borrow');
     //   }
     // } else {
-    //   await executeRepay(valueSOL || 0, toast);
+    //   await executeRepay(valueUnderlying || 0, toast);
     //   handleSliderChange(0);
     // }
   };
@@ -334,7 +334,7 @@ const RepayForm = (props: RepayProps) => {
                   <div className={questionIcon}/>
                 </span>
               }
-              value={fs(userAllowance + 0.9 * (valueSOL ?? 0))}
+              value={fs(userAllowance + 0.9 * (valueUnderlying ?? 0))}
               toolTipLabel={
                 <span>
                   Estimated{' '}
@@ -358,21 +358,21 @@ const RepayForm = (props: RepayProps) => {
               <InfoBlock
                 title={'Your SOL balance'}
                 value={fs(SOLBalance)}
-              ></InfoBlock>
+              />
             </div>
             <div className={cs(styles.balance, styles.col)}>
               <InfoBlock
                 isDisabled
                 title={'NEW SOL balance'}
-                value={fs(SOLBalance - (valueSOL || 0))}
-              ></InfoBlock>
+                value={fs(SOLBalance - (valueUnderlying || 0))}
+              />
             </div>
           </div>
           <InputsBlock
             firstInputValue={p(f(valueUSD))}
-            secondInputValue={p(f(valueSOL))}
+            secondInputValue={p(f(valueUnderlying))}
             onChangeFirstInput={handleUsdInputChange}
-            onChangeSecondInput={handleUsdcInputChange}
+            onChangeSecondInput={handleUnderlyingInputChange}
           />
         </div>
 
