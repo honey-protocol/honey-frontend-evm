@@ -78,13 +78,10 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
           </>
         ) : (workflow == LoanWorkFlowType.loanOrBorrow && activeTab == "borrow") ? (
           <>
-            <BorrowForm
-            />
+            <BorrowForm/>
           </>) : (workflow == LoanWorkFlowType.loanOrBorrow && activeTab == "repay") ? (
           <>
-            <RepayForm
-              userDebt={0.1}
-            />
+            <RepayForm/>
           </>) : (<></>)
         }
       </HoneyTabs>
