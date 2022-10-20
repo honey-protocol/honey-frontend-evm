@@ -24,7 +24,7 @@ import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
 import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtokenHelper";
 import { useGetBorrowAmount } from "../../hooks/useCoupon";
 import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from "../../hooks/useHivemind";
-import { useGetUserBalance } from "../../hooks/useERC20";
+import { useCheckUnlimitedApproval, useGetUserBalance } from "../../hooks/useERC20";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -60,6 +60,7 @@ const RepayForm = (props: RepayProps) => {
   );
   const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
   const [userBalance, isLoadingUserBalance] = useGetUserBalance(ERC20ContractAddress, currentUser, unit)
+  const [approval, isLoadingApproval] = useCheckUnlimitedApproval(ERC20ContractAddress, HERC20ContractAddress, currentUser)
 
   const [valueUSD, setValueUSD] = useState<number>();
   const [valueUnderlying, setValueUnderlying] = useState<number>();
@@ -149,7 +150,7 @@ const RepayForm = (props: RepayProps) => {
         <div className={styles.nftInfo}>
           <div className={styles.nftImage}>
             <HexaBoxContainer>
-              <Image src={nft.image} layout="fill"/>
+              <Image src={nft.image} alt={nft.name} layout="fill"/>
             </HexaBoxContainer>
           </div>
           <div className={styles.nftName}>{nft.name}</div>
@@ -393,6 +394,11 @@ const RepayForm = (props: RepayProps) => {
             secondInputValue={p(f(valueUnderlying))}
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleUnderlyingInputChange}
+            firstInputAddon={
+              <>
+                <Image src={erc20Icon} layout='fill' alt={"underlying icon"}/> <span>{erc20Name}</span>
+              </>
+            }
           />
         </div>
 

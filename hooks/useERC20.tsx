@@ -119,7 +119,6 @@ export function useCheckUnlimitedApproval(ERC20ContractAddress: string, HERC20Co
     }
   )
   const result = amount || '0'
-  console.log(`result => ${result}`)
   return [result === unlimited, isLoading || isFetching]
 }
 
