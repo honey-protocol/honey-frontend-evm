@@ -78,13 +78,14 @@ const RepayForm = (props: RepayProps) => {
   /* end initial all  financial value here */
 
   useEffect(() => {
-    if (isLoadingNFT || isLoadingNFTPrice || isLoadingBorrowAmount || isLoadingUnderlyingPrice || isLoadingCollateralFactor || isLoadingMaxBorrow || isLoadingUserBalance) {
+    if (isLoadingNFT || isLoadingNFTPrice || isLoadingBorrowAmount || isLoadingUnderlyingPrice || isLoadingCollateralFactor || isLoadingMaxBorrow || isLoadingUserBalance || isLoadingApproval) {
       toast.processing()
     } else {
+      getRepayState()
       toast.clear()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingNFT, isLoadingNFTPrice, isLoadingBorrowAmount, isLoadingUnderlyingPrice, isLoadingCollateralFactor, isLoadingMaxBorrow, isLoadingUserBalance])
+  }, [isLoadingNFT, isLoadingNFTPrice, isLoadingBorrowAmount, isLoadingUnderlyingPrice, isLoadingCollateralFactor, isLoadingMaxBorrow, isLoadingUserBalance, isLoadingApproval])
 
   // Put your validators here
   const isRepayButtonDisabled = () => {
@@ -130,6 +131,18 @@ const RepayForm = (props: RepayProps) => {
     else if (repayState == 'WAIT_FOR_WITHDRAW') return 'Claim NFT';
     else return 'Withdraw finished';
   };
+
+  const getRepayState = () => {
+    if (repayState == 'DONE') {
+      return
+    } else if (borrowAmount == "0") {
+      setRepayState('WAIT_FOR_WITHDRAW')
+    } else if (approval) {
+      setRepayState('WAIT_FOR_REPAY')
+    } else {
+      setRepayState('WAIT_FOR_APPROVAL')
+    }
+  }
 
   const onRepay = async (event: any) => {
     // if (userDebt == 0 && openPositions[0]) {
