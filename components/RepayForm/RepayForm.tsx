@@ -13,7 +13,6 @@ import { hAlign } from 'styles/common.css';
 import { questionIcon } from 'styles/icons.css';
 import cs from 'classnames';
 import useToast from 'hooks/useToast';
-import { MAX_LTV } from 'constants/loan';
 import { LoanWorkFlowType } from "../../types/workflows";
 import useDisplayStore from "../../store/displayStore";
 import { UserContext } from "../../contexts/userContext";
@@ -250,7 +249,7 @@ const RepayForm = (props: RepayProps) => {
               minAvailableValue={userDebt}
               maxSafePosition={0.3 - userDebt / 1000}
               dangerPosition={0.45 - userDebt / 1000}
-              maxAvailablePosition={MAX_LTV}
+              maxAvailablePosition={collateralFactor}
               isReadonly
             />
           </div>
@@ -285,7 +284,7 @@ const RepayForm = (props: RepayProps) => {
               minAvailableValue={newDebt}
               maxSafePosition={0.3 - userDebt / 1000}
               dangerPosition={0.45 - userDebt / 1000}
-              maxAvailablePosition={MAX_LTV}
+              maxAvailablePosition={collateralFactor}
               isReadonly
             />
           </div>
@@ -366,7 +365,7 @@ const RepayForm = (props: RepayProps) => {
                   <div className={questionIcon}/>
                 </span>
               }
-              value={fs(userAllowance + 0.9 * (valueUnderlying ?? 0))}
+              value={fs(userAllowance + (valueUnderlying ?? 0))}
               toolTipLabel={
                 <span>
                   Estimated{' '}
