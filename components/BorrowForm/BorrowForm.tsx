@@ -27,7 +27,6 @@ import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtoke
 import { useGetBorrowAmount } from "../../hooks/useCoupon";
 import { borrow } from "../../hooks/useHerc20";
 import { queryKeys } from "../../helpers/queryHelper";
-import SOLIcon from "../InputsBlock/assets/SOL.svg";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -95,7 +94,7 @@ const BorrowForm = (props: BorrowProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoadingNFT, isLoadingCollateralFactor, isLoadingNFTPrice, isLoadingUnderlyingPrice, isLoadingBorrowAmount, isLoadingMaxBorrow]);
 
-  /*   Begin hand slider function  */
+  /*   Begin handle slider function  */
   const handleSliderChange = (value: number) => {
     if (userAllowance <= 0) return;
     setSliderValue(value);

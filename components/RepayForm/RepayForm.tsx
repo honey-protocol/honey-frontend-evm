@@ -66,15 +66,17 @@ const RepayForm = (props: RepayProps) => {
   const [valueUnderlying, setValueUnderlying] = useState<number>();
   const [sliderValue, setSliderValue] = useState(0);
   const {toast, ToastComponent} = useToast();
+  const [repayState, setRepayState] = useState('WAIT_FOR_APPROVAL');
 
 
+  /* initial all financial value here */
   const userDebt = parseFloat(borrowAmount);
   const userAllowance = parseFloat(maxBorrowAmount) - userDebt;
   const loanToValue = userDebt / nftPrice
   const maxValue = userDebt != 0 ? userDebt : userAllowance;
   const underlyingBalance = parseFloat(userBalance);
-
   const newDebt = userDebt - (valueUnderlying ? valueUnderlying : 0);
+  /* end initial all  financial value here */
 
   useEffect(() => {
     if (isLoadingNFT || isLoadingNFTPrice || isLoadingBorrowAmount || isLoadingUnderlyingPrice || isLoadingCollateralFactor || isLoadingMaxBorrow || isLoadingUserBalance) {
@@ -87,9 +89,10 @@ const RepayForm = (props: RepayProps) => {
 
   // Put your validators here
   const isRepayButtonDisabled = () => {
-    return false;
+    return repayState == 'DONE'
   };
 
+  /*   Begin handle slider function  */
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
     setValueUSD(value * underlyingPrice);
@@ -119,6 +122,14 @@ const RepayForm = (props: RepayProps) => {
     setValueUSD(underlyingValue * underlyingPrice);
     setValueUnderlying(underlyingValue);
     setSliderValue(underlyingValue * underlyingPrice);
+  };
+  /*  end handle slider function   */
+
+  const buttonTitle = () => {
+    if (repayState == 'WAIT_FOR_APPROVAL') return 'Approve';
+    else if (repayState == 'WAIT_FOR_REPAY') return 'Repay';
+    else if (repayState == 'WAIT_FOR_WITHDRAW') return 'Claim NFT';
+    else return 'Withdraw finished';
   };
 
   const onRepay = async (event: any) => {
@@ -429,7 +440,9 @@ const RepayForm = (props: RepayProps) => {
             isFluid={true}
             onClick={onRepay}
           >
-            {userDebt > 0 ? 'Repay' : 'Claim NFT'}
+            <>
+              {buttonTitle()}
+            </>
           </HoneyButton>
         </div>
       </div>
