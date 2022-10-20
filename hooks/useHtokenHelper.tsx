@@ -164,7 +164,7 @@ export async function getAssets(htokenHelperContractAddress: string, HERC20Contr
   return resultAsset
 }
 
-export async function getUnderlyingPriceInUSD(htokenHelperContractAddress: string, HERC20ContractAddress: string, unit: Unit) {
+export async function getUnderlyingPriceInUSD(htokenHelperContractAddress: string, HERC20ContractAddress: string) {
   const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
   const options = {
     chain: chain,
@@ -176,30 +176,27 @@ export async function getUnderlyingPriceInUSD(htokenHelperContractAddress: strin
 
   // @ts-ignore
   const result: any = await Moralis.Web3API.native.runContractFunction(options)
-  //todo new contract would not need matissa conversion
-  const erc20PriceInUSD = fromWei(result, unit)
-  return erc20PriceInUSD
+  return parseInt(result) / 10000.0
 }
 
 export function useGetUnderlyingPriceInUSD(
   htokenHelperContractAddress: string,
   HERC20ContractAddress: string,
-  unit: Unit,
 ): [number, boolean] {
-  const onSuccess = (data: string) => {
+  const onSuccess = (data: number) => {
     return data
   }
   const onError = (data: string) => {
-    return "0"
+    return 0
   }
 
   const {data: amount, isLoading, isFetching} = useQuery(
     queryKeys.underlyingPriceInUSD(HERC20ContractAddress),
     () => {
       if (htokenHelperContractAddress != "" && HERC20ContractAddress != "") {
-        return getUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
+        return getUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress)
       } else {
-        return "0"
+        return 0
       }
     },
     {
@@ -209,7 +206,7 @@ export function useGetUnderlyingPriceInUSD(
       staleTime: defaultCacheStaleTime
     }
   )
-  const result = parseInt(amount || '0')
+  const result = amount || 0
 
   return [result, isLoading || isFetching];
 }

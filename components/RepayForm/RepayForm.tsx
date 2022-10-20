@@ -57,7 +57,7 @@ const RepayForm = (props: RepayProps) => {
     NFTId,
     unit
   );
-  const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress, unit)
+  const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress)
   const [userBalance, isLoadingUserBalance] = useGetUserBalance(ERC20ContractAddress, currentUser, unit)
   const [approval, isLoadingApproval] = useCheckUnlimitedApproval(ERC20ContractAddress, HERC20ContractAddress, currentUser)
 
