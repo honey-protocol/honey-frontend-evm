@@ -44,7 +44,15 @@ export async function getRepayLoanApproval(ERC20ContractAddress: string, HERC20C
 
 }
 
-export async function getUnlimitedApproval(ERC20ContractAddress: string, HERC20ContractAddress: string) {
+export interface getUnlimitedApprovalVariables {
+  ERC20ContractAddress: string
+  HERC20ContractAddress: string
+}
+
+export async function getUnlimitedApproval({
+                                             ERC20ContractAddress,
+                                             HERC20ContractAddress
+                                           }: getUnlimitedApprovalVariables) {
   const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json()
   const options = {
     chain: chain,
