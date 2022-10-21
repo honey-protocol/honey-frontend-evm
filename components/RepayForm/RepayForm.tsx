@@ -16,7 +16,7 @@ import useToast from 'hooks/useToast';
 import { LoanWorkFlowType } from "../../types/workflows";
 import useDisplayStore from "../../store/displayStore";
 import { UserContext } from "../../contexts/userContext";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
@@ -24,6 +24,8 @@ import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtoke
 import { useGetBorrowAmount } from "../../hooks/useCoupon";
 import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from "../../hooks/useHivemind";
 import { useCheckUnlimitedApproval, useGetUserBalance } from "../../hooks/useERC20";
+import { withdrawCollateral } from "../../hooks/useHerc20";
+import { queryKeys } from "../../helpers/queryHelper";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -85,7 +87,7 @@ const RepayForm = (props: RepayProps) => {
       toast.clear()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingNFT, isLoadingNFTPrice, isLoadingBorrowAmount, isLoadingUnderlyingPrice, isLoadingCollateralFactor, isLoadingMaxBorrow, isLoadingUserBalance, isLoadingApproval])
+  }, [isLoadingNFT, isLoadingNFTPrice, isLoadingBorrowAmount, isLoadingUnderlyingPrice, isLoadingCollateralFactor, isLoadingMaxBorrow, isLoadingUserBalance, isLoadingApproval, nft])
 
   // Put your validators here
   const isRepayButtonDisabled = () => {
@@ -125,6 +127,7 @@ const RepayForm = (props: RepayProps) => {
   };
   /*  end handle slider function   */
 
+  /*  begin handling borrow function */
   const buttonTitle = () => {
     if (repayState == 'WAIT_FOR_APPROVAL') return 'Approve';
     else if (repayState == 'WAIT_FOR_REPAY') return 'Repay';
@@ -144,17 +147,24 @@ const RepayForm = (props: RepayProps) => {
     }
   }
 
-  const onRepay = async (event: any) => {
-    // if (userDebt == 0 && openPositions[0]) {
-    //   await executeWithdrawNFT(openPositions[0].mint, toast);
-    //   if (changeTab) {
-    //     changeTab('borrow');
-    //   }
-    // } else {
-    //   await executeRepay(valueUnderlying || 0, toast);
-    //   handleSliderChange(0);
-    // }
+  const withdrawMutation = useMutation(withdrawCollateral)
+  const onClick = async () => {
+    try {
+      toast.processing()
+      if (repayState == 'WAIT_FOR_WITHDRAW') {
+        await withdrawMutation.mutateAsync({HERC20ContractAddress, NFTTokenId: nft.tokenId})
+        console.log('withdraw succeed');
+        setRepayState("DONE")
+        await queryClient.invalidateQueries(queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey))
+        await queryClient.invalidateQueries(queryKeys.listUserNFTs(walletPublicKey, nftContractAddress))
+      }
+      toast.success('Successful! Transaction complete');
+    } catch (err) {
+      console.error(err);
+      toast.error('Sorry! Transaction failed');
+    }
   };
+  /*  end handling borrow function */
 
   const handleCancel = () => {
     setIsSidebarVisibleInMobile(false)
@@ -450,7 +460,7 @@ const RepayForm = (props: RepayProps) => {
             variant="primary"
             disabled={isRepayButtonDisabled()}
             isFluid={true}
-            onClick={onRepay}
+            onClick={onClick}
           >
             <>
               {buttonTitle()}
