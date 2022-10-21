@@ -23,7 +23,7 @@ import { useGetMetaDataFromNFTId } from "../../hooks/useNFT";
 import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from "../../hooks/useHtokenHelper";
 import { useGetBorrowAmount } from "../../hooks/useCoupon";
 import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from "../../hooks/useHivemind";
-import { useCheckUnlimitedApproval, useGetUserBalance } from "../../hooks/useERC20";
+import { getUnlimitedApproval, useCheckUnlimitedApproval, useGetUserBalance } from "../../hooks/useERC20";
 import { withdrawCollateral } from "../../hooks/useHerc20";
 import { queryKeys } from "../../helpers/queryHelper";
 
@@ -148,6 +148,7 @@ const RepayForm = (props: RepayProps) => {
   }
 
   const withdrawMutation = useMutation(withdrawCollateral)
+  const getApprovalMutation = useMutation(getUnlimitedApproval)
   const onClick = async () => {
     try {
       toast.processing()
@@ -157,6 +158,10 @@ const RepayForm = (props: RepayProps) => {
         setRepayState("DONE")
         await queryClient.invalidateQueries(queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey))
         await queryClient.invalidateQueries(queryKeys.listUserNFTs(walletPublicKey, nftContractAddress))
+      } else if (repayState == 'WAIT_FOR_APPROVAL'){
+        await getApprovalMutation.mutateAsync({ERC20ContractAddress, HERC20ContractAddress})
+        console.log('Approval succeed')
+        await queryClient.invalidateQueries(queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress))
       }
       toast.success('Successful! Transaction complete');
     } catch (err) {
