@@ -20,7 +20,6 @@ import HoneyButton from '../../components/HoneyButton/HoneyButton';
 import { Key } from 'antd/lib/table/interface';
 import { formatNumber } from '../../helpers/format';
 import SearchInput from '../../components/SearchInput/SearchInput';
-import debounce from 'lodash/debounce';
 import { getColumnSortStatus } from '../../helpers/tableUtils';
 import { generateMockHistoryData } from '../../helpers/chartUtils';
 import { HoneyChart } from '../../components/HoneyChart/HoneyChart';
@@ -35,27 +34,17 @@ import { Typography } from 'antd';
 import { pageDescription, pageTitle } from 'styles/common.css';
 import HoneyTableNameCell from 'components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell';
 import HoneyTableRow from 'components/HoneyTable/HoneyTableRow/HoneyTableRow';
+import _ from "lodash";
 
 
-
-const { format: f, formatPercent: fp, formatERC20: fs } = formatNumber;
+const {format: f, formatPercent: fp, formatERC20: fs} = formatNumber;
 
 const Lend: NextPage = () => {
   const calculatedInterestRate = 0.1
 
-
-  const [marketPositions, setMarketPositions] = useState(0);
-  const [totalMarketDebt, setTotalMarketDebt] = useState(0);
-  const [nftPrice, setNftPrice] = useState(0);
-
-
   const isMock = true;
   const [tableData, setTableData] = useState<LendTableRow[]>([]);
-  const [tableDataFiltered, setTableDataFiltered] = useState<LendTableRow[]>(
-    []
-  );
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] =
     useState(false);
 
@@ -82,6 +71,11 @@ const Lend: NextPage = () => {
     return [];
   };
 
+  /*    Begin filter function       */
+  const [tableDataFiltered, setTableDataFiltered] = useState<LendTableRow[]>(
+    []
+  );
+  const [searchQuery, setSearchQuery] = useState('');
   const onSearch = (searchTerm: string): LendTableRow[] => {
     if (!searchTerm) {
       return [...tableData];
@@ -93,24 +87,24 @@ const Lend: NextPage = () => {
   };
 
   const debouncedSearch = useCallback(
-    debounce(searchQuery => {
-      setTableDataFiltered(onSearch(searchQuery));
+    _.debounce((criteria: string) => {
+      setTableDataFiltered(onSearch(criteria))
+      setSearchQuery(criteria);
     }, 500),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [tableData]
-  );
+  )
+
   const handleSearchInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
       setSearchQuery(value);
       debouncedSearch(value);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [tableData]
   );
-
-  // Apply search if initial lend list changed
-  useEffect(() => {
-    debouncedSearch(searchQuery);
-  }, [tableData]);
+  /*    End filter function            */
 
   useEffect(() => {
     const mockData: LendTableRow[] = [
@@ -176,7 +170,7 @@ const Lend: NextPage = () => {
               <div className={style.logoWrapper}>
                 <div className={style.collectionLogo}>
                   <HexaBoxContainer>
-                    <Image src={honeyGenesisBee} />
+                    <Image src={honeyGenesisBee}/>
                   </HexaBoxContainer>
                 </div>
               </div>
@@ -187,18 +181,18 @@ const Lend: NextPage = () => {
       },
       {
         width: columnsWidth[1],
-        title: ({ sortColumns }) => {
+        title: ({sortColumns}) => {
           const sortOrder = getColumnSortStatus(sortColumns, 'rate');
           return (
             <div
               className={
                 style.headerCell[
                   sortOrder === 'disabled' ? 'disabled' : 'active'
-                ]
+                  ]
               }
             >
               <span>Interest rate</span>{' '}
-              <div className={style.sortIcon[sortOrder]} />
+              <div className={style.sortIcon[sortOrder]}/>
             </div>
           );
         },
@@ -214,18 +208,18 @@ const Lend: NextPage = () => {
       },
       {
         width: columnsWidth[3],
-        title: ({ sortColumns }) => {
+        title: ({sortColumns}) => {
           const sortOrder = getColumnSortStatus(sortColumns, 'value');
           return (
             <div
               className={
                 style.headerCell[
                   sortOrder === 'disabled' ? 'disabled' : 'active'
-                ]
+                  ]
               }
             >
               <span>Supplied</span>{' '}
-              <div className={style.sortIcon[sortOrder]} />
+              <div className={style.sortIcon[sortOrder]}/>
             </div>
           );
         },
@@ -237,18 +231,18 @@ const Lend: NextPage = () => {
       },
       {
         width: columnsWidth[2],
-        title: ({ sortColumns }) => {
+        title: ({sortColumns}) => {
           const sortOrder = getColumnSortStatus(sortColumns, 'available');
           return (
             <div
               className={
                 style.headerCell[
                   sortOrder === 'disabled' ? 'disabled' : 'active'
-                ]
+                  ]
               }
             >
               <span>Available</span>{' '}
-              <div className={style.sortIcon[sortOrder]} />
+              <div className={style.sortIcon[sortOrder]}/>
             </div>
           );
         },
@@ -265,7 +259,7 @@ const Lend: NextPage = () => {
           return (
             <div className={style.buttonsCell}>
               <HoneyButton variant="text">
-                Manage <div className={style.arrowRightIcon} />
+                Manage <div className={style.arrowRightIcon}/>
               </HoneyButton>
             </div>
           );
@@ -290,7 +284,7 @@ const Lend: NextPage = () => {
                     <div className={style.logoWrapper}>
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
-                          <Image src={honeyGenesisBee} />
+                          <Image src={honeyGenesisBee}/>
                         </HexaBoxContainer>
                       </div>
                     </div>
@@ -302,7 +296,7 @@ const Lend: NextPage = () => {
                 rightSide={
                   <div className={style.buttonsCell}>
                     <HoneyButton variant="text">
-                      Manage <div className={style.arrowRightIcon} />
+                      Manage <div className={style.arrowRightIcon}/>
                     </HoneyButton>
                   </div>
                 }
@@ -342,7 +336,7 @@ const Lend: NextPage = () => {
                 href="https://buy.moonpay.com"
                 rel="noreferrer"
               >
-                <HoneyButton style={{ display: 'inline' }} variant="text">
+                <HoneyButton style={{display: 'inline'}} variant="text">
                   Need crypto?
                 </HoneyButton>
               </a>
@@ -389,10 +383,10 @@ const Lend: NextPage = () => {
             )}
           >
             <div className={style.mobileRow}>
-              <SearchForm />
+              <SearchForm/>
             </div>
             <div className={style.mobileRow}>
-              <MyCollectionsToggle />
+              <MyCollectionsToggle/>
             </div>
           </div>
           <div className={c(style.mobileTableHeader)}>
