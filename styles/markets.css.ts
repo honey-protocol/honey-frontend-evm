@@ -61,6 +61,9 @@ export const rateCellMobile = style([
   }
 ]);
 
+export const borrowRate = style({ color: vars.colors.red });
+export const lendRate = style({ color: vars.colors.green });
+
 export const buttonsCell = style({
   display: 'flex',
   justifyContent: 'center',
@@ -472,4 +475,21 @@ export const docIcon = style({
   width: 52,
   height: 52,
   background: 'url("/images/docIcon.svg") center center no-repeat'
+});
+
+export const tableCell = style([
+  typography.button,
+  {
+    width: '33.3%',
+    textAlign: 'center',
+    color: vars.colors.grayTransparent
+  }
+]);
+
+export const mobileSearchAndToggleContainer = style({
+  marginBottom: vars.space.medium,
+  borderRadius: '12px',
+  minHeight: '40px',
+  background: vars.colors.grayMiddle,
+  paddingRight: '10px'
 });
