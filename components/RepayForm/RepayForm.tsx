@@ -123,7 +123,7 @@ const RepayForm = (props: RepayProps) => {
 
     setValueUSD(underlyingValue * underlyingPrice);
     setValueUnderlying(underlyingValue);
-    setSliderValue(underlyingValue * underlyingPrice);
+    setSliderValue(underlyingValue);
   };
   /*  end handle slider function   */
 
@@ -158,7 +158,7 @@ const RepayForm = (props: RepayProps) => {
         setRepayState("DONE")
         await queryClient.invalidateQueries(queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey))
         await queryClient.invalidateQueries(queryKeys.listUserNFTs(walletPublicKey, nftContractAddress))
-      } else if (repayState == 'WAIT_FOR_APPROVAL'){
+      } else if (repayState == 'WAIT_FOR_APPROVAL') {
         await getApprovalMutation.mutateAsync({ERC20ContractAddress, HERC20ContractAddress})
         console.log('Approval succeed')
         await queryClient.invalidateQueries(queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress))
