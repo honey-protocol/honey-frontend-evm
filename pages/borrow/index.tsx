@@ -103,7 +103,6 @@ const Markets: NextPage = () => {
   );
   /*    End filter function            */
   /*    begin sidebar interaction function          */
-  const [isMobileSidebarVisible, setShowMobileSidebar] = useState(false);
   const initDepositNFTFlow = () => {
     setWorkflow(LoanWorkFlowType.depositNFT)
     setIsSidebarVisibleInMobile(true)
