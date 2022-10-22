@@ -26,6 +26,7 @@ import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from "../../hook
 import { getUnlimitedApproval, useCheckUnlimitedApproval, useGetUserBalance } from "../../hooks/useERC20";
 import { withdrawCollateral } from "../../hooks/useHerc20";
 import { queryKeys } from "../../helpers/queryHelper";
+import { repayBorrowHelper } from "../../helpers/repayHelper";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -147,6 +148,24 @@ const RepayForm = (props: RepayProps) => {
     }
   }
 
+  const repayLoan = async () => {
+    await repayBorrowHelper(
+      HERC20ContractAddress,
+      nft.tokenId,
+      userDebt,
+      sliderValue,
+      unit,
+      borrowAmount
+    ).then(() => {
+      console.log('Repay Loan');
+    })
+      .catch(function (err) {
+        console.error(err);
+        throw err
+      });
+  };
+
+  const repayLoanMutation = useMutation(repayLoan)
   const withdrawMutation = useMutation(withdrawCollateral)
   const getApprovalMutation = useMutation(getUnlimitedApproval)
   const onClick = async () => {
@@ -162,6 +181,12 @@ const RepayForm = (props: RepayProps) => {
         await getApprovalMutation.mutateAsync({ERC20ContractAddress, HERC20ContractAddress})
         console.log('Approval succeed')
         await queryClient.invalidateQueries(queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress))
+      } else if (repayState == 'WAIT_FOR_REPAY') {
+        await repayLoanMutation.mutateAsync()
+        console.log('Repay Succeed')
+        await queryClient.invalidateQueries(queryKeys.maxBorrowFromNFT(HERC20ContractAddress, nftContractAddress, walletPublicKey, nft.tokenId))
+        await queryClient.invalidateQueries(queryKeys.borrowAmount(HERC20ContractAddress, nft.tokenId))
+        await queryClient.invalidateQueries(queryKeys.userBalance(walletPublicKey, ERC20ContractAddress))
       }
       toast.success('Successful! Transaction complete');
     } catch (err) {
