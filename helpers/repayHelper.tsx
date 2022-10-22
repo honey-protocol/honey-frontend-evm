@@ -1,6 +1,5 @@
 // approval 105% amount
-import { getRepayLoanApproval } from "../hooks/useERC20";
-import { approvalMargin } from "../constants/constant";
+import { repayMargin } from "../constants/constant";
 import { repayBorrow } from "../hooks/useHerc20";
 import { toWei } from "web3-utils";
 
@@ -10,8 +9,9 @@ export async function repayBorrowHelper(HERC20ContractAddress: string, NFTTokenI
     await repayBorrow(HERC20ContractAddress, NFTTokenId, sliderValue.toFixed(18).toString(), unit)
     console.log(`repay loan for amount: ${sliderValue}`)
   } else {
-    await repayBorrow(HERC20ContractAddress, NFTTokenId, borrowAmount, unit)
-    console.log(`repay loan for amount: ${borrowAmount}`)
+    const newAmount = Number(borrowAmount) * repayMargin
+    await repayBorrow(HERC20ContractAddress, NFTTokenId, newAmount.toFixed(18).toString(), unit)
+    console.log(`repay loan for amount: ${newAmount}`)
   }
 }
 

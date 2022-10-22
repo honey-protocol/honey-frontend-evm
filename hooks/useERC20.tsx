@@ -127,7 +127,7 @@ export function useCheckUnlimitedApproval(ERC20ContractAddress: string, HERC20Co
     }
   )
   const result = amount || '0'
-  return [result === unlimited, isLoading || isFetching]
+  return [result.length >= unlimited.length - 1, isLoading || isFetching]
 }
 
 export async function getUserBalance(ERC20ContractAddress: string, userAddress: string, unit: Unit) {
