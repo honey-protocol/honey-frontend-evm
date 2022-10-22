@@ -156,14 +156,8 @@ const RepayForm = (props: RepayProps) => {
       sliderValue,
       unit,
       borrowAmount
-    ).then(() => {
-      console.log('Repay Loan');
-    })
-      .catch(function (err) {
-        console.error(err);
-        throw err
-      });
-  };
+    )
+  }
 
   const repayLoanMutation = useMutation(repayLoan)
   const withdrawMutation = useMutation(withdrawCollateral)
