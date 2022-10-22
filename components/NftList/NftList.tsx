@@ -1,5 +1,3 @@
-import { MAX_LTV } from 'constants/loan';
-import { RoundHalfDown } from 'helpers/utils';
 import React, { useState } from 'react';
 import NftCard from '../NftCard/NftCard';
 import * as style from './NftList.css';
