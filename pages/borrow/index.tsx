@@ -5,7 +5,7 @@ import { ColumnType } from 'antd/lib/table';
 import * as style from '../../styles/markets.css';
 import useLoanFlowStore from "../../store/loanFlowStore";
 import { HoneyTableColumnType, MarketTablePosition, MarketTableRow } from "../../types/markets";
-import {
+import React, {
   ChangeEvent,
   ReactChild,
   ReactFragment,
@@ -472,6 +472,13 @@ const Markets: NextPage = () => {
       </div>
     </div>
   );
+
+  const marketSidebar = () => (
+    <HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
+      {/* borrow repay module */}
+      <MarketsSidebar/>
+    </HoneySider>
+  );
   /* end table components              */
 
 
@@ -484,7 +491,7 @@ const Markets: NextPage = () => {
           {' '}
         </Typography.Text>
       </div>
-      <HoneyContent>
+      <HoneyContent sidebar={marketSidebar()}>
         <div className={style.mobileTableHeader}>
           <div className={style.mobileRow}>
             <SearchForm/>
@@ -602,13 +609,6 @@ const Markets: NextPage = () => {
           </div>
         ))}
       </HoneyContent>
-      <HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
-        {/* borrow repay module */}
-        <MarketsSidebar
-        />
-
-      </HoneySider>
-
     </LayoutRedesign>
   );
 };
