@@ -64,6 +64,7 @@ const Markets: NextPage = () => {
   useEffect(() => {
     setTableData(marketData);
     setTableDataFiltered(marketData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [positions, isLoadingPositions] = usePositions(HERC20ContractAddress, nftContractAddress, currentUser, unit)

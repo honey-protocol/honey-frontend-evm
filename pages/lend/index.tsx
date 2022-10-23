@@ -35,6 +35,7 @@ import { pageDescription, pageTitle } from 'styles/common.css';
 import HoneyTableNameCell from 'components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell';
 import HoneyTableRow from 'components/HoneyTable/HoneyTableRow/HoneyTableRow';
 import _ from "lodash";
+import useDisplayStore from "../../store/displayStore";
 
 
 const {format: f, formatPercent: fp, formatERC20: fs} = formatNumber;
@@ -48,17 +49,8 @@ const Lend: NextPage = () => {
   const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] =
     useState(false);
 
-  const [isMobileSidebarVisible, setShowMobileSidebar] = useState(false);
+  const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile)
 
-  const showMobileSidebar = () => {
-    setShowMobileSidebar(true);
-    document.body.classList.add('disable-scroll');
-  };
-
-  const hideMobileSidebar = () => {
-    setShowMobileSidebar(false);
-    document.body.classList.remove('disable-scroll');
-  };
 
   const getPositionData = () => {
     if (isMock) {
@@ -121,6 +113,7 @@ const Lend: NextPage = () => {
     ];
     setTableData(mockData);
     setTableDataFiltered(mockData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRowClick = (
@@ -128,7 +121,7 @@ const Lend: NextPage = () => {
     record: LendTableRow
   ) => {
     // setSelectedMarketId(record.id);
-    showMobileSidebar();
+    // showMobileSidebar();
   };
 
   const handleToggle = (checked: boolean) => {
@@ -170,7 +163,7 @@ const Lend: NextPage = () => {
               <div className={style.logoWrapper}>
                 <div className={style.collectionLogo}>
                   <HexaBoxContainer>
-                    <Image src={honeyGenesisBee}/>
+                    <Image src={honeyGenesisBee} alt={"collection logo"}/>
                   </HexaBoxContainer>
                 </div>
               </div>
@@ -266,6 +259,7 @@ const Lend: NextPage = () => {
         }
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [tableData, isMyCollectionsFilterEnabled, searchQuery]
   );
 
@@ -284,7 +278,7 @@ const Lend: NextPage = () => {
                     <div className={style.logoWrapper}>
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
-                          <Image src={honeyGenesisBee}/>
+                          <Image src={honeyGenesisBee} alt={"collection logo"}/>
                         </HexaBoxContainer>
                       </div>
                     </div>
@@ -314,11 +308,12 @@ const Lend: NextPage = () => {
         }
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isMyCollectionsFilterEnabled, tableData, searchQuery]
   );
 
   const lendSidebar = () => (
-    <HoneySider isMobileSidebarVisible={isMobileSidebarVisible}>
+    <HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
 
     </HoneySider>
   );
