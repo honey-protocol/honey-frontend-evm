@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import LayoutRedesign from '../../components/LayoutRedesign/LayoutRedesign';
-// import LendSidebar from '../../components/LendSidebar/LendSidebar';
+import LendSidebar from '../../components/LendSidebar/LendSidebar';
 import { LendTableRow } from '../../types/lend';
 import React, {
   ChangeEvent,
@@ -31,6 +31,7 @@ import useDisplayStore from "../../store/displayStore";
 import { useLend } from "../../hooks/useCollection";
 import { collections } from "../../constants/NFTCollections";
 import { UserContext } from "../../contexts/userContext";
+import MarketsSidebar from "../../components/MarketsSidebar/MarketsSidebar";
 
 const {format: f, formatPercent: fp, formatERC20: fs} = formatNumber;
 
@@ -301,7 +302,8 @@ const Lend: NextPage = () => {
 
   const lendSidebar = () => (
     <HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
-
+      {/* lend withdraw module */}
+      <MarketsSidebar/>
     </HoneySider>
   );
 
