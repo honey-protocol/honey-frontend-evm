@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import * as styles from './MarketsSidebar.css';
 import { MarketsSidebarProps } from './types';
-import { Typography } from 'antd';
 import HoneyTabs, { HoneyTabItem } from 'components/HoneyTabs/HoneyTabs';
 import EmptyStateDetails from 'components/EmptyStateDetails/EmptyStateDetails';
 import { UserContext } from "../../contexts/userContext";
@@ -14,13 +13,10 @@ import DepositNFTForm from "../DepositNFTForm/DepositNFTForm";
 import BorrowForm from "../BorrowForm/BorrowForm";
 import RepayForm from "../RepayForm/RepayForm";
 
-const {Text} = Typography;
-
 type Tab = 'borrow' | 'repay';
 
 const MarketsSidebar = (props: MarketsSidebarProps) => {
   const {
-    hideMobileSidebar,
   } = props;
   const workflow = useLoanFlowStore((state) => state.workflow)
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
@@ -47,10 +43,11 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
         await queryClient.invalidateQueries(['nft'])
         await queryClient.invalidateQueries(['coupons'])
         setCurrentUser(user);
-        setIsSidebarVisibleInMobile(false)
-        document.body.classList.remove('disable-scroll');
       } catch (e) {
         console.log(e)
+      } finally {
+        setIsSidebarVisibleInMobile(false)
+        document.body.classList.remove('disable-scroll');
       }
     }
   };
