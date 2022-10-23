@@ -31,7 +31,6 @@ import useDisplayStore from "../../store/displayStore";
 import { useLend } from "../../hooks/useCollection";
 import { collections } from "../../constants/NFTCollections";
 import { UserContext } from "../../contexts/userContext";
-import MarketsSidebar from "../../components/MarketsSidebar/MarketsSidebar";
 
 const {format: f, formatPercent: fp, formatERC20: fs} = formatNumber;
 
@@ -137,7 +136,7 @@ const Lend: NextPage = () => {
               <div className={style.logoWrapper}>
                 <div className={style.collectionLogo}>
                   <HexaBoxContainer>
-                    <Image src={row['icon']} alt={"nft icon"}/>
+                    <Image src={row['icon']} layout='fill' alt={"nft icon"}/>
                   </HexaBoxContainer>
                 </div>
               </div>
@@ -259,14 +258,14 @@ const Lend: NextPage = () => {
                     <div className={style.logoWrapper}>
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
-                          <Image src={row['icon']} alt={"collection logo"}/>
+                          <Image src={row['icon']} layout='fill' alt={"collection logo"}/>
                         </HexaBoxContainer>
                       </div>
                     </div>
                     <div className={style.logoWrapper}>
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
-                          <Image src={row['erc20Icon']} alt={"collection logo"}/>
+                          <Image src={row['erc20Icon']} layout='fill' alt={"collection logo"}/>
                         </HexaBoxContainer>
                       </div>
                     </div>
@@ -303,7 +302,7 @@ const Lend: NextPage = () => {
   const lendSidebar = () => (
     <HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
       {/* lend withdraw module */}
-      <MarketsSidebar/>
+      <LendSidebar/>
     </HoneySider>
   );
 
