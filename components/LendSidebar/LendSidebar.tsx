@@ -8,7 +8,7 @@ import EmptyStateDetails from '../EmptyStateDetails/EmptyStateDetails';
 import useDisplayStore from "../../store/displayStore";
 import { useQueryClient } from "react-query";
 import useLendFlowStore from "../../store/lendFlowStore";
-import { LendWorkFlowType } from "../../types/workflows";
+import { LendWorkFlowType, LoanWorkFlowType } from "../../types/workflows";
 import { UserContext } from "../../contexts/userContext";
 import { useMoralis } from "react-moralis";
 
@@ -22,7 +22,7 @@ const LendSidebar = (props: LendSidebarProps) => {
   /*  begin tab function            */
   const items: [HoneyTabItem, HoneyTabItem] = [
     {label: 'Deposit', key: 'deposit'},
-    {label: 'Withdraw', key: 'withdraw'}
+    {label: 'Withdraw', key: 'withdraw', disabled: Boolean(workflow != LendWorkFlowType.lendOrWithdraw)}
   ];
   const [activeTab, setActiveTab] = useState<Tab>('deposit');
 
