@@ -15,21 +15,13 @@ import c from 'classnames';
 import { ColumnType } from 'antd/lib/table';
 import HexaBoxContainer from '../../components/HexaBoxContainer/HexaBoxContainer';
 import Image from 'next/image';
-import honeyGenesisBee from '/public/images/imagePlaceholder.png';
 import HoneyButton from '../../components/HoneyButton/HoneyButton';
 import { Key } from 'antd/lib/table/interface';
 import { formatNumber } from '../../helpers/format';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import { getColumnSortStatus } from '../../helpers/tableUtils';
-import { generateMockHistoryData } from '../../helpers/chartUtils';
-import { HoneyChart } from '../../components/HoneyChart/HoneyChart';
 import HoneySider from '../../components/HoneySider/HoneySider';
 import HoneyContent from '../../components/HoneyContent/HoneyContent';
-
-import HoneyToggle from 'components/HoneyToggle/HoneyToggle';
-
-import { ToastProps } from 'hooks/useToast';
-import { RoundHalfDown } from 'helpers/utils';
 import { Typography } from 'antd';
 import { pageDescription, pageTitle } from 'styles/common.css';
 import HoneyTableNameCell from 'components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell';
@@ -39,6 +31,7 @@ import useDisplayStore from "../../store/displayStore";
 import { useLend } from "../../hooks/useCollection";
 import { collections } from "../../constants/NFTCollections";
 import { UserContext } from "../../contexts/userContext";
+import { MarketTableRow } from "../../types/markets";
 
 
 const {format: f, formatPercent: fp, formatERC20: fs} = formatNumber;
@@ -138,19 +131,26 @@ const Lend: NextPage = () => {
       {
         width: columnsWidth[0],
         title: SearchForm,
-        dataIndex: 'name',
+        dataIndex: ['name', 'icon', 'erc20Icon'],
         key: 'name',
-        render: (name: string) => {
+        render: (text: string, row: LendTableRow) => {
           return (
             <div className={style.nameCell}>
               <div className={style.logoWrapper}>
                 <div className={style.collectionLogo}>
                   <HexaBoxContainer>
-                    <Image src={honeyGenesisBee} alt={"collection logo"}/>
+                    <Image src={row['icon']} alt={"nft icon"}/>
                   </HexaBoxContainer>
                 </div>
               </div>
-              <div className={style.collectionName}>{name}</div>
+              <div className={style.logoWrapper}>
+                <div className={style.collectionLogo}>
+                  <HexaBoxContainer>
+                    <Image src={row['erc20Icon']} layout='fill' alt='nft icon'/>
+                  </HexaBoxContainer>
+                </div>
+              </div>
+              <div className={style.collectionName}>{row['name']}</div>
             </div>
           );
         }
@@ -250,9 +250,9 @@ const Lend: NextPage = () => {
     () => [
       {
         width: columnsWidth[0],
-        dataIndex: 'name',
+        dataIndex: ['name', 'icon', 'erc20Icon'],
         key: 'name',
-        render: (name: string, row: LendTableRow) => {
+        render: (text: string, row: LendTableRow) => {
           return (
             <>
               <HoneyTableNameCell
@@ -261,12 +261,19 @@ const Lend: NextPage = () => {
                     <div className={style.logoWrapper}>
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
-                          <Image src={honeyGenesisBee} alt={"collection logo"}/>
+                          <Image src={row['icon']} alt={"collection logo"}/>
+                        </HexaBoxContainer>
+                      </div>
+                    </div>
+                    <div className={style.logoWrapper}>
+                      <div className={style.collectionLogo}>
+                        <HexaBoxContainer>
+                          <Image src={row['erc20Icon']} alt={"collection logo"}/>
                         </HexaBoxContainer>
                       </div>
                     </div>
                     <div className={style.nameCellMobile}>
-                      <div className={style.collectionName}>{name}</div>
+                      <div className={style.collectionName}>{row['name']}</div>
                     </div>
                   </>
                 }
