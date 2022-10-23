@@ -31,14 +31,11 @@ import useDisplayStore from "../../store/displayStore";
 import { useLend } from "../../hooks/useCollection";
 import { collections } from "../../constants/NFTCollections";
 import { UserContext } from "../../contexts/userContext";
-import { MarketTableRow } from "../../types/markets";
-
 
 const {format: f, formatPercent: fp, formatERC20: fs} = formatNumber;
 
 const Lend: NextPage = () => {
   const calculatedInterestRate = 0.1
-  const isMock = true;
   const {currentUser, setCurrentUser} = useContext(UserContext);
   const [tableData, setTableData] = useState<LendTableRow[]>([]);
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([]);
