@@ -3,3 +3,8 @@ export enum LoanWorkFlowType {
   depositNFT,
   loanOrBorrow,
 }
+
+export enum LendWorkFlowType {
+  none,
+  lendOrWithdraw,
+}

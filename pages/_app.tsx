@@ -11,6 +11,7 @@ import { QueryClientProvider, QueryClient } from "react-query";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useLoanFlowStore from "../store/loanFlowStore";
+import useLendFlowStore from "../store/lendFlowStore";
 
 const queryClient = new QueryClient()
 
@@ -23,9 +24,11 @@ const storedAccent =
 function MyApp({Component, pageProps}: AppProps) {
   const router = useRouter()
   const resetLoanFlowStore = useLoanFlowStore((state) => state.reset)
+  const resetLendFlowStore = useLendFlowStore((state) => state.reset)
   useEffect(() => {
     const handleRouteChange = (url: any, {shallow}: any) => {
       resetLoanFlowStore()
+      resetLendFlowStore()
     }
     router.events.on('routeChangeStart', handleRouteChange)
     return () => {
