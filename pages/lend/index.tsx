@@ -4,7 +4,7 @@ import LayoutRedesign from '../../components/LayoutRedesign/LayoutRedesign';
 import { LendTableRow } from '../../types/lend';
 import React, {
   ChangeEvent,
-  useCallback,
+  useCallback, useContext,
   useEffect,
   useMemo,
   useState
@@ -36,14 +36,17 @@ import HoneyTableNameCell from 'components/HoneyTable/HoneyTableNameCell/HoneyTa
 import HoneyTableRow from 'components/HoneyTable/HoneyTableRow/HoneyTableRow';
 import _ from "lodash";
 import useDisplayStore from "../../store/displayStore";
+import { useLend } from "../../hooks/useCollection";
+import { collections } from "../../constants/NFTCollections";
+import { UserContext } from "../../contexts/userContext";
 
 
 const {format: f, formatPercent: fp, formatERC20: fs} = formatNumber;
 
 const Lend: NextPage = () => {
   const calculatedInterestRate = 0.1
-
   const isMock = true;
+  const {currentUser, setCurrentUser} = useContext(UserContext);
   const [tableData, setTableData] = useState<LendTableRow[]>([]);
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([]);
   const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] =
@@ -51,17 +54,15 @@ const Lend: NextPage = () => {
 
   const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile)
 
+  /*    Begin insert data into table */
+  const lendData = useLend(currentUser, collections)
+  useEffect(() => {
+    setTableData(lendData);
+    setTableDataFiltered(lendData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const getPositionData = () => {
-    if (isMock) {
-      const from = new Date()
-        .setFullYear(new Date().getFullYear() - 1)
-        .valueOf();
-      const to = new Date().valueOf();
-      return generateMockHistoryData(from, to);
-    }
-    return [];
-  };
+  /*   End insert data into table */
 
   /*    Begin filter function       */
   const [tableDataFiltered, setTableDataFiltered] = useState<LendTableRow[]>(
@@ -97,24 +98,6 @@ const Lend: NextPage = () => {
     [tableData]
   );
   /*    End filter function            */
-
-  useEffect(() => {
-    const mockData: LendTableRow[] = [
-      {
-        key: '0',
-        name: 'Honey Genesis Bee',
-        interest: 1,
-        // validated available to be totalMarketDeposits
-        available: 0,
-        // validated value to be totalMarkDeposits + totalMarketDebt
-        value: 0,
-        stats: getPositionData()
-      }
-    ];
-    setTableData(mockData);
-    setTableDataFiltered(mockData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleRowClick = (
     event: React.MouseEvent<Element, MouseEvent>,

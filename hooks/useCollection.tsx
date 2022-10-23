@@ -6,6 +6,9 @@ import { defaultCacheStaleTime } from "../constants/constant";
 import { getUserCoupons } from "./useHerc20";
 import { getImageUrlFromMetaData } from "../helpers/NFThelper";
 import { getMetaDataFromNFTId } from "./useNFT";
+import { LendTableRow } from "../types/lend";
+import { generateMockHistoryData } from "../helpers/chartUtils";
+import { TimestampPoint } from "../components/HoneyChart/types";
 
 const defaultPosition: MarketTablePosition = {
   name: "",
@@ -41,7 +44,7 @@ export function usePositions(HERC20ContractAddress: string, ERC721ContractAddres
     return [] as coupon[]
   }
   const walletPublicKey: string = user?.get("ethAddress") || ""
-  const {data: couponList, isLoading: isLoadingCoupons, isFetching: isFetchCoupons} = useQuery(
+  const {data: couponList, isLoading: isLoadingCoupons, isFetching: isFetchingCoupons} = useQuery(
     queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey),
     () => {
       if (walletPublicKey != "" && HERC20ContractAddress != "") {
@@ -95,6 +98,34 @@ export function usePositions(HERC20ContractAddress: string, ERC721ContractAddres
   const isFetchingPosition = results.some(query => query.isFetching)
   const positions = results.map(result => result.data || defaultPosition).filter(position => position.image != "")
 
-  return [positions, isLoadingPosition || isFetchingPosition || isLoadingCoupons || isFetchCoupons]
+  return [positions, isLoadingPosition || isFetchingPosition || isLoadingCoupons || isFetchingCoupons]
+
+}
+
+export function useLend(user: MoralisType.User | null, collections: collection[]): LendTableRow[] {
+  const result = collections.map(collection => {
+      const market: LendTableRow = {
+        key: collection.HERC20ContractAddress,
+        name: `${collection.name}/${collection.erc20Name}`,
+        icon: collection.icon,
+        erc20Icon: collection.erc20Icon,
+        interest: 1,
+        available: 0,
+        value: 0,
+        stats: []
+      }
+      return market
+    }
+  )
+  return result
+}
+
+//todo add graph later
+export function useLendPositions(): [Array<TimestampPoint>, boolean] {
+  const from = new Date()
+    .setFullYear(new Date().getFullYear() - 1)
+    .valueOf();
+  const to = new Date().valueOf();
+  return [generateMockHistoryData(from, to), false];
 
 }
