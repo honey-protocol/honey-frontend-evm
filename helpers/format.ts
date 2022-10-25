@@ -82,6 +82,7 @@ export const formatNumber = {
     return `$ ${formatNumber.format(val)}`;
   },
 
+  // TODO: decide currency
   /**
    * Converts 1000 into 1K, 1 000 000 to 1M, 1 000 000 000 to 1B, etc
    * @param value
