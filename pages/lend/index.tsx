@@ -31,6 +31,8 @@ import useDisplayStore from "../../store/displayStore";
 import { useLend } from "../../hooks/useCollection";
 import { collections } from "../../constants/NFTCollections";
 import { UserContext } from "../../contexts/userContext";
+import useLendFlowStore from "../../store/lendFlowStore";
+import { LendWorkFlowType } from "../../types/workflows";
 
 const {format: f, formatPercent: fp, formatERC20: fs} = formatNumber;
 
@@ -42,7 +44,10 @@ const Lend: NextPage = () => {
   const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] =
     useState(false);
 
+  const setWorkFlow = useLendFlowStore((state) => state.setWorkflow)
+  const setHERC20ContractAddr = useLendFlowStore((state) => state.setHERC20ContractAddr)
   const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile)
+  const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
 
   /*    Begin insert data into table */
   const lendData = useLend(currentUser, collections)
@@ -89,12 +94,14 @@ const Lend: NextPage = () => {
   );
   /*    End filter function            */
 
-  const handleRowClick = (
+  const initLendOrWithdrawFlow = (
     event: React.MouseEvent<Element, MouseEvent>,
     record: LendTableRow
   ) => {
-    // setSelectedMarketId(record.id);
-    // showMobileSidebar();
+    setHERC20ContractAddr(record.key)
+    setWorkFlow(LendWorkFlowType.lendOrWithdraw)
+    setIsSidebarVisibleInMobile(true)
+    document.body.classList.add('disable-scroll');
   };
 
   const handleToggle = (checked: boolean) => {
@@ -337,7 +344,7 @@ const Lend: NextPage = () => {
             className={style.table}
             onRow={(record, rowIndex) => {
               return {
-                onClick: event => handleRowClick(event, record)
+                onClick: event => initLendOrWithdrawFlow(event, record)
               };
             }}
             // TODO: uncomment when the chart has been replaced and implemented
@@ -387,7 +394,7 @@ const Lend: NextPage = () => {
             className={style.table}
             onRow={(record, rowIndex) => {
               return {
-                onClick: event => handleRowClick(event, record)
+                onClick: event => initLendOrWithdrawFlow(event, record)
               };
             }}
           />
