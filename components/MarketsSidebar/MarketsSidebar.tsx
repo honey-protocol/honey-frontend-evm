@@ -77,9 +77,15 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
             <BorrowForm/>
           </>) : (workflow == LoanWorkFlowType.loanOrBorrow && activeTab == "repay") ? (
           <>
-            <RepayForm/>
-          </>) : (<></>)
-        }
+            <RepayForm />
+          </>
+        ) : (
+          <EmptyStateDetails
+            icon={<div className={styles.boltIcon} />}
+            title="Manage panel"
+            description="First, choose a NFT collection"
+          />
+        )}
       </HoneyTabs>
     </div>
   );
