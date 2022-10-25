@@ -10,7 +10,8 @@ import cs from 'classnames';
 export const links = [
   {
     title: 'DASHBOARD',
-    href: '/dashboard'
+    href: '/dashboard',
+    disabled: true
   },
   {
     title: 'BORROW',
@@ -22,15 +23,18 @@ export const links = [
   },
   {
     title: 'LIQUIDATION',
-    href: '/liquidate'
+    href: '/liquidate',
+    disabled: true
   },
   {
     title: 'FARM',
-    href: '/farm'
+    href: '/farm',
+    disabled: true
   },
   {
     title: 'GOVERNANCE',
-    href: '/governance'
+    href: '/governance',
+    disabled: true
   },
   {
     title: 'DOCUMENTATION',
@@ -93,9 +97,15 @@ const HeaderDropdownMenu = () => {
             })}
             key={i}
           >
-            <Link href={link.href} passHref>
-              <HoneyButton variant="textSecondary">{link.title}</HoneyButton>
-            </Link>
+            {link.disabled ? (
+              <HoneyButton disabled variant="textSecondary">
+                {link.title}
+              </HoneyButton>
+            ) : (
+              <Link href={link.href} passHref>
+                <HoneyButton variant="textSecondary">{link.title}</HoneyButton>
+              </Link>
+            )}
           </li>
         ))}
       <li>
