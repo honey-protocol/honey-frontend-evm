@@ -543,6 +543,11 @@ const Markets: NextPage = () => {
                 );
               }
             }}
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: event => initDepositNFTFlow()
+              };
+            }}
           />
         </div>
 
