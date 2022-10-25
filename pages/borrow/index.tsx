@@ -192,12 +192,40 @@ const Markets: NextPage = () => {
           hidden: windowWidth < TABLET_BP,
           sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
           render: (rate: number) => {
-            return <div className={style.rateCell}>{fp(rate * 100)}</div>;
+            return (
+              <div className={classNames(style.rateCell, style.borrowRate)}>
+                {fp(rate * 100)}
+              </div>
+            );
+          }
+        },
+
+        {
+          width: columnsWidth[3],
+          title: ({ sortColumns }: ColumnTitleProps<MarketTableRow>) => {
+            const sortOrder = getColumnSortStatus(sortColumns, 'value');
+            return (
+              <div
+                className={
+                  style.headerCell[
+                    sortOrder === 'disabled' ? 'disabled' : 'active'
+                    ]
+                }
+              >
+                <span>SUPPLIED</span>
+                <div className={style.sortIcon[sortOrder]} />
+              </div>
+            );
+          },
+          dataIndex: 'value',
+          sorter: (a: MarketTableRow, b: MarketTableRow) => a.value - b.value,
+          render: (value: number) => {
+            return <div className={style.valueCell}>{fs(value)}</div>;
           }
         },
         {
           width: columnsWidth[2],
-          title: ({sortColumns}: ColumnTitleProps<MarketTableRow>) => {
+          title: ({ sortColumns }: ColumnTitleProps<MarketTableRow>) => {
             const sortOrder = getColumnSortStatus(sortColumns, 'available');
             return (
               <div
@@ -208,7 +236,7 @@ const Markets: NextPage = () => {
                 }
               >
                 <span>Available</span>{' '}
-                <div className={style.sortIcon[sortOrder]}/>
+                <div className={style.sortIcon[sortOrder]} />
               </div>
             );
           },
@@ -218,29 +246,6 @@ const Markets: NextPage = () => {
             a.available - b.available,
           render: (available: number) => {
             return <div className={style.availableCell}>{fs(available)}</div>;
-          }
-        },
-        {
-          width: columnsWidth[3],
-          title: ({sortColumns}: ColumnTitleProps<MarketTableRow>) => {
-            const sortOrder = getColumnSortStatus(sortColumns, 'value');
-            return (
-              <div
-                className={
-                  style.headerCell[
-                    sortOrder === 'disabled' ? 'disabled' : 'active'
-                    ]
-                }
-              >
-                <span>TVL</span>
-                <div className={style.sortIcon[sortOrder]}/>
-              </div>
-            );
-          },
-          dataIndex: 'value',
-          sorter: (a: MarketTableRow, b: MarketTableRow) => a.value - b.value,
-          render: (value: number) => {
-            return <div className={style.valueCell}>{fs(value)}</div>;
           }
         },
         {
