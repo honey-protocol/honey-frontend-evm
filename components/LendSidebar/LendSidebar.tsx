@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import * as styles from './LendSidebar.css';
 import { LendSidebarProps } from './types';
-// import DepositForm from '../DepositForm/DepositForm';
+import DepositForm from '../DepositForm/DepositForm';
 // import WithdrawForm from '../WithdrawForm/WithdrawForm';
 import HoneyTabs, { HoneyTabItem } from '../HoneyTabs/HoneyTabs';
 import EmptyStateDetails from '../EmptyStateDetails/EmptyStateDetails';
@@ -11,6 +11,7 @@ import useLendFlowStore from "../../store/lendFlowStore";
 import { LendWorkFlowType, LoanWorkFlowType } from "../../types/workflows";
 import { UserContext } from "../../contexts/userContext";
 import { useMoralis } from "react-moralis";
+import BorrowForm from "../BorrowForm/BorrowForm";
 
 type Tab = 'deposit' | 'withdraw';
 
@@ -67,7 +68,10 @@ const LendSidebar = (props: LendSidebarProps) => {
             btnTitle="CONNECT WALLET"
             onBtnClick={connect}
           />
-        ) : (<></>)}
+        ) :(workflow == LendWorkFlowType.lendOrWithdraw && activeTab == "deposit")?(
+          <>
+            <DepositForm/>
+          </>): (<></>)}
       </HoneyTabs>
     </div>
   );
