@@ -7,8 +7,8 @@ export const title = style({
   fontSize: '16px !important'
 });
 
-export const phantomIcon = style({
+export const metamaskIcon = style({
   width: 20,
   height: 20,
-  background: 'url("/images/phantomIcon.svg") center center no-repeat'
+  background: 'url("/images/metamaskIcon.svg") center center no-repeat'
 });
