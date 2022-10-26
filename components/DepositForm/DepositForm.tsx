@@ -25,6 +25,7 @@ import useLoanFlowStore from "../../store/loanFlowStore";
 import { LendWorkFlowType } from "../../types/workflows";
 import useLendFlowStore from "../../store/lendFlowStore";
 import { useGetUserBalance } from "../../hooks/useERC20";
+import { useGetTotalBorrow } from "../../hooks/useHerc20";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -50,6 +51,7 @@ const DepositForm = (props: DepositFormProps) => {
   const [userBalance, isLoadingUserBalance] = useGetUserBalance(ERC20ContractAddress, currentUser, unit)
   const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(htokenHelperContractAddress, HERC20ContractAddress, currentUser, unit)
   const [totalUnderlyingBalance, isLoadingTotalUnderlyingBalance] = useGetTotalUnderlyingBalance(htokenHelperContractAddress, HERC20ContractAddress, unit)
+  const [totalBorrow, isLoadingTotalBorrow] = useGetTotalBorrow(HERC20ContractAddress, unit)
 
   const [valueUSD, setValueUSD] = useState<number>(0);
   const [valueUnderlying, setValueUnderlying] = useState<number>(0);
@@ -57,19 +59,19 @@ const DepositForm = (props: DepositFormProps) => {
 
   const {toast, ToastComponent} = useToast();
   const totalUnderlyingInMarket = parseFloat(totalUnderlyingBalance)
-  const totalBorrow = 500
+  const totalBorrowAmount = parseFloat(totalBorrow)
   const userTotalDeposits = parseFloat(userUnderlyingBalance)
-  const utilizationRate = totalBorrow / (totalUnderlyingInMarket + totalBorrow)
+  const utilizationRate = totalBorrowAmount / (totalUnderlyingInMarket + totalBorrowAmount)
   const maxValue = parseFloat(userBalance);
 
   useEffect(() => {
-    if (isLoadingUnderlyingPrice || isLoadingUserBalance || isLoadingUserUnderlyingBalance || isLoadingTotalUnderlyingBalance) {
+    if (isLoadingUnderlyingPrice || isLoadingUserBalance || isLoadingUserUnderlyingBalance || isLoadingTotalUnderlyingBalance || isLoadingTotalBorrow) {
       toast.processing()
     } else {
       toast.clear()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingUnderlyingPrice, isLoadingUserBalance, isLoadingUserUnderlyingBalance, isLoadingTotalUnderlyingBalance])
+  }, [isLoadingUnderlyingPrice, isLoadingUserBalance, isLoadingUserUnderlyingBalance, isLoadingTotalUnderlyingBalance, isLoadingTotalBorrow])
 
   // Put your validators here
   const isDepositButtonDisabled = () => {
