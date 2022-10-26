@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 import { queryKeys } from "../helpers/queryHelper";
 import { defaultCacheStaleTime } from "../constants/constant";
 
-export async function getSupplyBalance(htokenHelperContractAddress: string, HERC20ContractAddress: string, address: string, unit: Unit) {
+export async function getUserSupplyBalance(htokenHelperContractAddress: string, HERC20ContractAddress: string, address: string, unit: Unit) {
   const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
   const options = {
     chain: chain,
@@ -49,7 +49,7 @@ export async function getAllCollateral(htokenHelperContractAddress: string, HERC
   return loans.filter((loan) => loan.active && loan.borrowAmount != "0")
 }
 
-export function useGetUnderlyingBalance(
+export function useGetUserUnderlyingBalance(
   htokenHelperContractAddress: string,
   HERC20ContractAddress: string,
   user: MoralisType.User | null,
@@ -66,7 +66,7 @@ export function useGetUnderlyingBalance(
     queryKeys.userTotalSupply(walletPublicKey, HERC20ContractAddress),
     () => {
       if (walletPublicKey != "" && htokenHelperContractAddress != "" && HERC20ContractAddress != "") {
-        return getSupplyBalance(htokenHelperContractAddress, HERC20ContractAddress, walletPublicKey, unit)
+        return getUserSupplyBalance(htokenHelperContractAddress, HERC20ContractAddress, walletPublicKey, unit)
       } else {
         return '0'
       }
