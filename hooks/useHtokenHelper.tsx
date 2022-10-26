@@ -22,6 +22,22 @@ export async function getUserSupplyBalance(htokenHelperContractAddress: string, 
   return supplyBalance
 }
 
+export async function getTotalSupplyBalance(htokenHelperContractAddress: string, HERC20ContractAddress: string, unit: Unit) {
+  const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
+  const options = {
+    chain: chain,
+    address: htokenHelperContractAddress,
+    function_name: "getAvailableUnderlying",
+    abi: ABI,
+    params: {_hToken: HERC20ContractAddress},
+  }
+
+  // @ts-ignore
+  const result: any = await Moralis.Web3API.native.runContractFunction(options)
+  const supplyBalance = fromWei(result, unit)
+  return supplyBalance
+}
+
 export async function getAllCollateral(htokenHelperContractAddress: string, HERC20ContractAddress: string, start: string, end: string, unit: Unit) {
   const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json()
   const options = {
@@ -47,6 +63,36 @@ export async function getAllCollateral(htokenHelperContractAddress: string, HERC
     return userLoan
   })
   return loans.filter((loan) => loan.active && loan.borrowAmount != "0")
+}
+
+export function useGetTotalUnderlyingBalance(
+  htokenHelperContractAddress: string,
+  HERC20ContractAddress: string,
+  unit: Unit
+): [string, boolean] {
+  const onSuccess = (data: string) => {
+    return data
+  }
+  const onError = (data: string) => {
+    return '0'
+  }
+  const {data: amount, isLoading, isFetching} = useQuery(
+    queryKeys.totalSupply(HERC20ContractAddress),
+    () => {
+      if (htokenHelperContractAddress != "" && HERC20ContractAddress != "") {
+        return getTotalSupplyBalance(htokenHelperContractAddress, HERC20ContractAddress, unit)
+      } else {
+        return '0'
+      }
+    },
+    {
+      onSuccess,
+      onError,
+      retry: false,
+      staleTime: defaultCacheStaleTime
+    }
+  )
+  return [amount || '0', isLoading || isFetching];
 }
 
 export function useGetUserUnderlyingBalance(

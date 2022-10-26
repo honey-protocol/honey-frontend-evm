@@ -13,7 +13,11 @@ import { questionIcon } from 'styles/icons.css';
 import { hAlign } from 'styles/common.css';
 import useToast from 'hooks/useToast';
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
-import { useGetUnderlyingPriceInUSD, useGetUserUnderlyingBalance } from "../../hooks/useHtokenHelper";
+import {
+  useGetTotalUnderlyingBalance,
+  useGetUnderlyingPriceInUSD,
+  useGetUserUnderlyingBalance
+} from "../../hooks/useHtokenHelper";
 import useDisplayStore from "../../store/displayStore";
 import { UserContext } from "../../contexts/userContext";
 import { useQueryClient } from "react-query";
@@ -45,33 +49,27 @@ const DepositForm = (props: DepositFormProps) => {
   const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress)
   const [userBalance, isLoadingUserBalance] = useGetUserBalance(ERC20ContractAddress, currentUser, unit)
   const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(htokenHelperContractAddress, HERC20ContractAddress, currentUser, unit)
+  const [totalUnderlyingBalance, isLoadingTotalUnderlyingBalance] = useGetTotalUnderlyingBalance(htokenHelperContractAddress, HERC20ContractAddress, unit)
 
   const [valueUSD, setValueUSD] = useState<number>(0);
   const [valueUnderlying, setValueUnderlying] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState(0);
-  const [utilizationRate, setUtilizationRate] = useState(0);
 
   const {toast, ToastComponent} = useToast();
-  const value = 20
-  const available = 5
+  const totalUnderlyingInMarket = parseFloat(totalUnderlyingBalance)
+  const totalBorrow = 500
   const userTotalDeposits = parseFloat(userUnderlyingBalance)
-
-  useEffect(() => {
-    if (value && available) {
-      setUtilizationRate(Number(f(((value - available) / value) * 100)));
-    }
-  }, [value, available]);
-
+  const utilizationRate = totalBorrow / (totalUnderlyingInMarket + totalBorrow)
   const maxValue = parseFloat(userBalance);
 
   useEffect(() => {
-    if (isLoadingUnderlyingPrice || isLoadingUserBalance || isLoadingUserUnderlyingBalance) {
+    if (isLoadingUnderlyingPrice || isLoadingUserBalance || isLoadingUserUnderlyingBalance || isLoadingTotalUnderlyingBalance) {
       toast.processing()
     } else {
       toast.clear()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingUnderlyingPrice, isLoadingUserBalance, isLoadingUserUnderlyingBalance])
+  }, [isLoadingUnderlyingPrice, isLoadingUserBalance, isLoadingUserUnderlyingBalance, isLoadingTotalUnderlyingBalance])
 
   // Put your validators here
   const isDepositButtonDisabled = () => {
