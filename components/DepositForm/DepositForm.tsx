@@ -1,32 +1,54 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import { InfoBlock } from '../InfoBlock/InfoBlock';
 import { InputsBlock } from '../InputsBlock/InputsBlock';
 import { HoneySlider } from '../HoneySlider/HoneySlider';
 import * as styles from './DepositForm.css';
 import { formatNumber } from '../../helpers/format';
-import honeyGenesisBee from '/public/images/imagePlaceholder.png';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 import HexaBoxContainer from '../HexaBoxContainer/HexaBoxContainer';
 import SidebarScroll from '../SidebarScroll/SidebarScroll';
 import { DepositFormProps } from './types';
-import { PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { questionIcon } from 'styles/icons.css';
 import { hAlign } from 'styles/common.css';
 import useToast from 'hooks/useToast';
+import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
+import { useGetUnderlyingPriceInUSD } from "../../hooks/useHtokenHelper";
+import useDisplayStore from "../../store/displayStore";
+import { UserContext } from "../../contexts/userContext";
+import { useQueryClient } from "react-query";
+import useLoanFlowStore from "../../store/loanFlowStore";
+import { LendWorkFlowType } from "../../types/workflows";
+import useLendFlowStore from "../../store/lendFlowStore";
 
-const { format: f, formatPercent: fp, formatERC20: fs, parse: p } = formatNumber;
+const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
 const DepositForm = (props: DepositFormProps) => {
+  const {} = props;
+  const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
+  const {currentUser, setCurrentUser} = useContext(UserContext);
+  const queryClient = useQueryClient();
+  const walletPublicKey: string = currentUser?.get("ethAddress") || ""
+  const HERC20ContractAddress = useLendFlowStore((state) => state.HERC20ContractAddr)
+
   const {
-  } = props;
+    nftContractAddress,
+    htokenHelperContractAddress,
+    hivemindContractAddress,
+    ERC20ContractAddress,
+    name,
+    icon,
+    unit,
+  } = getContractsByHTokenAddr(HERC20ContractAddress)
+  const setWorkflow = useLendFlowStore((state) => state.setWorkflow)
+  const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress)
 
   const [valueUSD, setValueUSD] = useState<number>(0);
-  const [valueSOL, setValueSOL] = useState<number>(0);
+  const [valueUnderlying, setValueUnderlying] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState(0);
   const [utilizationRate, setUtilizationRate] = useState(0);
 
-  const { toast, ToastComponent } = useToast();
+  const {toast, ToastComponent} = useToast();
   const value = 20
   const available = 5
   const userTotalDeposits = 30
@@ -38,7 +60,6 @@ const DepositForm = (props: DepositFormProps) => {
   }, [value, available]);
 
   const maxValue = 4;
-  const solPrice = 1;
 
   // Put your validators here
   const isDepositButtonDisabled = () => {
@@ -47,49 +68,51 @@ const DepositForm = (props: DepositFormProps) => {
 
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
-    setValueUSD(value * solPrice);
-    setValueSOL(value);
+    setValueUSD(value * underlyingPrice);
+    setValueUnderlying(value);
   };
 
   const handleUsdInputChange = (usdValue: number | undefined) => {
     if (!usdValue) {
       setValueUSD(0);
-      setValueSOL(0);
+      setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
     setValueUSD(usdValue);
-    setValueSOL(usdValue / solPrice);
-    setSliderValue(usdValue / solPrice);
+    setValueUnderlying(usdValue / underlyingPrice);
+    setSliderValue(usdValue);
   };
 
-  const handleSolInputChange = (solValue: number | undefined) => {
-    if (!solValue) {
+  const handleUnderlyingInputChange = (underlyingValue: number | undefined) => {
+    if (!underlyingValue) {
       setValueUSD(0);
-      setValueSOL(0);
+      setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
 
-    setValueUSD(solValue * solPrice);
-    setValueSOL(solValue);
-    setSliderValue(solValue);
+    setValueUSD(underlyingValue * underlyingPrice);
+    setValueUnderlying(underlyingValue);
+    setSliderValue(underlyingValue);
   };
 
   const handleDeposit = async () => {
-    // await executeDeposit(valueSOL, toast);
+    // await executeDeposit(valueUnderlying, toast);
     handleSliderChange(0);
   };
 
-  const onCancel = () =>{
-
+  const onCancel = () => {
+    setIsSidebarVisibleInMobile(false)
+    setWorkflow(LendWorkFlowType.none)
+    document.body.classList.remove('disable-scroll');
   }
 
   return (
     <SidebarScroll
       footer={
         toast?.state ? (
-          <ToastComponent />
+          <ToastComponent/>
         ) : (
           <div className={styles.buttons}>
             <div className={styles.smallCol}>
@@ -115,10 +138,10 @@ const DepositForm = (props: DepositFormProps) => {
         <div className={styles.nftInfo}>
           <div className={styles.nftImage}>
             <HexaBoxContainer>
-              <Image src={honeyGenesisBee} />
+              <Image src={icon} alt={name} layout="fill"/>
             </HexaBoxContainer>
           </div>
-          <div className={styles.nftName}>Honey Genesis Bee</div>
+          <div className={styles.nftName}>{name}</div>
         </div>
         <div className={styles.row}>
           <div className={styles.col}>
@@ -135,7 +158,7 @@ const DepositForm = (props: DepositFormProps) => {
               toolTipLabel="APY is measured by compounding the weekly interest rate"
               footer={
                 <span className={hAlign}>
-                  Estimated APY <div className={questionIcon} />
+                  Estimated APY <div className={questionIcon}/>
                 </span>
               }
             />
@@ -147,7 +170,7 @@ const DepositForm = (props: DepositFormProps) => {
               toolTipLabel=" Amount of supplied liquidity currently being borrowed"
               footer={
                 <span className={hAlign}>
-                  Utilization rate <div className={questionIcon} />
+                  Utilization rate <div className={questionIcon}/>
                 </span>
               }
             />
@@ -156,10 +179,10 @@ const DepositForm = (props: DepositFormProps) => {
 
         <div className={styles.inputs}>
           <InputsBlock
-            firstInputValue={valueSOL}
-            secondInputValue={valueUSD}
-            onChangeFirstInput={handleSolInputChange}
-            onChangeSecondInput={handleUsdInputChange}
+            firstInputValue={p(f(valueUSD))}
+            secondInputValue={p(f(valueUnderlying))}
+            onChangeFirstInput={handleUsdInputChange}
+            onChangeSecondInput={handleUnderlyingInputChange}
             maxValue={maxValue}
           />
         </div>
