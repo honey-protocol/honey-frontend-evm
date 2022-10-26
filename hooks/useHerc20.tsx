@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Moralis from "moralis-v1";
-import { fromWei } from "web3-utils";
+import { fromWei, Unit } from "web3-utils";
 import { basePath, chain, confirmedBlocks } from "../constants/service";
 import MoralisType from "moralis-v1";
 import { safeToWei } from "../helpers/repayHelper";
@@ -237,6 +237,35 @@ export async function getTotalBorrow(HERC20ContractAddress: string, unit: Unit) 
   // @ts-ignore
   const result: any = await Moralis.Web3API.native.runContractFunction(options)
   return fromWei(result, unit)
+}
+
+export function useGetTotalBorrow(
+  HERC20ContractAddress: string,
+  unit: Unit
+): [string, boolean] {
+  const onSuccess = (data: string) => {
+    return data
+  }
+  const onError = (data: string) => {
+    return '0'
+  }
+  const {data: amount, isLoading, isFetching} = useQuery(
+    queryKeys.totalBorrow(HERC20ContractAddress),
+    () => {
+      if (HERC20ContractAddress != "") {
+        return getTotalBorrow(HERC20ContractAddress, unit)
+      } else {
+        return '0'
+      }
+    },
+    {
+      onSuccess,
+      onError,
+      retry: false,
+      staleTime: defaultCacheStaleTime
+    }
+  )
+  return [amount || '0', isLoading || isFetching];
 }
 
 export async function getTotalReserves(HERC20ContractAddress: string, unit: Unit) {
