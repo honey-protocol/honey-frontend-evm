@@ -21,10 +21,9 @@ import {
 import useDisplayStore from "../../store/displayStore";
 import { UserContext } from "../../contexts/userContext";
 import { useQueryClient } from "react-query";
-import useLoanFlowStore from "../../store/loanFlowStore";
 import { LendWorkFlowType } from "../../types/workflows";
 import useLendFlowStore from "../../store/lendFlowStore";
-import { useGetUserBalance } from "../../hooks/useERC20";
+import { useCheckUnlimitedApproval, useGetUserBalance } from "../../hooks/useERC20";
 import { useGetTotalBorrow } from "../../hooks/useHerc20";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
@@ -49,6 +48,7 @@ const DepositForm = (props: DepositFormProps) => {
   const setWorkflow = useLendFlowStore((state) => state.setWorkflow)
   const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress)
   const [userBalance, isLoadingUserBalance] = useGetUserBalance(ERC20ContractAddress, currentUser, unit)
+  const [approval, isLoadingApproval] = useCheckUnlimitedApproval(ERC20ContractAddress, HERC20ContractAddress, currentUser)
   const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(htokenHelperContractAddress, HERC20ContractAddress, currentUser, unit)
   const [totalUnderlyingBalance, isLoadingTotalUnderlyingBalance] = useGetTotalUnderlyingBalance(htokenHelperContractAddress, HERC20ContractAddress, unit)
   const [totalBorrow, isLoadingTotalBorrow] = useGetTotalBorrow(HERC20ContractAddress, unit)
@@ -57,27 +57,32 @@ const DepositForm = (props: DepositFormProps) => {
   const [valueUnderlying, setValueUnderlying] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState(0);
 
+  /* initial all financial value here */
   const {toast, ToastComponent} = useToast();
+  const [depositState, setDepositState] = useState('WAIT_FOR_APPROVAL');
   const totalUnderlyingInMarket = parseFloat(totalUnderlyingBalance)
   const totalBorrowAmount = parseFloat(totalBorrow)
   const userTotalDeposits = parseFloat(userUnderlyingBalance)
   const utilizationRate = totalBorrowAmount / (totalUnderlyingInMarket + totalBorrowAmount)
   const maxValue = parseFloat(userBalance);
+  /* end initial all  financial value here */
 
   useEffect(() => {
-    if (isLoadingUnderlyingPrice || isLoadingUserBalance || isLoadingUserUnderlyingBalance || isLoadingTotalUnderlyingBalance || isLoadingTotalBorrow) {
+    if (isLoadingUnderlyingPrice || isLoadingUserBalance || isLoadingUserUnderlyingBalance || isLoadingTotalUnderlyingBalance || isLoadingTotalBorrow || isLoadingApproval) {
       toast.processing()
     } else {
+      getDepositState()
       toast.clear()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingUnderlyingPrice, isLoadingUserBalance, isLoadingUserUnderlyingBalance, isLoadingTotalUnderlyingBalance, isLoadingTotalBorrow])
+  }, [isLoadingUnderlyingPrice, isLoadingUserBalance, isLoadingUserUnderlyingBalance, isLoadingTotalUnderlyingBalance, isLoadingTotalBorrow, isLoadingApproval])
 
   // Put your validators here
   const isDepositButtonDisabled = () => {
     return false;
   };
 
+  /*   Begin handle slider function  */
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
     setValueUSD(value * underlyingPrice);
@@ -108,6 +113,21 @@ const DepositForm = (props: DepositFormProps) => {
     setValueUnderlying(underlyingValue);
     setSliderValue(underlyingValue);
   };
+  /*  end handle slider function   */
+
+  /*  begin handling borrow function */
+  const buttonTitle = () => {
+    if (depositState == 'WAIT_FOR_APPROVAL') return 'Approve';
+    else if (depositState == 'WAIT_FOR_DEPOSIT') return 'Deposit';
+  };
+
+  const getDepositState = () => {
+    if (approval) {
+      setDepositState('WAIT_FOR_DEPOSIT')
+    } else {
+      setDepositState('WAIT_FOR_APPROVAL')
+    }
+  }
 
   const handleDeposit = async () => {
     // await executeDeposit(valueUnderlying, toast);
@@ -139,7 +159,9 @@ const DepositForm = (props: DepositFormProps) => {
                 isFluid={true}
                 onClick={handleDeposit}
               >
-                Deposit
+                <>
+                  {buttonTitle()}
+                </>
               </HoneyButton>
             </div>
           </div>
