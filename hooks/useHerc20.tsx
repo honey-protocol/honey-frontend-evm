@@ -56,7 +56,17 @@ export const borrow = async ({
 
 }
 
-export async function depositUnderlying(HERC20ContractAddress: string, amount: string, unit: Unit) {
+export interface depositVariables {
+  HERC20ContractAddress: string
+  amount: string
+  unit: Unit
+}
+
+export async function depositUnderlying({
+                                          HERC20ContractAddress: HERC20ContractAddress,
+                                          amount: amount,
+                                          unit: unit
+                                        }: depositVariables) {
   const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json()
   const options = {
     chain: chain,

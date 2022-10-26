@@ -24,7 +24,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { LendWorkFlowType } from "../../types/workflows";
 import useLendFlowStore from "../../store/lendFlowStore";
 import { getUnlimitedApproval, useCheckUnlimitedApproval, useGetUserBalance } from "../../hooks/useERC20";
-import { useGetTotalBorrow } from "../../hooks/useHerc20";
+import { depositUnderlying, useGetTotalBorrow } from "../../hooks/useHerc20";
 import { queryKeys } from "../../helpers/queryHelper";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
@@ -38,10 +38,10 @@ const DepositForm = (props: DepositFormProps) => {
   const HERC20ContractAddress = useLendFlowStore((state) => state.HERC20ContractAddr)
 
   const {
-    nftContractAddress,
     htokenHelperContractAddress,
-    hivemindContractAddress,
     ERC20ContractAddress,
+    erc20Name,
+    erc20Icon,
     name,
     icon,
     unit,
@@ -131,6 +131,7 @@ const DepositForm = (props: DepositFormProps) => {
   }
 
   const getApprovalMutation = useMutation(getUnlimitedApproval)
+  const depositUnderlyingMutation = useMutation(depositUnderlying)
   const onClick = async () => {
     try {
       toast.processing()
@@ -138,6 +139,15 @@ const DepositForm = (props: DepositFormProps) => {
         await getApprovalMutation.mutateAsync({ERC20ContractAddress, HERC20ContractAddress})
         console.log('Approval succeed')
         await queryClient.invalidateQueries(queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress))
+      } else if (depositState == 'WAIT_FOR_DEPOSIT') {
+        await depositUnderlyingMutation.mutateAsync({
+          HERC20ContractAddress,
+          amount: valueUnderlying.toFixed(18).toString(),
+          unit
+        })
+        await queryClient.invalidateQueries(queryKeys.totalSupply(HERC20ContractAddress))
+        await queryClient.invalidateQueries(queryKeys.userTotalSupply(walletPublicKey, HERC20ContractAddress))
+        console.log('deposit succeed')
       }
       toast.success('Successful! Transaction complete');
     } catch (err) {
@@ -230,6 +240,11 @@ const DepositForm = (props: DepositFormProps) => {
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleUnderlyingInputChange}
             maxValue={maxValue}
+            firstInputAddon={
+              <>
+                <Image src={erc20Icon} layout='fill' alt={"underlying icon"}/> <span>{erc20Name}</span>
+              </>
+            }
           />
         </div>
 
