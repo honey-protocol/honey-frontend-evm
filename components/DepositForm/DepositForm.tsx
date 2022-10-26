@@ -147,6 +147,7 @@ const DepositForm = (props: DepositFormProps) => {
         })
         await queryClient.invalidateQueries(queryKeys.totalSupply(HERC20ContractAddress))
         await queryClient.invalidateQueries(queryKeys.userTotalSupply(walletPublicKey, HERC20ContractAddress))
+        await queryClient.invalidateQueries(queryKeys.userBalance(walletPublicKey, ERC20ContractAddress))
         console.log('deposit succeed')
       }
       toast.success('Successful! Transaction complete');
