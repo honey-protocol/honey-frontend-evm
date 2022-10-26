@@ -181,6 +181,7 @@ const RepayForm = (props: RepayProps) => {
         await queryClient.invalidateQueries(queryKeys.maxBorrowFromNFT(HERC20ContractAddress, nftContractAddress, walletPublicKey, nft.tokenId))
         await queryClient.invalidateQueries(queryKeys.borrowAmount(HERC20ContractAddress, nft.tokenId))
         await queryClient.invalidateQueries(queryKeys.userBalance(walletPublicKey, ERC20ContractAddress))
+        handleSliderChange(0);
       }
       toast.success('Successful! Transaction complete');
     } catch (err) {

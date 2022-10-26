@@ -20,11 +20,12 @@ import {
 } from "../../hooks/useHtokenHelper";
 import useDisplayStore from "../../store/displayStore";
 import { UserContext } from "../../contexts/userContext";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { LendWorkFlowType } from "../../types/workflows";
 import useLendFlowStore from "../../store/lendFlowStore";
-import { useCheckUnlimitedApproval, useGetUserBalance } from "../../hooks/useERC20";
+import { getUnlimitedApproval, useCheckUnlimitedApproval, useGetUserBalance } from "../../hooks/useERC20";
 import { useGetTotalBorrow } from "../../hooks/useHerc20";
+import { queryKeys } from "../../helpers/queryHelper";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -129,10 +130,21 @@ const DepositForm = (props: DepositFormProps) => {
     }
   }
 
-  const handleDeposit = async () => {
-    // await executeDeposit(valueUnderlying, toast);
-    handleSliderChange(0);
-  };
+  const getApprovalMutation = useMutation(getUnlimitedApproval)
+  const onClick = async () => {
+    try {
+      toast.processing()
+      if (depositState == 'WAIT_FOR_APPROVAL') {
+        await getApprovalMutation.mutateAsync({ERC20ContractAddress, HERC20ContractAddress})
+        console.log('Approval succeed')
+        await queryClient.invalidateQueries(queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress))
+      }
+      toast.success('Successful! Transaction complete');
+    } catch (err) {
+      console.error(err);
+      toast.error('Sorry! Transaction failed');
+    }
+  }
 
   const onCancel = () => {
     setIsSidebarVisibleInMobile(false)
@@ -157,7 +169,7 @@ const DepositForm = (props: DepositFormProps) => {
                 variant="primary"
                 disabled={isDepositButtonDisabled()}
                 isFluid={true}
-                onClick={handleDeposit}
+                onClick={onClick}
               >
                 <>
                   {buttonTitle()}
