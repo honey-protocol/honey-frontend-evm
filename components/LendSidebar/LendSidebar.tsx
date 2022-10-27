@@ -12,6 +12,7 @@ import { LendWorkFlowType, LoanWorkFlowType } from "../../types/workflows";
 import { UserContext } from "../../contexts/userContext";
 import { useMoralis } from "react-moralis";
 import BorrowForm from "../BorrowForm/BorrowForm";
+import WithdrawForm from "../WithdrawForm/WithdrawForm";
 
 type Tab = 'deposit' | 'withdraw';
 
@@ -68,10 +69,13 @@ const LendSidebar = (props: LendSidebarProps) => {
             btnTitle="CONNECT WALLET"
             onBtnClick={connect}
           />
-        ) :(workflow == LendWorkFlowType.lendOrWithdraw && activeTab == "deposit")?(
+        ) : (workflow == LendWorkFlowType.lendOrWithdraw && activeTab == "deposit") ? (
           <>
             <DepositForm/>
-          </>): (<></>)}
+          </>) : (workflow == LendWorkFlowType.lendOrWithdraw && activeTab == "withdraw") ? (
+          <>
+            <WithdrawForm/>
+          </>) : (<></>)}
       </HoneyTabs>
     </div>
   );
