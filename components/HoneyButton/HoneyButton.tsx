@@ -3,7 +3,7 @@ import { FC } from 'react';
 import * as styles from './HoneyButton.css';
 import c from 'classnames';
 
-interface HoneyButtonProps extends ButtonProps {
+export interface HoneyButtonProps extends ButtonProps {
   variant?: 'primary' | 'secondary' | 'tertiary' | 'text' | 'textSecondary';
   isFluid?: boolean;
 }
