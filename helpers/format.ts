@@ -12,7 +12,6 @@ export const numberFormatterMobile = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2
 });
 
-
 export const formatNumber = {
   format: (val?: number): string => {
     if (!val) {
@@ -84,11 +83,51 @@ export const formatNumber = {
   },
 
   /**
-   * Works as formatNumber.format but adds ◎ at the start of the string
+   * Converts 1000 into 1K, 1 000 000 to 1M, 1 000 000 000 to 1B, etc
+   * @param value
+   * @param decimals
+   */
+  formatShortName: (value: number, decimals = 2): string => {
+    if (value < 1000) {
+      return String(formatNumber.format(value));
+    }
+    const templates = [
+      { value: 1, symbol: '' },
+      { value: 1e3, symbol: 'K' },
+      { value: 1e6, symbol: 'M' }
+      // { value: 1e9, symbol: 'B' },
+      // { value: 1e12, symbol: 'T' },
+      // { value: 1e15, symbol: 'P' },
+      // { value: 1e18, symbol: 'E' },
+    ];
+    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    const item = templates
+      .slice()
+      .reverse()
+      .find(it => {
+        return value >= it.value;
+      });
+    return item
+      ? formatNumber
+          .formatRoundDown(value / item.value, decimals)
+          .replace(rx, '$1') + item.symbol
+      : '0';
+  },
+
+  // TODO: decide currency
+  /**
+   * Works as formatNumber.format but adds [currency] at the start of the string
    * @param val
    */
   formatERC20: (val?: number) => {
-    return `◎ ${formatNumber.format(val)}`;
+    return `${formatNumber.format(val)}`;
+  },
+
+  formatToThousands: (value: number): string => {
+    if (value < 1000) {
+      return '0 k';
+    }
+    return `${Math.floor(value / 1000)} k`;
   },
 
   /**
@@ -123,4 +162,26 @@ export const dateFromTimestamp = (timestamp: number | string) => {
   });
 
   return `${date}`;
+};
+
+/**
+ * Convert long NFT name into short.
+ * @param {string} nftName - full NFT name, consist of collection name + NFT number
+ * @param {number} maxLength - max formatted name length, 10 by default
+ */
+export const formatNFTName = (nftName: string, maxLength = 10) => {
+  if (nftName.length <= maxLength) {
+    return nftName;
+  }
+
+  const nftNumber = nftName.match(/#\d+$/)?.[0] || '';
+  const collectionName = nftNumber.length
+    ? nftName.split(nftNumber)[0]
+    : nftName;
+
+  const splicedCollectionName = collectionName.slice(
+    0,
+    maxLength - nftNumber.length
+  );
+  return `${splicedCollectionName}...${nftNumber}`;
 };
