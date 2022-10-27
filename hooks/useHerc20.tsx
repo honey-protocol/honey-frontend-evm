@@ -89,7 +89,7 @@ export async function redeemUnderlying(HERC20ContractAddress: string, amount: st
   const options = {
     chain: chain,
     contractAddress: HERC20ContractAddress,
-    functionName: "redeem",
+    functionName: "withdraw",
     abi: ABI,
     params: {_amount: safeToWei(amount, unit)},
   }

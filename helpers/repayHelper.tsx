@@ -20,9 +20,8 @@ export async function redeemUnderlyingHelper(HERC20ContractAddress: string, user
     await redeemUnderlying(HERC20ContractAddress, sliderValue.toFixed(18).toString(), unit)
     console.log(`redeem for amount: ${sliderValue}`)
   } else {
-    const newAmount = Number(userUnderlyingBalance) * repayMargin
-    await redeemUnderlying(HERC20ContractAddress, newAmount.toFixed(18).toString(), unit)
-    console.log(`redeem for amount: ${newAmount}`)
+    await redeemUnderlying(HERC20ContractAddress, userUnderlyingBalance, unit)
+    console.log(`redeem for amount: ${userUnderlyingBalance}`)
   }
 }
 
