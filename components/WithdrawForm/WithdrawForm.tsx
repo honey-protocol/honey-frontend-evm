@@ -5,7 +5,6 @@ import { InputsBlock } from '../InputsBlock/InputsBlock';
 import { HoneySlider } from '../HoneySlider/HoneySlider';
 import * as styles from './WithdrawForm.css';
 import { formatNumber } from '../../helpers/format';
-import honeyGenesisBee from '/public/images/imagePlaceholder.png';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 import HexaBoxContainer from '../HexaBoxContainer/HexaBoxContainer';
 import SidebarScroll from '../SidebarScroll/SidebarScroll';
@@ -24,7 +23,6 @@ import {
   useGetUnderlyingPriceInUSD,
   useGetUserUnderlyingBalance
 } from "../../hooks/useHtokenHelper";
-import { useGetUserBalance } from "../../hooks/useERC20";
 import { useGetTotalBorrow } from "../../hooks/useHerc20";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
@@ -57,9 +55,12 @@ const WithdrawForm = (props: WithdrawFormProps) => {
   const [sliderValue, setSliderValue] = useState(0);
   const {toast, ToastComponent} = useToast();
 
-  const maxValue = 100;
-  const userTotalDeposits = 100
-  const utilizationRate = 0.7
+  /* initial all financial value here */
+  const userTotalDeposits = parseFloat(userUnderlyingBalance)
+  const totalUnderlyingInMarket = parseFloat(totalUnderlyingBalance)
+  const totalBorrowAmount = parseFloat(totalBorrow)
+  const utilizationRate = totalBorrowAmount / (totalUnderlyingInMarket + totalBorrowAmount) * 100
+  /* end initial all  financial value here */
 
   useEffect(() => {
     if (isLoadingUnderlyingPrice || isLoadingUserUnderlyingBalance || isLoadingTotalUnderlyingBalance || isLoadingTotalBorrow) {
@@ -149,10 +150,10 @@ const WithdrawForm = (props: WithdrawFormProps) => {
         <div className={styles.nftInfo}>
           <div className={styles.nftImage}>
             <HexaBoxContainer>
-              <Image src={honeyGenesisBee}/>
+              <Image src={icon} alt={name} layout="fill"/>
             </HexaBoxContainer>
           </div>
-          <div className={styles.nftName}>Honey Genesis Bee</div>
+          <div className={styles.nftName}>{name}</div>
         </div>
         <div className={styles.row}>
           <div className={styles.col}>
@@ -190,17 +191,17 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 
         <div className={styles.inputs}>
           <InputsBlock
-            firstInputValue={valueUSD}
-            secondInputValue={valueUnderlying}
+            firstInputValue={p(f(valueUSD))}
+            secondInputValue={p(f(valueUnderlying))}
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleUnderlyingInputChange}
-            maxValue={maxValue}
+            maxValue={userTotalDeposits}
           />
         </div>
 
         <HoneySlider
           currentValue={sliderValue}
-          maxValue={maxValue}
+          maxValue={userTotalDeposits}
           minAvailableValue={0}
           // maxSafePosition={0.4}
           // maxAvailablePosition={maxValue} // TODO: should be capped by available liquidity

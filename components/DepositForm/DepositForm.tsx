@@ -64,7 +64,7 @@ const DepositForm = (props: DepositFormProps) => {
   const totalUnderlyingInMarket = parseFloat(totalUnderlyingBalance)
   const totalBorrowAmount = parseFloat(totalBorrow)
   const userTotalDeposits = parseFloat(userUnderlyingBalance)
-  const utilizationRate = totalBorrowAmount / (totalUnderlyingInMarket + totalBorrowAmount)
+  const utilizationRate = totalBorrowAmount / (totalUnderlyingInMarket + totalBorrowAmount) * 100
   const maxValue = parseFloat(userBalance);
   /* end initial all  financial value here */
 
