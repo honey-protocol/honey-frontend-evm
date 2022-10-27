@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import { InfoBlock } from '../InfoBlock/InfoBlock';
 import { InputsBlock } from '../InputsBlock/InputsBlock';
@@ -13,22 +13,62 @@ import { WithdrawFormProps } from './types';
 import { questionIcon } from 'styles/icons.css';
 import { hAlign } from 'styles/common.css';
 import useToast from 'hooks/useToast';
+import { LendWorkFlowType } from "../../types/workflows";
+import useDisplayStore from "../../store/displayStore";
+import { UserContext } from "../../contexts/userContext";
+import { useQueryClient } from "react-query";
+import useLendFlowStore from "../../store/lendFlowStore";
+import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
+import {
+  useGetTotalUnderlyingBalance,
+  useGetUnderlyingPriceInUSD,
+  useGetUserUnderlyingBalance
+} from "../../hooks/useHtokenHelper";
+import { useGetUserBalance } from "../../hooks/useERC20";
+import { useGetTotalBorrow } from "../../hooks/useHerc20";
 
-const { format: f, formatPercent: fp, formatERC20: fs, parse: p } = formatNumber;
+const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
 const WithdrawForm = (props: WithdrawFormProps) => {
-  const {
+  const {} = props;
+  const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
+  const {currentUser, setCurrentUser} = useContext(UserContext);
+  const queryClient = useQueryClient();
+  const walletPublicKey: string = currentUser?.get("ethAddress") || ""
+  const HERC20ContractAddress = useLendFlowStore((state) => state.HERC20ContractAddr)
 
-  } = props;
+  const {
+    htokenHelperContractAddress,
+    ERC20ContractAddress,
+    erc20Name,
+    erc20Icon,
+    name,
+    icon,
+    unit,
+  } = getContractsByHTokenAddr(HERC20ContractAddress)
+  const setWorkflow = useLendFlowStore((state) => state.setWorkflow)
+  const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress)
+  const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(htokenHelperContractAddress, HERC20ContractAddress, currentUser, unit)
+  const [totalUnderlyingBalance, isLoadingTotalUnderlyingBalance] = useGetTotalUnderlyingBalance(htokenHelperContractAddress, HERC20ContractAddress, unit)
+  const [totalBorrow, isLoadingTotalBorrow] = useGetTotalBorrow(HERC20ContractAddress, unit)
+
   const [valueUSD, setValueUSD] = useState<number>(0);
-  const [valueSOL, setValueSOL] = useState<number>(0);
+  const [valueUnderlying, setValueUnderlying] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState(0);
-  const { toast, ToastComponent } = useToast();
+  const {toast, ToastComponent} = useToast();
 
   const maxValue = 100;
-  const solPrice = 1;
   const userTotalDeposits = 100
   const utilizationRate = 0.7
+
+  useEffect(() => {
+    if (isLoadingUnderlyingPrice || isLoadingUserUnderlyingBalance || isLoadingTotalUnderlyingBalance || isLoadingTotalBorrow) {
+      toast.processing()
+    } else {
+      toast.clear()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoadingUnderlyingPrice, isLoadingUserUnderlyingBalance, isLoadingTotalUnderlyingBalance, isLoadingTotalBorrow])
 
   // Put your validators here
   const isWithdrawButtonDisabled = () => {
@@ -37,53 +77,57 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
-    setValueUSD(value * solPrice);
-    setValueSOL(value);
+    setValueUSD(value * underlyingPrice);
+    setValueUnderlying(value);
   };
 
   const handleUsdInputChange = (usdValue: number | undefined) => {
     if (!usdValue) {
       setValueUSD(0);
-      setValueSOL(0);
+      setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
-
-    console.log('p(f(usdValue))', p(f(usdValue)));
 
     setValueUSD(usdValue);
-    setValueSOL(usdValue / solPrice);
-    setSliderValue(usdValue / solPrice);
+    setValueUnderlying(usdValue / underlyingPrice);
+    setSliderValue(usdValue);
   };
 
-  const handleSolInputChange = (solValue: number | undefined) => {
-    if (!solValue) {
+  const handleUnderlyingInputChange = (underlyingValue: number | undefined) => {
+    if (!underlyingValue) {
       setValueUSD(0);
-      setValueSOL(0);
+      setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
 
-    setValueUSD(solValue * solPrice);
-    setValueSOL(solValue);
-    setSliderValue(solValue);
+    setValueUSD(underlyingValue * underlyingPrice);
+    setValueUnderlying(underlyingValue);
+    setSliderValue(underlyingValue);
   };
 
   const handleWithdraw = async () => {
-    //await executeWithdraw(valueSOL, toast);
+    //await executeWithdraw(valueUnderlying, toast);
     handleSliderChange(0);
   };
+
+  const onCancel = () => {
+    setIsSidebarVisibleInMobile(false)
+    setWorkflow(LendWorkFlowType.none)
+    document.body.classList.remove('disable-scroll');
+  }
 
 
   return (
     <SidebarScroll
       footer={
         toast?.state ? (
-          <ToastComponent />
+          <ToastComponent/>
         ) : (
           <div className={styles.buttons}>
             <div className={styles.smallCol}>
-              <HoneyButton variant="secondary" onClick={() => {}}>
+              <HoneyButton variant="secondary" onClick={onCancel}>
                 Cancel
               </HoneyButton>
             </div>
@@ -105,7 +149,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
         <div className={styles.nftInfo}>
           <div className={styles.nftImage}>
             <HexaBoxContainer>
-              <Image src={honeyGenesisBee} />
+              <Image src={honeyGenesisBee}/>
             </HexaBoxContainer>
           </div>
           <div className={styles.nftName}>Honey Genesis Bee</div>
@@ -125,7 +169,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
               toolTipLabel="APY is measured by compounding the weekly interest rate"
               footer={
                 <span className={hAlign}>
-                  Estimated APY <div className={questionIcon} />
+                  Estimated APY <div className={questionIcon}/>
                 </span>
               }
             />
@@ -137,7 +181,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
               toolTipLabel=" Amount of supplied liquidity currently being borrowed"
               footer={
                 <span className={hAlign}>
-                  Utilization rate <div className={questionIcon} />
+                  Utilization rate <div className={questionIcon}/>
                 </span>
               }
             />
@@ -146,10 +190,10 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 
         <div className={styles.inputs}>
           <InputsBlock
-            firstInputValue={valueSOL}
-            secondInputValue={valueUSD}
-            onChangeFirstInput={handleSolInputChange}
-            onChangeSecondInput={handleUsdInputChange}
+            firstInputValue={valueUSD}
+            secondInputValue={valueUnderlying}
+            onChangeFirstInput={handleUsdInputChange}
+            onChangeSecondInput={handleUnderlyingInputChange}
             maxValue={maxValue}
           />
         </div>
