@@ -15,7 +15,7 @@ import useToast from 'hooks/useToast';
 import { LendWorkFlowType } from "../../types/workflows";
 import useDisplayStore from "../../store/displayStore";
 import { UserContext } from "../../contexts/userContext";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import useLendFlowStore from "../../store/lendFlowStore";
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import {
@@ -24,6 +24,8 @@ import {
   useGetUserUnderlyingBalance
 } from "../../hooks/useHtokenHelper";
 import { useGetTotalBorrow } from "../../hooks/useHerc20";
+import { redeemUnderlyingHelper, repayBorrowHelper } from "../../helpers/repayHelper";
+import { queryKeys } from "../../helpers/queryHelper";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
 
@@ -38,8 +40,6 @@ const WithdrawForm = (props: WithdrawFormProps) => {
   const {
     htokenHelperContractAddress,
     ERC20ContractAddress,
-    erc20Name,
-    erc20Icon,
     name,
     icon,
     unit,
@@ -108,9 +108,31 @@ const WithdrawForm = (props: WithdrawFormProps) => {
     setSliderValue(underlyingValue);
   };
 
+  const redeem = async () => {
+    await redeemUnderlyingHelper(
+      HERC20ContractAddress,
+      userTotalDeposits,
+      sliderValue,
+      unit,
+      userUnderlyingBalance
+    )
+  }
+  const redeemMutation = useMutation(redeem)
+
   const handleWithdraw = async () => {
-    //await executeWithdraw(valueUnderlying, toast);
-    handleSliderChange(0);
+    try {
+      toast.processing()
+      await redeemMutation.mutateAsync()
+      console.log('Redeem Succeed')
+      await queryClient.invalidateQueries(queryKeys.totalSupply(HERC20ContractAddress))
+      await queryClient.invalidateQueries(queryKeys.userTotalSupply(walletPublicKey, HERC20ContractAddress))
+      await queryClient.invalidateQueries(queryKeys.userBalance(walletPublicKey, ERC20ContractAddress))
+      handleSliderChange(0);
+      toast.success('Successful! Transaction complete');
+    } catch (err) {
+      console.error(err);
+      toast.error('Sorry! Transaction failed');
+    }
   };
 
   const onCancel = () => {
