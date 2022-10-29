@@ -6,12 +6,11 @@ import cs from 'classnames';
 type NftListProps = {
   data: NFT[];
   selectNFT: (nft: NFT) => void;
-  nftPrice: number;
   buttonText: string;
 };
 
 const NftList = (props: NftListProps) => {
-  const {data, selectNFT, nftPrice, buttonText} = props;
+  const {data, selectNFT, buttonText} = props;
   const [selectedNFTId, setSelectedNFTId] = useState<string | null>(null);
 
   function handleClick(nft: NFT) {
@@ -38,7 +37,7 @@ const NftList = (props: NftListProps) => {
                 hasBorder={
                   index !== data.length - 1 || item.id === selectedNFTId
                 }
-                text={`◎ ${nftPrice.toFixed(2)} value`}
+                text={`${item.tokenId}`}
                 buttonText={buttonText}
               />
             </div>

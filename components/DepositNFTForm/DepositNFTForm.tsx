@@ -27,7 +27,11 @@ const DepositNFTForm = (props: DepositNFTProps) => {
   const queryClient = useQueryClient();
   const walletPublicKey: string = currentUser?.get("ethAddress") || ""
   const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr)
-  const {nftContractAddress, htokenHelperContractAddress, hivemindContractAddress} = getContractsByHTokenAddr(HERC20ContractAddress)
+  const {
+    nftContractAddress,
+    htokenHelperContractAddress,
+    hivemindContractAddress
+  } = getContractsByHTokenAddr(HERC20ContractAddress)
   const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
   const [selectedNft, setSelectedNft] = useState<NFT | null>(null);
   const {toast, ToastComponent} = useToast();
@@ -35,7 +39,6 @@ const DepositNFTForm = (props: DepositNFTProps) => {
   const [availableNFTs, isLoadingNFT] = useFetchNFTByUserByCollection(currentUser, nftContractAddress);
   const [nftState, setNFTState] = useState('WAIT_FOR_APPROVAL');
   const [isNFTApproved, isLoadingApproval] = useIsNFTApproved(nftContractAddress, HERC20ContractAddress, selectedNft?.tokenId || '')
-  const [nftValue, isLoadingNFTValue] = useGetNFTPrice(htokenHelperContractAddress, HERC20ContractAddress)
   const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(htokenHelperContractAddress, HERC20ContractAddress, hivemindContractAddress)
 
   useEffect(() => {
@@ -47,13 +50,13 @@ const DepositNFTForm = (props: DepositNFTProps) => {
   }, [selectedNft, isNFTApproved]);
 
   useEffect(() => {
-    if (isLoadingNFT || isLoadingApproval || isLoadingNFTValue || isLoadingMaxBorrow) {
+    if (isLoadingNFT || isLoadingApproval || isLoadingMaxBorrow) {
       toast.processing()
     } else {
       toast.clear()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingNFT, isLoadingApproval, isLoadingNFTValue, isLoadingMaxBorrow]);
+  }, [isLoadingNFT, isLoadingApproval, isLoadingMaxBorrow]);
 
   const buttonTitle = () => {
     if (nftState == 'WAIT_FOR_APPROVAL') return 'Approve';
@@ -119,10 +122,9 @@ const DepositNFTForm = (props: DepositNFTProps) => {
       <>
         <div className={styles.newBorrowingTitle}>Choose NFT</div>
         <NftList
-          nftPrice={nftValue}
           data={availableNFTs}
           selectNFT={selectNFT}
-          buttonText={maxBorrow.toFixed(4).toString()}
+          buttonText={maxBorrow.toFixed(2).toString()}
         />
       </>
     );
