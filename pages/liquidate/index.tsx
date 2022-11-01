@@ -48,9 +48,7 @@ const Liquidate: NextPage = () => {
    * @params none
    * @returns open positions | bidding data | userbid | user position
    */
-  const [fetchedPositions, setFetchedPositions] = useState<
-    Array<LiquidateTablePosition>
-  >([]);
+  const [fetchedPositions, setFetchedPositions] = useState<Array<LiquidateTablePosition>>([]);
   const [nftPrice, setNftPrice] = useState<number>(0);
   const [totalDebt, setTotalDebt] = useState<number>(0);
   const [loanToValue, setLoanToValue] = useState<number>(0);
@@ -67,9 +65,7 @@ const Liquidate: NextPage = () => {
   };
 
   const [tableData, setTableData] = useState<LiquidateTableRow[]>([]);
-  const [tableDataFiltered, setTableDataFiltered] = useState<
-    LiquidateTableRow[]
-  >([]);
+  const [tableDataFiltered, setTableDataFiltered] = useState<LiquidateTableRow[]>([]);
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([]);
   const [isMyBidsFilterEnabled, setIsMyBidsFilterEnabled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -91,6 +87,7 @@ const Liquidate: NextPage = () => {
 
     setTableData(mockData);
     setTableDataFiltered(mockData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchedPositions]);
 
   const handleToggle = (checked: boolean) => {
@@ -119,13 +116,10 @@ const Liquidate: NextPage = () => {
       setSearchQuery(value);
       debouncedSearch(value);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [tableData]
   );
 
-  // Apply search if initial liquidations list changed
-  useEffect(() => {
-    debouncedSearch(searchQuery);
-  }, [tableData]);
 
   const SearchForm = () => {
     return (
@@ -152,7 +146,7 @@ const Liquidate: NextPage = () => {
               <div className={style.logoWrapper}>
                 <div className={style.collectionLogo}>
                   <HexaBoxContainer>
-                    <Image src={honeyGenesisBee} />
+                    <Image src={honeyGenesisBee} layout='fill' alt={"collection logo"}/>
                   </HexaBoxContainer>
                 </div>
               </div>
@@ -163,18 +157,18 @@ const Liquidate: NextPage = () => {
       },
       {
         width: columnsWidth[1],
-        title: ({ sortColumns }) => {
+        title: ({sortColumns}) => {
           const sortOrder = getColumnSortStatus(sortColumns, 'risk');
           return (
             <div
               className={
                 style.headerCell[
                   sortOrder === 'disabled' ? 'disabled' : 'active'
-                ]
+                  ]
               }
             >
               <span>Risk</span>
-              <div className={style.sortIcon[sortOrder]} />
+              <div className={style.sortIcon[sortOrder]}/>
             </div>
           );
         },
@@ -186,18 +180,18 @@ const Liquidate: NextPage = () => {
       },
       {
         width: columnsWidth[2],
-        title: ({ sortColumns }) => {
+        title: ({sortColumns}) => {
           const sortOrder = getColumnSortStatus(sortColumns, 'liqThreshold');
           return (
             <div
               className={
                 style.headerCell[
                   sortOrder === 'disabled' ? 'disabled' : 'active'
-                ]
+                  ]
               }
             >
               <span>Liq %</span>
-              <div className={style.sortIcon[sortOrder]} />
+              <div className={style.sortIcon[sortOrder]}/>
             </div>
           );
         },
@@ -209,18 +203,18 @@ const Liquidate: NextPage = () => {
       },
       {
         width: columnsWidth[3],
-        title: ({ sortColumns }) => {
+        title: ({sortColumns}) => {
           const sortOrder = getColumnSortStatus(sortColumns, 'totalDebt');
           return (
             <div
               className={
                 style.headerCell[
                   sortOrder === 'disabled' ? 'disabled' : 'active'
-                ]
+                  ]
               }
             >
               <span>Total Debt</span>{' '}
-              <div className={style.sortIcon[sortOrder]} />
+              <div className={style.sortIcon[sortOrder]}/>
             </div>
           );
         },
@@ -232,18 +226,18 @@ const Liquidate: NextPage = () => {
       },
       {
         width: columnsWidth[4],
-        title: ({ sortColumns }) => {
+        title: ({sortColumns}) => {
           const sortOrder = getColumnSortStatus(sortColumns, 'tvl');
           return (
             <div
               className={
                 style.headerCell[
                   sortOrder === 'disabled' ? 'disabled' : 'active'
-                ]
+                  ]
               }
             >
               <span>TVL</span>
-              <div className={style.sortIcon[sortOrder]} />
+              <div className={style.sortIcon[sortOrder]}/>
             </div>
           );
         },
@@ -269,13 +263,14 @@ const Liquidate: NextPage = () => {
           return (
             <div className={style.buttonsCell}>
               <HoneyButton variant="text">
-                View <div className={style.arrowIcon} />
+                View <div className={style.arrowIcon}/>
               </HoneyButton>
             </div>
           );
         }
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isMyBidsFilterEnabled, tableData, searchQuery]
   );
 
@@ -294,7 +289,7 @@ const Liquidate: NextPage = () => {
                     <div className={style.logoWrapper}>
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
-                          <Image src={honeyGenesisBee} />
+                          <Image src={honeyGenesisBee} layout='fill' alt={"collection logo"}/>
                         </HexaBoxContainer>
                       </div>
                     </div>
@@ -306,7 +301,7 @@ const Liquidate: NextPage = () => {
                 rightSide={
                   <div className={style.buttonsCell}>
                     <HoneyButton variant="text">
-                      View <div className={style.arrowIcon} />
+                      View <div className={style.arrowIcon}/>
                     </HoneyButton>
                   </div>
                 }
@@ -322,12 +317,13 @@ const Liquidate: NextPage = () => {
         }
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isMyBidsFilterEnabled, tableData, searchQuery]
   );
 
   const liquidateSidebar = () => (
     <HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
-      <LiquidateSidebar />
+      <LiquidateSidebar/>
     </HoneySider>
   );
 
@@ -359,8 +355,8 @@ const Liquidate: NextPage = () => {
               expandedRowRender: record => {
                 return (
                   <div className={style.expandSection}>
-                    <div className={style.dashedDivider} />
-                    <LiquidateExpandTable data={record.positions} />
+                    <div className={style.dashedDivider}/>
+                    <LiquidateExpandTable data={record.positions}/>
                   </div>
                 );
               }
@@ -370,7 +366,7 @@ const Liquidate: NextPage = () => {
         <div className={showTablet}>
           <div className={classNames(style.mobileSearchAndToggleContainer)}>
             <div className={style.mobileRow}>
-              <SearchForm />
+              <SearchForm/>
             </div>
           </div>
 
@@ -401,7 +397,7 @@ const Liquidate: NextPage = () => {
                     className={style.expandSection}
                     onClick={showMobileSidebar}
                   >
-                    <div className={style.dashedDivider} />
+                    <div className={style.dashedDivider}/>
                     <LiquidateExpandTableMobile
                       data={record.positions}
                       onPlaceBid={showMobileSidebar}
@@ -413,23 +409,23 @@ const Liquidate: NextPage = () => {
           />
         </div>
         {!tableDataFiltered.length &&
-          (isMyBidsFilterEnabled ? (
-            <div className={style.emptyStateContainer}>
-              <EmptyStateDetails
-                icon={<div className={style.docIcon} />}
-                title="You didn’t use any collections yet"
-                description="Turn off the filter my collection and choose any collection to borrow money"
-              />
-            </div>
-          ) : (
-            <div className={style.emptyStateContainer}>
-              <EmptyStateDetails
-                icon={<div className={style.docIcon} />}
-                title="No collections to display"
-                description="Turn off all filters and clear search inputs"
-              />
-            </div>
-          ))}
+        (isMyBidsFilterEnabled ? (
+          <div className={style.emptyStateContainer}>
+            <EmptyStateDetails
+              icon={<div className={style.docIcon}/>}
+              title="You didn’t use any collections yet"
+              description="Turn off the filter my collection and choose any collection to borrow money"
+            />
+          </div>
+        ) : (
+          <div className={style.emptyStateContainer}>
+            <EmptyStateDetails
+              icon={<div className={style.docIcon}/>}
+              title="No collections to display"
+              description="Turn off all filters and clear search inputs"
+            />
+          </div>
+        ))}
       </HoneyContent>
     </LayoutRedesign>
   );
