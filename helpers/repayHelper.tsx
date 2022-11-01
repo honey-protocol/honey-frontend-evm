@@ -1,6 +1,6 @@
 // approval 105% amount
 import { repayMargin } from "../constants/constant";
-import { redeemUnderlying, repayBorrow } from "../hooks/useHerc20";
+import { repayBorrow, withdrawUnderlying } from "../hooks/useHerc20";
 import { toWei } from "web3-utils";
 
 
@@ -15,12 +15,12 @@ export async function repayBorrowHelper(HERC20ContractAddress: string, NFTTokenI
   }
 }
 
-export async function redeemUnderlyingHelper(HERC20ContractAddress: string, userTotalDeposits: number, sliderValue: number, unit: Unit, userUnderlyingBalance: string) {
+export async function withdrawUnderlyingHelper(HERC20ContractAddress: string, userTotalDeposits: number, sliderValue: number, unit: Unit, userUnderlyingBalance: string) {
   if (userTotalDeposits - sliderValue >= 0.01) {
-    await redeemUnderlying(HERC20ContractAddress, sliderValue.toFixed(18).toString(), unit)
+    await withdrawUnderlying(HERC20ContractAddress, sliderValue.toFixed(18).toString(), unit)
     console.log(`redeem for amount: ${sliderValue}`)
   } else {
-    await redeemUnderlying(HERC20ContractAddress, userUnderlyingBalance, unit)
+    await withdrawUnderlying(HERC20ContractAddress, userUnderlyingBalance, unit)
     console.log(`redeem for amount: ${userUnderlyingBalance}`)
   }
 }

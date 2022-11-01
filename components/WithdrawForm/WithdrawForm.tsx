@@ -24,7 +24,7 @@ import {
   useGetUserUnderlyingBalance
 } from "../../hooks/useHtokenHelper";
 import { useGetTotalBorrow } from "../../hooks/useHerc20";
-import { redeemUnderlyingHelper, repayBorrowHelper } from "../../helpers/repayHelper";
+import { withdrawUnderlyingHelper } from "../../helpers/repayHelper";
 import { queryKeys } from "../../helpers/queryHelper";
 
 const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
@@ -42,6 +42,8 @@ const WithdrawForm = (props: WithdrawFormProps) => {
     ERC20ContractAddress,
     name,
     icon,
+    erc20Name,
+    erc20Icon,
     unit,
   } = getContractsByHTokenAddr(HERC20ContractAddress)
   const setWorkflow = useLendFlowStore((state) => state.setWorkflow)
@@ -108,8 +110,8 @@ const WithdrawForm = (props: WithdrawFormProps) => {
     setSliderValue(underlyingValue);
   };
 
-  const redeem = async () => {
-    await redeemUnderlyingHelper(
+  const withdraw = async () => {
+    await withdrawUnderlyingHelper(
       HERC20ContractAddress,
       userTotalDeposits,
       sliderValue,
@@ -117,12 +119,12 @@ const WithdrawForm = (props: WithdrawFormProps) => {
       userUnderlyingBalance
     )
   }
-  const redeemMutation = useMutation(redeem)
+  const withdrawMutation = useMutation(withdraw)
 
   const handleWithdraw = async () => {
     try {
       toast.processing()
-      await redeemMutation.mutateAsync()
+      await withdrawMutation.mutateAsync()
       console.log('Redeem Succeed')
       await queryClient.invalidateQueries(queryKeys.totalSupply(HERC20ContractAddress))
       await queryClient.invalidateQueries(queryKeys.userTotalSupply(walletPublicKey, HERC20ContractAddress))
@@ -218,6 +220,11 @@ const WithdrawForm = (props: WithdrawFormProps) => {
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleUnderlyingInputChange}
             maxValue={userTotalDeposits}
+            firstInputAddon={
+              <>
+                <Image src={erc20Icon} layout='fill' alt={"underlying icon"}/> <span>{erc20Name}</span>
+              </>
+            }
           />
         </div>
 
@@ -225,8 +232,6 @@ const WithdrawForm = (props: WithdrawFormProps) => {
           currentValue={sliderValue}
           maxValue={userTotalDeposits}
           minAvailableValue={0}
-          // maxSafePosition={0.4}
-          // maxAvailablePosition={maxValue} // TODO: should be capped by available liquidity
           onChange={handleSliderChange}
         />
       </div>

@@ -84,7 +84,7 @@ export async function depositUnderlying({
 
 }
 
-export async function redeemUnderlying(HERC20ContractAddress: string, amount: string, unit: Unit) {
+export async function withdrawUnderlying(HERC20ContractAddress: string, amount: string, unit: Unit) {
   const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json()
   const options = {
     chain: chain,
