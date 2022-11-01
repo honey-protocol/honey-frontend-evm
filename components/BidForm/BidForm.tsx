@@ -93,10 +93,6 @@ const BidForm = (props: BidFormProps) => {
     currentUserBid != 0 ? handlePlaceBid() : handleIncreaseBid();
   }
 
-  useEffect(() => {
-    console.log('@@--', currentUserBid);
-  }, [currentUserBid]);
-
   const handleCancel = () => {
     setIsSidebarVisibleInMobile(false);
     // setWorkflow(LoanWorkFlowType.none)
@@ -133,7 +129,7 @@ const BidForm = (props: BidFormProps) => {
         <div className={styles.nftInfo}>
           <div className={styles.nftImage}>
             <HexaBoxContainer>
-              <Image src={honeyGenesisBee} />
+              <Image src={honeyGenesisBee} layout='fill' alt={"collection logo"}/>
             </HexaBoxContainer>
           </div>
           <div className={styles.nftName}>Honey Genesis Bee</div>

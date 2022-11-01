@@ -30,7 +30,7 @@ export const LiquidateExpandTableMobile: FC<{
           <div className={sharedStyles.expandedRowIcon} />
           <div className={sharedStyles.collectionLogo}>
             <HexaBoxContainer>
-              <Image src={honeyGenesisBee} />
+              <Image src={honeyGenesisBee} layout='fill' alt={"collection logo"}/>
             </HexaBoxContainer>
           </div>
           <div className={sharedStyles.nameCellText}>
