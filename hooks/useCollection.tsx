@@ -9,6 +9,7 @@ import { getMetaDataFromNFTId } from "./useNFT";
 import { LendTableRow } from "../types/lend";
 import { generateMockHistoryData } from "../helpers/chartUtils";
 import { TimestampPoint } from "../components/HoneyChart/types";
+import { LiquidateTableRow } from "../types/liquidate";
 
 const defaultPosition: MarketTablePosition = {
   name: "",
@@ -128,4 +129,23 @@ export function useLendPositions(): [Array<TimestampPoint>, boolean] {
   const to = new Date().valueOf();
   return [generateMockHistoryData(from, to), false];
 
+}
+
+export function useLiquidation(user: MoralisType.User | null, collections: collection[]): LiquidateTableRow[] {
+  const result = collections.map(collection => {
+      const liquidateTableRow: LiquidateTableRow = {
+        key: collection.HERC20ContractAddress,
+        name: `${collection.name}/${collection.erc20Name}`,
+        icon: collection.icon,
+        erc20Icon: collection.erc20Icon,
+        risk: 0.1,
+        liqThreshold: 0.75,
+        totalDebt: 30,
+        tvl: 15,
+        positions: []
+      }
+      return liquidateTableRow
+    }
+  )
+  return result
 }

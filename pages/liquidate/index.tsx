@@ -7,7 +7,7 @@ import * as style from '../../styles/markets.css';
 import EmptyStateDetails from '../../components/EmptyStateDetails/EmptyStateDetails';
 import React, {
   ChangeEvent,
-  useCallback,
+  useCallback, useContext,
   useEffect,
   useMemo,
   useState
@@ -34,6 +34,9 @@ import HoneyTableNameCell from 'components/HoneyTable/HoneyTableNameCell/HoneyTa
 import LiquidateExpandTableMobile from 'components/LiquidateExpandTable/LiquidateExpandTableMobile';
 import { LiquidateTablePosition } from '../../types/liquidate';
 import useDisplayStore from 'store/displayStore';
+import { useLiquidation } from "../../hooks/useCollection";
+import { UserContext } from "../../contexts/userContext";
+import { collections } from "../../constants/NFTCollections";
 
 export const LIQUIDATION_THRESHOLD = 0.65;
 
@@ -48,10 +51,6 @@ const Liquidate: NextPage = () => {
    * @params none
    * @returns open positions | bidding data | userbid | user position
    */
-  const [fetchedPositions, setFetchedPositions] = useState<Array<LiquidateTablePosition>>([]);
-  const [nftPrice, setNftPrice] = useState<number>(0);
-  const [totalDebt, setTotalDebt] = useState<number>(0);
-  const [loanToValue, setLoanToValue] = useState<number>(0);
   const isSidebarVisibleInMobile = useDisplayStore(
     state => state.isSidebarVisibleInMobile
   );
@@ -64,31 +63,21 @@ const Liquidate: NextPage = () => {
     document.body.classList.add('disable-scroll');
   };
 
+  const {currentUser, setCurrentUser} = useContext(UserContext);
   const [tableData, setTableData] = useState<LiquidateTableRow[]>([]);
   const [tableDataFiltered, setTableDataFiltered] = useState<LiquidateTableRow[]>([]);
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([]);
   const [isMyBidsFilterEnabled, setIsMyBidsFilterEnabled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // PUT YOUR DATA SOURCE HERE
-  // MOCK DATA FOR NOW
+  /*    Begin insert data into table */
+  const liquidateData = useLiquidation(currentUser, collections)
   useEffect(() => {
-    const mockData: LiquidateTableRow[] = [
-      {
-        key: '0',
-        name: 'Honey Genesis Bee',
-        risk: loanToValue,
-        liqThreshold: LIQUIDATION_THRESHOLD,
-        totalDebt: totalDebt,
-        tvl: nftPrice * fetchedPositions.length,
-        positions: fetchedPositions
-      }
-    ];
-
-    setTableData(mockData);
-    setTableDataFiltered(mockData);
+    setTableData(liquidateData);
+    setTableDataFiltered(liquidateData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchedPositions]);
+  }, []);
+  /*   End insert data into table */
 
   const handleToggle = (checked: boolean) => {
     setIsMyBidsFilterEnabled(checked);
@@ -138,19 +127,26 @@ const Liquidate: NextPage = () => {
       {
         width: columnsWidth[0],
         title: SearchForm,
-        dataIndex: 'name',
+        dataIndex: ['name', 'icon', 'erc20Icon'],
         key: 'name',
-        render: (name: string) => {
+        render: (text: string, row: LiquidateTableRow) => {
           return (
             <div className={style.nameCell}>
               <div className={style.logoWrapper}>
                 <div className={style.collectionLogo}>
                   <HexaBoxContainer>
-                    <Image src={honeyGenesisBee} layout='fill' alt={"collection logo"}/>
+                    <Image src={row['icon']} layout='fill' alt="nft icon"/>
                   </HexaBoxContainer>
                 </div>
               </div>
-              <div className={style.collectionName}>{name}</div>
+              <div className={style.logoWrapper}>
+                <div className={style.collectionLogo}>
+                  <HexaBoxContainer>
+                    <Image src={row['erc20Icon']} layout='fill' alt='erc20 icon'/>
+                  </HexaBoxContainer>
+                </div>
+              </div>
+              <div className={style.collectionName}>{row['name']}</div>
             </div>
           );
         }
@@ -278,9 +274,9 @@ const Liquidate: NextPage = () => {
     () => [
       {
         width: columnsWidth[0],
-        dataIndex: 'name',
+        dataIndex: ['name', 'icon', 'erc20Icon'],
         key: 'name',
-        render: (name: string, row: LiquidateTableRow) => {
+        render: (text: string, row: LiquidateTableRow) => {
           return (
             <>
               <HoneyTableNameCell
@@ -289,12 +285,19 @@ const Liquidate: NextPage = () => {
                     <div className={style.logoWrapper}>
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
-                          <Image src={honeyGenesisBee} layout='fill' alt={"collection logo"}/>
+                          <Image src={row['icon']} layout='fill' alt="nft icon"/>
+                        </HexaBoxContainer>
+                      </div>
+                    </div>
+                    <div className={style.logoWrapper}>
+                      <div className={style.collectionLogo}>
+                        <HexaBoxContainer>
+                          <Image src={row['erc20Icon']} layout='fill' alt='erc20 icon'/>
                         </HexaBoxContainer>
                       </div>
                     </div>
                     <div className={style.nameCellMobile}>
-                      <div className={style.collectionName}>{name}</div>
+                      <div className={style.collectionName}>{row['name']}</div>
                     </div>
                   </>
                 }

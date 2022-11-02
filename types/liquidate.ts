@@ -1,6 +1,8 @@
 export type LiquidateTableRow = {
   key: string;
   name: string;
+  icon: string;
+  erc20Icon: string;
   risk: number;
   liqThreshold: number;
   totalDebt: number;
