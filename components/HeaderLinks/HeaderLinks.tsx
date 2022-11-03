@@ -24,7 +24,6 @@ export const links = [
   {
     title: 'LIQUIDATION',
     href: '/liquidate',
-    disabled: true
   },
   {
     title: 'FARM',
