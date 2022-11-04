@@ -12,8 +12,8 @@ interface LendFlowState {
 const useLendFlowStore = create<LendFlowState>()((set) => ({
   HERC20ContractAddr: "",
   workflow: LendWorkFlowType.none,
-  setHERC20ContractAddr: (HERC20ContractAddr: string) => set((state) => ({HERC20ContractAddr: HERC20ContractAddr})),
-  setWorkflow: (workflow: LendWorkFlowType) => set((state) => ({workflow: workflow})),
+  setHERC20ContractAddr: (HERC20ContractAddr: string) => set(() => ({HERC20ContractAddr: HERC20ContractAddr})),
+  setWorkflow: (workflow: LendWorkFlowType) => set(() => ({workflow: workflow})),
   reset: () => set(() => ({
     HERC20ContractAddr: "",
     workflow: LendWorkFlowType.none,

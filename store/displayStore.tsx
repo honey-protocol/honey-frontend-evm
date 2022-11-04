@@ -8,7 +8,7 @@ interface displayStoreState {
 
 const useDisplayStore = create<displayStoreState>()((set) => ({
   isSidebarVisibleInMobile: false,
-  setIsSidebarVisibleInMobile: (isSidebarVisibleInMobile: boolean) => set((state) => ({isSidebarVisibleInMobile: isSidebarVisibleInMobile})),
+  setIsSidebarVisibleInMobile: (isSidebarVisibleInMobile: boolean) => set(() => ({isSidebarVisibleInMobile: isSidebarVisibleInMobile})),
   reset: () => set(() => ({
     isSidebarVisibleInMobile: false
   })),
