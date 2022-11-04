@@ -159,13 +159,6 @@ const Markets: NextPage = () => {
                     </HexaBoxContainer>
                   </div>
                 </div>
-                <div className={style.logoWrapper}>
-                  <div className={style.collectionLogo}>
-                    <HexaBoxContainer>
-                      <Image src={row['erc20Icon']} layout='fill' alt='nft icon'/>
-                    </HexaBoxContainer>
-                  </div>
-                </div>
                 <div className={style.collectionName}>{row["name"]}</div>
               </div>
             );
@@ -202,7 +195,7 @@ const Markets: NextPage = () => {
 
         {
           width: columnsWidth[3],
-          title: ({ sortColumns }: ColumnTitleProps<MarketTableRow>) => {
+          title: ({sortColumns}: ColumnTitleProps<MarketTableRow>) => {
             const sortOrder = getColumnSortStatus(sortColumns, 'value');
             return (
               <div
@@ -213,7 +206,7 @@ const Markets: NextPage = () => {
                 }
               >
                 <span>SUPPLIED</span>
-                <div className={style.sortIcon[sortOrder]} />
+                <div className={style.sortIcon[sortOrder]}/>
               </div>
             );
           },
@@ -225,7 +218,7 @@ const Markets: NextPage = () => {
         },
         {
           width: columnsWidth[2],
-          title: ({ sortColumns }: ColumnTitleProps<MarketTableRow>) => {
+          title: ({sortColumns}: ColumnTitleProps<MarketTableRow>) => {
             const sortOrder = getColumnSortStatus(sortColumns, 'available');
             return (
               <div
@@ -236,7 +229,7 @@ const Markets: NextPage = () => {
                 }
               >
                 <span>Available</span>{' '}
-                <div className={style.sortIcon[sortOrder]} />
+                <div className={style.sortIcon[sortOrder]}/>
               </div>
             );
           },
@@ -282,13 +275,6 @@ const Markets: NextPage = () => {
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
                           <Image src={row['icon']} layout='fill' alt='nft icon'/>
-                        </HexaBoxContainer>
-                      </div>
-                    </div>
-                    <div className={style.logoWrapper}>
-                      <div className={style.collectionLogo}>
-                        <HexaBoxContainer>
-                          <Image src={row['erc20Icon']} layout='fill' alt='nft icon'/>
                         </HexaBoxContainer>
                       </div>
                     </div>

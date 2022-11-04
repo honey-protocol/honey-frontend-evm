@@ -18,7 +18,6 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import { ColumnType } from 'antd/lib/table';
 import HexaBoxContainer from '../../components/HexaBoxContainer/HexaBoxContainer';
 import Image from 'next/image';
-import honeyGenesisBee from '/public/images/imagePlaceholder.png';
 import { getColumnSortStatus } from '../../helpers/tableUtils';
 import HoneyButton from '../../components/HoneyButton/HoneyButton';
 import { formatNumber } from '../../helpers/format';
@@ -136,13 +135,6 @@ const Liquidate: NextPage = () => {
                 <div className={style.collectionLogo}>
                   <HexaBoxContainer>
                     <Image src={row['icon']} layout='fill' alt="nft icon"/>
-                  </HexaBoxContainer>
-                </div>
-              </div>
-              <div className={style.logoWrapper}>
-                <div className={style.collectionLogo}>
-                  <HexaBoxContainer>
-                    <Image src={row['erc20Icon']} layout='fill' alt='erc20 icon'/>
                   </HexaBoxContainer>
                 </div>
               </div>
@@ -286,13 +278,6 @@ const Liquidate: NextPage = () => {
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
                           <Image src={row['icon']} layout='fill' alt="nft icon"/>
-                        </HexaBoxContainer>
-                      </div>
-                    </div>
-                    <div className={style.logoWrapper}>
-                      <div className={style.collectionLogo}>
-                        <HexaBoxContainer>
-                          <Image src={row['erc20Icon']} layout='fill' alt='erc20 icon'/>
                         </HexaBoxContainer>
                       </div>
                     </div>

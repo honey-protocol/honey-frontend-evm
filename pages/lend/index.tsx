@@ -147,13 +147,6 @@ const Lend: NextPage = () => {
                   </HexaBoxContainer>
                 </div>
               </div>
-              <div className={style.logoWrapper}>
-                <div className={style.collectionLogo}>
-                  <HexaBoxContainer>
-                    <Image src={row['erc20Icon']} layout='fill' alt='nft icon'/>
-                  </HexaBoxContainer>
-                </div>
-              </div>
               <div className={style.collectionName}>{row['name']}</div>
             </div>
           );
@@ -266,13 +259,6 @@ const Lend: NextPage = () => {
                       <div className={style.collectionLogo}>
                         <HexaBoxContainer>
                           <Image src={row['icon']} layout='fill' alt={"collection logo"}/>
-                        </HexaBoxContainer>
-                      </div>
-                    </div>
-                    <div className={style.logoWrapper}>
-                      <div className={style.collectionLogo}>
-                        <HexaBoxContainer>
-                          <Image src={row['erc20Icon']} layout='fill' alt={"collection logo"}/>
                         </HexaBoxContainer>
                       </div>
                     </div>
