@@ -11,6 +11,6 @@ export enum LendWorkFlowType {
 
 export enum LiquidationWorkFlowType {
   none,
-  bid,
-  viewBids,
+  collectionBid,
+  collateralBid,
 }
