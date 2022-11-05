@@ -33,9 +33,10 @@ import HoneyTableNameCell from 'components/HoneyTable/HoneyTableNameCell/HoneyTa
 import LiquidateExpandTableMobile from 'components/LiquidateExpandTable/LiquidateExpandTableMobile';
 import { LiquidateTablePosition } from '../../types/liquidate';
 import useDisplayStore from 'store/displayStore';
-import { useLiquidation } from "../../hooks/useCollection";
+import { useLiquidation, useLiquidationPositions, usePositions } from "../../hooks/useCollection";
 import { UserContext } from "../../contexts/userContext";
 import { collections } from "../../constants/NFTCollections";
+import useLiquidationFlowStore from "../../store/liquidationFlowStore";
 
 export const LIQUIDATION_THRESHOLD = 0.65;
 
@@ -67,7 +68,8 @@ const Liquidate: NextPage = () => {
   const [tableDataFiltered, setTableDataFiltered] = useState<LiquidateTableRow[]>([]);
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([]);
   const [isMyBidsFilterEnabled, setIsMyBidsFilterEnabled] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr)
+  const setHERC20ContractAddr = useLiquidationFlowStore((state) => state.setHERC20ContractAddr)
 
   /*    Begin insert data into table */
   const liquidateData = useLiquidation(currentUser, collections)
@@ -76,12 +78,16 @@ const Liquidate: NextPage = () => {
     setTableDataFiltered(liquidateData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const [positions, isLoadingPositions] = useLiquidationPositions(HERC20ContractAddress)
   /*   End insert data into table */
 
   const handleToggle = (checked: boolean) => {
     setIsMyBidsFilterEnabled(checked);
   };
 
+  /*    Begin filter function       */
+  const [searchQuery, setSearchQuery] = useState('');
   const onSearch = (searchTerm: string): LiquidateTableRow[] => {
     if (!searchTerm) {
       return [...tableData];
@@ -107,6 +113,7 @@ const Liquidate: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [tableData]
   );
+  /*    End filter function            */
 
 
   const SearchForm = () => {
@@ -344,7 +351,7 @@ const Liquidate: NextPage = () => {
                 return (
                   <div className={style.expandSection}>
                     <div className={style.dashedDivider}/>
-                    <LiquidateExpandTable data={record.positions}/>
+                    <LiquidateExpandTable data={positions}/>
                   </div>
                 );
               }
@@ -387,7 +394,7 @@ const Liquidate: NextPage = () => {
                   >
                     <div className={style.dashedDivider}/>
                     <LiquidateExpandTableMobile
-                      data={record.positions}
+                      data={positions}
                       onPlaceBid={showMobileSidebar}
                     />
                   </div>

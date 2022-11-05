@@ -7,7 +7,6 @@ import { ColumnType } from 'antd/lib/table';
 import { LiquidateTablePosition } from '../../types/liquidate';
 import HexaBoxContainer from '../HexaBoxContainer/HexaBoxContainer';
 import Image from 'next/image';
-import honeyGenesisBee from '/public/images/imagePlaceholder.png';
 import { InfoBlock } from '../InfoBlock/InfoBlock';
 import { formatNumber, formatNFTName } from '../../helpers/format';
 import HoneyTooltip from '../HoneyTooltip/HoneyTooltip';
@@ -26,24 +25,25 @@ export const LiquidateExpandTable: FC<{ data: LiquidateTablePosition[] }> = ({
     () => [
       {
         width: 250,
-        dataIndex: 'name',
+        dataIndex: ['name', 'image', 'tokenId', 'healthLvl'],
+        key: 'tokenId',
         sortOrder: filter === 'most_critical' ? 'descend' : undefined,
         sorter: (a, b) => b.healthLvl - a.healthLvl,
-        render: (name, record) => (
+        render: (text: string, row: LiquidateTablePosition) => (
           <div className={sharedStyles.expandedRowNameCell}>
             <div className={sharedStyles.expandedRowIcon} />
             <div className={sharedStyles.collectionLogo}>
               <HexaBoxContainer>
-                <Image src={honeyGenesisBee} layout='fill' alt={"collection logo"}/>
+                <Image src={row['image']} layout='fill' alt={"collection logo"}/>
               </HexaBoxContainer>
             </div>
             <div className={sharedStyles.nameCellText}>
-              <HoneyTooltip label={name}>
+              <HoneyTooltip label={row["name"]}>
                 <div className={sharedStyles.collectionName}>
-                  {formatNFTName(name)}
+                  {formatNFTName(row["name"])}
                 </div>
               </HoneyTooltip>
-              <HealthLvl healthLvl={record.healthLvl} />
+              <HealthLvl healthLvl={row["healthLvl"]} />
             </div>
           </div>
         )

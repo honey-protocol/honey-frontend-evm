@@ -14,28 +14,29 @@ import HoneyTooltip from '../HoneyTooltip/HoneyTooltip';
 import HealthLvl from 'components/HealthLvl/HealthLvl';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 
-const { formatPercent: fp, formatERC20: fs } = formatNumber;
+const {formatPercent: fp, formatERC20: fs} = formatNumber;
 
 export const LiquidateExpandTableMobile: FC<{
   data: LiquidateTablePosition[];
   onPlaceBid: Function;
-}> = ({ data, onPlaceBid }) => {
+}> = ({data, onPlaceBid}) => {
   const expandColumnsMobile: ColumnType<LiquidateTablePosition>[] = [
     {
-      dataIndex: 'name',
+      dataIndex: ['name', 'image', 'tokenId', 'healthLvl'],
+      key: 'tokenId',
       sortOrder: 'descend',
       sorter: (a, b) => b.healthLvl - a.healthLvl,
-      render: (name, record) => (
+      render: (text: string, row: LiquidateTablePosition) => (
         <div className={sharedStyles.expandedRowNameCell}>
-          <div className={sharedStyles.expandedRowIcon} />
+          <div className={sharedStyles.expandedRowIcon}/>
           <div className={sharedStyles.collectionLogo}>
             <HexaBoxContainer>
-              <Image src={honeyGenesisBee} layout='fill' alt={"collection logo"}/>
+              <Image src={row['image']} layout='fill' alt={"collection logo"}/>
             </HexaBoxContainer>
           </div>
           <div className={sharedStyles.nameCellText}>
-            <div className={sharedStyles.collectionNameMobile}>{name}</div>
-            <HealthLvl healthLvl={record.healthLvl} />
+            <div className={sharedStyles.collectionNameMobile}>{row["name"]}</div>
+            <HealthLvl healthLvl={row["healthLvl"]}/>
           </div>
         </div>
       )
@@ -62,7 +63,7 @@ export const LiquidateExpandTableMobile: FC<{
           <span className={styles.positionsCount}>{data.length}</span>
         </div>
         <HoneyButton variant="text" onClick={() => onPlaceBid()}>
-          Place bid <div className={sharedStyles.arrowRightIcon} />
+          Place bid <div className={sharedStyles.arrowRightIcon}/>
         </HoneyButton>
       </div>
       <HoneyTable
