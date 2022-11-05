@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useLoanFlowStore from "../store/loanFlowStore";
 import useLendFlowStore from "../store/lendFlowStore";
+import useLiquidationFlowStore from "../store/liquidationFlowStore";
 
 const queryClient = new QueryClient()
 
@@ -25,10 +26,12 @@ function MyApp({Component, pageProps}: AppProps) {
   const router = useRouter()
   const resetLoanFlowStore = useLoanFlowStore((state) => state.reset)
   const resetLendFlowStore = useLendFlowStore((state) => state.reset)
+  const resetLiquidationFlowStore = useLiquidationFlowStore((state) => state.reset)
   useEffect(() => {
     const handleRouteChange = (url: any, {shallow}: any) => {
       resetLoanFlowStore()
       resetLendFlowStore()
+      resetLiquidationFlowStore()
     }
     router.events.on('routeChangeStart', handleRouteChange)
     return () => {

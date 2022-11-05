@@ -8,3 +8,9 @@ export enum LendWorkFlowType {
   none,
   lendOrWithdraw,
 }
+
+export enum LiquidationWorkFlowType {
+  none,
+  bid,
+  viewBids,
+}
