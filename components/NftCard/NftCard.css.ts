@@ -4,7 +4,7 @@ import { typography, vars } from '../../styles/theme.css';
 export const nftCard = style([
   {
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     paddingBottom: 14,
     cursor: 'pointer'
   }
@@ -40,8 +40,9 @@ export const nftDescription = style({});
 export const nftName = style([
   typography.caption,
   {
-    color: vars.colors.grayTransparent,
-    marginBottom: '2px'
+    color: vars.colors.black,
+    marginBottom: '2px',
+    fontSize: '14px'
   }
 ]);
 

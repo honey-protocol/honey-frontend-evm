@@ -19,7 +19,13 @@ import { depositNFTCollateral } from "../../hooks/useHerc20";
 import { queryKeys } from "../../helpers/queryHelper";
 import getDepositNFTApproval from "../../hooks/useERC721";
 
-const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
+const {
+  format: f,
+  formatPercent: fp,
+  formatERC20: fs,
+  parse: p,
+  formatShortName: fsn
+} = formatNumber;
 
 const DepositNFTForm = (props: DepositNFTProps) => {
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
@@ -103,11 +109,11 @@ const DepositNFTForm = (props: DepositNFTProps) => {
       HERC20ContractAddress,
       selectedNft?.tokenId || ""
     ).then(() => {
-      console.log('get NFT Approval');
+        console.log('get NFT Approval');
     }).catch(function (err) {
-      console.error('get NFT Approval fail');
-      throw err;
-    });
+        console.error('get NFT Approval fail');
+        throw err;
+      });
   };
 
   const getApprovalMutation = useMutation(getApproval)
@@ -124,7 +130,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
         <NftList
           data={availableNFTs}
           selectNFT={selectNFT}
-          buttonText={maxBorrow.toFixed(2).toString()}
+          buttonText={fsn(maxBorrow)}
         />
       </>
     );

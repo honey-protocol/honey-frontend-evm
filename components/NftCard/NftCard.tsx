@@ -39,10 +39,12 @@ const NftCard = (props: NftCardProps) => {
       </div>
       <div className={styles.nftRight}>
         <div className={styles.nftDescription}>
-          <div className={styles.nftName}>{nft.name}</div>
-          <div className={styles.nftLabel}>
-            {text} {hint && <span className={styles.hint}>{hint}</span>}
+          <div className={styles.nftName}>
+            {nft.name} #{text}
           </div>
+          {/* <div className={styles.nftLabel}>
+            {text} {hint && <span className={styles.hint}>{hint}</span>}
+          </div> */}
         </div>
         <HoneyButton variant="text">
           Up to {buttonText}
