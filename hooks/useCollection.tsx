@@ -9,7 +9,9 @@ import { getMetaDataFromNFTId } from "./useNFT";
 import { LendTableRow } from "../types/lend";
 import { generateMockHistoryData } from "../helpers/chartUtils";
 import { TimestampPoint } from "../components/HoneyChart/types";
-import { LiquidateTableRow } from "../types/liquidate";
+import { LiquidateTablePosition, LiquidateTableRow } from "../types/liquidate";
+import { ActiveCouponByCollectionQueryDocument, ActiveCouponQueryQuery, getBuiltGraphSDK } from "../.graphclient";
+import { getNFTDefaultImage, getNFTName } from "../helpers/collateralHelper";
 
 const defaultPosition: MarketTablePosition = {
   name: "",
@@ -142,10 +144,51 @@ export function useLiquidation(user: MoralisType.User | null, collections: colle
         liqThreshold: 0.75,
         totalDebt: 30,
         tvl: 15,
-        positions: []
       }
       return liquidateTableRow
     }
   )
   return result
+}
+
+export function useLiquidationPositions(HERC20ContractAddress: string): [LiquidateTablePosition[], boolean] {
+  const sdk = getBuiltGraphSDK()
+  const onSubgraphQuerySuccess = (data: ActiveCouponQueryQuery) => {
+    return data
+  }
+  const onSubGraphQueryError = () => {
+    return null
+  }
+  const {data: collateralsFromSubgraph, isLoading, isFetching} = useQuery(
+    queryKeys.listCollateral(HERC20ContractAddress),
+    async () => {
+      if( HERC20ContractAddress != "") {
+        return await sdk.ActiveCouponByCollectionQuery({HERC20ContractAddress: HERC20ContractAddress.toLowerCase()})
+      } else {
+        return []
+      }
+    }
+    ,
+    {
+      onSuccess: onSubgraphQuerySuccess,
+      onError: onSubGraphQueryError,
+      retry: false,
+      staleTime: defaultCacheStaleTime
+    }
+  )
+  const positionList = collateralsFromSubgraph?.coupons?.map(collateralObj => {
+    const result: LiquidateTablePosition = {
+      name: getNFTName(collateralObj.hTokenAddr),
+      image: getNFTDefaultImage(collateralObj.hTokenAddr),
+      couponId: collateralObj.couponID,
+      tokenId: collateralObj.collateralID,
+      healthLvl: 0.5,
+      untilLiquidation: 0.1,
+      debt: collateralObj.amount,
+      estimatedValue: 0.5,
+    }
+    return result
+  })
+
+  return [positionList || [], isLoading || isFetching]
 }
