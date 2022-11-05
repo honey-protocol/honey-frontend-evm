@@ -78,8 +78,15 @@ const LendSidebar = (props: LendSidebarProps) => {
             <DepositForm/>
           </>) : (workflow == LendWorkFlowType.lendOrWithdraw && activeTab == "withdraw") ? (
           <>
-            <WithdrawForm/>
-          </>) : (<></>)}
+            <WithdrawForm />
+          </>
+        ) : (
+          <EmptyStateDetails
+            icon={<div className={styles.boltIcon} />}
+            title="Manage panel"
+            description="First, choose a NFT collection"
+          />
+        )}
       </HoneyTabs>
     </div>
   );
