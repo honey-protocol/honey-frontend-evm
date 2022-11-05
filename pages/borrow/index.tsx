@@ -42,6 +42,7 @@ import { LoanWorkFlowType } from "../../types/workflows";
 import MarketsSidebar from "../../components/MarketsSidebar/MarketsSidebar";
 import useDisplayStore from "../../store/displayStore";
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
+import HealthLvl from 'components/HealthLvl/HealthLvl';
 
 const {formatPercent: fp, formatERC20: fs} = formatNumber
 const Markets: NextPage = () => {
@@ -323,10 +324,8 @@ const Markets: NextPage = () => {
           </div>
           <div className={style.nameCellText}>
             <div className={style.collectionName}>{row['name']}</div>
-            <div className={style.risk.safe}>
-              <span className={style.valueCell}>{"0"}</span>{' '}
-              <span className={style.riskText}>Risk lvl</span>
-            </div>
+
+            <HealthLvl healthLvl={0} />
           </div>
         </div>
       )
