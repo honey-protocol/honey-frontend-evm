@@ -59,7 +59,7 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
         activeKey={activeTab}
         onTabChange={handleTabChange}
         items={items}
-        active={workflow != LoanWorkFlowType.loanOrBorrow}
+        active={true}
       >
         {!currentUser ? (
           <EmptyStateDetails
