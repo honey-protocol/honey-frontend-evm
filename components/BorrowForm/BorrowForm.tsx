@@ -152,9 +152,11 @@ const BorrowForm = (props: BorrowProps) => {
   };
   /*  end handling borrow function */
 
-
   const liqPercent =
     ((nftPrice - borrowedValue / collateralFactor) / nftPrice) * 100;
+  const newLiqPercent = nftPrice
+    ? ((nftPrice - newTotalDebt) / nftPrice) * 100
+    : 0;
 
   const renderContent = () => {
 
@@ -197,30 +199,18 @@ const BorrowForm = (props: BorrowProps) => {
               }
             />
           </div>
+
           <div className={styles.col}>
             <InfoBlock
-              value={`${fs(borrowedValue / collateralFactor)} ${
-                borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
-              }`}
-              valueSize="normal"
-              isDisabled={borrowedValue <= 0}
+              value={fs(userAllowance)}
               title={
                 <span className={hAlign}>
-                  Liquidation price <div className={questionIcon}/>
+                  Allowance <div className={questionIcon} />
                 </span>
               }
-              toolTipLabel={
-                <span>
-                  Price at which the position (NFT) will be liquidated.{' '}
-                  <a
-                    className={styles.extLink}
-                    target="blank"
-                    href=" " //TODO: add link to docs
-                  >
-                    Learn more.
-                  </a>
-                </span>
-              }
+              toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
+                60
+              )}`}
             />
           </div>
         </div>
@@ -231,20 +221,20 @@ const BorrowForm = (props: BorrowProps) => {
               value={fp(loanToValue * 100)}
               toolTipLabel={
                 <span>
-                  Risk level is measured using the{' '}
                   <a
                     className={styles.extLink}
                     target="blank"
                     href="https://docs.honey.finance/learn/defi-lending#loan-to-value-ratio"
                   >
-                    loan-to-value ratio
+                    Loan-to-value ratio{' '}
                   </a>
-                  , and determines how close a position is to being liquidated.
+                  measures the ratio of the debt, compared to the value of the
+                  collateral.
                 </span>
               }
               title={
                 <span className={hAlign}>
-                  Risk level <div className={questionIcon}/>
+                  Loan-to-value % <div className={questionIcon} />
                 </span>
               }
             />
@@ -262,18 +252,18 @@ const BorrowForm = (props: BorrowProps) => {
             <InfoBlock
               title={
                 <span className={hAlign}>
-                  New risk level <div className={questionIcon}/>
+                  New LTV %<div className={questionIcon} />
                 </span>
               }
               toolTipLabel={
                 <span>
-                  Estimated{' '}
+                  New{' '}
                   <a
                     className={styles.extLink}
                     target="blank"
-                    href=" https://docs.honey.finance/lending-protocol/borrowing#risk-level"
+                    href="https://docs.honey.finance/learn/defi-lending#loan-to-value-ratio"
                   >
-                    risk level{' '}
+                    Loan-to-value ratio{' '}
                   </a>
                   after the requested changes to the loan are approved.
                 </span>
@@ -346,23 +336,37 @@ const BorrowForm = (props: BorrowProps) => {
         <div className={styles.row}>
           <div className={styles.col}>
             <InfoBlock
-              value={fs(userAllowance)}
+              value={`${fs(borrowedValue / collateralFactor)} ${
+                borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
+              }`}
+              valueSize="normal"
+              isDisabled={borrowedValue <= 0}
               title={
                 <span className={hAlign}>
-                  Allowance <div className={questionIcon}/>
+                  Liquidation price <div className={questionIcon} />
                 </span>
               }
-              toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
-                60
-              )}`}
+              toolTipLabel={
+                <span>
+                  Price at which the position (NFT) will be liquidated.{' '}
+                  <a
+                    className={styles.extLink}
+                    target="blank"
+                    href=" " //TODO: add link to docs
+                  >
+                    Learn more.
+                  </a>
+                </span>
+              }
             />
           </div>
+
           <div className={styles.col}>
             <InfoBlock
-              isDisabled
+              isDisabled={borrowedValue <= 0}
               title={
                 <span className={hAlign}>
-                  New allowance <div className={questionIcon}/>
+                  New Liquidation price <div className={questionIcon} />
                 </span>
               }
               toolTipLabel={
@@ -371,20 +375,17 @@ const BorrowForm = (props: BorrowProps) => {
                   <a
                     className={styles.extLink}
                     target="blank"
-                    href="https://docs.honey.finance/learn/defi-lending#allowance"
+                    href=" " //TODO: add link to docs
                   >
-                    allowance{' '}
-                  </a>
+                    liquidation Price
+                  </a>{' '}
                   after the requested changes to the loan are approved.
                 </span>
               }
-              value={fs(
-                userAllowance - newAdditionalDebt < 0
-                  ? 0
-                  : !valueUnderlying
-                    ? userAllowance
-                    : userAllowance - newAdditionalDebt
-              )}
+              value={`${fs(newTotalDebt / collateralFactor)} ${
+                borrowedValue ? `(-${newLiqPercent.toFixed(0)}%)` : ''
+              }`}
+              valueSize="normal"
             />
           </div>
         </div>
@@ -440,11 +441,7 @@ const BorrowForm = (props: BorrowProps) => {
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleUnderlyingInputChange}
             maxValue={userAllowance}
-            firstInputAddon={
-              <>
-                <Image src={erc20Icon} layout='fill' alt={"underlying icon"}/> <span>{erc20Name}</span>
-              </>
-            }
+            firstInputAddon={erc20Name}
           />
         </div>
 

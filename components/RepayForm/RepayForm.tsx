@@ -201,6 +201,7 @@ const RepayForm = (props: RepayProps) => {
   const liqPercent = nftPrice
     ? ((nftPrice - userDebt / collateralFactor) / nftPrice) * 100
     : 0;
+  const newLiqPercent = nftPrice ? ((nftPrice - newDebt) / nftPrice) * 100 : 0;
 
   const renderContent = () => {
     return (
@@ -240,29 +241,15 @@ const RepayForm = (props: RepayProps) => {
           </div>
           <div className={styles.col}>
             <InfoBlock
-              value={`${fs(userDebt / collateralFactor)} ${
-                userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''
-              }`}
-              valueSize="normal"
-              isDisabled={userDebt == 0}
+              value={fs(userAllowance)}
               title={
                 <span className={hAlign}>
-                  Liquidation price
-                  <div className={questionIcon}/>
+                  Allowance <div className={questionIcon} />
                 </span>
               }
-              toolTipLabel={
-                <span>
-                  Price at which the position (NFT) will be liquidated.{' '}
-                  <a
-                    className={styles.extLink}
-                    target="blank"
-                    href=" " //TODO: add link to docs
-                  >
-                    Learn more.
-                  </a>
-                </span>
-              }
+              toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
+                60
+              )}`}
             />
           </div>
         </div>
@@ -393,40 +380,55 @@ const RepayForm = (props: RepayProps) => {
         <div className={styles.row}>
           <div className={styles.col}>
             <InfoBlock
-              value={fs(userAllowance)}
+              value={`${fs(userDebt / collateralFactor)} ${
+                userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''
+              }`}
+              valueSize="normal"
               title={
                 <span className={hAlign}>
-                  Allowance <div className={questionIcon}/>
+                  Liquidation price
+                  <div className={questionIcon} />
                 </span>
               }
-              toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
-                60
-              )}`}
+              toolTipLabel={
+                <span>
+                  Price at which the position (NFT) will be liquidated.{' '}
+                  <a
+                    className={styles.extLink}
+                    target="blank"
+                    href=" " //TODO: add link to docs
+                  >
+                    Learn more.
+                  </a>
+                </span>
+              }
             />
           </div>
           <div className={styles.col}>
             <InfoBlock
-              isDisabled
+              isDisabled={userDebt <= 0}
               title={
                 <span className={hAlign}>
-                  New allowance
-                  <div className={questionIcon}/>
+                  New Liquidation price <div className={questionIcon} />
                 </span>
               }
-              value={fs(userAllowance + (valueUnderlying ?? 0))}
               toolTipLabel={
                 <span>
                   Estimated{' '}
                   <a
                     className={styles.extLink}
                     target="blank"
-                    href="https://docs.honey.finance/learn/defi-lending#allowance"
+                    href=" " //TODO: add link to docs
                   >
-                    allowance{' '}
-                  </a>
+                    liquidation Price
+                  </a>{' '}
                   after the requested changes to the loan are approved.
                 </span>
               }
+              value={`${fs(newDebt / collateralFactor)} ${
+                userDebt ? `(-${newLiqPercent.toFixed(0)}%)` : ''
+              }`}
+              valueSize="normal"
             />
           </div>
         </div>
@@ -452,11 +454,7 @@ const RepayForm = (props: RepayProps) => {
             secondInputValue={p(f(valueUnderlying))}
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleUnderlyingInputChange}
-            firstInputAddon={
-              <>
-                <Image src={erc20Icon} layout='fill' alt={"underlying icon"}/> <span>{erc20Name}</span>
-              </>
-            }
+            firstInputAddon={erc20Name}
           />
         </div>
 
