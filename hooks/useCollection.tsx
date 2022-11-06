@@ -10,7 +10,7 @@ import { LendTableRow } from "../types/lend";
 import { generateMockHistoryData } from "../helpers/chartUtils";
 import { TimestampPoint } from "../components/HoneyChart/types";
 import { LiquidateTablePosition, LiquidateTableRow } from "../types/liquidate";
-import { ActiveCouponByCollectionQueryDocument, ActiveCouponQueryQuery, getBuiltGraphSDK } from "../.graphclient";
+import { ActiveCouponQueryQuery, getBuiltGraphSDK } from "../.graphclient";
 import { getNFTDefaultImage, getNFTName } from "../helpers/collateralHelper";
 
 const defaultPosition: MarketTablePosition = {
