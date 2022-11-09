@@ -1,6 +1,6 @@
-// need this function because sometimes 3rd party provider return address in upper case
-import { collections } from "../constants/NFTCollections";
+import { collections, helperContract } from "../constants/NFTCollections";
 
+// need this function because sometimes 3rd party provider return address in upper case
 export function caseInsensitiveCompare(str1: string, str2: string) {
   return str1.toLowerCase() === str2.toLowerCase()
 }
@@ -9,10 +9,11 @@ export function getContractsByHTokenAddr(HERC20ContractAddr: string) {
   const collection = collections.find(
     collection => caseInsensitiveCompare(collection.HERC20ContractAddress, HERC20ContractAddr)
   );
+
   const ERC20ContractAddress = collection?.ERC20ContractAddress || ''
-  const hivemindContractAddress = collection?.hivemindContractAddress || ''
+  const hivemindContractAddress = helperContract.hivemindContractAddress
   const nftContractAddress = collection?.ERC721ContractAddress || ''
-  const htokenHelperContractAddress = collection?.htokenHelperContractAddress || ''
+  const htokenHelperContractAddress = helperContract.htokenHelperContractAddress
   const name = collection?.name || ''
   const icon = collection?.icon || ''
   const erc20Name = collection?.erc20Name || ''

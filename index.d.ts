@@ -1,11 +1,6 @@
 declare module '*.png';
 declare module '*.svg';
 
-type Creator = {
-  address: string;
-  verified: number;
-  share: number;
-};
 
 //tokenAcc is same as pubkey,
 type NFT = {
@@ -49,6 +44,9 @@ type collection = {
   ERC721ContractAddress: string
   ERC20ContractAddress: string
   HERC20ContractAddress: string
+}
+
+type helperContract = {
   htokenHelperContractAddress: string
   hivemindContractAddress: string
   oracleContractAddress: string
