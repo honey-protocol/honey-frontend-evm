@@ -79,6 +79,7 @@ function getHelperContract() {
       htokenHelperContractAddress: "0xf2CE170da2106371e337615be64A67B9316A651b",
       hivemindContractAddress: "0xd3de0B05F13759267F7F3213BEe7699F648c2Cbb",
       oracleContractAddress: "0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163",
+      marketContractAddress: "0xcdfFDC33A72920850EFF7593BA7687C9e8FC9954",
     }
     return contract
   } else if (envName == "prod") {
@@ -86,6 +87,7 @@ function getHelperContract() {
       htokenHelperContractAddress: "0xf2CE170da2106371e337615be64A67B9316A651b",
       hivemindContractAddress: "0xd3de0B05F13759267F7F3213BEe7699F648c2Cbb",
       oracleContractAddress: "0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163",
+      marketContractAddress: "0xcdfFDC33A72920850EFF7593BA7687C9e8FC9954",
     }
     return contract
   } else {
@@ -93,6 +95,7 @@ function getHelperContract() {
       htokenHelperContractAddress: "",
       hivemindContractAddress: "",
       oracleContractAddress: "",
+      marketContractAddress: "",
     }
     return contract
   }

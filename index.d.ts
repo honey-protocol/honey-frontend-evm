@@ -50,6 +50,7 @@ type helperContract = {
   htokenHelperContractAddress: string
   hivemindContractAddress: string
   oracleContractAddress: string
+  marketContractAddress: string
 }
 
 type userCollectionStatistic = {
