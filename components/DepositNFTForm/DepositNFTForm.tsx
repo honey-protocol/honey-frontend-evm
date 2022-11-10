@@ -36,9 +36,10 @@ const DepositNFTForm = (props: DepositNFTProps) => {
   const {
     nftContractAddress,
     htokenHelperContractAddress,
-    hivemindContractAddress
-  } = getContractsByHTokenAddr(HERC20ContractAddress)
-  const setWorkflow = useLoanFlowStore((state) => state.setWorkflow)
+    hivemindContractAddress,
+    erc20Name
+  } = getContractsByHTokenAddr(HERC20ContractAddress);
+  const setWorkflow = useLoanFlowStore(state => state.setWorkflow);
   const [selectedNft, setSelectedNft] = useState<NFT | null>(null);
   const {toast, ToastComponent} = useToast();
 
@@ -130,7 +131,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
         <NftList
           data={availableNFTs}
           selectNFT={selectNFT}
-          buttonText={fsn(maxBorrow)}
+          buttonText={`${fsn(maxBorrow)} ${erc20Name}`}
         />
       </>
     );
