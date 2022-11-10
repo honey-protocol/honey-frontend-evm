@@ -59,7 +59,7 @@ const LendSidebar = (props: LendSidebarProps) => {
         activeKey={activeTab}
         onTabChange={handleTabChange}
         items={items}
-        active={workflow != LendWorkFlowType.lendOrWithdraw}
+        active={true}
       >
         {!currentUser ? (
           <EmptyStateDetails
