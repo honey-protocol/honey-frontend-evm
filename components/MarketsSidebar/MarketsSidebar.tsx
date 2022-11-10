@@ -16,10 +16,13 @@ import RepayForm from "../RepayForm/RepayForm";
 type Tab = 'borrow' | 'repay';
 
 const MarketsSidebar = (props: MarketsSidebarProps) => {
-  const {
-  } = props;
-  const workflow = useLoanFlowStore((state) => state.workflow)
-  const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
+  const {} = props;
+  const { workflow, HERC20ContractAddr, setWorkflow } = useLoanFlowStore(
+    state => state
+  );
+  const setIsSidebarVisibleInMobile = useDisplayStore(
+    state => state.setIsSidebarVisibleInMobile
+  );
   const queryClient = useQueryClient();
   /*  begin tab function            */
   const [activeTab, setActiveTab] = useState<Tab>('borrow');
@@ -53,6 +56,12 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
   };
   /* end authentication function */
 
+  const initDepositNFTFlow = () => {
+    setWorkflow(LoanWorkFlowType.depositNFT);
+    setIsSidebarVisibleInMobile(true);
+    document.body.classList.add('disable-scroll');
+  };
+
   return (
     <div className={styles.marketsSidebarContainer}>
       <HoneyTabs
@@ -68,7 +77,13 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
             description="First, choose a NFT collection"
             buttons={[{ title: 'CONNECT WALLET', onClick: connect }]}
           />
-        ) : (workflow == LoanWorkFlowType.depositNFT) ? (
+        ) : !HERC20ContractAddr ? (
+          <EmptyStateDetails
+            icon={<div className={styles.boltIcon} />}
+            title="Manage panel"
+            description="First, choose a NFT collection"
+          />
+        ) : workflow == LoanWorkFlowType.depositNFT ? (
           <>
             <DepositNFTForm/>
           </>
@@ -81,9 +96,16 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
           </>
         ) : (
           <EmptyStateDetails
-            icon={<div className={styles.boltIcon} />}
-            title="Manage panel"
-            description="First, choose a NFT collection"
+            icon=""
+            title=""
+            description=""
+            buttons={[
+              {
+                title: 'Select Nft to deposit',
+                variant: 'primary',
+                onClick: initDepositNFTFlow
+              }
+            ]}
           />
         )}
       </HoneyTabs>
