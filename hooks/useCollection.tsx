@@ -90,7 +90,8 @@ export function usePositions(
 								name: metaData.name,
 								image: getImageUrlFromMetaData(metaData.metadata || ''),
 								tokenId: metaData.token_id,
-								couponId: coupon.couponId
+								couponId: coupon.couponId,
+								debt: Number(coupon.borrowAmount)
 							};
 							return result;
 						} catch (e) {
@@ -113,6 +114,11 @@ export function usePositions(
 	const positions = results
 		.map((result) => result.data || defaultPosition)
 		.filter((position) => position.image != '');
+
+	return [
+		positions,
+		isLoadingPosition || isFetchingPosition || isLoadingCoupons || isFetchingCoupons
+	];
 
 	return [
 		positions,
