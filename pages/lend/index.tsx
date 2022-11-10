@@ -45,7 +45,9 @@ const Lend: NextPage = () => {
     useState(false);
 
   const setWorkFlow = useLendFlowStore((state) => state.setWorkflow)
-  const setHERC20ContractAddr = useLendFlowStore((state) => state.setHERC20ContractAddr)
+  const { setHERC20ContractAddr, HERC20ContractAddr } = useLendFlowStore(
+    state => state
+  );
   const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile)
   const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
 
@@ -333,6 +335,7 @@ const Lend: NextPage = () => {
                 onClick: event => initLendOrWithdrawFlow(event, record)
               };
             }}
+            selectedRowsKeys={[HERC20ContractAddr]}
             // TODO: uncomment when the chart has been replaced and implemented
             // expandable={{
             //   // we use our own custom expand column
