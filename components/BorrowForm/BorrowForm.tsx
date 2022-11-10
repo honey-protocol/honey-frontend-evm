@@ -281,7 +281,7 @@ const BorrowForm = (props: BorrowProps) => {
                   after the requested changes to the loan are approved.
                 </span>
               }
-              value={fp((borrowedValue + newAdditionalDebt / nftPrice) * 100)}
+              value={fp(((borrowedValue + newAdditionalDebt) / nftPrice) * 100)}
               isDisabled={true}
             />
             <HoneySlider
@@ -464,7 +464,7 @@ const BorrowForm = (props: BorrowProps) => {
           minAvailableValue={borrowedValue}
           maxSafePosition={0.3 - borrowedValue / 1000}
           dangerPosition={0.45 - borrowedValue / 1000}
-          maxAvailablePosition={collateralFactor}
+          maxAvailablePosition={userAllowance / nftPrice}
           onChange={handleSliderChange}
         />
       </>
