@@ -59,12 +59,7 @@ const LendSidebar = (props: LendSidebarProps) => {
 	/* end authentication function */
 	return (
 		<div className={styles.lendSidebarContainer}>
-			<HoneyTabs
-				activeKey={activeTab}
-				onTabChange={handleTabChange}
-				items={items}
-				active={workflow != LendWorkFlowType.lendOrWithdraw}
-			>
+			<HoneyTabs activeKey={activeTab} onTabChange={handleTabChange} items={items} active={true}>
 				{!currentUser ? (
 					<EmptyStateDetails
 						icon={<div className={styles.lightIcon} />}
