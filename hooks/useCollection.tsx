@@ -80,8 +80,9 @@ export function usePositions(HERC20ContractAddress: string, ERC721ContractAddres
                 image: getImageUrlFromMetaData(metaData.metadata || ""),
                 tokenId: metaData.token_id,
                 couponId: coupon.couponId,
-              }
-              return result
+                debt: Number(coupon.borrowAmount)
+              };
+              return result;
             } catch (e) {
               console.error("Error fetching market position with error")
               console.error(e)
