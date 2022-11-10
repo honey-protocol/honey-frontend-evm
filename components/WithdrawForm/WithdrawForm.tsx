@@ -71,8 +71,13 @@ const WithdrawForm = (props: WithdrawFormProps) => {
   /* end initial all  financial value here */
 
   useEffect(() => {
-    if (isLoadingUnderlyingPrice || isLoadingUserUnderlyingBalance || isLoadingTotalUnderlyingBalance || isLoadingTotalBorrow) {
-      toast.processing()
+    if (
+      isLoadingUnderlyingPrice ||
+      isLoadingUserUnderlyingBalance ||
+      isLoadingTotalUnderlyingBalance ||
+      isLoadingTotalBorrow
+    ) {
+      toast.processing('Loading your data');
     } else {
       toast.clear()
     }

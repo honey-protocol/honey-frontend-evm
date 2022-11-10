@@ -92,10 +92,17 @@ const BorrowForm = (props: BorrowProps) => {
   };
 
   useEffect(() => {
-    if (isLoadingNFT || isLoadingCollateralFactor || isLoadingNFTPrice || isLoadingUnderlyingPrice || isLoadingBorrowAmount || isLoadingMaxBorrow) {
-      toast.processing()
+    if (
+      isLoadingNFT ||
+      isLoadingCollateralFactor ||
+      isLoadingNFTPrice ||
+      isLoadingUnderlyingPrice ||
+      isLoadingBorrowAmount ||
+      isLoadingMaxBorrow
+    ) {
+      toast.processing('Loading your data');
     } else {
-      toast.clear()
+      toast.clear();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoadingNFT, isLoadingCollateralFactor, isLoadingNFTPrice, isLoadingUnderlyingPrice, isLoadingBorrowAmount, isLoadingMaxBorrow]);

@@ -87,11 +87,20 @@ const RepayForm = (props: RepayProps) => {
   /* end initial all  financial value here */
 
   useEffect(() => {
-    if (isLoadingNFT || isLoadingNFTPrice || isLoadingBorrowAmount || isLoadingUnderlyingPrice || isLoadingCollateralFactor || isLoadingMaxBorrow || isLoadingUserBalance || isLoadingApproval) {
-      toast.processing()
+    if (
+      isLoadingNFT ||
+      isLoadingNFTPrice ||
+      isLoadingBorrowAmount ||
+      isLoadingUnderlyingPrice ||
+      isLoadingCollateralFactor ||
+      isLoadingMaxBorrow ||
+      isLoadingUserBalance ||
+      isLoadingApproval
+    ) {
+      toast.processing('Loading your data');
     } else {
-      getRepayState()
-      toast.clear()
+      getRepayState();
+      toast.clear();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoadingNFT, isLoadingNFTPrice, isLoadingBorrowAmount, isLoadingUnderlyingPrice, isLoadingCollateralFactor, isLoadingMaxBorrow, isLoadingUserBalance, isLoadingApproval, nft])

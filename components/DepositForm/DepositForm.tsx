@@ -75,11 +75,18 @@ const DepositForm = (props: DepositFormProps) => {
   /* end initial all  financial value here */
 
   useEffect(() => {
-    if (isLoadingUnderlyingPrice || isLoadingUserBalance || isLoadingUserUnderlyingBalance || isLoadingTotalUnderlyingBalance || isLoadingTotalBorrow || isLoadingApproval) {
-      toast.processing()
+    if (
+      isLoadingUnderlyingPrice ||
+      isLoadingUserBalance ||
+      isLoadingUserUnderlyingBalance ||
+      isLoadingTotalUnderlyingBalance ||
+      isLoadingTotalBorrow ||
+      isLoadingApproval
+    ) {
+      toast.processing('Loading your data');
     } else {
-      getDepositState()
-      toast.clear()
+      getDepositState();
+      toast.clear();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoadingUnderlyingPrice, isLoadingUserBalance, isLoadingUserUnderlyingBalance, isLoadingTotalUnderlyingBalance, isLoadingTotalBorrow, isLoadingApproval])
