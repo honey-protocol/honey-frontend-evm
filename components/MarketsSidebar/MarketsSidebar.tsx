@@ -17,7 +17,7 @@ type Tab = 'borrow' | 'repay';
 
 const MarketsSidebar = (props: MarketsSidebarProps) => {
 	const {} = props;
-	const workflow = useLoanFlowStore((state) => state.workflow);
+	const { workflow, HERC20ContractAddr, setWorkflow } = useLoanFlowStore((state) => state);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const queryClient = useQueryClient();
 	/*  begin tab function            */
@@ -52,6 +52,12 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
 	};
 	/* end authentication function */
 
+	const initDepositNFTFlow = () => {
+		setWorkflow(LoanWorkFlowType.depositNFT);
+		setIsSidebarVisibleInMobile(true);
+		document.body.classList.add('disable-scroll');
+	};
+
 	return (
 		<div className={styles.marketsSidebarContainer}>
 			<HoneyTabs activeKey={activeTab} onTabChange={handleTabChange} items={items} active={true}>
@@ -61,6 +67,12 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
 						title="You didn’t connect any wallet yet"
 						description="First, choose a NFT collection"
 						buttons={[{ title: 'CONNECT WALLET', onClick: connect }]}
+					/>
+				) : !HERC20ContractAddr ? (
+					<EmptyStateDetails
+						icon={<div className={styles.boltIcon} />}
+						title="Manage panel"
+						description="First, choose a NFT collection"
 					/>
 				) : workflow == LoanWorkFlowType.depositNFT ? (
 					<>
@@ -76,9 +88,16 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
 					</>
 				) : (
 					<EmptyStateDetails
-						icon={<div className={styles.boltIcon} />}
-						title="Manage panel"
-						description="First, choose a NFT collection"
+						icon=""
+						title=""
+						description=""
+						buttons={[
+							{
+								title: 'Select Nft to deposit',
+								variant: 'primary',
+								onClick: initDepositNFTFlow
+							}
+						]}
 					/>
 				)}
 			</HoneyTabs>
