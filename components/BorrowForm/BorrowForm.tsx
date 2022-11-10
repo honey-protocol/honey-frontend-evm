@@ -28,7 +28,13 @@ import { useGetBorrowAmount } from "../../hooks/useCoupon";
 import { borrow } from "../../hooks/useHerc20";
 import { queryKeys } from "../../helpers/queryHelper";
 
-const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
+const {
+  format: f,
+  formatPercent: fp,
+  formatERC20: fs,
+  parse: p,
+  formatShortName: fsn
+} = formatNumber;
 
 const BorrowForm = (props: BorrowProps) => {
   const {} = props;
@@ -177,7 +183,7 @@ const BorrowForm = (props: BorrowProps) => {
         <div className={styles.row}>
           <div className={styles.col}>
             <InfoBlock
-              value={fs(nftPrice)}
+              value={fsn(nftPrice)}
               valueSize="big"
               title={
                 <span className={hAlign}>

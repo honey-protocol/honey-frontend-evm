@@ -27,7 +27,13 @@ import { useGetTotalBorrow } from "../../hooks/useHerc20";
 import { withdrawUnderlyingHelper } from "../../helpers/repayHelper";
 import { queryKeys } from "../../helpers/queryHelper";
 
-const {format: f, formatPercent: fp, formatERC20: fs, parse: p} = formatNumber;
+const {
+  format: f,
+  formatPercent: fp,
+  formatERC20: fs,
+  parse: p,
+  formatShortName: fsn
+} = formatNumber;
 
 const WithdrawForm = (props: WithdrawFormProps) => {
   const {} = props;
@@ -182,7 +188,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
         <div className={styles.row}>
           <div className={styles.col}>
             <InfoBlock
-              value={fs(userTotalDeposits)}
+              value={fsn(userTotalDeposits)}
               valueSize="big"
               footer={<span>Your Deposits</span>}
             />
@@ -220,11 +226,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleUnderlyingInputChange}
             maxValue={userTotalDeposits}
-            firstInputAddon={
-              <>
-                <Image src={erc20Icon} layout='fill' alt={"underlying icon"}/> <span>{erc20Name}</span>
-              </>
-            }
+            firstInputAddon={erc20Name}
           />
         </div>
 

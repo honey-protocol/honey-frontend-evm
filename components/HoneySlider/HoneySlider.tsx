@@ -31,7 +31,11 @@ interface HoneySliderProps {
   onChange?: (value: number) => void;
 }
 
-const {formatPercent: fp, formatERC20: fs} = formatNumber;
+const {
+  formatPercent: fp,
+  formatERC20: fs,
+  formatShortName: fsn
+} = formatNumber;
 
 export const HoneySlider: FC<HoneySliderProps> = ({
   maxValue,
@@ -93,7 +97,7 @@ export const HoneySlider: FC<HoneySliderProps> = ({
       >
         {!isReadonly && (
           <div className={styles.sliderHeader.primary}>
-            {fs(minAvailableValue)}
+            {fsn(minAvailableValue)}
           </div>
         )}
         <Slider
@@ -117,7 +121,7 @@ export const HoneySlider: FC<HoneySliderProps> = ({
       >
         {!isReadonly && (
           <div className={styles.sliderHeader.secondary}>
-            {fs(maxValue * maxAvailablePosition)}
+            {fsn(maxValue * maxAvailablePosition)}
           </div>
         )}
         <Slider
@@ -146,7 +150,7 @@ export const HoneySlider: FC<HoneySliderProps> = ({
           style={{width: `${unavailablePosition * 100}%`}}
         >
           {!isReadonly && (
-            <div className={styles.sliderHeader.secondary}>{fs(maxValue)}</div>
+            <div className={styles.sliderHeader.secondary}>{fsn(maxValue)}</div>
           )}
           <Slider
             className={c(styles.slider, styles.disabledBackgroundSlider)}
