@@ -20,6 +20,12 @@ export type LiquidateTablePosition = {
   estimatedValue: number;
 };
 
+export type Bid = {
+  bid: string;
+  bidder: string;
+  unlockTimeStamp: number;
+}
+
 export type BiddingPosition = {
   bid: string;
   bidLimit: string;
