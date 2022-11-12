@@ -13,7 +13,7 @@
       },
       {
         "internalType": "contract HivemindI",
-        "name": "_hivemindAddress",
+        "name": "_hivemind",
         "type": "address"
       },
       {
@@ -23,32 +23,12 @@
       },
       {
         "internalType": "address",
-        "name": "_liquidatorAddress",
+        "name": "_liquidator",
         "type": "address"
       },
       {
         "internalType": "uint256",
         "name": "_initialExchangeRateMantissa",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_reserveFactorMantissa",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_adminFeeMantissa",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_hiveFeeMantissa",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_protocolFeeMantissa",
         "type": "uint256"
       },
       {
@@ -60,6 +40,16 @@
         "internalType": "address",
         "name": "_hiveFeeReceiver",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_symbol",
+        "type": "string"
       }
     ],
     "stateMutability": "nonpayable",
@@ -68,7 +58,7 @@
   {
     "inputs": [
       {
-        "internalType": "enum ErrorReporter.Error",
+        "internalType": "enum Error",
         "name": "error",
         "type": "uint8"
       }
@@ -79,7 +69,7 @@
   {
     "inputs": [
       {
-        "internalType": "enum ErrorReporter.Error",
+        "internalType": "enum Error",
         "name": "error",
         "type": "uint8"
       }
@@ -90,7 +80,7 @@
   {
     "inputs": [
       {
-        "internalType": "enum ErrorReporter.Error",
+        "internalType": "enum Error",
         "name": "error",
         "type": "uint8"
       }
@@ -112,6 +102,25 @@
     "inputs": [],
     "name": "WrongParams",
     "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "_ids",
+        "type": "uint256[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_earnings",
+        "type": "uint256"
+      }
+    ],
+    "name": "AccruedInterestToCoupons",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -227,6 +236,12 @@
         "internalType": "uint256",
         "name": "_collateralId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_couponId",
+        "type": "uint256"
       }
     ],
     "name": "CollateralDeposited",
@@ -283,7 +298,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "interestIndex",
+            "name": "debtShares",
             "type": "uint256"
           }
         ],
@@ -679,6 +694,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_oldDao",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_newDao",
+        "type": "address"
+      }
+    ],
+    "name": "SetDAO",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "operator",
@@ -897,7 +931,7 @@
   },
   {
     "inputs": [],
-    "name": "MARKET_ADMIN",
+    "name": "MARKET_ADMIN_ROLE",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -910,7 +944,7 @@
   },
   {
     "inputs": [],
-    "name": "SUPPLIER",
+    "name": "SUPPLIER_ROLE",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -961,6 +995,19 @@
       }
     ],
     "name": "_setContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newAddress",
+        "type": "address"
+      }
+    ],
+    "name": "_setDao",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1049,63 +1096,6 @@
     "inputs": [],
     "name": "accrueInterest",
     "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_collateralId",
-        "type": "uint256"
-      }
-    ],
-    "name": "accrueInterestToCollateral",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_couponId",
-        "type": "uint256"
-      }
-    ],
-    "name": "accrueInterestToCoupon",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "_ids",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "accrueInterestToCoupons",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -1257,7 +1247,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "interestIndex",
+        "name": "debtShares",
         "type": "uint256"
       }
     ],
@@ -1347,6 +1337,19 @@
   },
   {
     "inputs": [],
+    "name": "dao",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "decimals",
     "outputs": [
       {
@@ -1393,6 +1396,24 @@
       }
     ],
     "name": "depositUnderlying",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      }
+    ],
+    "name": "depositUnderlyingTo",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1485,13 +1506,39 @@
           },
           {
             "internalType": "uint256",
-            "name": "interestIndex",
+            "name": "debtShares",
             "type": "uint256"
           }
         ],
         "internalType": "struct HTokenInternal.Coupon[]",
         "name": "",
         "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCashPrior",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getDebt",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1505,7 +1552,7 @@
         "type": "uint256"
       }
     ],
-    "name": "getBorrowAmountForCollateral",
+    "name": "getDebtForCollateral",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1524,20 +1571,7 @@
         "type": "uint256"
       }
     ],
-    "name": "getBorrowByCouponId",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getCashPrior",
+    "name": "getDebtForCoupon",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1606,7 +1640,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "interestIndex",
+            "name": "debtShares",
             "type": "uint256"
           }
         ],
@@ -1676,7 +1710,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "interestIndex",
+            "name": "debtShares",
             "type": "uint256"
           }
         ],
@@ -2282,6 +2316,19 @@
   },
   {
     "inputs": [],
+    "name": "totalShares",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "underlyingToken",
     "outputs": [
       {
@@ -2336,9 +2383,9 @@
     "name": "version",
     "outputs": [
       {
-        "internalType": "string",
+        "internalType": "uint256",
         "name": "",
-        "type": "string"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

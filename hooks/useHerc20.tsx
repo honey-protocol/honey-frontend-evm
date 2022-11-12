@@ -161,12 +161,12 @@ export function useGetUserCoupons(HERC20ContractAddress: string, user: MoralisTy
   return [coupons || [], isLoading || isFetching];
 }
 
-export async function getBorrowFromCoupon(HERC20ContractAddress: string, NFTTokenId: string, unit: Unit) {
+export async function getBorrowFromCollateral(HERC20ContractAddress: string, NFTTokenId: string, unit: Unit) {
   const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json()
   const options = {
     chain: chain,
     address: HERC20ContractAddress,
-    function_name: "getBorrowAmountForCollateral",
+    function_name: "getDebtForCollateral",
     abi: ABI,
     params: {_collateralId: NFTTokenId},
   }
