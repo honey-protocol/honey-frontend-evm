@@ -327,25 +327,6 @@
         "type": "address"
       }
     ],
-    "name": "getDebt",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
     "name": "getFloorPriceInUSD",
     "outputs": [
       {
@@ -457,25 +438,6 @@
       }
     ],
     "name": "getUnderlyingPriceInUSD",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "internalUnderlyingPriceInUSD",
     "outputs": [
       {
         "internalType": "uint256",

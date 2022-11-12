@@ -7,7 +7,7 @@
   {
     "inputs": [
       {
-        "internalType": "enum ErrorReporter.Error",
+        "internalType": "enum Error",
         "name": "error",
         "type": "uint8"
       }
@@ -18,7 +18,7 @@
   {
     "inputs": [
       {
-        "internalType": "enum ErrorReporter.Error",
+        "internalType": "enum Error",
         "name": "error",
         "type": "uint8"
       }
@@ -69,6 +69,69 @@
       }
     ],
     "name": "ActionPausedhToken",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_oldBorrowCapGuardian",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_newBorrowCapGuardian",
+        "type": "address"
+      }
+    ],
+    "name": "BorrowCapGuardianUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_newBorrowCap",
+        "type": "uint256"
+      }
+    ],
+    "name": "BorrowCapUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_oldCollateralFactorMantissa",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_newCollateralFactorMantissa",
+        "type": "uint256"
+      }
+    ],
+    "name": "CollateralFactorUpdated",
     "type": "event"
   },
   {
@@ -126,19 +189,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_oldCap",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_newCap",
-        "type": "uint256"
+        "indexed": true,
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
       }
     ],
-    "name": "MarketsInCapChanged",
+    "name": "MarketRemoved",
     "type": "event"
   },
   {
@@ -153,74 +210,17 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_newBorrowCap",
-        "type": "uint256"
-      }
-    ],
-    "name": "NewBorrowCap",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_oldBorrowCapGuardian",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_newBorrowCapGuardian",
-        "type": "address"
-      }
-    ],
-    "name": "NewBorrowCapGuardian",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_oldCloseFactorMantissa",
+        "name": "_oldMaxLTVFactorMantissa",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_newCloseFactorMantissa",
+        "name": "_newMaxLTVFactorMantissa",
         "type": "uint256"
       }
     ],
-    "name": "NewCloseFactor",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_oldCollateralFactorMantissa",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_newCollateralFactorMantissa",
-        "type": "uint256"
-      }
-    ],
-    "name": "NewCollateralFactor",
+    "name": "NewMaxLTVFactor",
     "type": "event"
   },
   {
@@ -239,7 +239,7 @@
         "type": "address"
       }
     ],
-    "name": "NewPriceOracle",
+    "name": "PriceOracleUpdated",
     "type": "event"
   },
   {
@@ -351,7 +351,7 @@
   },
   {
     "inputs": [],
-    "name": "FACTORY",
+    "name": "FACTORY_ROLE",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -364,7 +364,7 @@
   },
   {
     "inputs": [],
-    "name": "PAUSABLE",
+    "name": "PAUSER_ROLE",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -401,12 +401,12 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_newCloseFactorMantissa",
-        "type": "uint256"
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
       }
     ],
-    "name": "_setCloseFactor",
+    "name": "_removeMarket",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -450,12 +450,17 @@
   {
     "inputs": [
       {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
-        "name": "_newCap",
+        "name": "_newMaxLTVFactorMantissa",
         "type": "uint256"
       }
     ],
-    "name": "_setMarketsInCap",
+    "name": "_setMaxLTVFactor",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -629,6 +634,29 @@
   {
     "inputs": [
       {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_depositor",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "depositAllowed",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "contract HTokenI[]",
         "name": "_hTokens",
         "type": "address[]"
@@ -735,12 +763,17 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "liquidity",
+        "name": "liquidityTillLiquidation",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
         "name": "shortfall",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "liquidityTillLTV",
         "type": "uint256"
       }
     ],
@@ -917,6 +950,16 @@
         "internalType": "bool",
         "name": "liquidationPaused",
         "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "repayBorrowPaused",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "depositPaused",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -941,18 +984,10 @@
         "internalType": "uint256",
         "name": "collateralFactorMantissa",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "marketsInCap",
-    "outputs": [
+      },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "maxLTVFactorMantissa",
         "type": "uint256"
       }
     ],
@@ -1087,13 +1122,42 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "_underlying",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_start",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_end",
+        "type": "uint256"
+      }
+    ],
+    "name": "underlyingExistsInMarkets",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "version",
     "outputs": [
       {
-        "internalType": "string",
+        "internalType": "uint256",
         "name": "",
-        "type": "string"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

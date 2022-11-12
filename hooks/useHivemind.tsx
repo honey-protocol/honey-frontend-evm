@@ -24,7 +24,7 @@ export async function getMaxBorrowFromNFT(hivemindContractAddress: string, HERC2
   }
   // @ts-ignore
   const result: any = await Moralis.Web3API.native.runContractFunction(options)
-  return fromWei(result["liquidity"], unit)
+  return fromWei(result["liquidityTillLTV"], unit)
 }
 
 export function useGetMaxBorrowAmountFromNFT(hivemindContractAddress: string, HERC20ContractAddress: string, ERC721ContractAddress: string, user: MoralisType.User | null, NFTId: string, unit: Unit): [string, boolean] {
