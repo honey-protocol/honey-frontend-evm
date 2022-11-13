@@ -26,6 +26,12 @@ export type Bid = {
   unlockTimeStamp: number;
 }
 
+export type BidInfo = {
+  highestBidder: string
+  highestBid: string
+  bids: Array<Bid>
+}
+
 export type BiddingPosition = {
   bid: string;
   bidLimit: string;

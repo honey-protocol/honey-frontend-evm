@@ -3,18 +3,12 @@ import { useQuery } from "react-query";
 import { queryKeys } from "../helpers/queryHelper";
 import { blackHole, defaultCacheStaleTime } from "../constants/constant";
 import { fromWei, Unit } from "web3-utils";
-import { basePath, chain } from "../constants/service";
+import { basePath, chain, confirmedBlocks } from "../constants/service";
 import Moralis from "moralis-v1";
-import { Bid } from "../types/liquidate";
-import { getTotalBorrow } from "./useHerc20";
+import { Bid, BidInfo } from "../types/liquidate";
+import { safeToWei } from "../helpers/repayHelper";
 
-export interface CollectionBids {
-  highestBidder: string
-  highestBid: string
-  bids: Array<Bid>
-}
-
-export async function getCollectionBids(marketContractAddress: string, HERC20ContractAddress: string, unit: Unit): Promise<CollectionBids> {
+export async function getCollectionBids(marketContractAddress: string, HERC20ContractAddress: string, unit: Unit): Promise<BidInfo> {
   const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json()
   const options = {
     chain: chain,
@@ -40,9 +34,9 @@ export async function getCollectionBids(marketContractAddress: string, HERC20Con
     return bid
   })
   const filteredBidResult = bidResult.filter(bid => bid.bidder != blackHole)
-  const collectionBids: CollectionBids = {
+  const collectionBids: BidInfo = {
     highestBidder: (highestBidder == blackHole) ? "" : highestBidder,
-    highestBid: (highestBidder == blackHole) ? "" : highestBid,
+    highestBid: (highestBidder == blackHole) ? "0" : highestBid,
     bids: filteredBidResult
   }
   return collectionBids
@@ -52,13 +46,13 @@ export function useGetCollectionBids(
   marketContractAddress: string,
   HERC20ContractAddress: string,
   unit: Unit
-): [CollectionBids, boolean] {
-  const defaultCollectionBids: CollectionBids = {
+): [BidInfo, boolean] {
+  const defaultCollectionBids: BidInfo = {
     highestBidder: "",
     highestBid: "0",
     bids: []
   }
-  const onSuccess = (data: CollectionBids) => {
+  const onSuccess = (data: BidInfo) => {
     return data
   }
   const onError = () => {
@@ -82,4 +76,33 @@ export function useGetCollectionBids(
     }
   )
   return [collectionBids || defaultCollectionBids, isLoading || isFetching];
+}
+
+export interface bidCollectionVariables {
+  marketContractAddress: string
+  HERC20ContractAddress: string
+  amount: string
+  unit: Unit
+}
+
+export const bidCollection = async ({
+                                      marketContractAddress: marketContractAddress,
+                                      HERC20ContractAddress: HERC20ContractAddress,
+                                      amount: amount,
+                                      unit: unit
+                                    }: bidCollectionVariables) => {
+  const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json()
+  const options = {
+    chain: chain,
+    contractAddress: marketContractAddress,
+    functionName: "bidCollection",
+    abi: ABI,
+    params: {_hToken: HERC20ContractAddress, _amount: safeToWei(amount, unit)},
+  }
+  const transaction = await Moralis.executeFunction(options)
+  console.log(`transaction hash: ${transaction.hash}`);
+
+  // @ts-ignore
+  const receipt = await transaction.wait(confirmedBlocks);
+  console.log(receipt)
 }
