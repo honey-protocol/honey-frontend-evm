@@ -25,4 +25,5 @@ export const queryKeys = {
   // liquidator related
   listCollateral: (HERC20ContractAddress: string) => ['collateral', 'list', HERC20ContractAddress] as const,
   listCollectionBids: (marketContractAddress: string, HERC20ContractAddress: string) => ['bid', 'list', marketContractAddress, HERC20ContractAddress] as const,
+  listCollectionMinimumBid: (marketContractAddress: string, HERC20ContractAddress: string) => ['bid', 'list', marketContractAddress, HERC20ContractAddress, 'minimum'] as const,
 }

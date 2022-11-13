@@ -9,7 +9,7 @@ import useDisplayStore from "../../store/displayStore";
 import { useQueryClient } from "react-query";
 import { UserContext } from "../../contexts/userContext";
 import { useMoralis } from "react-moralis";
-import { LiquidationWorkFlowType, LoanWorkFlowType } from "../../types/workflows";
+import { LiquidationWorkFlowType } from "../../types/workflows";
 import useLiquidationFlowStore from "../../store/liquidationFlowStore";
 
 

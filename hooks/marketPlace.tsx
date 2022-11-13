@@ -6,7 +6,6 @@ import { fromWei, Unit } from "web3-utils";
 import { basePath, chain, confirmedBlocks } from "../constants/service";
 import Moralis from "moralis-v1";
 import { Bid, BidInfo } from "../types/liquidate";
-import { safeToWei } from "../helpers/repayHelper";
 
 export async function getCollectionBids(marketContractAddress: string, HERC20ContractAddress: string, unit: Unit): Promise<BidInfo> {
   const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json()
@@ -97,7 +96,7 @@ export const bidCollection = async ({
     contractAddress: marketContractAddress,
     functionName: "bidCollection",
     abi: ABI,
-    params: {_hToken: HERC20ContractAddress, _amount: safeToWei(amount, unit)},
+    params: {_hToken: HERC20ContractAddress, _amount: amount, unit},
   }
   const transaction = await Moralis.executeFunction(options)
   console.log(`transaction hash: ${transaction.hash}`);
@@ -105,4 +104,49 @@ export const bidCollection = async ({
   // @ts-ignore
   const receipt = await transaction.wait(confirmedBlocks);
   console.log(receipt)
+}
+
+export async function getCollectionMinimumBid(marketContractAddress: string, HERC20ContractAddress: string, unit: Unit) {
+  const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json()
+  const options = {
+    chain: chain,
+    address: marketContractAddress,
+    function_name: "viewMinimumNextBidCollection",
+    abi: ABI,
+    params: {_hToken: HERC20ContractAddress},
+  }
+
+  // @ts-ignore
+  const result: Array = await Moralis.Web3API.native.runContractFunction(options)
+  return fromWei(result)
+}
+
+export function useGetCollectionMinimumBid(
+  marketContractAddress: string,
+  HERC20ContractAddress: string,
+  unit: Unit
+): [string, boolean] {
+  const onSuccess = (data: string) => {
+    return data
+  }
+  const onError = () => {
+    return ""
+  }
+  const {data: minimumBid, isLoading, isFetching} = useQuery(
+    queryKeys.listCollectionMinimumBid(marketContractAddress, HERC20ContractAddress),
+    () => {
+      if (HERC20ContractAddress != "" && marketContractAddress != "") {
+        return getCollectionMinimumBid(marketContractAddress, HERC20ContractAddress, unit)
+      } else {
+        return ""
+      }
+    },
+    {
+      onSuccess,
+      onError,
+      retry: false,
+      staleTime: defaultCacheStaleTime
+    }
+  )
+  return [minimumBid || "", isLoading || isFetching];
 }
