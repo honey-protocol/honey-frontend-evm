@@ -37,6 +37,7 @@ import { useLiquidation, useLiquidationPositions, usePositions } from "../../hoo
 import { UserContext } from "../../contexts/userContext";
 import { collections } from "../../constants/NFTCollections";
 import useLiquidationFlowStore from "../../store/liquidationFlowStore";
+import { LiquidationWorkFlowType } from "../../types/workflows";
 
 export const LIQUIDATION_THRESHOLD = 0.65;
 
@@ -70,6 +71,8 @@ const Liquidate: NextPage = () => {
   const [isMyBidsFilterEnabled, setIsMyBidsFilterEnabled] = useState(false);
   const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr)
   const setHERC20ContractAddr = useLiquidationFlowStore((state) => state.setHERC20ContractAddr)
+  const setNFTId = useLiquidationFlowStore((state) => state.setNFTId)
+  const setWorkflow = useLiquidationFlowStore((state) => state.setWorkflow)
 
   /*    Begin insert data into table */
   const liquidateData = useLiquidation(currentUser, collections)
@@ -114,6 +117,15 @@ const Liquidate: NextPage = () => {
     [tableData]
   );
   /*    End filter function            */
+  /*    begin sidebar interaction function          */
+  const initCollectionBidFlow = (HERC20ContractAddress: string) => {
+    setWorkflow(LiquidationWorkFlowType.none)
+    setHERC20ContractAddr(HERC20ContractAddress)
+    setNFTId("")
+    setWorkflow(LiquidationWorkFlowType.collectionBid)
+    document.body.classList.add('disable-scroll');
+  }
+  /* end sidebar interaction function          */
 
 
   const SearchForm = () => {
@@ -344,8 +356,10 @@ const Liquidate: NextPage = () => {
             expandable={{
               // we use our own custom expand column
               showExpandColumn: false,
-              onExpand: (expanded, row) =>
-                setExpandedRowKeys(expanded ? [row.key] : []),
+              onExpand: (expanded, row) => {
+                initCollectionBidFlow(row.HERC20ContractAddress)
+                setExpandedRowKeys(expanded ? [row.key] : [])
+              },
               expandedRowKeys,
               expandedRowRender: record => {
                 return (
@@ -383,8 +397,10 @@ const Liquidate: NextPage = () => {
             expandable={{
               // we use our own custom expand column
               showExpandColumn: false,
-              onExpand: (expanded, row) =>
-                setExpandedRowKeys(expanded ? [row.key] : []),
+              onExpand: (expanded, row) => {
+                initCollectionBidFlow(row.HERC20ContractAddress)
+                setExpandedRowKeys(expanded ? [row.key] : [])
+              },
               expandedRowKeys,
               expandedRowRender: record => {
                 return (
