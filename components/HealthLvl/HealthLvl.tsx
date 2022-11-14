@@ -39,7 +39,7 @@ const HealthLvl: FC<HealthLvlProps> = props => {
         </div>
       );
     }
-    return <div className={style.valueCell}>NaN</div>;
+    return <div className={style.valueCell}>0</div>;
   };
 
   return <>{healthLvl && getStatus(healthLvl)}</>;
