@@ -44,7 +44,11 @@ import useDisplayStore from "../../store/displayStore";
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import HealthLvl from 'components/HealthLvl/HealthLvl';
 
-const {formatPercent: fp, formatERC20: fs} = formatNumber
+const {
+  formatPercent: fp,
+  formatERC20: fs,
+  formatShortName: fsn
+} = formatNumber;
 const Markets: NextPage = () => {
   const {currentUser, setCurrentUser} = useContext(UserContext);
   const [tableData, setTableData] = useState<MarketTableRow[]>([]);
@@ -325,7 +329,7 @@ const Markets: NextPage = () => {
           <div className={style.nameCellText}>
             <div className={style.collectionName}>{row['name']}</div>
 
-            <HealthLvl healthLvl={0} />
+            <HealthLvl healthLvl={row.healthLvl || 0} />
           </div>
         </div>
       )
@@ -340,11 +344,11 @@ const Markets: NextPage = () => {
       )
     },
     {
-      dataIndex: 'allowance',
+      dataIndex: 'available',
       width: columnsWidth[2],
-      render: allowance => (
+      render: available => (
         <div className={style.expandedRowCell}>
-          <InfoBlock title={'Allowance:'} value={fs(allowance)}/>
+          <InfoBlock title={'Allowance:'} value={fs(available)} />
         </div>
       )
     },
@@ -353,7 +357,7 @@ const Markets: NextPage = () => {
       width: columnsWidth[3],
       render: value => (
         <div className={style.expandedRowCell}>
-          <InfoBlock title={'Value:'} value={'0'}/>
+          <InfoBlock title={'Value:'} value={fsn(value)} />
         </div>
       )
     },
@@ -408,7 +412,7 @@ const Markets: NextPage = () => {
       dataIndex: 'available',
       render: available => (
         <div className={style.expandedRowCell}>
-          <InfoBlock title={'Allowance:'} value={'0'}/>
+          <InfoBlock title={'Allowance:'} value={fsn(available)} />
         </div>
       )
     },
