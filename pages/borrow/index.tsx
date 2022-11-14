@@ -43,6 +43,7 @@ import MarketsSidebar from "../../components/MarketsSidebar/MarketsSidebar";
 import useDisplayStore from "../../store/displayStore";
 import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
 import HealthLvl from 'components/HealthLvl/HealthLvl';
+import c from 'classnames';
 
 const {
   formatPercent: fp,
@@ -302,6 +303,7 @@ const Markets: NextPage = () => {
 
               <HoneyTableRow>
                 <div className={style.rateCell}>{fp(row.rate * 100)}</div>
+                <div className={style.availableCell}>{fs(row.value)}</div>
                 <div className={style.availableCell}>{fs(row.available)}</div>
               </HoneyTableRow>
             </>
@@ -393,26 +395,8 @@ const Markets: NextPage = () => {
           </div>
           <div className={style.nameCellText}>
             <div className={style.collectionNameMobile}>{row['name']}</div>
-            <div className={style.risk.safe}>
-              <span className={style.valueCell}>{0}</span>
-            </div>
-          </div>
+            <HealthLvl healthLvl={row.healthLvl || 0} />
         </div>
-      )
-    },
-    {
-      dataIndex: 'debt',
-      render: debt => (
-        <div className={style.expandedRowCell}>
-          <InfoBlock title={'Debt:'} value={'0'}/>
-        </div>
-      )
-    },
-    {
-      dataIndex: 'available',
-      render: available => (
-        <div className={style.expandedRowCell}>
-          <InfoBlock title={'Allowance:'} value={fsn(available)} />
         </div>
       )
     },
@@ -422,13 +406,13 @@ const Markets: NextPage = () => {
       title: '',
       width: '50px',
       render: (text, row) => (
-        <div className={style.buttonsCell}>
+        <div className={c(style.expandedRowCell, style.buttonsCell)}>
           <HoneyButton
             variant="text"
             onClick={e => initLoanOrBorrowFlow(row['tokenId'], row['couponId'])}
           >
             {'Manage'}
-            <div className={style.arrowRightIcon}/>
+            <div className={style.arrowRightIcon} />
           </HoneyButton>
         </div>
       )
@@ -486,15 +470,6 @@ const Markets: NextPage = () => {
         </Typography.Text>
       </div>
       <HoneyContent sidebar={marketSidebar()}>
-        <div className={style.mobileTableHeader}>
-          <div className={style.mobileRow}>
-            <SearchForm/>
-          </div>
-          <div className={style.mobileRow}>
-            <MyCollectionsToggle/>
-          </div>
-        </div>
-
         <div className={style.hideTablet}>
           <HoneyTable
             hasRowsShadow={true}
@@ -541,6 +516,24 @@ const Markets: NextPage = () => {
         </div>
 
         <div className={style.showTablet}>
+          <div
+            className={c(
+              style.mobileTableHeader,
+              style.mobileSearchAndToggleContainer
+            )}
+          >
+            <div className={style.mobileRow}>
+              <SearchForm />
+            </div>
+            <div className={style.mobileRow}>
+              <MyCollectionsToggle />
+            </div>
+          </div>
+          <div className={c(style.mobileTableHeader)}>
+            <div className={style.tableCell}>Interest</div>
+            <div className={style.tableCell}>Supplied</div>
+            <div className={style.tableCell}>Available</div>
+          </div>
           <HoneyTable
             hasRowsShadow={true}
             tableLayout="fixed"
