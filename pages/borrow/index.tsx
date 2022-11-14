@@ -45,7 +45,7 @@ import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import HealthLvl from 'components/HealthLvl/HealthLvl';
 import c from 'classnames';
 
-const { formatPercent: fp, formatERC20: fs } = formatNumber;
+const { formatPercent: fp, formatERC20: fs, formatShortName: fsn } = formatNumber;
 const Markets: NextPage = () => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const [tableData, setTableData] = useState<MarketTableRow[]>([]);
@@ -302,7 +302,7 @@ const Markets: NextPage = () => {
 					<div className={style.nameCellText}>
 						<div className={style.collectionName}>{row['name']}</div>
 
-						<HealthLvl healthLvl={0} />
+						<HealthLvl healthLvl={row.healthLvl || 0} />
 					</div>
 				</div>
 			)
@@ -317,11 +317,11 @@ const Markets: NextPage = () => {
 			)
 		},
 		{
-			dataIndex: 'allowance',
+			dataIndex: 'available',
 			width: columnsWidth[2],
-			render: (allowance) => (
+			render: (available) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Allowance:'} value={fs(allowance)} />
+					<InfoBlock title={'Allowance:'} value={fsn(available)} />
 				</div>
 			)
 		},
@@ -330,7 +330,7 @@ const Markets: NextPage = () => {
 			width: columnsWidth[3],
 			render: (value) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Value:'} value={'0'} />
+					<InfoBlock title={'Value:'} value={fsn(value)} />
 				</div>
 			)
 		},
@@ -366,8 +366,26 @@ const Markets: NextPage = () => {
 					</div>
 					<div className={style.nameCellText}>
 						<div className={style.collectionNameMobile}>{row['name']}</div>
-						<HealthLvl healthLvl={row.healthLvl || 0} />
+						<div className={style.risk.safe}>
+							<span className={style.valueCell}>{0}</span>
+						</div>
 					</div>
+				</div>
+			)
+		},
+		{
+			dataIndex: 'debt',
+			render: (debt) => (
+				<div className={style.expandedRowCell}>
+					<InfoBlock title={'Debt:'} value={'0'} />
+				</div>
+			)
+		},
+		{
+			dataIndex: 'available',
+			render: (available) => (
+				<div className={style.expandedRowCell}>
+					<InfoBlock title={'Allowance:'} value={fsn(available)} />
 				</div>
 			)
 		},
@@ -377,7 +395,7 @@ const Markets: NextPage = () => {
 			title: '',
 			width: '50px',
 			render: (text, row) => (
-				<div className={c(style.expandedRowCell, style.buttonsCell)}>
+				<div className={style.buttonsCell}>
 					<HoneyButton
 						variant="text"
 						onClick={(e) => initLoanOrBorrowFlow(row['tokenId'], row['couponId'])}
