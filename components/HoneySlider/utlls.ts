@@ -69,8 +69,10 @@ export const getPositionedLabels = ({
           left: 'initial',
           right: '0',
           transform: 'initial',
-        } : {},
-        label: fpr(label)
+                display: lastLabelValue < 1 ? 'none' : 'initial'
+              }
+            : {},
+        label: fpr(Math.round(label))
       };
     }
   });
