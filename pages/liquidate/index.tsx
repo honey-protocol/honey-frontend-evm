@@ -38,7 +38,7 @@ import { UserContext } from "../../contexts/userContext";
 import { collections } from "../../constants/NFTCollections";
 import useLiquidationFlowStore from "../../store/liquidationFlowStore";
 
-export const LIQUIDATION_THRESHOLD = 0.65;
+export const LIQUIDATION_THRESHOLD = 0.65; // TODO: fetch dynamically
 
 const {
   formatPercent: fp,

@@ -185,7 +185,9 @@ const BorrowForm = (props: BorrowProps) => {
               />
             </HexaBoxContainer>
           </div>
-          <div className={styles.nftName}>{nft.name}</div>
+          <div className={styles.nftName}>
+            {nft.name} {nft.id}
+          </div>
         </div>
         <div className={styles.row}>
           <div className={styles.col}>
@@ -464,7 +466,7 @@ const BorrowForm = (props: BorrowProps) => {
           minAvailableValue={borrowedValue}
           maxSafePosition={0.3 - borrowedValue / 1000}
           dangerPosition={0.45 - borrowedValue / 1000}
-          maxAvailablePosition={userAllowance / nftPrice}
+          maxAvailablePosition={(userAllowance + borrowedValue) / nftPrice}
           onChange={handleSliderChange}
         />
       </>
