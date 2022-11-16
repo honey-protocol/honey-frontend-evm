@@ -220,11 +220,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
             onChangeFirstInput={handleUsdInputChange}
             onChangeSecondInput={handleUnderlyingInputChange}
             maxValue={userTotalDeposits}
-            firstInputAddon={
-              <>
-                <Image src={erc20Icon} layout='fill' alt={"underlying icon"}/> <span>{erc20Name}</span>
-              </>
-            }
+            firstInputAddon={erc20Name}
           />
         </div>
 

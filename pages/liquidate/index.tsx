@@ -357,7 +357,7 @@ const Liquidate: NextPage = () => {
               // we use our own custom expand column
               showExpandColumn: false,
               onExpand: (expanded, row) => {
-                initCollectionBidFlow(row.HERC20ContractAddress)
+                initCollectionBidFlow(row.key)
                 setExpandedRowKeys(expanded ? [row.key] : [])
               },
               expandedRowKeys,
@@ -398,7 +398,7 @@ const Liquidate: NextPage = () => {
               // we use our own custom expand column
               showExpandColumn: false,
               onExpand: (expanded, row) => {
-                initCollectionBidFlow(row.HERC20ContractAddress)
+                initCollectionBidFlow(row.key)
                 setExpandedRowKeys(expanded ? [row.key] : [])
               },
               expandedRowKeys,

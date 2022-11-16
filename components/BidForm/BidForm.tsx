@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { InfoBlock } from '../InfoBlock/InfoBlock';
 import { InputsBlock } from '../InputsBlock/InputsBlock';
@@ -17,6 +17,13 @@ import { questionIcon } from 'styles/icons.css';
 import useToast from 'hooks/useToast';
 import useDisplayStore from 'store/displayStore';
 import useLoanFlowStore from 'store/loanFlowStore';
+import { UserContext } from "../../contexts/userContext";
+import { useQueryClient } from "react-query";
+import useLiquidationFlowStore from "../../store/liquidationFlowStore";
+import { getContractsByHTokenAddr } from "../../helpers/generalHelper";
+import useLendFlowStore from "../../store/lendFlowStore";
+import { LendWorkFlowType, LiquidationWorkFlowType } from "../../types/workflows";
+import { useGetUnderlyingPriceInUSD } from "../../hooks/useHtokenHelper";
 
 const {
   format: f,
@@ -28,26 +35,36 @@ const {
 } = formatNumber;
 
 const BidForm = (props: BidFormProps) => {
-  const isMock = true;
-  const { userBalance, highestBiddingValue, currentUserBid } = {
+  const {userBalance, highestBiddingValue, currentUserBid} = {
     userBalance: 5,
     highestBiddingValue: 4,
     currentUserBid: 3
   };
   const maxValue = 1000;
+  const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile)
+  const {currentUser, setCurrentUser} = useContext(UserContext);
+  const queryClient = useQueryClient();
+  const walletPublicKey: string = currentUser?.get("ethAddress") || ""
+  const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr)
 
-  // TODO: import token price
-  const tokenPrice = 4;
+  const {
+    htokenHelperContractAddress,
+    ERC20ContractAddress,
+    name,
+    icon,
+    erc20Name,
+    erc20Icon,
+    unit,
+  } = getContractsByHTokenAddr(HERC20ContractAddress)
+  const setWorkflow = useLiquidationFlowStore((state) => state.setWorkflow)
+  const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(htokenHelperContractAddress, HERC20ContractAddress)
+
 
   const [valueUSD, setValueUSD] = useState<number>(0);
   const [valueUnderlying, setValueUnderlying] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState(0);
-  const { toast, ToastComponent } = useToast();
+  const {toast, ToastComponent} = useToast();
 
-  const setIsSidebarVisibleInMobile = useDisplayStore(
-    state => state.setIsSidebarVisibleInMobile
-  );
-  const setWorkflow = useLoanFlowStore(state => state.setWorkflow);
 
   // Put your validators here
   const isSubmitButtonDisabled = () => {
@@ -56,7 +73,7 @@ const BidForm = (props: BidFormProps) => {
 
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
-    setValueUSD(value * tokenPrice);
+    setValueUSD(value * underlyingPrice);
     setValueUnderlying(value);
   };
 
@@ -68,34 +85,37 @@ const BidForm = (props: BidFormProps) => {
       return;
     }
     setValueUSD(usdValue);
-    setValueUnderlying(usdValue / tokenPrice);
-    setSliderValue(usdValue / tokenPrice);
+    setValueUnderlying(usdValue / underlyingPrice);
+    setSliderValue(usdValue / underlyingPrice);
   };
 
-  const handleSolInputChange = (tokenValue: number | undefined) => {
-    if (!tokenValue) {
+  const handleUnderlyingInputChange = (underlyingValue: number | undefined) => {
+    if (!underlyingValue) {
       setValueUSD(0);
       setValueUnderlying(0);
       setSliderValue(0);
       return;
     }
 
-    setValueUSD(tokenValue * tokenPrice);
-    setValueUnderlying(tokenValue);
-    setSliderValue(tokenValue);
+    setValueUSD(underlyingValue * underlyingPrice);
+    setValueUnderlying(underlyingValue);
+    setSliderValue(underlyingValue);
   };
 
-  const handlePlaceBid = () => {};
-  const handleIncreaseBid = () => {};
-  const handleRevokeBid = () => {};
+  const handlePlaceBid = () => {
+  };
+  const handleIncreaseBid = () => {
+  };
+  const handleRevokeBid = () => {
+  };
 
   function triggerIndicator() {
     currentUserBid != 0 ? handlePlaceBid() : handleIncreaseBid();
   }
 
-  const handleCancel = () => {
-    setIsSidebarVisibleInMobile(false);
-    // setWorkflow(LoanWorkFlowType.none)
+  const onCancel = () => {
+    setIsSidebarVisibleInMobile(false)
+    setWorkflow(LiquidationWorkFlowType.none)
     document.body.classList.remove('disable-scroll');
   };
 
@@ -103,11 +123,11 @@ const BidForm = (props: BidFormProps) => {
     <SidebarScroll
       footer={
         toast.state ? (
-          <ToastComponent />
+          <ToastComponent/>
         ) : (
           <div className={styles.buttons}>
             <div className={styles.smallCol}>
-              <HoneyButton variant="secondary" onClick={() => handleCancel()}>
+              <HoneyButton variant="secondary" onClick={onCancel}>
                 Cancel
               </HoneyButton>
             </div>
@@ -129,10 +149,10 @@ const BidForm = (props: BidFormProps) => {
         <div className={styles.nftInfo}>
           <div className={styles.nftImage}>
             <HexaBoxContainer>
-              <Image src={honeyGenesisBee} layout='fill' alt={"collection logo"}/>
+              <Image src={icon} layout='fill' alt={"collection logo"}/>
             </HexaBoxContainer>
           </div>
-          <div className={styles.nftName}>Honey Genesis Bee</div>
+          <div className={styles.nftName}>{name}</div>
         </div>
         <div className={styles.row}>
           <div className={styles.col}>
@@ -164,22 +184,22 @@ const BidForm = (props: BidFormProps) => {
               valueSize="big"
               title={
                 <span className={hAlign}>
-                  Highest bid <div className={questionIcon} />
+                  Highest bid <div className={questionIcon}/>
                 </span>
               }
             />
           </div>
-          {/* <div className={styles.col}>
+          <div className={styles.col}>
             <InfoBlock
               title={
                 <span className={hAlign}>
-                  Minimal bid <div className={questionIcon} />
+                  Minimal bid <div className={questionIcon}/>
                 </span>
               }
               value={fs(highestBiddingValue * 1.1)}
               valueSize="big"
             />
-          </div> */}
+          </div>
         </div>
         <div className={styles.row}>
           <div className={styles.col}>
@@ -193,11 +213,12 @@ const BidForm = (props: BidFormProps) => {
 
         <div className={styles.inputs}>
           <InputsBlock
-            firstInputValue={valueUnderlying}
-            secondInputValue={valueUSD}
-            onChangeFirstInput={handleSolInputChange}
-            onChangeSecondInput={handleUsdInputChange}
+            firstInputValue={p(f(valueUSD))}
+            secondInputValue={p(f(valueUnderlying))}
+            onChangeFirstInput={handleUsdInputChange}
+            onChangeSecondInput={handleUnderlyingInputChange}
             maxValue={maxValue}
+            firstInputAddon={erc20Name}
           />
         </div>
 
