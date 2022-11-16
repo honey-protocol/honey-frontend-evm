@@ -1,2 +1,1 @@
-export type MarketsSidebarProps = {
-};
+export type MarketsSidebarProps = {};

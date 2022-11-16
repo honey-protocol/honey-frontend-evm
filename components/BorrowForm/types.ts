@@ -1,2 +1,1 @@
-export type BorrowProps = {
-};
+export type BorrowProps = {};

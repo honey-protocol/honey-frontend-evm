@@ -1,2 +1,1 @@
-export type WithdrawFormProps = {
-};
+export type WithdrawFormProps = {};

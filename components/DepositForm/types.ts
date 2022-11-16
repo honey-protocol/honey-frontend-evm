@@ -1,3 +1,1 @@
-export type DepositFormProps = {
-
-};
+export type DepositFormProps = {};

@@ -1,16 +1,16 @@
 export enum LoanWorkFlowType {
-  none,
-  depositNFT,
-  loanOrBorrow,
+	none,
+	depositNFT,
+	loanOrBorrow
 }
 
 export enum LendWorkFlowType {
-  none,
-  lendOrWithdraw,
+	none,
+	lendOrWithdraw
 }
 
 export enum LiquidationWorkFlowType {
-  none,
-  collectionBid,
-  collateralBid,
+	none,
+	collectionBid,
+	collateralBid
 }

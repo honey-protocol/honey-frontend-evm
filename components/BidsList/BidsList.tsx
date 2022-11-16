@@ -6,40 +6,37 @@ import CurrentBidList from '../CurrentBidList/CurrentBidList';
 import { BidListProps } from './types';
 
 const BidsList = (props: BidListProps) => {
-  const { biddingArray } = props;
-  const fetchedTokenPrice = 5;
-  const [convertedBiddingArray, setConvertedBiddingArray] = useState([]);
+	const { biddingArray } = props;
+	const fetchedTokenPrice = 5;
+	const [convertedBiddingArray, setConvertedBiddingArray] = useState([]);
 
-  async function handleConvertion(bArray: any) {
-    let converted = await bArray.map((bid: any, index: number) => {
-      return {
-        id: index,
-        date: 1663663018156,
-        walletAddress: bid.bidder,
-        usdValue: bid.bidLimit,
-        tokenAmount: bid.bidLimit
-      };
-    });
+	async function handleConvertion(bArray: any) {
+		let converted = await bArray.map((bid: any, index: number) => {
+			return {
+				id: index,
+				date: 1663663018156,
+				walletAddress: bid.bidder,
+				usdValue: bid.bidLimit,
+				tokenAmount: bid.bidLimit
+			};
+		});
 
-    setConvertedBiddingArray(converted);
-  }
+		setConvertedBiddingArray(converted);
+	}
 
-  useEffect(() => {
-    if (biddingArray.length) handleConvertion(biddingArray);
-  }, [biddingArray]);
+	useEffect(() => {
+		if (biddingArray.length) handleConvertion(biddingArray);
+	}, [biddingArray]);
 
-  const currentBidCardData: CurrentBidCardProps[] = convertedBiddingArray;
+	const currentBidCardData: CurrentBidCardProps[] = convertedBiddingArray;
 
-  return (
-    <SidebarScroll>
-      <div className={styles.bidsList}>
-        <CurrentBidList
-          data={currentBidCardData}
-          fetchedTokenPrice={fetchedTokenPrice}
-        />
-      </div>
-    </SidebarScroll>
-  );
+	return (
+		<SidebarScroll>
+			<div className={styles.bidsList}>
+				<CurrentBidList data={currentBidCardData} fetchedTokenPrice={fetchedTokenPrice} />
+			</div>
+		</SidebarScroll>
+	);
 };
 
 export default BidsList;

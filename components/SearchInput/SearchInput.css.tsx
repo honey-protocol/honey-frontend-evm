@@ -6,30 +6,27 @@ const inputSelector = `.ant-input-affix-wrapper.${searchInput}`;
 const inputFocusedSelector = `.ant-input-affix-wrapper-focused.${searchInput}`;
 
 globalStyle(inputSelector, {
-  border: 'none',
-  background: 'transparent'
+	border: 'none',
+	background: 'transparent'
 });
 
 globalStyle(`${inputSelector} .ant-input-prefix`, {
-  marginRight: 24
+	marginRight: 24
 });
 
 globalStyle(`${inputSelector} .ant-input`, {
-  ...typography.button,
-  border: 'none',
-  background: 'transparent'
+	...typography.button,
+	border: 'none',
+	background: 'transparent'
+});
+
+globalStyle(`${inputFocusedSelector}, ${inputSelector}:focus, ${inputSelector}:active`, {
+	boxShadow: 'none'
 });
 
 globalStyle(
-  `${inputFocusedSelector}, ${inputSelector}:focus, ${inputSelector}:active`,
-  {
-    boxShadow: 'none'
-  }
-);
-
-globalStyle(
-  `${inputFocusedSelector} svg *, ${inputSelector}:focus svg *, ${inputSelector}:active svg *`,
-  {
-    fill: vars.colors.brownLight
-  }
+	`${inputFocusedSelector} svg *, ${inputSelector}:focus svg *, ${inputSelector}:active svg *`,
+	{
+		fill: vars.colors.brownLight
+	}
 );

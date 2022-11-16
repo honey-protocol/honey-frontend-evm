@@ -14,67 +14,62 @@ import HoneyTooltip from '../HoneyTooltip/HoneyTooltip';
 import HealthLvl from 'components/HealthLvl/HealthLvl';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 
-const {formatPercent: fp, formatERC20: fs} = formatNumber;
+const { formatPercent: fp, formatERC20: fs } = formatNumber;
 
 export const LiquidateExpandTableMobile: FC<{
-  data: LiquidateTablePosition[];
-  onPlaceBid: Function;
-}> = ({data, onPlaceBid}) => {
-  const expandColumnsMobile: ColumnType<LiquidateTablePosition>[] = [
-    {
-      dataIndex: ['name', 'image', 'tokenId', 'healthLvl'],
-      key: 'tokenId',
-      sortOrder: 'descend',
-      sorter: (a, b) => b.healthLvl - a.healthLvl,
-      render: (text: string, row: LiquidateTablePosition) => (
-        <div className={sharedStyles.expandedRowNameCell}>
-          <div className={sharedStyles.expandedRowIcon}/>
-          <div className={sharedStyles.collectionLogo}>
-            <HexaBoxContainer>
-              <Image src={row['image']} layout='fill' alt={"collection logo"}/>
-            </HexaBoxContainer>
-          </div>
-          <div className={sharedStyles.nameCellText}>
-            <div className={sharedStyles.collectionNameMobile}>{row["name"]}</div>
-            <HealthLvl healthLvl={row["healthLvl"]}/>
-          </div>
-        </div>
-      )
-    },
-    {
-      dataIndex: 'untilLiquidation',
-      render: untilLiquidation => (
-        <div className={sharedStyles.expandedRowCell}>
-          <InfoBlock
-            title={'Until liquidation:'}
-            value={fs(untilLiquidation)}
-          />
-        </div>
-      )
-    }
-  ];
-  return (
-    <>
-      <div className={styles.expandTableHeader}>
-        <div className={styles.positionsCounterContainer}>
-          <span className={styles.positionsCounterTitleMobile}>
-            Open positions
-          </span>
-          <span className={styles.positionsCount}>{data.length}</span>
-        </div>
-        <HoneyButton variant="text" onClick={() => onPlaceBid()}>
-          Place bid <div className={sharedStyles.arrowRightIcon}/>
-        </HoneyButton>
-      </div>
-      <HoneyTable
-        className={sharedStyles.expandContentTable}
-        columns={expandColumnsMobile}
-        dataSource={data}
-        pagination={false}
-        showHeader={false}
-      />
-    </>
-  );
+	data: LiquidateTablePosition[];
+	onPlaceBid: Function;
+}> = ({ data, onPlaceBid }) => {
+	const expandColumnsMobile: ColumnType<LiquidateTablePosition>[] = [
+		{
+			dataIndex: ['name', 'image', 'tokenId', 'healthLvl'],
+			key: 'tokenId',
+			sortOrder: 'descend',
+			sorter: (a, b) => b.healthLvl - a.healthLvl,
+			render: (text: string, row: LiquidateTablePosition) => (
+				<div className={sharedStyles.expandedRowNameCell}>
+					<div className={sharedStyles.expandedRowIcon} />
+					<div className={sharedStyles.collectionLogo}>
+						<HexaBoxContainer>
+							<Image src={row['image']} layout="fill" alt={'collection logo'} />
+						</HexaBoxContainer>
+					</div>
+					<div className={sharedStyles.nameCellText}>
+						<div className={sharedStyles.collectionNameMobile}>{row['name']}</div>
+						<HealthLvl healthLvl={row['healthLvl']} />
+					</div>
+				</div>
+			)
+		},
+		{
+			dataIndex: 'untilLiquidation',
+			render: (untilLiquidation) => (
+				<div className={sharedStyles.expandedRowCell}>
+					<InfoBlock title={'Until liquidation:'} value={fs(untilLiquidation)} />
+				</div>
+			)
+		}
+	];
+	return (
+		<>
+			<div className={styles.expandTableHeader}>
+				<div className={styles.positionsCounterContainer}>
+					<span className={styles.positionsCounterTitleMobile}>Open positions</span>
+					<span className={styles.positionsCount}>{data.length}</span>
+				</div>
+				<HoneyButton variant="text" onClick={() => onPlaceBid()}>
+					Place bid <div className={sharedStyles.arrowRightIcon} />
+				</HoneyButton>
+			</div>
+			<HoneyTable
+				className={sharedStyles.expandContentTable}
+				columns={expandColumnsMobile}
+				dataSource={data}
+				pagination={false}
+				showHeader={false}
+			/>
+		</>
+	);
 };
 
 export default LiquidateExpandTableMobile;

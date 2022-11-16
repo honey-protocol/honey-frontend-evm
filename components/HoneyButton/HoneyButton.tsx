@@ -4,34 +4,27 @@ import * as styles from './HoneyButton.css';
 import c from 'classnames';
 
 export interface HoneyButtonProps extends ButtonProps {
-  variant?: 'primary' | 'secondary' | 'tertiary' | 'text' | 'textSecondary';
-  isFluid?: boolean;
+	variant?: 'primary' | 'secondary' | 'tertiary' | 'text' | 'textSecondary';
+	isFluid?: boolean;
 }
 
-const HoneyButton: FC<HoneyButtonProps> = props => {
-  const {
-    className,
-    children,
-    disabled,
-    variant,
-    isFluid,
-    ...rest
-  } = props;
+const HoneyButton: FC<HoneyButtonProps> = (props) => {
+	const { className, children, disabled, variant, isFluid, ...rest } = props;
 
-  return (
-    <Button
-      {...rest}
-      disabled={disabled}
-      className={c(
-        styles.honeyButton,
-        variant ? styles[variant] : styles['primary'],
-        {[styles.disabled]: disabled, [styles.fluid]: isFluid},
-        className
-      )}
-    >
-      {props.children}
-    </Button>
-  );
+	return (
+		<Button
+			{...rest}
+			disabled={disabled}
+			className={c(
+				styles.honeyButton,
+				variant ? styles[variant] : styles['primary'],
+				{ [styles.disabled]: disabled, [styles.fluid]: isFluid },
+				className
+			)}
+		>
+			{props.children}
+		</Button>
+	);
 };
 
 export default HoneyButton;

@@ -1,10 +1,10 @@
-export type PeriodName = 'all' | 'six_month' | 'three_month' | 'one_month'
+export type PeriodName = 'all' | 'six_month' | 'three_month' | 'one_month';
 type PeriodNameConst = Record<string, PeriodName>;
 export const PERIOD: PeriodNameConst = {
-  one_month: 'one_month',
-  three_month: 'three_month',
-  six_month: 'six_month',
-  all: 'all',
+	one_month: 'one_month',
+	three_month: 'three_month',
+	six_month: 'six_month',
+	all: 'all'
 } as const;
 
 export const HOUR = 1000 * 60 * 60;

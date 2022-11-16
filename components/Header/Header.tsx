@@ -8,32 +8,32 @@ import cs from 'classnames';
 import MobileMenu from 'components/MobileMenu/MobileMenu';
 
 const Header: FC = () => {
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+	const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  return (
-    <div className={styles.headerContainer}>
-      <HoneyCardYellowShadow>
-        <div className={cs(styles.content, { ['open']: showMobileMenu })}>
-          <div className={styles.main}>
-            <Space size="small">
-              <div
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className={cs(
-                  styles.menuToggle,
-                  showMobileMenu ? styles.menuClose : styles.menuOpen
-                )}
-              />
+	return (
+		<div className={styles.headerContainer}>
+			<HoneyCardYellowShadow>
+				<div className={cs(styles.content, { ['open']: showMobileMenu })}>
+					<div className={styles.main}>
+						<Space size="small">
+							<div
+								onClick={() => setShowMobileMenu(!showMobileMenu)}
+								className={cs(
+									styles.menuToggle,
+									showMobileMenu ? styles.menuClose : styles.menuOpen
+								)}
+							/>
 
-              <div className={styles.logo} />
-            </Space>
-            <HeaderLinks />
-            <WalletMenu />
-          </div>
-          <MobileMenu isVisible={showMobileMenu} />
-        </div>
-      </HoneyCardYellowShadow>
-    </div>
-  );
+							<div className={styles.logo} />
+						</Space>
+						<HeaderLinks />
+						<WalletMenu />
+					</div>
+					<MobileMenu isVisible={showMobileMenu} />
+				</div>
+			</HoneyCardYellowShadow>
+		</div>
+	);
 };
 
 export default Header;

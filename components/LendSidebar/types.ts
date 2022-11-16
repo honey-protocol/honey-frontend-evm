@@ -1,2 +1,1 @@
-export type LendSidebarProps = {
-};
+export type LendSidebarProps = {};

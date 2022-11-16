@@ -1,3 +1,1 @@
-export type DepositNFTProps = {
-
-};
+export type DepositNFTProps = {};
