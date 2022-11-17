@@ -31,7 +31,13 @@ import {
 import { depositUnderlying, useGetTotalBorrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 
-const { format: f, formatPercent: fp, formatERC20: fs, parse: p } = formatNumber;
+const {
+	format: f,
+	formatPercent: fp,
+	formatERC20: fs,
+	parse: p,
+	formatShortName: fsn
+} = formatNumber;
 
 const DepositForm = (props: DepositFormProps) => {
 	const {} = props;
@@ -245,7 +251,7 @@ const DepositForm = (props: DepositFormProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(userTotalDeposits)}
+							value={fsn(userTotalDeposits)}
 							valueSize="big"
 							footer={<span>Your Deposits</span>}
 						/>

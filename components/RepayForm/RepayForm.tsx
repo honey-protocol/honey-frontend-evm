@@ -32,7 +32,13 @@ import { withdrawCollateral } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 import { repayBorrowHelper } from '../../helpers/repayHelper';
 
-const { format: f, formatPercent: fp, formatERC20: fs, parse: p } = formatNumber;
+const {
+	format: f,
+	formatPercent: fp,
+	formatERC20: fs,
+	parse: p,
+	formatShortName: fsn
+} = formatNumber;
 
 const RepayForm = (props: RepayProps) => {
 	const {} = props;
@@ -258,7 +264,7 @@ const RepayForm = (props: RepayProps) => {
 		document.body.classList.remove('disable-scroll');
 	};
 
-	const liqPercent = nftPrice ? ((nftPrice - userDebt / collateralFactor) / nftPrice) * 100 : 0;
+	const liqPercent = nftPrice ? ((nftPrice - userDebt) / collateralFactor / nftPrice) * 100 : 0;
 	const newLiqPercent = nftPrice ? ((nftPrice - newDebt) / nftPrice) * 100 : 0;
 
 	const renderContent = () => {
@@ -275,7 +281,7 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(nftPrice)}
+							value={fsn(nftPrice)}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
@@ -299,7 +305,7 @@ const RepayForm = (props: RepayProps) => {
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(userAllowance)}
+							value={fsn(userAllowance)}
 							title={
 								<span className={hAlign}>
 									Allowance <div className={questionIcon} />

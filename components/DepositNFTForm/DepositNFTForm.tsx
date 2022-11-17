@@ -14,22 +14,12 @@ import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { UserContext } from '../../contexts/userContext';
 import { useMutation, useQueryClient } from 'react-query';
 import { useFetchNFTByUserByCollection, useIsNFTApproved } from '../../hooks/useNFT';
-import {
-	useGetMaxBorrowableAmount,
-	useGetNFTPrice,
-	useGetNFTPriceInUSD
-} from '../../hooks/useHtokenHelper';
+import { useGetMaxBorrowableAmount } from '../../hooks/useHtokenHelper';
 import { depositNFTCollateral } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 import getDepositNFTApproval from '../../hooks/useERC721';
 
-const {
-	format: f,
-	formatPercent: fp,
-	formatERC20: fs,
-	parse: p,
-	formatShortName: fsn
-} = formatNumber;
+const { formatShortName: fsn } = formatNumber;
 
 const DepositNFTForm = (props: DepositNFTProps) => {
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
@@ -37,7 +27,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 	const queryClient = useQueryClient();
 	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
 	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
-	const { nftContractAddress, htokenHelperContractAddress, hivemindContractAddress } =
+	const { nftContractAddress, htokenHelperContractAddress, hivemindContractAddress, erc20Name } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
 	const setWorkflow = useLoanFlowStore((state) => state.setWorkflow);
 	const [selectedNft, setSelectedNft] = useState<NFT | null>(null);
@@ -146,7 +136,11 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 		return (
 			<>
 				<div className={styles.newBorrowingTitle}>Choose NFT</div>
-				<NftList data={availableNFTs} selectNFT={selectNFT} buttonText={fsn(maxBorrow)} />
+				<NftList
+					data={availableNFTs}
+					selectNFT={selectNFT}
+					buttonText={`${fsn(maxBorrow)} ${erc20Name}`}
+				/>
 			</>
 		);
 	};
