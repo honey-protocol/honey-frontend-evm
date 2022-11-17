@@ -115,7 +115,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 
 		setValueUSD(usdValue);
 		setValueUnderlying(usdValue / underlyingPrice);
-		setSliderValue(usdValue);
+		setSliderValue(usdValue / underlyingPrice);
 	};
 
 	const handleUnderlyingInputChange = (underlyingValue: number | undefined) => {

@@ -143,7 +143,7 @@ const DepositForm = (props: DepositFormProps) => {
 		}
 		setValueUSD(usdValue);
 		setValueUnderlying(usdValue / underlyingPrice);
-		setSliderValue(usdValue);
+		setSliderValue(usdValue / underlyingPrice);
 	};
 
 	const handleUnderlyingInputChange = (underlyingValue: number | undefined) => {
