@@ -38,9 +38,15 @@ const MobileMenu = (props: MobileMenuProps) => {
 					})}
 					key={i}
 				>
-					<Link href={link.href} passHref>
-						<HoneyButton variant="textSecondary">{link.title}</HoneyButton>
-					</Link>
+					{link.disabled ? (
+						<HoneyButton disabled variant="textSecondary">
+							{link.title}
+						</HoneyButton>
+					) : (
+						<Link href={link.href} passHref>
+							<HoneyButton variant="textSecondary">{link.title}</HoneyButton>
+						</Link>
+					)}
 				</li>
 			))}
 			<li

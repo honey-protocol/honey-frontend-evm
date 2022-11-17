@@ -31,7 +31,7 @@ interface HoneySliderProps {
 	onChange?: (value: number) => void;
 }
 
-const { formatPercent: fp, formatERC20: fs } = formatNumber;
+const { formatPercent: fp, formatERC20: fs, formatShortName: fsn } = formatNumber;
 
 export const HoneySlider: FC<HoneySliderProps> = ({
 	maxValue,
@@ -88,7 +88,7 @@ export const HoneySlider: FC<HoneySliderProps> = ({
 					// display: minAvailableValue ? 'inherit' : 'none',
 				}}
 			>
-				{!isReadonly && <div className={styles.sliderHeader.primary}>{fs(minAvailableValue)}</div>}
+				{!isReadonly && <div className={styles.sliderHeader.primary}>{fsn(minAvailableValue)}</div>}
 				<Slider
 					className={c(
 						styles.slider,
@@ -104,7 +104,9 @@ export const HoneySlider: FC<HoneySliderProps> = ({
 			</div>
 			<div className={styles.sliderWrapper} style={{ width: `${availablePosition * 100}%` }}>
 				{!isReadonly && (
-					<div className={styles.sliderHeader.secondary}>{fs(maxValue * maxAvailablePosition)}</div>
+					<div className={styles.sliderHeader.secondary}>
+						{fsn(maxValue * maxAvailablePosition)}
+					</div>
 				)}
 				<Slider
 					tooltipVisible={false}
@@ -128,7 +130,7 @@ export const HoneySlider: FC<HoneySliderProps> = ({
 			</div>
 			{unavailablePosition > 0 && (
 				<div className={styles.sliderWrapper} style={{ width: `${unavailablePosition * 100}%` }}>
-					{!isReadonly && <div className={styles.sliderHeader.secondary}>{fs(maxValue)}</div>}
+					{!isReadonly && <div className={styles.sliderHeader.secondary}>{fsn(maxValue)}</div>}
 					<Slider
 						className={c(styles.slider, styles.disabledBackgroundSlider)}
 						handleStyle={{ display: 'none' }}

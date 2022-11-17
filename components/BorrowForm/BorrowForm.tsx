@@ -28,7 +28,13 @@ import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { borrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 
-const { format: f, formatPercent: fp, formatERC20: fs, parse: p } = formatNumber;
+const {
+	format: f,
+	formatPercent: fp,
+	formatERC20: fs,
+	parse: p,
+	formatShortName: fsn
+} = formatNumber;
 
 const BorrowForm = (props: BorrowProps) => {
 	const {} = props;
@@ -43,7 +49,6 @@ const BorrowForm = (props: BorrowProps) => {
 		nftContractAddress,
 		htokenHelperContractAddress,
 		hivemindContractAddress,
-		erc20Icon,
 		erc20Name,
 		unit
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
@@ -199,12 +204,14 @@ const BorrowForm = (props: BorrowProps) => {
 							<Image src={nft.image || imagePlaceholder} alt={nft.name} layout="fill" />
 						</HexaBoxContainer>
 					</div>
-					<div className={styles.nftName}>{nft.name}</div>
+					<div className={styles.nftName}>
+						{nft.name} {nft.id}
+					</div>
 				</div>
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(nftPrice)}
+							value={fsn(nftPrice)}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
@@ -294,7 +301,7 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={fp((borrowedValue + newAdditionalDebt / nftPrice) * 100)}
+							value={fp(((borrowedValue + newAdditionalDebt) / nftPrice) * 100)}
 							isDisabled={true}
 						/>
 						<HoneySlider
@@ -303,7 +310,7 @@ const BorrowForm = (props: BorrowProps) => {
 							minAvailableValue={borrowedValue}
 							maxSafePosition={0.3 - borrowedValue / 1000}
 							dangerPosition={0.45 - borrowedValue / 1000}
-							maxAvailablePosition={collateralFactor}
+							maxAvailablePosition={(userAllowance + borrowedValue) / nftPrice}
 							isReadonly
 						/>
 					</div>

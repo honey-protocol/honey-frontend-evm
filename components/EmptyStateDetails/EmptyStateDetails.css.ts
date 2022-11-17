@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { typography } from 'styles/theme.css';
+import { typography, vars } from 'styles/theme.css';
 
 export const emptyStateContent = style({
 	width: '100%',
@@ -30,5 +30,6 @@ export const emptyStateDescription = style([
 ]);
 
 export const emptyStateWalletBtn = style({
-	marginTop: 12
+	marginTop: 12,
+	color: vars.colors.black
 });
