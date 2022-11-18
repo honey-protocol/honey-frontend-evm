@@ -289,12 +289,7 @@ const DepositForm = (props: DepositFormProps) => {
 						onChangeFirstInput={handleUsdInputChange}
 						onChangeSecondInput={handleUnderlyingInputChange}
 						maxValue={maxValue}
-						firstInputAddon={
-							<>
-								<Image src={erc20Icon} layout="fill" alt={'underlying icon'} />{' '}
-								<span>{erc20Name}</span>
-							</>
-						}
+						firstInputAddon={erc20Name}
 					/>
 				</div>
 
