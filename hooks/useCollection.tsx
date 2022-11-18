@@ -12,6 +12,10 @@ import { TimestampPoint } from '../components/HoneyChart/types';
 import { LiquidateTablePosition, LiquidateTableRow } from '../types/liquidate';
 import { ActiveCouponQueryQuery, getBuiltGraphSDK } from '../.graphclient';
 import { getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
+import { useGetNFTPrice } from './useHtokenHelper';
+import { getContractsByHTokenAddr } from 'helpers/generalHelper';
+import { useGetMaxBorrowAmountFromNFT } from './useHivemind';
+import { LIQUIDATION_THRESHOLD } from 'pages/liquidate';
 
 const defaultPosition: MarketTablePosition = {
 	name: '',
@@ -76,7 +80,24 @@ export function usePositions(
 	);
 
 	const coupons = couponList || [];
+	const { nftContractAddress, htokenHelperContractAddress, hivemindContractAddress } =
+		getContractsByHTokenAddr(HERC20ContractAddress);
+	const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(
+		htokenHelperContractAddress,
+		HERC20ContractAddress
+	);
+	const [maxBorrowAmount, isLoadingMaxBorrow] = useGetMaxBorrowAmountFromNFT(
+		hivemindContractAddress,
+		HERC20ContractAddress,
+		nftContractAddress,
+		user,
+		coupons[0]?.NFTId,
+		unit
+	);
 
+	const maxBorrowAmountNumber = Number(maxBorrowAmount);
+
+	console.log({ maxBorrowAmountNumber, nftPrice, maxBorrowAmount });
 	const results = useQueries(
 		coupons.map((coupon) => {
 			return {
@@ -85,13 +106,18 @@ export function usePositions(
 					if (walletPublicKey != '' && ERC721ContractAddress != '') {
 						try {
 							const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, coupon.NFTId);
+							const debt = Number(coupon.borrowAmount);
+							const available = maxBorrowAmountNumber ? maxBorrowAmountNumber - debt : 0;
 							const result: MarketTablePosition = {
 								// id: `${metaData.name}-${metaData.token_id}`, //id will be name-tokenId
-								name: metaData.name,
+								name: `${metaData.name} ${metaData.token_id}`,
 								image: getImageUrlFromMetaData(metaData.metadata || ''),
 								tokenId: metaData.token_id,
 								couponId: coupon.couponId,
-								debt: Number(coupon.borrowAmount)
+								debt,
+								value: nftPrice,
+								available,
+								healthLvl: ((nftPrice - debt / LIQUIDATION_THRESHOLD) / nftPrice) * 100
 							};
 							return result;
 						} catch (e) {
