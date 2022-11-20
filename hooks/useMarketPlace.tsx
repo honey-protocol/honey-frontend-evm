@@ -7,10 +7,11 @@ import { basePath, chain, confirmedBlocks } from '../constants/service';
 import Moralis from 'moralis-v1';
 import { Bid, BidInfo } from '../types/liquidate';
 
+//we are going to let liquidation related function to return value with mantissa so we can do
+//high precision math in the front end
 export async function getCollectionBids(
 	marketContractAddress: string,
-	HERC20ContractAddress: string,
-	unit: Unit
+	HERC20ContractAddress: string
 ): Promise<BidInfo> {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
 	const options = {
@@ -24,13 +25,13 @@ export async function getCollectionBids(
 	// @ts-ignore
 	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
 	const highestBidder: string = result[1];
-	const highestBid = fromWei(result[2] as string, unit);
+	const highestBid = result[2] as string;
 	const bidders: Array<string> = result[3];
 	const bids: Array<string> = result[4];
 	const unlockTime: Array<number> = result[5];
 	const bidResult = bidders.map(function (bidder: any, i: number) {
 		const bid: Bid = {
-			bid: fromWei(bids[i], unit),
+			bid: bids[i],
 			bidder: bidder,
 			unlockTimeStamp: unlockTime[i]
 		};
@@ -47,8 +48,7 @@ export async function getCollectionBids(
 
 export function useGetCollectionBids(
 	marketContractAddress: string,
-	HERC20ContractAddress: string,
-	unit: Unit
+	HERC20ContractAddress: string
 ): [BidInfo, boolean] {
 	const defaultCollectionBids: BidInfo = {
 		highestBidder: '',
@@ -69,7 +69,7 @@ export function useGetCollectionBids(
 		queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress),
 		() => {
 			if (HERC20ContractAddress != '' && marketContractAddress != '') {
-				return getCollectionBids(marketContractAddress, HERC20ContractAddress, unit);
+				return getCollectionBids(marketContractAddress, HERC20ContractAddress);
 			} else {
 				return defaultCollectionBids;
 			}
