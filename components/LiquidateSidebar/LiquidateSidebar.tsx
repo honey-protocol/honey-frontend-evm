@@ -15,8 +15,6 @@ import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 type Tab = 'bid' | 'current';
 
 const LiquidateSidebar = (props: LiquidateSidebarProps) => {
-	const biddingArray: any = [];
-
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const workflow = useLiquidationFlowStore((state) => state.workflow);
 	const queryClient = useQueryClient();
