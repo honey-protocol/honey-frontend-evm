@@ -77,7 +77,7 @@ const LiquidateSidebar = (props: LiquidateSidebarProps) => {
 					</>
 				) : workflow == LiquidationWorkFlowType.collectionBid && activeTab === 'current' ? (
 					<>
-						<BidsList biddingArray={biddingArray} />
+						<BidsList />
 					</>
 				) : (
 					<EmptyStateDetails
