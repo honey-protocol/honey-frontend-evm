@@ -1,39 +1,28 @@
-import { FC, useEffect, useState } from 'react';
 import * as styles from './BidsList.css';
 import SidebarScroll from '../SidebarScroll/SidebarScroll';
-import { CurrentBidCardProps } from '../CurrentBidCard/types';
 import CurrentBidList from '../CurrentBidList/CurrentBidList';
-import { BidListProps } from './types';
+import useLiquidationFlowStore from '../../store/liquidationFlowStore';
+import { useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
+import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
+import { useGetCollectionBids } from '../../hooks/useMarketPlace';
 
-const BidsList = (props: BidListProps) => {
-	const { biddingArray } = props;
-	const fetchedTokenPrice = 5;
-	const [convertedBiddingArray, setConvertedBiddingArray] = useState([]);
-
-	async function handleConvertion(bArray: any) {
-		let converted = await bArray.map((bid: any, index: number) => {
-			return {
-				id: index,
-				date: 1663663018156,
-				walletAddress: bid.bidder,
-				usdValue: bid.bidLimit,
-				tokenAmount: bid.bidLimit
-			};
-		});
-
-		setConvertedBiddingArray(converted);
-	}
-
-	useEffect(() => {
-		if (biddingArray.length) handleConvertion(biddingArray);
-	}, [biddingArray]);
-
-	const currentBidCardData: CurrentBidCardProps[] = convertedBiddingArray;
+const BidsList = () => {
+	const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr);
+	const { htokenHelperContractAddress, marketContractAddress, unit } =
+		getContractsByHTokenAddr(HERC20ContractAddress);
+	const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(
+		htokenHelperContractAddress,
+		HERC20ContractAddress
+	);
+	const [bidInfo, isLoadingBidInfo] = useGetCollectionBids(
+		marketContractAddress,
+		HERC20ContractAddress
+	);
 
 	return (
 		<SidebarScroll>
 			<div className={styles.bidsList}>
-				<CurrentBidList data={currentBidCardData} fetchedTokenPrice={fetchedTokenPrice} />
+				<CurrentBidList bids={bidInfo.bids} underlyingPrice={underlyingPrice} unit={unit} />
 			</div>
 		</SidebarScroll>
 	);

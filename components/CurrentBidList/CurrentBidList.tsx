@@ -1,24 +1,26 @@
 import React from 'react';
 import CurrentBidCard from '../CurrentBidCard/CurrentBidCard';
-import { CurrentBidCardProps } from '../CurrentBidCard/types';
+import { Bid } from '../../types/liquidate';
 
 type CurrentBidListProps = {
-	data: CurrentBidCardProps[];
-	fetchedTokenPrice: number;
+	bids: Bid[];
+	underlyingPrice: number;
+	unit: Unit;
 };
 
 const CurrentBidList = (props: CurrentBidListProps) => {
-	const { data, fetchedTokenPrice } = props;
+	const { bids, underlyingPrice, unit } = props;
 
 	return (
 		<>
-			{data &&
-				data.map((item, index) => (
+			{bids &&
+				bids.map((bid, index) => (
 					<div key={index}>
 						<CurrentBidCard
-							{...item}
-							fetchedTokenPrice={fetchedTokenPrice}
-							hasBorder={index !== data.length - 1}
+							bid={bid}
+							underlyingPrice={underlyingPrice}
+							hasBorder={index !== bids.length - 1}
+							unit={unit}
 						/>
 					</div>
 				))}
