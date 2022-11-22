@@ -17,7 +17,7 @@ export async function getCollectionBids(
 	const options = {
 		chain: chain,
 		address: marketContractAddress,
-		function_name: 'getAllBidsForACollection',
+		function_name: 'viewAuctionCollection',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
@@ -88,14 +88,12 @@ export interface bidCollectionVariables {
 	marketContractAddress: string;
 	HERC20ContractAddress: string;
 	amount: string;
-	unit: Unit;
 }
 
 export const bidCollection = async ({
 	marketContractAddress: marketContractAddress,
 	HERC20ContractAddress: HERC20ContractAddress,
-	amount: amount,
-	unit: unit
+	amount: amount
 }: bidCollectionVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
 	const options = {
@@ -103,7 +101,7 @@ export const bidCollection = async ({
 		contractAddress: marketContractAddress,
 		functionName: 'bidCollection',
 		abi: ABI,
-		params: { _hToken: HERC20ContractAddress, _amount: amount, unit }
+		params: { _hToken: HERC20ContractAddress, _amount: amount }
 	};
 	const transaction = await Moralis.executeFunction(options);
 	console.log(`transaction hash: ${transaction.hash}`);

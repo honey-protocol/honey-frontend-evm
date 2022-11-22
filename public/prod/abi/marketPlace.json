@@ -23,17 +23,6 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "error",
-        "type": "string"
-      }
-    ],
-    "name": "ExternalFailure",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "enum Error",
         "name": "error",
         "type": "uint8"
@@ -78,7 +67,7 @@
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "_collateralId",
         "type": "uint256"
@@ -103,7 +92,7 @@
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "_collateralId",
         "type": "uint256"
@@ -116,7 +105,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum MarketplaceModule.SettleType",
+        "internalType": "enum Marketplace.SettleType",
         "name": "_settleType",
         "type": "uint8"
       }
@@ -129,61 +118,12 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
+        "internalType": "contract HTokenI",
         "name": "_hToken",
         "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_collateralId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
       }
     ],
-    "name": "BidEntered",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_collateralId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "BidWithdrawn",
+    "name": "CollectionAuctionFullyRefunded",
     "type": "event"
   },
   {
@@ -233,7 +173,45 @@
         "type": "uint256"
       }
     ],
+    "name": "CollectionBidIncreased",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
     "name": "CollectionBidWithdrawn",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "contract HivemindI",
+        "name": "_oldHivemind",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "contract HivemindI",
+        "name": "_newHivemind",
+        "type": "address"
+      }
+    ],
+    "name": "HivemindUpdated",
     "type": "event"
   },
   {
@@ -246,7 +224,7 @@
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "_collateralId",
         "type": "uint256"
@@ -310,19 +288,6 @@
       }
     ],
     "name": "NewBidCooldown",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "_status",
-        "type": "bool"
-      }
-    ],
-    "name": "NewDefaultAuctionStatus",
     "type": "event"
   },
   {
@@ -544,6 +509,93 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_collateralId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "SingleBidEntered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_collateralId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "SingleBidIncreased",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_collateralId",
+        "type": "uint256"
+      }
+    ],
+    "name": "SingleBidWithdrawn",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "contract IERC20",
         "name": "_token",
         "type": "address"
@@ -556,6 +608,25 @@
       }
     ],
     "name": "TokenSwept",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_oldTreasury",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_newTreasury",
+        "type": "address"
+      }
+    ],
+    "name": "TreasuryUpdated",
     "type": "event"
   },
   {
@@ -675,12 +746,25 @@
   {
     "inputs": [
       {
-        "internalType": "bool",
-        "name": "_status",
-        "type": "bool"
+        "internalType": "contract HivemindI",
+        "name": "_newHivemind",
+        "type": "address"
       }
     ],
-    "name": "_setDefaultAuctionStatus",
+    "name": "_setHivemind",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newTreasury",
+        "type": "address"
+      }
+    ],
+    "name": "_setTreasury",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -782,29 +866,6 @@
       },
       {
         "internalType": "uint256",
-        "name": "_collateralId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "bid",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
       }
@@ -825,6 +886,29 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "bidSingle",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -907,126 +991,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "defaultAuctionStatus",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_collateralId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getAllBidsForACollateral",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "contract IERC20",
-            "name": "underlying",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "highestBidder",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "highestBid",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address[50]",
-            "name": "bidders",
-            "type": "address[50]"
-          },
-          {
-            "internalType": "uint256[50]",
-            "name": "bids",
-            "type": "uint256[50]"
-          },
-          {
-            "internalType": "uint256[50]",
-            "name": "unlockTimes",
-            "type": "uint256[50]"
-          }
-        ],
-        "internalType": "struct MarketplaceI.Auction",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getAllBidsForACollection",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "contract IERC20",
-            "name": "underlying",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "highestBidder",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "highestBid",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address[50]",
-            "name": "bidders",
-            "type": "address[50]"
-          },
-          {
-            "internalType": "uint256[50]",
-            "name": "bids",
-            "type": "uint256[50]"
-          },
-          {
-            "internalType": "uint256[50]",
-            "name": "unlockTimes",
-            "type": "uint256[50]"
-          }
-        ],
-        "internalType": "struct MarketplaceI.Auction",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "bytes32",
@@ -1098,6 +1062,47 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_increaseAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "increaseBidCollection",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_increaseAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "increaseBidSingle",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1399,7 +1404,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_tokenId",
+        "name": "_collateralId",
         "type": "uint256"
       },
       {
@@ -1523,6 +1528,113 @@
   {
     "inputs": [
       {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      }
+    ],
+    "name": "viewAuctionCollection",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "contract IERC20",
+            "name": "underlying",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "highestBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "highestBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address[50]",
+            "name": "bidders",
+            "type": "address[50]"
+          },
+          {
+            "internalType": "uint256[50]",
+            "name": "bids",
+            "type": "uint256[50]"
+          },
+          {
+            "internalType": "uint256[50]",
+            "name": "unlockTimes",
+            "type": "uint256[50]"
+          }
+        ],
+        "internalType": "struct MarketplaceI.Auction",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralId",
+        "type": "uint256"
+      }
+    ],
+    "name": "viewAuctionSingle",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "contract IERC20",
+            "name": "underlying",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "highestBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "highestBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address[50]",
+            "name": "bidders",
+            "type": "address[50]"
+          },
+          {
+            "internalType": "uint256[50]",
+            "name": "bids",
+            "type": "uint256[50]"
+          },
+          {
+            "internalType": "uint256[50]",
+            "name": "unlockTimes",
+            "type": "uint256[50]"
+          }
+        ],
+        "internalType": "struct MarketplaceI.Auction",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "contract IERC20",
         "name": "_token",
         "type": "address"
@@ -1556,7 +1668,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "minimumBid",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -1580,7 +1692,70 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "minimumBid",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      }
+    ],
+    "name": "viewUserBidCollection",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralId",
+        "type": "uint256"
+      }
+    ],
+    "name": "viewUserBidSingle",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
         "type": "uint256"
       }
     ],
