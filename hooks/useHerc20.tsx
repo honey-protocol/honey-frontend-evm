@@ -102,76 +102,6 @@ export async function withdrawUnderlying(
 	console.log(receipt);
 }
 
-export interface getUserCouponsVariables {
-	HERC20ContractAddress: string;
-	userAddress: string;
-	unit: Unit;
-}
-
-export const getUserCoupons = async ({
-	HERC20ContractAddress,
-	userAddress,
-	unit
-}: getUserCouponsVariables) => {
-	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
-	const options = {
-		chain: chain,
-		address: HERC20ContractAddress,
-		function_name: 'getUserCoupons',
-		abi: ABI,
-		params: { _user: userAddress }
-	};
-	// @ts-ignore
-	const results: Array<any> = await Moralis.Web3API.native.runContractFunction(options);
-	const coupons = results.map((result) => {
-		const [id, active, owner, collateralId, borrowAmount, index] = result;
-		const userCoupon: coupon = {
-			NFTId: collateralId,
-			borrowAmount: fromWei(borrowAmount, unit),
-			active: active == 2,
-			index: index,
-			couponId: id
-		};
-		return userCoupon;
-	});
-	return coupons.filter((coupon) => coupon.active);
-};
-
-export function useGetUserCoupons(
-	HERC20ContractAddress: string,
-	user: MoralisType.User | null,
-	unit: Unit
-): [Array<coupon>, boolean] {
-	const onSuccess = (data: coupon[]) => {
-		return data;
-	};
-	const onError = () => {
-		return [] as coupon[];
-	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
-	const {
-		data: coupons,
-		isLoading,
-		isFetching
-	} = useQuery(
-		queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey),
-		() => {
-			if (walletPublicKey != '') {
-				return getUserCoupons({ HERC20ContractAddress, userAddress: walletPublicKey, unit });
-			} else {
-				return [] as Array<coupon>;
-			}
-		},
-		{
-			onSuccess,
-			onError,
-			retry: false,
-			staleTime: defaultCacheStaleTime
-		}
-	);
-	return [coupons || [], isLoading || isFetching];
-}
-
 export async function getBorrowFromCollateral(
 	HERC20ContractAddress: string,
 	NFTTokenId: string,
@@ -313,29 +243,4 @@ export async function getTotalReserves(HERC20ContractAddress: string, unit: Unit
 	const result = await Moralis.Web3API.native.runContractFunction(options);
 	const totalReserve = fromWei(result, unit);
 	return totalReserve;
-}
-
-export async function getActiveCoupons(HERC20ContractAddress: string, unit: Unit) {
-	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
-	const options = {
-		chain: chain,
-		address: HERC20ContractAddress,
-		function_name: 'getActiveCoupons',
-		abi: ABI,
-		params: {}
-	};
-	// @ts-ignore
-	const results: Array<any> = await Moralis.Web3API.native.runContractFunction(options);
-	const coupons = results.map((result) => {
-		const [id, active, collateralId, borrowAmount, index, owner] = result;
-		const userCoupon: coupon = {
-			NFTId: collateralId,
-			borrowAmount: fromWei(borrowAmount, unit),
-			active: active == 2,
-			index: index,
-			couponId: id
-		};
-		return userCoupon;
-	});
-	return coupons;
 }

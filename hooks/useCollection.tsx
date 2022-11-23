@@ -3,7 +3,7 @@ import { MarketTablePosition, MarketTableRow } from '../types/markets';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
-import { getUserCoupons } from './useHerc20';
+import { getUserCoupons } from './useHtokenHelper';
 import { getImageUrlFromMetaData } from '../helpers/NFThelper';
 import { getMetaDataFromNFTId } from './useNFT';
 import { LendTableRow } from '../types/lend';
@@ -42,6 +42,7 @@ export function useMarket(
 }
 
 export function usePositions(
+	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
 	user: MoralisType.User | null,
@@ -62,7 +63,12 @@ export function usePositions(
 		queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey),
 		() => {
 			if (walletPublicKey != '' && HERC20ContractAddress != '') {
-				return getUserCoupons({ HERC20ContractAddress, userAddress: walletPublicKey, unit });
+				return getUserCoupons({
+					htokenHelperContractAddress,
+					HERC20ContractAddress,
+					userAddress: walletPublicKey,
+					unit
+				});
 			} else {
 				return [] as Array<coupon>;
 			}

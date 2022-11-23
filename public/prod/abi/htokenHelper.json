@@ -1,16 +1,5 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "contract PriceOracleI",
-        "name": "_priceOracle",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "inputs": [],
     "name": "WrongParams",
     "type": "error"
@@ -88,6 +77,11 @@
   {
     "inputs": [
       {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
         "internalType": "contract PriceOracleI",
         "name": "_newOracle",
         "type": "address"
@@ -109,6 +103,57 @@
     "name": "_setUpdateThreshold",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      }
+    ],
+    "name": "getActiveCoupons",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "id",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "active",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debtShares",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct HTokenInternalI.Coupon[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -160,7 +205,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "interestIndex",
+            "name": "debtShares",
             "type": "uint256"
           }
         ],
@@ -226,7 +271,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "interestIndex",
+            "name": "debtShares",
             "type": "uint256"
           }
         ],
@@ -449,11 +494,97 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
       {
         "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "getUserCouponIndices",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "getUserCoupons",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint32",
+            "name": "id",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint8",
+            "name": "active",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debtShares",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct HTokenInternalI.Coupon[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      }
+    ],
+    "name": "oracle",
+    "outputs": [
+      {
+        "internalType": "contract PriceOracleI",
         "name": "",
         "type": "address"
       }
@@ -463,10 +594,10 @@
   },
   {
     "inputs": [],
-    "name": "priceOracle",
+    "name": "owner",
     "outputs": [
       {
-        "internalType": "contract PriceOracleI",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }

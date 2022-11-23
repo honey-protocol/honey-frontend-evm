@@ -5,17 +5,7 @@ import { ColumnType } from 'antd/lib/table';
 import * as style from '../../styles/markets.css';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { HoneyTableColumnType, MarketTablePosition, MarketTableRow } from '../../types/markets';
-import React, {
-	ChangeEvent,
-	ReactChild,
-	ReactFragment,
-	ReactPortal,
-	useCallback,
-	useContext,
-	useEffect,
-	useMemo,
-	useState
-} from 'react';
+import React, { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import _ from 'lodash';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Image from 'next/image';
@@ -51,15 +41,18 @@ const Markets: NextPage = () => {
 	const [tableData, setTableData] = useState<MarketTableRow[]>([]);
 	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
-	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
-	const setHERC20ContractAddr = useLoanFlowStore((state) => state.setHERC20ContractAddr);
-	const setWorkflow = useLoanFlowStore((state) => state.setWorkflow);
-	const setNFTId = useLoanFlowStore((state) => state.setNFTId);
-	const setCouponId = useLoanFlowStore((state) => state.setCouponId);
+	const {
+		HERC20ContractAddr: HERC20ContractAddress,
+		setHERC20ContractAddr,
+		setWorkflow,
+		setNFTId,
+		setCouponId
+	} = useLoanFlowStore((state) => state);
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { width: windowWidth } = useWindowSize();
-	const { nftContractAddress, unit } = getContractsByHTokenAddr(HERC20ContractAddress);
+	const { htokenHelperContractAddress, nftContractAddress, unit } =
+		getContractsByHTokenAddr(HERC20ContractAddress);
 
 	/*    Begin insert data into table */
 	const marketData = useMarket(currentUser, collections);
@@ -70,6 +63,7 @@ const Markets: NextPage = () => {
 	}, []);
 
 	const [positions, isLoadingPositions] = usePositions(
+		htokenHelperContractAddress,
 		HERC20ContractAddress,
 		nftContractAddress,
 		currentUser,

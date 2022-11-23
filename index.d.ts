@@ -28,7 +28,7 @@ type coupon = {
 	NFTId: string;
 	borrowAmount: string;
 	active: boolean;
-	index: string;
+	debtShares: string;
 	couponId: string;
 };
 

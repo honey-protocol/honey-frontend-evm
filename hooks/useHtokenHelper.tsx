@@ -404,3 +404,110 @@ export function useGetNFTPrice(
 
 	return [amount || 0, isLoading || isFetching];
 }
+
+export async function getActiveCoupons(
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	unit: Unit
+) {
+	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
+	const options = {
+		chain: chain,
+		address: htokenHelperContractAddress,
+		function_name: 'getActiveCoupons',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress }
+	};
+	// @ts-ignore
+	const results: Array<any> = await Moralis.Web3API.native.runContractFunction(options);
+	const coupons = results.map((result) => {
+		const [id, active, owner, collateralId, borrowAmount, index] = result;
+		const userCoupon: coupon = {
+			NFTId: collateralId,
+			borrowAmount: fromWei(borrowAmount, unit),
+			active: active == 2,
+			debtShares: index,
+			couponId: id
+		};
+		return userCoupon;
+	});
+	return coupons;
+}
+
+export interface getUserCouponsVariables {
+	htokenHelperContractAddress: string;
+	HERC20ContractAddress: string;
+	userAddress: string;
+	unit: Unit;
+}
+
+export const getUserCoupons = async ({
+	htokenHelperContractAddress,
+	HERC20ContractAddress,
+	userAddress,
+	unit
+}: getUserCouponsVariables) => {
+	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
+	const options = {
+		chain: chain,
+		address: htokenHelperContractAddress,
+		function_name: 'getUserCoupons',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress, _user: userAddress }
+	};
+	// @ts-ignore
+	const results: Array<any> = await Moralis.Web3API.native.runContractFunction(options);
+	const coupons = results.map((result) => {
+		const [id, active, owner, collateralId, borrowAmount, debtShares] = result;
+		const userCoupon: coupon = {
+			NFTId: collateralId,
+			borrowAmount: fromWei(borrowAmount, unit),
+			active: active == 2,
+			debtShares: debtShares,
+			couponId: id
+		};
+		return userCoupon;
+	});
+	return coupons.filter((coupon) => coupon.active);
+};
+
+export function useGetUserCoupons(
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	user: MoralisType.User | null,
+	unit: Unit
+): [Array<coupon>, boolean] {
+	const onSuccess = (data: coupon[]) => {
+		return data;
+	};
+	const onError = () => {
+		return [] as coupon[];
+	};
+	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const {
+		data: coupons,
+		isLoading,
+		isFetching
+	} = useQuery(
+		queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey),
+		() => {
+			if (walletPublicKey != '') {
+				return getUserCoupons({
+					htokenHelperContractAddress,
+					HERC20ContractAddress,
+					userAddress: walletPublicKey,
+					unit
+				});
+			} else {
+				return [] as Array<coupon>;
+			}
+		},
+		{
+			onSuccess,
+			onError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	return [coupons || [], isLoading || isFetching];
+}
