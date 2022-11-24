@@ -421,12 +421,12 @@ export async function getActiveCoupons(
 	// @ts-ignore
 	const results: Array<any> = await Moralis.Web3API.native.runContractFunction(options);
 	const coupons = results.map((result) => {
-		const [id, active, owner, collateralId, borrowAmount, index] = result;
+		const [id, active, owner, collateralId, borrowAmount, debtShares] = result;
 		const userCoupon: coupon = {
 			NFTId: collateralId,
 			borrowAmount: fromWei(borrowAmount, unit),
 			active: active == 2,
-			debtShares: index,
+			debtShares: fromWei(debtShares, unit),
 			couponId: id
 		};
 		return userCoupon;
@@ -463,7 +463,7 @@ export const getUserCoupons = async ({
 			NFTId: collateralId,
 			borrowAmount: fromWei(borrowAmount, unit),
 			active: active == 2,
-			debtShares: debtShares,
+			debtShares: fromWei(debtShares, unit),
 			couponId: id
 		};
 		return userCoupon;

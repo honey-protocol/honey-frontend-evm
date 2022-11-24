@@ -6,7 +6,7 @@ import MoralisType from 'moralis-v1';
 import { safeToWei } from '../helpers/repayHelper';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
-import { defaultCacheStaleTime } from '../constants/constant';
+import { blackHole, defaultCacheStaleTime } from '../constants/constant';
 
 export async function depositNFTCollateral(HERC20ContractAddress: string, NFTTokenId: string) {
 	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
@@ -15,7 +15,7 @@ export async function depositNFTCollateral(HERC20ContractAddress: string, NFTTok
 		contractAddress: HERC20ContractAddress,
 		functionName: 'depositCollateral',
 		abi: ABI,
-		params: { _collateralId: NFTTokenId }
+		params: { _collateralIds: [NFTTokenId] }
 	};
 	const transaction = await Moralis.executeFunction(options);
 	console.log(`transaction hash: ${transaction.hash}`);
@@ -71,7 +71,7 @@ export async function depositUnderlying({
 		contractAddress: HERC20ContractAddress,
 		functionName: 'depositUnderlying',
 		abi: ABI,
-		params: { _amount: safeToWei(amount, unit) }
+		params: { _amount: safeToWei(amount, unit), _to: blackHole }
 	};
 	const transaction = await Moralis.executeFunction(options);
 	console.log(`transaction hash: ${transaction.hash}`);
@@ -133,7 +133,7 @@ export async function repayBorrow(
 		contractAddress: HERC20ContractAddress,
 		functionName: 'repayBorrow',
 		abi: ABI,
-		params: { _repayAmount: safeToWei(amount, unit), _collateralId: NFTTokenId }
+		params: { _repayAmount: safeToWei(amount, unit), _collateralId: NFTTokenId, _to: blackHole }
 	};
 	const transaction = await Moralis.executeFunction(options);
 	console.log(`transaction hash: ${transaction.hash}`);
@@ -158,7 +158,7 @@ export async function withdrawCollateral({
 		contractAddress: HERC20ContractAddress,
 		functionName: 'withdrawCollateral',
 		abi: ABI,
-		params: { _collateralId: NFTTokenId }
+		params: { _collateralIds: [NFTTokenId] }
 	};
 	const transaction = await Moralis.executeFunction(options);
 	console.log(`transaction hash: ${transaction.hash}`);
