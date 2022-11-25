@@ -2,7 +2,7 @@ import MoralisType from 'moralis-v1';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { blackHole, defaultCacheStaleTime } from '../constants/constant';
-import { fromWei, Unit } from 'web3-utils';
+import { fromWei, toWei, Unit } from 'web3-utils';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
 import Moralis from 'moralis-v1';
 import { Bid, BidInfo } from '../types/liquidate';
@@ -88,12 +88,14 @@ export interface bidCollectionVariables {
 	marketContractAddress: string;
 	HERC20ContractAddress: string;
 	amount: string;
+	unit: Unit;
 }
 
 export const bidCollection = async ({
 	marketContractAddress: marketContractAddress,
 	HERC20ContractAddress: HERC20ContractAddress,
-	amount: amount
+	amount: amount,
+	unit: unit
 }: bidCollectionVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
 	const options = {
@@ -101,7 +103,7 @@ export const bidCollection = async ({
 		contractAddress: marketContractAddress,
 		functionName: 'bidCollection',
 		abi: ABI,
-		params: { _hToken: HERC20ContractAddress, _amount: amount }
+		params: { _hToken: HERC20ContractAddress, _amount: toWei(amount, unit) }
 	};
 	const transaction = await Moralis.executeFunction(options);
 	console.log(`transaction hash: ${transaction.hash}`);
@@ -127,7 +129,7 @@ export async function getCollectionMinimumBid(
 
 	// @ts-ignore
 	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
-	return fromWei(result);
+	return result;
 }
 
 export function useGetCollectionMinimumBid(
@@ -139,7 +141,7 @@ export function useGetCollectionMinimumBid(
 		return data;
 	};
 	const onError = () => {
-		return '';
+		return '0';
 	};
 	const {
 		data: minimumBid,

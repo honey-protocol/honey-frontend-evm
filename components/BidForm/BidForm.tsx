@@ -5,7 +5,6 @@ import { InputsBlock } from '../InputsBlock/InputsBlock';
 import { HoneySlider } from '../HoneySlider/HoneySlider';
 import * as styles from './BidForm.css';
 import { formatNumber } from '../../helpers/format';
-import honeyGenesisBee from '/public/images/imagePlaceholder.png';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 import HexaBoxContainer from '../HexaBoxContainer/HexaBoxContainer';
 import HoneyWarning from '../HoneyWarning/HoneyWarning';
@@ -16,13 +15,11 @@ import { hAlign } from 'styles/common.css';
 import { questionIcon } from 'styles/icons.css';
 import useToast from 'hooks/useToast';
 import useDisplayStore from 'store/displayStore';
-import useLoanFlowStore from 'store/loanFlowStore';
 import { UserContext } from '../../contexts/userContext';
 import { useQueryClient } from 'react-query';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
-import useLendFlowStore from '../../store/lendFlowStore';
-import { LendWorkFlowType, LiquidationWorkFlowType } from '../../types/workflows';
+import { LiquidationWorkFlowType } from '../../types/workflows';
 import { useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
 
 const {
@@ -69,7 +66,7 @@ const BidForm = (props: BidFormProps) => {
 
 	// Put your validators here
 	const isSubmitButtonDisabled = () => {
-		return false;
+		return true;
 	};
 
 	const handleSliderChange = (value: number) => {
