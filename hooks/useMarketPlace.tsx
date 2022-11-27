@@ -113,6 +113,30 @@ export const bidCollection = async ({
 	console.log(receipt);
 };
 
+export interface cancelCollectionBidVariables {
+	marketContractAddress: string;
+	HERC20ContractAddress: string;
+}
+export const cancelCollectionBid = async ({
+	marketContractAddress: marketContractAddress,
+	HERC20ContractAddress: HERC20ContractAddress
+}: cancelCollectionBidVariables) => {
+	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
+	const options = {
+		chain: chain,
+		contractAddress: marketContractAddress,
+		functionName: 'cancelBidCollection',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress }
+	};
+	const transaction = await Moralis.executeFunction(options);
+	console.log(`transaction hash: ${transaction.hash}`);
+
+	// @ts-ignore
+	const receipt = await transaction.wait(confirmedBlocks);
+	console.log(receipt);
+};
+
 export async function getCollectionMinimumBid(
 	marketContractAddress: string,
 	HERC20ContractAddress: string,
