@@ -21,6 +21,7 @@ import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LiquidationWorkFlowType } from '../../types/workflows';
 import { useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
+import { useCheckUnlimitedApproval, useGetUserBalance } from '../../hooks/useERC20';
 
 const {
 	format: f,
@@ -32,31 +33,33 @@ const {
 } = formatNumber;
 
 const BidForm = (props: BidFormProps) => {
-	const { userBalance, highestBiddingValue, currentUserBid } = {
-		userBalance: 5,
+	const {} = props;
+	const { highestBiddingValue, currentUserBid } = {
 		highestBiddingValue: 4,
 		currentUserBid: 3
 	};
-	const maxValue = 1000;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const queryClient = useQueryClient();
 	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
 	const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr);
 
-	const {
-		htokenHelperContractAddress,
-		ERC20ContractAddress,
-		name,
-		icon,
-		erc20Name,
-		erc20Icon,
-		unit
-	} = getContractsByHTokenAddr(HERC20ContractAddress);
+	const { htokenHelperContractAddress, ERC20ContractAddress, name, icon, erc20Name, unit } =
+		getContractsByHTokenAddr(HERC20ContractAddress);
 	const setWorkflow = useLiquidationFlowStore((state) => state.setWorkflow);
 	const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(
 		htokenHelperContractAddress,
 		HERC20ContractAddress
+	);
+	const [userBalance, isLoadingUserBalance] = useGetUserBalance(
+		ERC20ContractAddress,
+		currentUser,
+		unit
+	);
+	const [approval, isLoadingApproval] = useCheckUnlimitedApproval(
+		ERC20ContractAddress,
+		HERC20ContractAddress,
+		currentUser
 	);
 
 	const [valueUSD, setValueUSD] = useState<number>(0);
@@ -64,11 +67,21 @@ const BidForm = (props: BidFormProps) => {
 	const [sliderValue, setSliderValue] = useState(0);
 	const { toast, ToastComponent } = useToast();
 
+	useEffect(() => {
+		if (isLoadingUnderlyingPrice || isLoadingUserBalance || isLoadingApproval) {
+			toast.processing();
+		} else {
+			toast.clear();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isLoadingUnderlyingPrice, isLoadingUserBalance, isLoadingApproval, HERC20ContractAddress]);
+
 	// Put your validators here
 	const isSubmitButtonDisabled = () => {
 		return true;
 	};
 
+	/*   Begin handle slider function  */
 	const handleSliderChange = (value: number) => {
 		setSliderValue(value);
 		setValueUSD(value * underlyingPrice);
@@ -99,6 +112,7 @@ const BidForm = (props: BidFormProps) => {
 		setValueUnderlying(underlyingValue);
 		setSliderValue(underlyingValue);
 	};
+	/*  end handle slider function   */
 
 	const handlePlaceBid = () => {};
 	const handleIncreaseBid = () => {};
@@ -194,7 +208,11 @@ const BidForm = (props: BidFormProps) => {
 				</div>
 				<div className={styles.row}>
 					<div className={styles.col}>
-						<InfoBlock value={fs(userBalance)} valueSize="big" title="Your token balance" />
+						<InfoBlock
+							value={fs(parseFloat(userBalance))}
+							valueSize="big"
+							title="Your token balance"
+						/>
 					</div>
 				</div>
 
@@ -204,14 +222,14 @@ const BidForm = (props: BidFormProps) => {
 						secondInputValue={p(f(valueUnderlying))}
 						onChangeFirstInput={handleUsdInputChange}
 						onChangeSecondInput={handleUnderlyingInputChange}
-						maxValue={maxValue}
+						maxValue={parseFloat(userBalance)}
 						firstInputAddon={erc20Name}
 					/>
 				</div>
 
 				<HoneySlider
 					currentValue={sliderValue}
-					maxValue={Number(frd(userBalance))}
+					maxValue={parseFloat(userBalance)}
 					minAvailableValue={0}
 					onChange={handleSliderChange}
 				/>

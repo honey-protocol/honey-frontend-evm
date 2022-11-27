@@ -53,7 +53,6 @@ const RepayForm = (props: RepayProps) => {
 		htokenHelperContractAddress,
 		hivemindContractAddress,
 		ERC20ContractAddress,
-		erc20Icon,
 		erc20Name,
 		unit
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
