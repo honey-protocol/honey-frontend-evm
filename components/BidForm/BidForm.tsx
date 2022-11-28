@@ -27,6 +27,7 @@ import {
 	useGetUserBalance
 } from '../../hooks/useERC20';
 import {
+	bidCollection,
 	cancelCollectionBid,
 	useGetCollectionBids,
 	useGetCollectionMinimumBid
@@ -106,6 +107,7 @@ const BidForm = (props: BidFormProps) => {
 			toast.processing();
 			setIsButtonDisable(true);
 		} else {
+			getBidState();
 			toast.clear();
 			setIsButtonDisable(false);
 		}
@@ -121,7 +123,7 @@ const BidForm = (props: BidFormProps) => {
 
 	// Put your validators here
 	const isSubmitButtonDisabled = () => {
-		return true;
+		return false;
 	};
 
 	/*   Begin handle slider function  */
@@ -164,7 +166,7 @@ const BidForm = (props: BidFormProps) => {
 	};
 
 	const getBidState = () => {
-		if (approval) {
+		if (!approval) {
 			setBidState('WAIT_FOR_APPROVAL');
 		} else {
 			setBidState('WAIT_FOR_BID');
@@ -173,6 +175,7 @@ const BidForm = (props: BidFormProps) => {
 
 	const getApprovalMutation = useMutation(getUnlimitedApproval);
 	const cancelBidMutation = useMutation(cancelCollectionBid);
+	const bidMutation = useMutation(bidCollection);
 	/*  end handling borrow function */
 
 	const handlePlaceBid = () => {};
@@ -195,9 +198,42 @@ const BidForm = (props: BidFormProps) => {
 		}
 	};
 
-	function triggerIndicator() {
-		//currentUserBid != 0 ? handlePlaceBid() : handleIncreaseBid();
-	}
+	const onClick = async () => {
+		try {
+			toast.processing();
+			setIsButtonDisable(true);
+			if (bidState == 'WAIT_FOR_BID') {
+				const amount = '0.01';
+				const unit = 'ether';
+				await bidMutation.mutateAsync({
+					marketContractAddress,
+					HERC20ContractAddress,
+					amount,
+					unit
+				});
+				console.log('Collection bid succeed');
+				await queryClient.invalidateQueries(
+					queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
+				);
+			} else if (bidState == 'WAIT_FOR_APPROVAL') {
+				await getApprovalMutation.mutateAsync({ ERC20ContractAddress, HERC20ContractAddress });
+				console.log('Approval succeed');
+				await queryClient.invalidateQueries(
+					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)
+				);
+				await queryClient.invalidateQueries(
+					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
+				);
+				handleSliderChange(0);
+			}
+			toast.success('Successful! Transaction complete');
+		} catch (err) {
+			console.error(err);
+			toast.error('Sorry! Transaction failed');
+		} finally {
+			setIsButtonDisable(false);
+		}
+	};
 
 	const onCancel = () => {
 		setIsSidebarVisibleInMobile(false);
@@ -222,7 +258,7 @@ const BidForm = (props: BidFormProps) => {
 								variant="primary"
 								disabled={isSubmitButtonDisabled()}
 								isFluid={true}
-								onClick={triggerIndicator}
+								onClick={onClick}
 							>
 								<>{buttonTitle()}</>
 							</HoneyButton>

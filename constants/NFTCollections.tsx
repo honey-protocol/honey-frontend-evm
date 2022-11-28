@@ -77,17 +77,17 @@ function getHelperContract() {
 	if (envName == 'dev') {
 		const contract: helperContract = {
 			htokenHelperContractAddress: '0xEF992a110D7Da86c3dC7e3101DB8B051B21D9c86',
-			hivemindContractAddress: '0x00a6D40877512A4647BCf7f80a523F1B8C55A5f4',
+			hivemindContractAddress: '0x9E84eea17C053159dFcc2382026cC3Dea9519804',
 			oracleContractAddress: '0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163',
-			marketContractAddress: '0xaD906a8B18fc45EbF7C80D440058CB020722232E'
+			marketContractAddress: '0x41895658d836AdabEb25D475e2622F8F8e41FB2D'
 		};
 		return contract;
 	} else if (envName == 'prod') {
 		const contract: helperContract = {
 			htokenHelperContractAddress: '0xEF992a110D7Da86c3dC7e3101DB8B051B21D9c86',
-			hivemindContractAddress: '0x00a6D40877512A4647BCf7f80a523F1B8C55A5f4',
+			hivemindContractAddress: '0x9E84eea17C053159dFcc2382026cC3Dea9519804',
 			oracleContractAddress: '0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163',
-			marketContractAddress: '0xaD906a8B18fc45EbF7C80D440058CB020722232E'
+			marketContractAddress: '0x41895658d836AdabEb25D475e2622F8F8e41FB2D'
 		};
 		return contract;
 	} else {
