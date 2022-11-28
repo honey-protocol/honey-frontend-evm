@@ -32,6 +32,8 @@ import {
 	useGetCollectionMinimumBid
 } from '../../hooks/useMarketPlace';
 import { queryKeys } from '../../helpers/queryHelper';
+import { hasBid, isHighestBid, userBid } from '../../helpers/liquidationHelper';
+import { fromWei } from 'web3-utils';
 
 const {
 	format: f,
@@ -44,9 +46,8 @@ const {
 
 const BidForm = (props: BidFormProps) => {
 	const {} = props;
-	const { highestBiddingValue, currentUserBid } = {
-		highestBiddingValue: 4,
-		currentUserBid: 3
+	const { highestBiddingValue } = {
+		highestBiddingValue: 4
 	};
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -195,7 +196,7 @@ const BidForm = (props: BidFormProps) => {
 	};
 
 	function triggerIndicator() {
-		currentUserBid != 0 ? handlePlaceBid() : handleIncreaseBid();
+		//currentUserBid != 0 ? handlePlaceBid() : handleIncreaseBid();
 	}
 
 	const onCancel = () => {
@@ -247,13 +248,13 @@ const BidForm = (props: BidFormProps) => {
 						></HoneyWarning>
 					</div>
 				</div>
-				{currentUserBid && (
+				{hasBid(walletPublicKey, bidInfo) && (
 					<div className={styles.row}>
 						<div className={styles.col}>
 							<CurrentBid
 								disabled={isButtonDisable}
-								value={currentUserBid}
-								title={currentUserBid == highestBiddingValue ? 'Your bid is #1' : 'Your bid is:'}
+								value={userBid(walletPublicKey, bidInfo, unit)}
+								title={isHighestBid(walletPublicKey, bidInfo) ? 'Your bid is #1' : 'Your bid is:'}
 								handleRevokeBid={() => handleRevokeBid()}
 							/>
 						</div>
@@ -262,7 +263,7 @@ const BidForm = (props: BidFormProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(highestBiddingValue)}
+							value={fs(parseFloat(fromWei(bidInfo.highestBid, unit)))}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
