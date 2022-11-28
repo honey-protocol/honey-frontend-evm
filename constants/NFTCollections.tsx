@@ -79,7 +79,7 @@ function getHelperContract() {
 			htokenHelperContractAddress: '0xEF992a110D7Da86c3dC7e3101DB8B051B21D9c86',
 			hivemindContractAddress: '0x9E84eea17C053159dFcc2382026cC3Dea9519804',
 			oracleContractAddress: '0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163',
-			marketContractAddress: '0x41895658d836AdabEb25D475e2622F8F8e41FB2D'
+			marketContractAddress: '0xE6736a60051271E2438d5612AE988dA3CE70Cea8'
 		};
 		return contract;
 	} else if (envName == 'prod') {
@@ -87,7 +87,7 @@ function getHelperContract() {
 			htokenHelperContractAddress: '0xEF992a110D7Da86c3dC7e3101DB8B051B21D9c86',
 			hivemindContractAddress: '0x9E84eea17C053159dFcc2382026cC3Dea9519804',
 			oracleContractAddress: '0x5e5ECc26FB7cf199E4404D35f4122C8A0E3b5163',
-			marketContractAddress: '0x41895658d836AdabEb25D475e2622F8F8e41FB2D'
+			marketContractAddress: '0xE6736a60051271E2438d5612AE988dA3CE70Cea8'
 		};
 		return contract;
 	} else {
