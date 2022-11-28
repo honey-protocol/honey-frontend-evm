@@ -47,19 +47,8 @@ export const queryKeys = {
 	userTotalPosition: (walletPublicKey: string, HERC20ContractAddress: string) =>
 		['user', 'totalPosition', walletPublicKey, HERC20ContractAddress] as const,
 	// user asset
-	userApproval: (
-		walletPublicKey: string,
-		ERC20ContractAddress: string,
-		HERC20ContractAddress: string
-	) =>
-		[
-			'user',
-			'erc20',
-			'approval',
-			walletPublicKey,
-			ERC20ContractAddress,
-			HERC20ContractAddress
-		] as const,
+	userApproval: (walletPublicKey: string, ERC20ContractAddress: string, contractAddress: string) =>
+		['user', 'erc20', 'approval', walletPublicKey, ERC20ContractAddress, contractAddress] as const,
 	userBalance: (walletPublicKey: string, ERC20ContractAddress: string) =>
 		['user', 'erc20', walletPublicKey, ERC20ContractAddress] as const,
 	// liquidator related

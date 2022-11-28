@@ -180,7 +180,10 @@ const DepositForm = (props: DepositFormProps) => {
 		try {
 			toast.processing();
 			if (depositState == 'WAIT_FOR_APPROVAL') {
-				await getApprovalMutation.mutateAsync({ ERC20ContractAddress, HERC20ContractAddress });
+				await getApprovalMutation.mutateAsync({
+					ERC20ContractAddress,
+					contractAddress: HERC20ContractAddress
+				});
 				console.log('Approval succeed');
 				await queryClient.invalidateQueries(
 					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)

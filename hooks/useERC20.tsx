@@ -54,12 +54,12 @@ export async function getRepayLoanApproval(
 
 export interface getUnlimitedApprovalVariables {
 	ERC20ContractAddress: string;
-	HERC20ContractAddress: string;
+	contractAddress: string;
 }
 
 export async function getUnlimitedApproval({
 	ERC20ContractAddress,
-	HERC20ContractAddress
+	contractAddress
 }: getUnlimitedApprovalVariables) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json();
 	const options = {
@@ -67,7 +67,7 @@ export async function getUnlimitedApproval({
 		contractAddress: ERC20ContractAddress,
 		functionName: 'approve',
 		abi: ABI,
-		params: { spender: HERC20ContractAddress, amount: unlimited }
+		params: { spender: contractAddress, amount: unlimited }
 	};
 	const transaction = await Moralis.executeFunction(options);
 	console.log(`transaction hash: ${transaction.hash}`);
@@ -96,7 +96,7 @@ export async function revokeApproval(ERC20ContractAddress: string, HERC20Contrac
 
 export async function getAllowance(
 	ERC20ContractAddress: string,
-	HERC20ContractAddress: string,
+	contractAddress: string,
 	userAddress: string
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json();
@@ -105,7 +105,7 @@ export async function getAllowance(
 		address: ERC20ContractAddress,
 		function_name: 'allowance',
 		abi: ABI,
-		params: { spender: HERC20ContractAddress, owner: userAddress }
+		params: { spender: contractAddress, owner: userAddress }
 	};
 
 	// @ts-ignore
@@ -114,7 +114,7 @@ export async function getAllowance(
 
 export function useCheckUnlimitedApproval(
 	ERC20ContractAddress: string,
-	HERC20ContractAddress: string,
+	contractAddress: string,
 	user: MoralisType.User | null
 ): [boolean, boolean] {
 	const onSuccess = (data: string) => {
@@ -129,10 +129,10 @@ export function useCheckUnlimitedApproval(
 		isLoading,
 		isFetching
 	} = useQuery(
-		queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress),
+		queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, contractAddress),
 		() => {
-			if (walletPublicKey != '' && ERC20ContractAddress != '' && HERC20ContractAddress != '') {
-				return getAllowance(ERC20ContractAddress, HERC20ContractAddress, walletPublicKey);
+			if (walletPublicKey != '' && ERC20ContractAddress != '' && contractAddress != '') {
+				return getAllowance(ERC20ContractAddress, contractAddress, walletPublicKey);
 			} else {
 				return '0';
 			}

@@ -77,7 +77,7 @@ const BidForm = (props: BidFormProps) => {
 	);
 	const [approval, isLoadingApproval] = useCheckUnlimitedApproval(
 		ERC20ContractAddress,
-		HERC20ContractAddress,
+		marketContractAddress,
 		currentUser
 	);
 	const [bidInfo, isLoadingBidInfo] = useGetCollectionBids(
@@ -216,10 +216,13 @@ const BidForm = (props: BidFormProps) => {
 					queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
 				);
 			} else if (bidState == 'WAIT_FOR_APPROVAL') {
-				await getApprovalMutation.mutateAsync({ ERC20ContractAddress, HERC20ContractAddress });
+				await getApprovalMutation.mutateAsync({
+					ERC20ContractAddress,
+					contractAddress: marketContractAddress
+				});
 				console.log('Approval succeed');
 				await queryClient.invalidateQueries(
-					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)
+					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, marketContractAddress)
 				);
 				await queryClient.invalidateQueries(
 					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)

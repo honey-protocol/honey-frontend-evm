@@ -225,7 +225,10 @@ const RepayForm = (props: RepayProps) => {
 					queryKeys.listUserNFTs(walletPublicKey, nftContractAddress)
 				);
 			} else if (repayState == 'WAIT_FOR_APPROVAL') {
-				await getApprovalMutation.mutateAsync({ ERC20ContractAddress, HERC20ContractAddress });
+				await getApprovalMutation.mutateAsync({
+					ERC20ContractAddress,
+					contractAddress: HERC20ContractAddress
+				});
 				console.log('Approval succeed');
 				await queryClient.invalidateQueries(
 					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)
