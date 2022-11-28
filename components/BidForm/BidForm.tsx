@@ -16,12 +16,22 @@ import { questionIcon } from 'styles/icons.css';
 import useToast from 'hooks/useToast';
 import useDisplayStore from 'store/displayStore';
 import { UserContext } from '../../contexts/userContext';
-import { useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LiquidationWorkFlowType } from '../../types/workflows';
 import { useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
-import { useCheckUnlimitedApproval, useGetUserBalance } from '../../hooks/useERC20';
+import {
+	getUnlimitedApproval,
+	useCheckUnlimitedApproval,
+	useGetUserBalance
+} from '../../hooks/useERC20';
+import {
+	cancelCollectionBid,
+	useGetCollectionBids,
+	useGetCollectionMinimumBid
+} from '../../hooks/useMarketPlace';
+import { queryKeys } from '../../helpers/queryHelper';
 
 const {
 	format: f,
@@ -44,8 +54,15 @@ const BidForm = (props: BidFormProps) => {
 	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
 	const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr);
 
-	const { htokenHelperContractAddress, ERC20ContractAddress, name, icon, erc20Name, unit } =
-		getContractsByHTokenAddr(HERC20ContractAddress);
+	const {
+		marketContractAddress,
+		htokenHelperContractAddress,
+		ERC20ContractAddress,
+		name,
+		icon,
+		erc20Name,
+		unit
+	} = getContractsByHTokenAddr(HERC20ContractAddress);
 	const setWorkflow = useLiquidationFlowStore((state) => state.setWorkflow);
 	const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(
 		htokenHelperContractAddress,
@@ -61,20 +78,45 @@ const BidForm = (props: BidFormProps) => {
 		HERC20ContractAddress,
 		currentUser
 	);
+	const [bidInfo, isLoadingBidInfo] = useGetCollectionBids(
+		marketContractAddress,
+		HERC20ContractAddress
+	);
+	const [minimumBid, isLoadingMinimumBid] = useGetCollectionMinimumBid(
+		marketContractAddress,
+		HERC20ContractAddress
+	);
 
 	const [valueUSD, setValueUSD] = useState<number>(0);
 	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
 	const [sliderValue, setSliderValue] = useState(0);
 	const { toast, ToastComponent } = useToast();
+	const [bidState, setBidState] = useState('WAIT_FOR_APPROVAL');
+	const [isButtonDisable, setIsButtonDisable] = useState(true);
 
 	useEffect(() => {
-		if (isLoadingUnderlyingPrice || isLoadingUserBalance || isLoadingApproval) {
+		if (
+			isLoadingUnderlyingPrice ||
+			isLoadingUserBalance ||
+			isLoadingApproval ||
+			isLoadingBidInfo ||
+			isLoadingMinimumBid
+		) {
 			toast.processing();
+			setIsButtonDisable(true);
 		} else {
 			toast.clear();
+			setIsButtonDisable(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoadingUnderlyingPrice, isLoadingUserBalance, isLoadingApproval, HERC20ContractAddress]);
+	}, [
+		isLoadingUnderlyingPrice,
+		isLoadingUserBalance,
+		isLoadingApproval,
+		isLoadingBidInfo,
+		isLoadingMinimumBid,
+		HERC20ContractAddress
+	]);
 
 	// Put your validators here
 	const isSubmitButtonDisabled = () => {
@@ -114,9 +156,43 @@ const BidForm = (props: BidFormProps) => {
 	};
 	/*  end handle slider function   */
 
+	/*  begin handling borrow function */
+	const buttonTitle = () => {
+		if (bidState == 'WAIT_FOR_APPROVAL') return 'Approve';
+		else return 'Place Bid';
+	};
+
+	const getBidState = () => {
+		if (approval) {
+			setBidState('WAIT_FOR_APPROVAL');
+		} else {
+			setBidState('WAIT_FOR_BID');
+		}
+	};
+
+	const getApprovalMutation = useMutation(getUnlimitedApproval);
+	const cancelBidMutation = useMutation(cancelCollectionBid);
+	/*  end handling borrow function */
+
 	const handlePlaceBid = () => {};
 	const handleIncreaseBid = () => {};
-	const handleRevokeBid = () => {};
+	const handleRevokeBid = async () => {
+		try {
+			toast.processing();
+			setIsButtonDisable(true);
+			await cancelBidMutation.mutateAsync({ marketContractAddress, HERC20ContractAddress });
+			console.log('Cancel bid succeed');
+			await queryClient.invalidateQueries(
+				queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
+			);
+			toast.success('Successful! Transaction complete');
+		} catch (err) {
+			console.error(err);
+			toast.error('Sorry! Transaction failed');
+		} finally {
+			setIsButtonDisable(false);
+		}
+	};
 
 	function triggerIndicator() {
 		currentUserBid != 0 ? handlePlaceBid() : handleIncreaseBid();
@@ -147,7 +223,7 @@ const BidForm = (props: BidFormProps) => {
 								isFluid={true}
 								onClick={triggerIndicator}
 							>
-								{currentUserBid != 0 ? 'Increase Bid' : 'Place Bid'}
+								<>{buttonTitle()}</>
 							</HoneyButton>
 						</div>
 					</div>
@@ -175,6 +251,7 @@ const BidForm = (props: BidFormProps) => {
 					<div className={styles.row}>
 						<div className={styles.col}>
 							<CurrentBid
+								disabled={isButtonDisable}
 								value={currentUserBid}
 								title={currentUserBid == highestBiddingValue ? 'Your bid is #1' : 'Your bid is:'}
 								handleRevokeBid={() => handleRevokeBid()}

@@ -139,8 +139,7 @@ export const cancelCollectionBid = async ({
 
 export async function getCollectionMinimumBid(
 	marketContractAddress: string,
-	HERC20ContractAddress: string,
-	unit: Unit
+	HERC20ContractAddress: string
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
 	const options = {
@@ -158,8 +157,7 @@ export async function getCollectionMinimumBid(
 
 export function useGetCollectionMinimumBid(
 	marketContractAddress: string,
-	HERC20ContractAddress: string,
-	unit: Unit
+	HERC20ContractAddress: string
 ): [string, boolean] {
 	const onSuccess = (data: string) => {
 		return data;
@@ -175,7 +173,7 @@ export function useGetCollectionMinimumBid(
 		queryKeys.listCollectionMinimumBid(marketContractAddress, HERC20ContractAddress),
 		() => {
 			if (HERC20ContractAddress != '' && marketContractAddress != '') {
-				return getCollectionMinimumBid(marketContractAddress, HERC20ContractAddress, unit);
+				return getCollectionMinimumBid(marketContractAddress, HERC20ContractAddress);
 			} else {
 				return '';
 			}
