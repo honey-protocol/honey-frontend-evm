@@ -50,7 +50,9 @@ export const queryKeys = {
 	userApproval: (walletPublicKey: string, ERC20ContractAddress: string, contractAddress: string) =>
 		['user', 'erc20', 'approval', walletPublicKey, ERC20ContractAddress, contractAddress] as const,
 	userBalance: (walletPublicKey: string, ERC20ContractAddress: string) =>
-		['user', 'erc20', walletPublicKey, ERC20ContractAddress] as const,
+		['user', 'erc20', 'balance', walletPublicKey, ERC20ContractAddress] as const,
+	userRefund: (walletPublicKey: string, ERC20ContractAddress: string) =>
+		['user', 'erc20', 'refund', walletPublicKey, ERC20ContractAddress] as const,
 	// liquidator related
 	listCollateral: (HERC20ContractAddress: string) =>
 		['collateral', 'list', HERC20ContractAddress] as const,

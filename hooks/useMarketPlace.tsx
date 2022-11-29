@@ -117,6 +117,7 @@ export interface cancelCollectionBidVariables {
 	marketContractAddress: string;
 	HERC20ContractAddress: string;
 }
+
 export const cancelCollectionBid = async ({
 	marketContractAddress: marketContractAddress,
 	HERC20ContractAddress: HERC20ContractAddress
@@ -186,4 +187,57 @@ export function useGetCollectionMinimumBid(
 		}
 	);
 	return [minimumBid || '', isLoading || isFetching];
+}
+
+export async function getAvailableRefund(
+	marketContractAddress: string,
+	ERC20ContractAddress: string,
+	userAddress: string
+) {
+	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
+	const options = {
+		chain: chain,
+		address: marketContractAddress,
+		function_name: 'viewAvailableRefund',
+		abi: ABI,
+		params: { _token: ERC20ContractAddress, _user: userAddress }
+	};
+
+	// @ts-ignore
+	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
+	return result;
+}
+
+export function useGetAvailableRefund(
+	marketContractAddress: string,
+	ERC20ContractAddress: string,
+	userAddress: string
+): [string, boolean] {
+	const onSuccess = (data: string) => {
+		return data;
+	};
+	const onError = () => {
+		return '0';
+	};
+	const {
+		data: refund,
+		isLoading,
+		isFetching
+	} = useQuery(
+		queryKeys.userRefund(userAddress, ERC20ContractAddress),
+		() => {
+			if (ERC20ContractAddress != '' && userAddress != '') {
+				return getAvailableRefund(marketContractAddress, ERC20ContractAddress, userAddress);
+			} else {
+				return '0';
+			}
+		},
+		{
+			onSuccess,
+			onError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	return [refund || '0', isLoading || isFetching];
 }
