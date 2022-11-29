@@ -29,11 +29,19 @@ import {
 import {
 	bidCollection,
 	cancelCollectionBid,
+	useGetAvailableRefund,
 	useGetCollectionBids,
-	useGetCollectionMinimumBid
+	useGetCollectionMinimumBid,
+	withdrawRefund
 } from '../../hooks/useMarketPlace';
 import { queryKeys } from '../../helpers/queryHelper';
-import { hasBid, isHighestBid, userBid } from '../../helpers/liquidationHelper';
+import {
+	hasBid,
+	hasRefund,
+	isHighestBid,
+	userBid,
+	userRefund
+} from '../../helpers/liquidationHelper';
 import { fromWei } from 'web3-utils';
 
 const {
@@ -88,6 +96,11 @@ const BidForm = (props: BidFormProps) => {
 		marketContractAddress,
 		HERC20ContractAddress
 	);
+	const [availableRefund, isLoadingAvailableRefund] = useGetAvailableRefund(
+		marketContractAddress,
+		ERC20ContractAddress,
+		walletPublicKey
+	);
 
 	const [valueUSD, setValueUSD] = useState<number>(0);
 	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
@@ -102,7 +115,8 @@ const BidForm = (props: BidFormProps) => {
 			isLoadingUserBalance ||
 			isLoadingApproval ||
 			isLoadingBidInfo ||
-			isLoadingMinimumBid
+			isLoadingMinimumBid ||
+			isLoadingAvailableRefund
 		) {
 			toast.processing();
 			setIsButtonDisable(true);
@@ -118,6 +132,7 @@ const BidForm = (props: BidFormProps) => {
 		isLoadingApproval,
 		isLoadingBidInfo,
 		isLoadingMinimumBid,
+		isLoadingAvailableRefund,
 		HERC20ContractAddress
 	]);
 
@@ -175,26 +190,64 @@ const BidForm = (props: BidFormProps) => {
 
 	const getApprovalMutation = useMutation(getUnlimitedApproval);
 	const cancelBidMutation = useMutation(cancelCollectionBid);
+	const withdrawRefundMutation = useMutation(withdrawRefund);
 	const bidMutation = useMutation(bidCollection);
 	/*  end handling borrow function */
 
 	const handlePlaceBid = () => {};
 	const handleIncreaseBid = () => {};
-	const handleRevokeBid = async () => {
+	const handleCurrentBid = async () => {
 		try {
 			toast.processing();
 			setIsButtonDisable(true);
-			await cancelBidMutation.mutateAsync({ marketContractAddress, HERC20ContractAddress });
-			console.log('Cancel bid succeed');
-			await queryClient.invalidateQueries(
-				queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
-			);
+			if (hasRefund(availableRefund)) {
+				await withdrawRefundMutation.mutateAsync({ marketContractAddress, ERC20ContractAddress });
+				console.log('Withdraw bid succeed');
+				await queryClient.invalidateQueries(
+					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
+				);
+				await queryClient.invalidateQueries(
+					queryKeys.userRefund(walletPublicKey, ERC20ContractAddress)
+				);
+			} else {
+				await cancelBidMutation.mutateAsync({ marketContractAddress, HERC20ContractAddress });
+				console.log('Cancel bid succeed');
+				await queryClient.invalidateQueries(
+					queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
+				);
+			}
 			toast.success('Successful! Transaction complete');
 		} catch (err) {
 			console.error(err);
 			toast.error('Sorry! Transaction failed');
 		} finally {
 			setIsButtonDisable(false);
+		}
+	};
+
+	const currentBidTile = () => {
+		if (hasRefund(availableRefund)) {
+			return 'you have refund' as string;
+		} else if (isHighestBid(walletPublicKey, bidInfo)) {
+			return 'Your bid is #1' as string;
+		} else {
+			return 'Your bid is:' as string;
+		}
+	};
+
+	const currentBidValue = () => {
+		if (hasRefund(availableRefund)) {
+			return userRefund(availableRefund, unit);
+		} else {
+			return userBid(walletPublicKey, bidInfo, unit);
+		}
+	};
+
+	const currentBidButtonText = () => {
+		if (hasRefund(availableRefund)) {
+			return 'Claim Refund' as string;
+		} else {
+			return 'Cancel' as string;
 		}
 	};
 
@@ -287,14 +340,15 @@ const BidForm = (props: BidFormProps) => {
 						></HoneyWarning>
 					</div>
 				</div>
-				{hasBid(walletPublicKey, bidInfo) && (
+				{(hasBid(walletPublicKey, bidInfo) || hasRefund(availableRefund)) && (
 					<div className={styles.row}>
 						<div className={styles.col}>
 							<CurrentBid
 								disabled={isButtonDisable}
-								value={userBid(walletPublicKey, bidInfo, unit)}
-								title={isHighestBid(walletPublicKey, bidInfo) ? 'Your bid is #1' : 'Your bid is:'}
-								handleRevokeBid={() => handleRevokeBid()}
+								value={currentBidValue()}
+								title={currentBidTile()}
+								buttonText={currentBidButtonText()}
+								onClick={() => handleCurrentBid()}
 							/>
 						</div>
 					</div>

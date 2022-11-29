@@ -7,19 +7,20 @@ import { formatNumber } from '../../helpers/format';
 interface CurrentBidProps {
 	title?: string;
 	value: number;
+	buttonText: string;
 	disabled: boolean;
-	handleRevokeBid: () => void;
+	onClick: () => void;
 }
 
 const { formatERC20: fs } = formatNumber;
 
 const CurrentBid = (props: CurrentBidProps) => {
-	const { title, handleRevokeBid, value, disabled } = props;
+	const { title, onClick, value, buttonText, disabled } = props;
 	return (
 		<div className={styles.CurrentBidContainer}>
 			<InfoBlock value={fs(value)} valueSize="big" title={title || ''} />
-			<HoneyButton onClick={handleRevokeBid} variant="secondary" disabled={disabled}>
-				Cancel
+			<HoneyButton onClick={onClick} variant="secondary" disabled={disabled}>
+				{buttonText}
 			</HoneyButton>
 		</div>
 	);

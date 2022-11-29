@@ -1,4 +1,3 @@
-import { numberFormatter } from './format';
 import { fromWei } from 'web3-utils';
 import { BidInfo } from '../types/liquidate';
 import { caseInsensitiveCompare } from './generalHelper';
@@ -22,4 +21,12 @@ export function userBid(userAddress: string, bidInfo: BidInfo, unit: Unit) {
 
 export function isHighestBid(userAddress: string, bidInfo: BidInfo) {
 	return caseInsensitiveCompare(bidInfo.highestBidder, userAddress);
+}
+
+export function hasRefund(refund: string) {
+	return refund != '0';
+}
+
+export function userRefund(refund: string, unit: Unit) {
+	return parseFloat(fromWei(refund, unit));
 }
