@@ -241,3 +241,28 @@ export function useGetAvailableRefund(
 	);
 	return [refund || '0', isLoading || isFetching];
 }
+
+export interface withdrawRefundVariables {
+	marketContractAddress: string;
+	ERC20ContractAddress: string;
+}
+
+export const withdrawRefund = async ({
+	marketContractAddress: marketContractAddress,
+	ERC20ContractAddress: ERC20ContractAddress
+}: withdrawRefundVariables) => {
+	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
+	const options = {
+		chain: chain,
+		contractAddress: marketContractAddress,
+		functionName: 'withdrawRefund',
+		abi: ABI,
+		params: { _token: ERC20ContractAddress }
+	};
+	const transaction = await Moralis.executeFunction(options);
+	console.log(`transaction hash: ${transaction.hash}`);
+
+	// @ts-ignore
+	const receipt = await transaction.wait(confirmedBlocks);
+	console.log(receipt);
+};
