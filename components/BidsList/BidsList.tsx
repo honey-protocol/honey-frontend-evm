@@ -5,6 +5,7 @@ import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { useGetCollectionBids } from '../../hooks/useMarketPlace';
+import { sortBids } from '../../helpers/liquidationHelper';
 
 const BidsList = () => {
 	const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr);
@@ -22,7 +23,11 @@ const BidsList = () => {
 	return (
 		<SidebarScroll>
 			<div className={styles.bidsList}>
-				<CurrentBidList bids={bidInfo.bids} underlyingPrice={underlyingPrice} unit={unit} />
+				<CurrentBidList
+					bids={sortBids(bidInfo.bids)}
+					underlyingPrice={underlyingPrice}
+					unit={unit}
+				/>
 			</div>
 		</SidebarScroll>
 	);

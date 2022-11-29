@@ -1,6 +1,18 @@
 import { fromWei } from 'web3-utils';
-import { BidInfo } from '../types/liquidate';
+import { Bid, BidInfo } from '../types/liquidate';
 import { caseInsensitiveCompare } from './generalHelper';
+import { BN } from 'bn.js';
+
+export function sortBids(bids: Bid[]): Bid[] {
+	const result = bids.sort((a, b) => {
+		const bidA = new BN(a.bid);
+		const bidB = new BN(b.bid);
+		if (bidA.lt(bidB)) return 1;
+		else if (bidA.eq(bidB)) return 0;
+		else return -1;
+	});
+	return result;
+}
 
 export function bidToFloat(bid: string, unit: Unit): number {
 	return parseFloat(fromWei(bid, unit));
