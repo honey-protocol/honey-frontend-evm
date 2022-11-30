@@ -37,7 +37,8 @@ const {
 } = formatNumber;
 
 const BorrowForm = (props: BorrowProps) => {
-	const {} = props;
+	// TODO: validate @firefox  - props setup if required
+    const { positions } = props;
 
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -205,7 +206,7 @@ const BorrowForm = (props: BorrowProps) => {
 						</HexaBoxContainer>
 					</div>
 					<div className={styles.nftName}>
-						{nft.name} {nft.id}
+						{nft.name} #{nft.tokenId}
 					</div>
 				</div>
 				<div className={styles.row}>
