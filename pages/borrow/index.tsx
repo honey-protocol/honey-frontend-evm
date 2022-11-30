@@ -418,7 +418,7 @@ const Markets: NextPage = () => {
 	const marketSidebar = () => (
 		<HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
 			{/* borrow repay module */}
-			<MarketsSidebar />
+			<MarketsSidebar positions={positions} />
 		</HoneySider>
 	);
 	/* end table components              */
