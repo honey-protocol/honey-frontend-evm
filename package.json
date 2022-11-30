@@ -15,7 +15,7 @@
     "@fontsource/ia-writer-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.4",
     "@graphql-mesh/runtime": "^0.44.30",
-    "@metamask/eth-sig-util": "^5.0.2",
+    "@metamask/eth-sig-util": "metamask/eth-sig-util",
     "@types/lodash": "^4.14.186",
     "@vanilla-extract/babel-plugin": "^1.1.4",
     "@vanilla-extract/css": "^1.6.8",

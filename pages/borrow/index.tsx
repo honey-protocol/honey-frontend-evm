@@ -48,6 +48,7 @@ const Markets: NextPage = () => {
 		setNFTId,
 		setCouponId
 	} = useLoanFlowStore((state) => state);
+    
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { width: windowWidth } = useWindowSize();
@@ -70,10 +71,13 @@ const Markets: NextPage = () => {
 		unit
 	);
 
+    console.log('@@-- positions', positions)
+
 	/*   End insert data into table */
 	/*    Begin filter function       */
 	const [searchQuery, setSearchQuery] = useState('');
 	const [tableDataFiltered, setTableDataFiltered] = useState<MarketTableRow[]>([]);
+
 	const onSearch = (searchTerm: string): MarketTableRow[] => {
 		if (!searchTerm) {
 			return [...tableData];
@@ -294,8 +298,7 @@ const Markets: NextPage = () => {
 						</HexaBoxContainer>
 					</div>
 					<div className={style.nameCellText}>
-						<div className={style.collectionName}>{row['name']}</div>
-
+						<div className={style.collectionName}>{`${row['name']} #${row['tokenId']}`}</div>
 						<HealthLvl healthLvl={0} />
 					</div>
 				</div>
