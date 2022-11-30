@@ -2,6 +2,7 @@ import { fromWei } from 'web3-utils';
 import { Bid, BidInfo } from '../types/liquidate';
 import { caseInsensitiveCompare } from './generalHelper';
 import { BN } from 'bn.js';
+import Decimal from 'decimal.js';
 
 export function sortBids(bids: Bid[]): Bid[] {
 	const result = bids.sort((a, b) => {
@@ -41,4 +42,11 @@ export function hasRefund(refund: string) {
 
 export function userRefund(refund: string, unit: Unit) {
 	return parseFloat(fromWei(refund, unit));
+}
+
+//convert wei into decimal with 2 precisions round up
+export function weiToDecimal(wei: string, unit: Unit) {
+	const value = fromWei(wei, unit);
+	const decimal = new Decimal(value).toFixed(2, Decimal.ROUND_UP);
+	return parseFloat(decimal);
 }

@@ -40,7 +40,8 @@ import {
 	hasRefund,
 	isHighestBid,
 	userBid,
-	userRefund
+	userRefund,
+	weiToDecimal
 } from '../../helpers/liquidationHelper';
 import { fromWei } from 'web3-utils';
 
@@ -55,9 +56,6 @@ const {
 
 const BidForm = (props: BidFormProps) => {
 	const {} = props;
-	const { highestBiddingValue } = {
-		highestBiddingValue: 4
-	};
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const queryClient = useQueryClient();
@@ -138,7 +136,7 @@ const BidForm = (props: BidFormProps) => {
 
 	// Put your validators here
 	const isSubmitButtonDisabled = () => {
-		return false;
+		return p(f(valueUnderlying)) < weiToDecimal(minimumBid, unit);
 	};
 
 	/*   Begin handle slider function  */
@@ -194,8 +192,6 @@ const BidForm = (props: BidFormProps) => {
 	const bidMutation = useMutation(bidCollection);
 	/*  end handling borrow function */
 
-	const handlePlaceBid = () => {};
-	const handleIncreaseBid = () => {};
 	const handleCurrentBid = async () => {
 		try {
 			toast.processing();
@@ -256,17 +252,18 @@ const BidForm = (props: BidFormProps) => {
 			toast.processing();
 			setIsButtonDisable(true);
 			if (bidState == 'WAIT_FOR_BID') {
-				const amount = '0.01';
-				const unit = 'ether';
 				await bidMutation.mutateAsync({
 					marketContractAddress,
 					HERC20ContractAddress,
-					amount,
+					amount: p(f(valueUnderlying)).toString(),
 					unit
 				});
 				console.log('Collection bid succeed');
 				await queryClient.invalidateQueries(
 					queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
+				);
+				await queryClient.invalidateQueries(
+					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
 				);
 			} else if (bidState == 'WAIT_FOR_APPROVAL') {
 				await getApprovalMutation.mutateAsync({
@@ -276,9 +273,6 @@ const BidForm = (props: BidFormProps) => {
 				console.log('Approval succeed');
 				await queryClient.invalidateQueries(
 					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, marketContractAddress)
-				);
-				await queryClient.invalidateQueries(
-					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
 				);
 				handleSliderChange(0);
 			}
@@ -337,7 +331,7 @@ const BidForm = (props: BidFormProps) => {
 						<HoneyWarning
 							message="Want to learn more about liquidations ?"
 							link="https://docs.honey.finance/learn/liquidations"
-						></HoneyWarning>
+						/>
 					</div>
 				</div>
 				{(hasBid(walletPublicKey, bidInfo) || hasRefund(availableRefund)) && (
@@ -372,7 +366,7 @@ const BidForm = (props: BidFormProps) => {
 									Minimal bid <div className={questionIcon} />
 								</span>
 							}
-							value={fs(highestBiddingValue * 1.1)}
+							value={fs(weiToDecimal(minimumBid, unit))}
 							valueSize="big"
 						/>
 					</div>
