@@ -37,8 +37,7 @@ const {
 } = formatNumber;
 
 const BorrowForm = (props: BorrowProps) => {
-	// TODO: validate @firefox  - props setup if required
-    const { positions } = props;
+	const {} = props;
 
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { currentUser, setCurrentUser } = useContext(UserContext);

@@ -16,7 +16,7 @@ import RepayForm from '../RepayForm/RepayForm';
 type Tab = 'borrow' | 'repay';
 
 const MarketsSidebar = (props: MarketsSidebarProps) => {
-	const {positions} = props;
+	const {} = props;
 	const { workflow, HERC20ContractAddr, setWorkflow } = useLoanFlowStore((state) => state);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const queryClient = useQueryClient();
@@ -80,7 +80,7 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
 					</>
 				) : workflow == LoanWorkFlowType.loanOrBorrow && activeTab == 'borrow' ? (
 					<>
-						<BorrowForm positions={positions} />
+						<BorrowForm />
 					</>
 				) : workflow == LoanWorkFlowType.loanOrBorrow && activeTab == 'repay' ? (
 					<>

@@ -48,7 +48,7 @@ const Markets: NextPage = () => {
 		setNFTId,
 		setCouponId
 	} = useLoanFlowStore((state) => state);
-    
+
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { width: windowWidth } = useWindowSize();
@@ -71,7 +71,7 @@ const Markets: NextPage = () => {
 		unit
 	);
 
-    console.log('@@-- positions', positions)
+	console.log('@@-- positions', positions);
 
 	/*   End insert data into table */
 	/*    Begin filter function       */
@@ -418,7 +418,7 @@ const Markets: NextPage = () => {
 	const marketSidebar = () => (
 		<HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
 			{/* borrow repay module */}
-			<MarketsSidebar positions={positions} />
+			<MarketsSidebar />
 		</HoneySider>
 	);
 	/* end table components              */

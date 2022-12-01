@@ -21,6 +21,12 @@ export type MarketTablePosition = {
 	debt?: number;
 	available?: number;
 	value?: number;
+  positions?: {
+    name: string;
+	  couponId: string;
+	  id: string;
+	  image: string;
+  }
 };
 
 export interface HoneyTableColumnType<RecordType> extends ColumnType<RecordType> {
