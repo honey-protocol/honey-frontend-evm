@@ -533,7 +533,7 @@ export async function getFrontendMarketData(
 
 	// @ts-ignore
 	const result: any = await Moralis.Web3API.native.runContractFunction(options);
-	const interestRate = result[0] as string;
+	const interestRate = result[0] as number;
 	const supplied = result[1] as string;
 	const available = result[2] as string;
 	const resultAsset = {
@@ -553,8 +553,11 @@ export function useGetFrontendMarketData(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
 	unit: Unit
-): [{ rate: string; supplied: string; available: string }, boolean] {
-	const onSuccess = (data: { rate: string; supplied: string; available: string }) => {
+): [
+	{ rate: number | undefined; supplied: number | undefined; available: number | undefined },
+	boolean
+] {
+	const onSuccess = (data: { rate: number; supplied: number; available: number }) => {
 		return data;
 	};
 	const onError = (data: string) => {
@@ -581,7 +584,11 @@ export function useGetFrontendMarketData(
 			staleTime: defaultCacheStaleTime
 		}
 	);
-	const result = contractMarketData || {};
+	const result = contractMarketData || {
+		rate: undefined,
+		supplied: undefined,
+		available: undefined
+	};
 
 	return [result, isLoading || isFetching];
 }
