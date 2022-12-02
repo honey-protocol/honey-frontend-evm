@@ -511,3 +511,84 @@ export function useGetUserCoupons(
 	);
 	return [coupons || [], isLoading || isFetching];
 }
+
+/**
+ * @description fetches market data from contract
+ * @params htokenHelper contract address | HERC20 contract address | unit: ether
+ * @returns resultAsset object: rate | supplied | available
+ */
+export async function getFrontendMarketData(
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	unit: Unit
+) {
+	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
+	const options = {
+		chain: chain,
+		address: htokenHelperContractAddress,
+		function_name: 'getFrontendMarketData',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress }
+	};
+
+	// @ts-ignore
+	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const interestRate = result[0] as number;
+	const supplied = result[1] as string;
+	const available = result[2] as string;
+	const resultAsset = {
+		rate: interestRate,
+		supplied: fromWei(supplied, unit),
+		available: fromWei(available, unit)
+	};
+
+	return resultAsset;
+}
+/**
+ * @description hook which calls upon getFrontendMarketData
+ * @params htokenHelper contract address | HERC20 contract address | unit: ether
+ * @returns resultAsset object: rate | supplied | available
+ */
+export function useGetFrontendMarketData(
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	unit: Unit
+): [
+	{ rate: number | undefined; supplied: number | undefined; available: number | undefined },
+	boolean
+] {
+	const onSuccess = (data: { rate: number; supplied: number; available: number }) => {
+		return data;
+	};
+	const onError = (data: string) => {
+		return 0;
+	};
+
+	const {
+		data: contractMarketData,
+		isLoading,
+		isFetching
+	} = useQuery(
+		queryKeys.marketData(HERC20ContractAddress),
+		() => {
+			if (htokenHelperContractAddress != '' && HERC20ContractAddress != '') {
+				return getFrontendMarketData(htokenHelperContractAddress, HERC20ContractAddress, unit);
+			} else {
+				return {};
+			}
+		},
+		{
+			onSuccess,
+			onError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	const result = contractMarketData || {
+		rate: undefined,
+		supplied: undefined,
+		available: undefined
+	};
+
+	return [result, isLoading || isFetching];
+}
