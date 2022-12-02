@@ -512,9 +512,15 @@ export function useGetUserCoupons(
 	return [coupons || [], isLoading || isFetching];
 }
 
+/**
+ * @description fetches market data from contract
+ * @params htokenHelper contract address | HERC20 contract address | unit: ether
+ * @returns resultAsset object: rate | supplied | available
+ */
 export async function getFrontendMarketData(
 	htokenHelperContractAddress: string,
-	HERC20ContractAddress: string
+	HERC20ContractAddress: string,
+	unit: Unit
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
 	const options = {
@@ -527,43 +533,57 @@ export async function getFrontendMarketData(
 
 	// @ts-ignore
 	const result: any = await Moralis.Web3API.native.runContractFunction(options);
-	console.log('result:: getFrontendMarketData', result);
-	return result;
+	const interestRate = result[0] as string;
+	const supplied = result[1] as string;
+	const available = result[2] as string;
+	const resultAsset = {
+		rate: interestRate,
+		supplied: fromWei(supplied, unit),
+		available: fromWei(available, unit)
+	};
+
+	return resultAsset;
 }
+/**
+ * @description hook which calls upon getFrontendMarketData
+ * @params htokenHelper contract address | HERC20 contract address | unit: ether
+ * @returns resultAsset object: rate | supplied | available
+ */
+export function useGetFrontendMarketData(
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	unit: Unit
+): [object, boolean] {
+	const onSuccess = (data: object) => {
+		return data;
+	};
+	const onError = (data: string) => {
+		return 0;
+	};
 
-// export async function useGetFrontendMarketData(
-// 	htokenHelperContractAddress: string,
-// 	HERC20ContractAddress: string
-// ): [number, boolean] {
-// 	const onSuccess = (data: number) => {
-// 		return data;
-// 	};
-// 	const onError = (data: string) => {
-// 		return 0;
-// 	};
+	const {
+		data: contractMarketData,
+		isLoading,
+		isFetching
+	} = useQuery(
+		queryKeys.marketData(HERC20ContractAddress),
+		() => {
+			if (htokenHelperContractAddress != '' && HERC20ContractAddress != '') {
+				return getFrontendMarketData(htokenHelperContractAddress, HERC20ContractAddress, unit);
+			} else {
+				return {};
+			}
+		},
+		{
+			onSuccess,
+			onError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	const result = contractMarketData || {};
 
-// 	const {
-// 		data: amount,
-// 		isLoading,
-// 		isFetching
-// 	} = useQuery(
-// 		queryKeys.frontendMarketData(HERC20ContractAddress),
-// 		() => {
-// 			if (htokenHelperContractAddress != '' && HERC20ContractAddress != '') {
-// 				return getFrontendMarketData(htokenHelperContractAddress, HERC20ContractAddress);
-// 			} else {
-// 				return 0;
-// 			}
-// 		},
-// 		{
-// 			onSuccess,
-// 			onError,
-// 			retry: false,
-// 			staleTime: defaultCacheStaleTime
-// 		}
-// 	);
-// 	const result = amount || 0;
-// 	return [result, isLoading || isFetching];
-// }
+	return [result, isLoading || isFetching];
+}
 
 export async function getFrontendCouponData() {}
