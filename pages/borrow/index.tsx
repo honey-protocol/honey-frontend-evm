@@ -72,7 +72,7 @@ const Markets: NextPage = () => {
 		unit
 	);
 
-	/*    Begin insert data into table */
+	/* Begin insert data into table */
 	const marketData = useMarket(currentUser, collections);
 	/**
 	 * @description
@@ -82,16 +82,17 @@ const Markets: NextPage = () => {
 	useEffect(() => {
 		marketData.map((market) => {
 			if (market.key == HERC20ContractAddress) {
-				market.rate = contractMarketData.rate;
-				market.value = contractMarketData.supplied;
-				market.available = contractMarketData.available;
+				market.rate = Number(contractMarketData.rate);
+				market.value = Number(contractMarketData.supplied);
+				market.available = Number(contractMarketData.available);
 			}
 			return market;
 		});
 		setTableData(marketData);
 		setTableDataFiltered(marketData);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [HERC20ContractAddress, contractMarketData]);
+	}, [HERC20ContractAddress, isLoadingMarketData]);
+
 	/**
 	 * @description
 	 * @params
