@@ -553,8 +553,8 @@ export function useGetFrontendMarketData(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
 	unit: Unit
-): [object, boolean] {
-	const onSuccess = (data: object) => {
+): [{ rate: string; supplied: string; available: string }, boolean] {
+	const onSuccess = (data: { rate: string; supplied: string; available: string }) => {
 		return data;
 	};
 	const onError = (data: string) => {
