@@ -34,7 +34,7 @@ import useDisplayStore from '../../store/displayStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import HealthLvl from 'components/HealthLvl/HealthLvl';
 import c from 'classnames';
-import { getFrontendMarketData } from '../../hooks/useHtokenHelper';
+import { getFrontendMarketData, useGetFrontendMarketData } from '../../hooks/useHtokenHelper';
 import { fromWei } from 'web3-utils';
 
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
@@ -43,6 +43,11 @@ const Markets: NextPage = () => {
 	const [tableData, setTableData] = useState<MarketTableRow[]>([]);
 	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
+	/**
+	 * @description
+	 * @params
+	 * @returns
+	 */
 	const {
 		HERC20ContractAddr: HERC20ContractAddress,
 		setHERC20ContractAddr,
@@ -56,24 +61,42 @@ const Markets: NextPage = () => {
 	const { width: windowWidth } = useWindowSize();
 	const { htokenHelperContractAddress, nftContractAddress, unit } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
-
-	if (htokenHelperContractAddress && HERC20ContractAddress) fetchValues();
-
-	async function fetchValues() {
-		const outcome = await getFrontendMarketData(htokenHelperContractAddress, HERC20ContractAddress);
-		console.log('this is outcome debt:', fs(parseFloat(fromWei(outcome[0], unit))));
-		console.log('this is outcome allowance:', fs(parseFloat(fromWei(outcome[1], unit))));
-		console.log('this is outcome nft floor price:', fs(parseFloat(fromWei(outcome[2], unit))));
-	}
+	/**
+	 * @description
+	 * @params
+	 * @returns
+	 */
+	const [contractMarketData, isLoadingMarketData] = useGetFrontendMarketData(
+		htokenHelperContractAddress,
+		HERC20ContractAddress,
+		unit
+	);
 
 	/*    Begin insert data into table */
 	const marketData = useMarket(currentUser, collections);
+	/**
+	 * @description
+	 * @params
+	 * @returns
+	 */
 	useEffect(() => {
+		marketData.map((market) => {
+			if (market.key == HERC20ContractAddress) {
+				market.rate = contractMarketData.rate;
+				market.value = contractMarketData.supplied;
+				market.available = contractMarketData.available;
+			}
+			return market;
+		});
 		setTableData(marketData);
 		setTableDataFiltered(marketData);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
+	}, [HERC20ContractAddress, contractMarketData]);
+	/**
+	 * @description
+	 * @params
+	 * @returns
+	 */
 	const [positions, isLoadingPositions] = usePositions(
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
@@ -81,8 +104,6 @@ const Markets: NextPage = () => {
 		currentUser,
 		unit
 	);
-
-	console.log('@@-- positions', positions);
 
 	/*   End insert data into table */
 	/*    Begin filter function       */
@@ -189,7 +210,7 @@ const Markets: NextPage = () => {
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
 					render: (rate: number) => {
 						return (
-							<div className={classNames(style.rateCell, style.borrowRate)}>{fp(rate * 100)}</div>
+							<div className={classNames(style.rateCell, style.borrowRate)}>{fp(rate / 1000)}</div>
 						);
 					}
 				},
