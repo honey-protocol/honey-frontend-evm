@@ -520,7 +520,7 @@ export async function getFrontendMarketData(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getAssets',
+		function_name: 'getFrontendMarketData',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
