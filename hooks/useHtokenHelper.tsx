@@ -511,3 +511,59 @@ export function useGetUserCoupons(
 	);
 	return [coupons || [], isLoading || isFetching];
 }
+
+export async function getFrontendMarketData(
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string
+) {
+	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
+	const options = {
+		chain: chain,
+		address: htokenHelperContractAddress,
+		function_name: 'getAssets',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress }
+	};
+
+	// @ts-ignore
+	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	console.log('result:: getFrontendMarketData', result);
+	return result;
+}
+
+// export async function useGetFrontendMarketData(
+// 	htokenHelperContractAddress: string,
+// 	HERC20ContractAddress: string
+// ): [number, boolean] {
+// 	const onSuccess = (data: number) => {
+// 		return data;
+// 	};
+// 	const onError = (data: string) => {
+// 		return 0;
+// 	};
+
+// 	const {
+// 		data: amount,
+// 		isLoading,
+// 		isFetching
+// 	} = useQuery(
+// 		queryKeys.frontendMarketData(HERC20ContractAddress),
+// 		() => {
+// 			if (htokenHelperContractAddress != '' && HERC20ContractAddress != '') {
+// 				return getFrontendMarketData(htokenHelperContractAddress, HERC20ContractAddress);
+// 			} else {
+// 				return 0;
+// 			}
+// 		},
+// 		{
+// 			onSuccess,
+// 			onError,
+// 			retry: false,
+// 			staleTime: defaultCacheStaleTime
+// 		}
+// 	);
+// 	const result = amount || 0;
+// 	return [result, isLoading || isFetching];
+// }
+
+export async function getFrontendCouponData() {}
