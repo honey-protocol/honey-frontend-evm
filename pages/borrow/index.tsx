@@ -34,6 +34,7 @@ import useDisplayStore from '../../store/displayStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import HealthLvl from 'components/HealthLvl/HealthLvl';
 import c from 'classnames';
+import { getFrontendMarketData } from '../../hooks/useHtokenHelper';
 
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 const Markets: NextPage = () => {
@@ -54,6 +55,13 @@ const Markets: NextPage = () => {
 	const { width: windowWidth } = useWindowSize();
 	const { htokenHelperContractAddress, nftContractAddress, unit } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
+
+	if (htokenHelperContractAddress && HERC20ContractAddress) fetchValues();
+
+	async function fetchValues() {
+		const outcome = await getFrontendMarketData(htokenHelperContractAddress, HERC20ContractAddress);
+		console.log('this is outcome', outcome);
+	}
 
 	/*    Begin insert data into table */
 	const marketData = useMarket(currentUser, collections);
