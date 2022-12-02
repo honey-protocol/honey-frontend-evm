@@ -21,7 +21,7 @@ const CurrentBidCard = (props: CurrentBidCardProps) => {
 			<div className={styles.bidCardLeft}>
 				<div className={styles.bidCardCopy}>
 					<p className={styles.bidCardAddress}>{bid.bidder}</p>
-					<p className={styles.bidCardDate}>{dateFromTimestamp(bid.unlockTimeStamp)}</p>
+					<p className={styles.bidCardDate}>{dateFromTimestamp(bid.unlockTimeStamp * 1000)}</p>
 				</div>
 
 				<div
