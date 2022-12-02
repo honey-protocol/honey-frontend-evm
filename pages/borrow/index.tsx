@@ -35,6 +35,7 @@ import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import HealthLvl from 'components/HealthLvl/HealthLvl';
 import c from 'classnames';
 import { getFrontendMarketData } from '../../hooks/useHtokenHelper';
+import { fromWei } from 'web3-utils';
 
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 const Markets: NextPage = () => {
@@ -60,7 +61,9 @@ const Markets: NextPage = () => {
 
 	async function fetchValues() {
 		const outcome = await getFrontendMarketData(htokenHelperContractAddress, HERC20ContractAddress);
-		console.log('this is outcome', outcome);
+		console.log('this is outcome debt:', fs(parseFloat(fromWei(outcome[0], unit))));
+		console.log('this is outcome allowance:', fs(parseFloat(fromWei(outcome[1], unit))));
+		console.log('this is outcome nft floor price:', fs(parseFloat(fromWei(outcome[2], unit))));
 	}
 
 	/*    Begin insert data into table */
