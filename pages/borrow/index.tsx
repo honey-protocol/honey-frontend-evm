@@ -55,12 +55,16 @@ const Markets: NextPage = () => {
 		getContractsByHTokenAddr(HERC20ContractAddress);
 
 	/*    Begin insert data into table */
-	const marketData = useMarket(currentUser, collections);
+	const [marketData, isLoadingMarketData] = useMarket(
+		currentUser,
+		collections,
+		htokenHelperContractAddress
+	);
 	useEffect(() => {
 		setTableData(marketData);
 		setTableDataFiltered(marketData);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [isLoadingMarketData]);
 
 	const [positions, isLoadingPositions] = usePositions(
 		htokenHelperContractAddress,
@@ -190,10 +194,10 @@ const Markets: NextPage = () => {
 							</div>
 						);
 					},
-					dataIndex: 'value',
-					sorter: (a: MarketTableRow, b: MarketTableRow) => a.value - b.value,
-					render: (value: number) => {
-						return <div className={style.valueCell}>{fs(value)}</div>;
+					dataIndex: 'supplied',
+					sorter: (a: MarketTableRow, b: MarketTableRow) => a.supplied - b.supplied,
+					render: (supplied: number) => {
+						return <div className={style.valueCell}>{fs(supplied)}</div>;
 					}
 				},
 				{
@@ -268,7 +272,7 @@ const Markets: NextPage = () => {
 
 							<HoneyTableRow>
 								<div className={style.rateCell}>{fp(row.rate * 100)}</div>
-								<div className={style.availableCell}>{fs(row.value)}</div>
+								<div className={style.availableCell}>{fs(row.supplied)}</div>
 								<div className={style.availableCell}>{fs(row.available)}</div>
 							</HoneyTableRow>
 						</>
