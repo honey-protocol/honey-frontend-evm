@@ -6,10 +6,8 @@ export type MarketTableRow = {
 	icon: string;
 	erc20Icon: string;
 	rate: number;
-	debt: number;
-	allowance: number;
 	available: number;
-	value: number;
+	supplied: number;
 };
 
 export type MarketTablePosition = {

@@ -3,7 +3,7 @@ import { MarketTablePosition, MarketTableRow } from '../types/markets';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
-import { getUserCoupons } from './useHtokenHelper';
+import { getMarketData, getUserCoupons } from './useHtokenHelper';
 import { getImageUrlFromMetaData } from '../helpers/NFThelper';
 import { getMetaDataFromNFTId } from './useNFT';
 import { LendTableRow } from '../types/lend';
@@ -20,25 +20,72 @@ const defaultPosition: MarketTablePosition = {
 	couponId: ''
 };
 
+const defaultMarketData: MarketTableRow = {
+	key: '',
+	name: '',
+	icon: '',
+	erc20Icon: '',
+	rate: 0,
+	available: 0,
+	supplied: 0
+};
+
 export function useMarket(
 	user: MoralisType.User | null,
-	collections: collection[]
-): MarketTableRow[] {
-	const result = collections.map((collection) => {
-		const market: MarketTableRow = {
-			key: collection.HERC20ContractAddress,
-			name: `${collection.name}/${collection.erc20Name}`,
-			icon: collection.icon,
-			erc20Icon: collection.erc20Icon,
-			rate: 0.1,
-			debt: 0,
-			allowance: 0,
-			available: 0,
-			value: 0
-		};
-		return market;
-	});
-	return result;
+	collections: collection[],
+	htokenHelperContractAddress: string
+): [MarketTableRow[], boolean] {
+	const results = useQueries(
+		collections.map((collection) => {
+			return {
+				queryKey: queryKeys.marketData(collection.HERC20ContractAddress),
+				queryFn: async () => {
+					if (htokenHelperContractAddress != '' || collection.HERC20ContractAddress != '') {
+						try {
+							const marketData = await getMarketData(
+								htokenHelperContractAddress,
+								collection.HERC20ContractAddress,
+								collection.unit
+							);
+							const result: MarketTableRow = {
+								key: collection.HERC20ContractAddress,
+								name: `${collection.name}/${collection.erc20Name}`,
+								icon: collection.icon,
+								erc20Icon: collection.erc20Icon,
+								rate: marketData.interestRate,
+								available: parseFloat(marketData.available),
+								supplied: parseFloat(marketData.supplied)
+							};
+							return result;
+						} catch (e) {
+							console.error('Error fetching market data with error');
+							console.error(e);
+							const result: MarketTableRow = {
+								key: collection.HERC20ContractAddress,
+								name: `${collection.name}/${collection.erc20Name}`,
+								icon: collection.icon,
+								erc20Icon: collection.erc20Icon,
+								rate: 0,
+								available: 0,
+								supplied: 0
+							};
+							return result;
+						}
+					} else {
+						return defaultMarketData;
+					}
+				},
+				staleTime: defaultCacheStaleTime,
+				retry: false
+			};
+		})
+	);
+	const marketResult = results
+		.map((result) => result.data || defaultMarketData)
+		.filter((data) => data.name != '');
+	const isLoadingMarketData = results.some((query) => query.isLoading);
+	const isFetchingMarketData = results.some((query) => query.isFetching);
+	return [marketResult, isLoadingMarketData || isFetchingMarketData];
 }
 
 export function usePositions(

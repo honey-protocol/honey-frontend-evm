@@ -511,3 +511,37 @@ export function useGetUserCoupons(
 	);
 	return [coupons || [], isLoading || isFetching];
 }
+
+interface marketData {
+	interestRate: number;
+	supplied: string;
+	available: string;
+}
+
+export async function getMarketData(
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	unit: Unit
+) {
+	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
+	const options = {
+		chain: chain,
+		address: htokenHelperContractAddress,
+		function_name: 'getFrontendMarketData',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress }
+	};
+
+	// @ts-ignore
+	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const interestRate = result[0] as number;
+	const supplied = result[1] as string;
+	const available = result[2] as string;
+	const resultData: marketData = {
+		interestRate: interestRate / 1000000.0,
+		supplied: fromWei(supplied, unit),
+		available: fromWei(available, unit)
+	};
+
+	return resultData;
+}
