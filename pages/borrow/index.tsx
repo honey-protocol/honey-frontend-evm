@@ -177,9 +177,7 @@ const Markets: NextPage = () => {
 					hidden: windowWidth < TABLET_BP,
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
 					render: (rate: number) => {
-						return (
-							<div className={classNames(style.rateCell, style.borrowRate)}>{fp(rate * 100)}</div>
-						);
+						return <div className={classNames(style.rateCell, style.borrowRate)}>{fp(rate)}</div>;
 					}
 				},
 
@@ -257,7 +255,7 @@ const Markets: NextPage = () => {
 										</div>
 										<div className={style.nameCellMobile}>
 											<div className={style.collectionName}>{row['name']}</div>
-											<div className={style.rateCellMobile}>{fp(row.rate * 100)}</div>
+											<div className={style.rateCellMobile}>{fp(row.rate)}</div>
 										</div>
 									</>
 								}
@@ -271,7 +269,7 @@ const Markets: NextPage = () => {
 							/>
 
 							<HoneyTableRow>
-								<div className={style.rateCell}>{fp(row.rate * 100)}</div>
+								<div className={style.rateCell}>{fp(row.rate)}</div>
 								<div className={style.availableCell}>{fs(row.supplied)}</div>
 								<div className={style.availableCell}>{fs(row.available)}</div>
 							</HoneyTableRow>

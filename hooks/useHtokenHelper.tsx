@@ -538,7 +538,7 @@ export async function getMarketData(
 	const supplied = result[1] as string;
 	const available = result[2] as string;
 	const resultData: marketData = {
-		interestRate: interestRate / 1000000.0,
+		interestRate: interestRate / 1000.0,
 		supplied: fromWei(supplied, unit),
 		available: fromWei(available, unit)
 	};
