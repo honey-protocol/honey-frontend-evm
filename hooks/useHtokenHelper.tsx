@@ -573,7 +573,7 @@ export async function getLendData(
 	const supplied = result[1] as string;
 	const available = result[2] as string;
 	const resultData: lendMarketData = {
-		interestRate: interestRate,
+		interestRate: interestRate / 1000,
 		supplied: fromWei(supplied, unit),
 		available: fromWei(available, unit)
 	};
