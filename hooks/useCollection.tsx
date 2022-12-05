@@ -30,6 +30,17 @@ const defaultMarketData: MarketTableRow = {
 	supplied: 0
 };
 
+const defaultLendData: LendTableRow = {
+	key: '',
+	name: '',
+	icon: '',
+	erc20Icon: '',
+	interest: 0,
+	available: 0,
+	supplied: 0,
+	stats: []
+};
+
 export function useMarket(
 	user: MoralisType.User | null,
 	collections: collection[],
@@ -229,7 +240,7 @@ export function useLend(
 	);
 
 	const marketResult = results
-		.map((result) => result.data || defaultMarketData)
+		.map((result) => result.data || defaultLendData)
 		.filter((data) => data.name != '');
 	const isLoadingMarketData = results.some((query) => query.isLoading);
 	const isFetchingMarketData = results.some((query) => query.isFetching);
