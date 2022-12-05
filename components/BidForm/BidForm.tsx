@@ -172,15 +172,18 @@ const BidForm = (props: BidFormProps) => {
 	};
 	/*  end handle slider function   */
 
-	/*  begin handling borrow function */
+	/*  begin handling bid text and text */
 	const buttonTitle = () => {
 		if (bidState == 'WAIT_FOR_APPROVAL') return 'Approve';
+		else if (bidState == 'WAIT_FOR_INCREASE_BID') return 'Increase Bid';
 		else return 'Place Bid';
 	};
 
 	const getBidState = () => {
 		if (!approval) {
 			setBidState('WAIT_FOR_APPROVAL');
+		} else if (hasBid(walletPublicKey, bidInfo)) {
+			setBidState('WAIT_FOR_INCREASE_BID');
 		} else {
 			setBidState('WAIT_FOR_BID');
 		}
@@ -190,8 +193,9 @@ const BidForm = (props: BidFormProps) => {
 	const cancelBidMutation = useMutation(cancelCollectionBid);
 	const withdrawRefundMutation = useMutation(withdrawRefund);
 	const bidMutation = useMutation(bidCollection);
-	/*  end handling borrow function */
+	/*  end handling bid text and state */
 
+	/* Begin handling refund or cancel bid function */
 	const handleCurrentBid = async () => {
 		try {
 			toast.processing();
@@ -210,6 +214,9 @@ const BidForm = (props: BidFormProps) => {
 				console.log('Cancel bid succeed');
 				await queryClient.invalidateQueries(
 					queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
+				);
+				await queryClient.invalidateQueries(
+					queryKeys.userRefund(walletPublicKey, ERC20ContractAddress)
 				);
 			}
 			toast.success('Successful! Transaction complete');
@@ -247,6 +254,8 @@ const BidForm = (props: BidFormProps) => {
 		}
 	};
 
+	/* End handling refund or cancel bid function */
+
 	const onClick = async () => {
 		try {
 			toast.processing();
@@ -273,6 +282,15 @@ const BidForm = (props: BidFormProps) => {
 				console.log('Approval succeed');
 				await queryClient.invalidateQueries(
 					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, marketContractAddress)
+				);
+				handleSliderChange(0);
+			} else if (bidState == 'WAIT_FOR_INCREASE_BID') {
+				console.log('Increase Collection Bid succeed');
+				await queryClient.invalidateQueries(
+					queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
+				);
+				await queryClient.invalidateQueries(
+					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
 				);
 				handleSliderChange(0);
 			}
