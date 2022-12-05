@@ -36,6 +36,7 @@ import {
 } from '../../hooks/useMarketPlace';
 import { queryKeys } from '../../helpers/queryHelper';
 import {
+	getMinimumBid,
 	hasBid,
 	hasRefund,
 	isHighestBid,
@@ -106,6 +107,7 @@ const BidForm = (props: BidFormProps) => {
 	const { toast, ToastComponent } = useToast();
 	const [bidState, setBidState] = useState('WAIT_FOR_APPROVAL');
 	const [isButtonDisable, setIsButtonDisable] = useState(true);
+	const minBid = getMinimumBid(minimumBid, userBid(walletPublicKey, bidInfo, unit), unit);
 
 	useEffect(() => {
 		if (
@@ -136,7 +138,7 @@ const BidForm = (props: BidFormProps) => {
 
 	// Put your validators here
 	const isSubmitButtonDisabled = () => {
-		return p(f(valueUnderlying)) < weiToDecimal(minimumBid, unit);
+		return p(f(valueUnderlying)) < minBid;
 	};
 
 	/*   Begin handle slider function  */
@@ -384,7 +386,7 @@ const BidForm = (props: BidFormProps) => {
 									Minimal bid <div className={questionIcon} />
 								</span>
 							}
-							value={fs(weiToDecimal(minimumBid, unit))}
+							value={fs(minBid)}
 							valueSize="big"
 						/>
 					</div>
