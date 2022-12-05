@@ -5,6 +5,7 @@ import { fromWei, Unit } from 'web3-utils';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
+import { LendTableRow } from 'types/lend';
 
 export async function getUserSupplyBalance(
 	htokenHelperContractAddress: string,
@@ -539,6 +540,40 @@ export async function getMarketData(
 	const available = result[2] as string;
 	const resultData: marketData = {
 		interestRate: interestRate / 1000.0,
+		supplied: fromWei(supplied, unit),
+		available: fromWei(available, unit)
+	};
+
+	return resultData;
+}
+
+interface lendMarketData {
+	interestRate: number;
+	supplied: string;
+	available: string;
+}
+
+export async function getLendData(
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	unit: Unit
+) {
+	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
+	const options = {
+		chain: chain,
+		address: htokenHelperContractAddress,
+		function_name: 'getFrontendMarketData',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress }
+	};
+
+	// @ts-ignore
+	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const interestRate = result[0] as number;
+	const supplied = result[1] as string;
+	const available = result[2] as string;
+	const resultData: lendMarketData = {
+		interestRate: interestRate,
 		supplied: fromWei(supplied, unit),
 		available: fromWei(available, unit)
 	};
