@@ -60,6 +60,7 @@ const Markets: NextPage = () => {
 		collections,
 		htokenHelperContractAddress
 	);
+
 	useEffect(() => {
 		setTableData(marketData);
 		setTableDataFiltered(marketData);
