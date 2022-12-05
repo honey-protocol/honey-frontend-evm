@@ -3,7 +3,7 @@ import { MarketTablePosition, MarketTableRow } from '../types/markets';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
-import { getMarketData, getUserCoupons } from './useHtokenHelper';
+import { getLendData, getMarketData, getUserCoupons } from './useHtokenHelper';
 import { getImageUrlFromMetaData } from '../helpers/NFThelper';
 import { getMetaDataFromNFTId } from './useNFT';
 import { LendTableRow } from '../types/lend';
@@ -173,21 +173,67 @@ export function usePositions(
 	];
 }
 
-export function useLend(user: MoralisType.User | null, collections: collection[]): LendTableRow[] {
-	const result = collections.map((collection) => {
-		const market: LendTableRow = {
-			key: collection.HERC20ContractAddress,
-			name: `${collection.name}/${collection.erc20Name}`,
-			icon: collection.icon,
-			erc20Icon: collection.erc20Icon,
-			interest: 1,
-			available: 0,
-			value: 0,
-			stats: []
-		};
-		return market;
-	});
-	return result;
+export function useLend(
+	user: MoralisType.User | null,
+	collections: collection[],
+	htokenHelperContractAddress: string
+): [LendTableRow[], boolean] {
+	const results = useQueries(
+		collections.map((collection) => {
+			return {
+				queryKey: queryKeys.lendMarketData(collection.HERC20ContractAddress),
+				queryFn: async () => {
+					if (htokenHelperContractAddress != '' || collection.HERC20ContractAddress != '') {
+						try {
+							const marketData = await getLendData(
+								htokenHelperContractAddress,
+								collection.HERC20ContractAddress,
+								collection.unit
+							);
+							const result: LendTableRow = {
+								key: collection.HERC20ContractAddress,
+								name: `${collection.name}/${collection.erc20Name}`,
+								icon: collection.icon,
+								erc20Icon: collection.erc20Icon,
+								interest: marketData.interestRate,
+								available: parseFloat(marketData.available),
+								supplied: parseFloat(marketData.supplied),
+								stats: []
+							};
+							result.interest =
+								result.interest * ((result.supplied - result.available) / result.supplied);
+							return result;
+						} catch (e) {
+							console.error('Error fetching market data with error');
+							console.error(e);
+							const result: LendTableRow = {
+								key: collection.HERC20ContractAddress,
+								name: `${collection.name}/${collection.erc20Name}`,
+								icon: collection.icon,
+								erc20Icon: collection.erc20Icon,
+								interest: 0,
+								available: 0,
+								supplied: 0,
+								stats: []
+							};
+							return result;
+						}
+					} else {
+						return defaultMarketData;
+					}
+				},
+				staleTime: defaultCacheStaleTime,
+				retry: false
+			};
+		})
+	);
+
+	const marketResult = results
+		.map((result) => result.data || defaultMarketData)
+		.filter((data) => data.name != '');
+	const isLoadingMarketData = results.some((query) => query.isLoading);
+	const isFetchingMarketData = results.some((query) => query.isFetching);
+	return [marketResult, isLoadingMarketData || isFetchingMarketData];
 }
 
 //todo add graph later
