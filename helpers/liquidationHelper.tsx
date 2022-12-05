@@ -1,4 +1,4 @@
-import { fromWei, toWei, unitMap } from 'web3-utils';
+import { fromWei } from 'web3-utils';
 import { Bid, BidInfo } from '../types/liquidate';
 import { caseInsensitiveCompare } from './generalHelper';
 import { BN } from 'bn.js';
