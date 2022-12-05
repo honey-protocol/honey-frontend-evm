@@ -2,7 +2,7 @@ import MoralisType from 'moralis-v1';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { blackHole, defaultCacheStaleTime } from '../constants/constant';
-import { fromWei, toWei, Unit } from 'web3-utils';
+import { toWei, Unit } from 'web3-utils';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
 import Moralis from 'moralis-v1';
 import { Bid, BidInfo } from '../types/liquidate';
