@@ -50,3 +50,11 @@ export function weiToDecimal(wei: string, unit: Unit) {
 	const decimal = new Decimal(value).toFixed(2, Decimal.ROUND_UP);
 	return parseFloat(decimal);
 }
+
+export function getMinimumBid(minimumBid: string, userBid: number, unit: Unit) {
+	const minBid = weiToDecimal(minimumBid, unit);
+	const userBidRoundDown = new Decimal(userBid).toFixed(2, Decimal.ROUND_DOWN);
+	const userNewMinBid = parseFloat(userBidRoundDown) + 0.01;
+	if (userNewMinBid >= minBid) return userNewMinBid;
+	else return minBid;
+}

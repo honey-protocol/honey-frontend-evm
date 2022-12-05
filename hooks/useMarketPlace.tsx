@@ -266,3 +266,30 @@ export const withdrawRefund = async ({
 	const receipt = await transaction.wait(confirmedBlocks);
 	console.log(receipt);
 };
+
+export interface increaseCollectionBidVariables {
+	marketContractAddress: string;
+	HERC20ContractAddress: string;
+	amount: string;
+}
+
+export const increaseCollectionBid = async ({
+	marketContractAddress: marketContractAddress,
+	HERC20ContractAddress: HERC20ContractAddress,
+	amount: amount
+}: increaseCollectionBidVariables) => {
+	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
+	const options = {
+		chain: chain,
+		contractAddress: marketContractAddress,
+		functionName: 'increaseBidCollection',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress, _increaseAmount: amount }
+	};
+	const transaction = await Moralis.executeFunction(options);
+	console.log(`transaction hash: ${transaction.hash}`);
+
+	// @ts-ignore
+	const receipt = await transaction.wait(confirmedBlocks);
+	console.log(receipt);
+};
