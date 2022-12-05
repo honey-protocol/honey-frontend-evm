@@ -29,6 +29,7 @@ import {
 import {
 	bidCollection,
 	cancelCollectionBid,
+	increaseCollectionBid,
 	useGetAvailableRefund,
 	useGetCollectionBids,
 	useGetCollectionMinimumBid,
@@ -36,6 +37,7 @@ import {
 } from '../../hooks/useMarketPlace';
 import { queryKeys } from '../../helpers/queryHelper';
 import {
+	getIncreaseAmount,
 	getMinimumBid,
 	hasBid,
 	hasRefund,
@@ -195,6 +197,7 @@ const BidForm = (props: BidFormProps) => {
 	const cancelBidMutation = useMutation(cancelCollectionBid);
 	const withdrawRefundMutation = useMutation(withdrawRefund);
 	const bidMutation = useMutation(bidCollection);
+	const increaseBidMutation = useMutation(increaseCollectionBid);
 	/*  end handling bid text and state */
 
 	/* Begin handling refund or cancel bid function */
@@ -287,6 +290,18 @@ const BidForm = (props: BidFormProps) => {
 				);
 				handleSliderChange(0);
 			} else if (bidState == 'WAIT_FOR_INCREASE_BID') {
+				const increaseAmount = getIncreaseAmount(
+					walletPublicKey,
+					bidInfo,
+					p(f(valueUnderlying)),
+					unit
+				);
+				await increaseBidMutation.mutateAsync({
+					marketContractAddress,
+					HERC20ContractAddress,
+					increaseAmount,
+					unit
+				});
 				console.log('Increase Collection Bid succeed');
 				await queryClient.invalidateQueries(
 					queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)

@@ -270,13 +270,15 @@ export const withdrawRefund = async ({
 export interface increaseCollectionBidVariables {
 	marketContractAddress: string;
 	HERC20ContractAddress: string;
-	amount: string;
+	increaseAmount: string;
+	unit: Unit;
 }
 
 export const increaseCollectionBid = async ({
 	marketContractAddress: marketContractAddress,
 	HERC20ContractAddress: HERC20ContractAddress,
-	amount: amount
+	increaseAmount: increaseAmount,
+	unit: unit
 }: increaseCollectionBidVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
 	const options = {
@@ -284,7 +286,7 @@ export const increaseCollectionBid = async ({
 		contractAddress: marketContractAddress,
 		functionName: 'increaseBidCollection',
 		abi: ABI,
-		params: { _hToken: HERC20ContractAddress, _increaseAmount: amount }
+		params: { _hToken: HERC20ContractAddress, _increaseAmount: toWei(increaseAmount, unit) }
 	};
 	const transaction = await Moralis.executeFunction(options);
 	console.log(`transaction hash: ${transaction.hash}`);
