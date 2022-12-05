@@ -1,4 +1,4 @@
-import { fromWei } from 'web3-utils';
+import { fromWei, toWei, unitMap } from 'web3-utils';
 import { Bid, BidInfo } from '../types/liquidate';
 import { caseInsensitiveCompare } from './generalHelper';
 import { BN } from 'bn.js';
@@ -57,4 +57,11 @@ export function getMinimumBid(minimumBid: string, userBid: number, unit: Unit) {
 	const userNewMinBid = parseFloat(userBidRoundDown) + 0.01;
 	if (userNewMinBid >= minBid) return userNewMinBid;
 	else return minBid;
+}
+
+export function getIncreaseAmount(userAddress: string, bidInfo: BidInfo, bid: number, unit: Unit) {
+	const bids = bidInfo.bids.filter((bid) => caseInsensitiveCompare(bid.bidder, userAddress));
+	const userBid = bids.length == 0 ? '0' : bids[0].bid;
+	const increaseAmount = new Decimal(bid).sub(fromWei(userBid, unit));
+	return increaseAmount.toFixed(20).replace(/\.?0+$/, '');
 }
