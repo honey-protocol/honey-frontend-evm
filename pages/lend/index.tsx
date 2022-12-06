@@ -1,7 +1,6 @@
 import type { NextPage } from 'next';
 import LayoutRedesign from '../../components/LayoutRedesign/LayoutRedesign';
 import LendSidebar from '../../components/LendSidebar/LendSidebar';
-import { LendTableRow } from '../../types/lend';
 import React, { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import HoneyTable from '../../components/HoneyTable/HoneyTable';
 import * as style from '../../styles/markets.css';
@@ -27,6 +26,8 @@ import { collections } from '../../constants/NFTCollections';
 import { UserContext } from '../../contexts/userContext';
 import useLendFlowStore from '../../store/lendFlowStore';
 import { LendWorkFlowType } from '../../types/workflows';
+import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
+import { LendTableRow } from 'types/lend';
 
 const { format: f, formatPercent: fp, formatERC20: fs } = formatNumber;
 
@@ -42,13 +43,21 @@ const Lend: NextPage = () => {
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 
+	const { htokenHelperContractAddress, nftContractAddress, unit } =
+		getContractsByHTokenAddr(HERC20ContractAddr);
+
 	/*    Begin insert data into table */
-	const lendData = useLend(currentUser, collections);
+	const [lendData, isLoadingMarketData] = useLend(
+		currentUser,
+		collections,
+		htokenHelperContractAddress
+	);
+
 	useEffect(() => {
 		setTableData(lendData);
 		setTableDataFiltered(lendData);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [isLoadingMarketData]);
 
 	/*   End insert data into table */
 
@@ -155,17 +164,15 @@ const Lend: NextPage = () => {
 					);
 				},
 				dataIndex: 'rate',
-				sorter: (a, b) => a.interest - b.interest,
+				sorter: (a, b) => a.rate - b.rate,
 				render: (rate: number) => {
-					return (
-						<div className={c(style.rateCell, style.lendRate)}>{fp(calculatedInterestRate)}</div>
-					);
+					return <div className={c(style.rateCell, style.lendRate)}>{fp(rate)}</div>;
 				}
 			},
 			{
 				width: columnsWidth[3],
 				title: ({ sortColumns }) => {
-					const sortOrder = getColumnSortStatus(sortColumns, 'value');
+					const sortOrder = getColumnSortStatus(sortColumns, 'supplied');
 					return (
 						<div className={style.headerCell[sortOrder === 'disabled' ? 'disabled' : 'active']}>
 							<span>Supplied</span>
@@ -173,10 +180,10 @@ const Lend: NextPage = () => {
 						</div>
 					);
 				},
-				dataIndex: 'value',
-				sorter: (a, b) => a.value - b.value,
-				render: (value: number) => {
-					return <div className={style.valueCell}>{fs(value)}</div>;
+				dataIndex: 'supplied',
+				sorter: (a, b) => a.supplied - b.supplied,
+				render: (supplied: number) => {
+					return <div className={style.valueCell}>{fs(supplied)}</div>;
 				}
 			},
 			{
@@ -248,10 +255,8 @@ const Lend: NextPage = () => {
 							/>
 
 							<HoneyTableRow>
-								<div className={c(style.rateCell, style.lendRate)}>
-									{fp(calculatedInterestRate)}
-								</div>
-								<div className={style.valueCell}>{fs(row.value)}</div>
+								<div className={c(style.rateCell, style.lendRate)}>{fp(row.rate)}</div>
+								<div className={style.valueCell}>{fs(row.supplied)}</div>
 								<div className={style.availableCell}>{fs(row.available)}</div>
 							</HoneyTableRow>
 						</>

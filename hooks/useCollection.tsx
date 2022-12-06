@@ -12,6 +12,7 @@ import { TimestampPoint } from '../components/HoneyChart/types';
 import { LiquidateTablePosition, LiquidateTableRow } from '../types/liquidate';
 import { ActiveCouponQueryQuery, getBuiltGraphSDK } from '../.graphclient';
 import { getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
+import { interestRateLend } from 'helpers/utils';
 
 const defaultPosition: MarketTablePosition = {
 	name: '',
@@ -227,21 +228,81 @@ export function usePositions(
 	];
 }
 
-export function useLend(user: MoralisType.User | null, collections: collection[]): LendTableRow[] {
-	const result = collections.map((collection) => {
-		const market: LendTableRow = {
-			key: collection.HERC20ContractAddress,
-			name: `${collection.name}/${collection.erc20Name}`,
-			icon: collection.icon,
-			erc20Icon: collection.erc20Icon,
-			interest: 1,
-			available: 0,
-			value: 0,
-			stats: []
-		};
-		return market;
-	});
-	return result;
+export function useLend(
+	user: MoralisType.User | null,
+	collections: collection[],
+	htokenHelperContractAddress: string
+): [LendTableRow[], boolean] {
+	const results = useQueries(
+		collections.map((collection) => {
+			return {
+				queryKey: queryKeys.lendData(collection.HERC20ContractAddress),
+				queryFn: async () => {
+					if (htokenHelperContractAddress != '' || collection.HERC20ContractAddress != '') {
+						try {
+							const marketData = await getMarketData(
+								htokenHelperContractAddress,
+								collection.HERC20ContractAddress,
+								collection.unit
+							);
+							const result: LendTableRow = {
+								key: collection.HERC20ContractAddress,
+								name: `${collection.name}/${collection.erc20Name}`,
+								icon: collection.icon,
+								erc20Icon: collection.erc20Icon,
+								available: parseFloat(marketData.available),
+								supplied: parseFloat(marketData.supplied),
+								rate: interestRateLend(
+									marketData.interestRate,
+									marketData.supplied,
+									marketData.available
+								)
+							};
+							return result;
+						} catch (e) {
+							console.error('Error fetching market data with error');
+							console.error(e);
+							const result: LendTableRow = {
+								key: collection.HERC20ContractAddress,
+								name: `${collection.name}/${collection.erc20Name}`,
+								icon: collection.icon,
+								erc20Icon: collection.erc20Icon,
+								rate: 0,
+								available: 0,
+								supplied: 0
+							};
+							return result;
+						}
+					} else {
+						return defaultMarketData;
+					}
+				},
+				staleTime: defaultCacheStaleTime,
+				retry: false
+			};
+		})
+	);
+	const marketResult = results
+		.map((result) => result.data || defaultMarketData)
+		.filter((data) => data.name != '');
+	const isLoadingMarketData = results.some((query) => query.isLoading);
+	const isFetchingMarketData = results.some((query) => query.isFetching);
+	return [marketResult, isLoadingMarketData || isFetchingMarketData];
+
+	// const result = collections.map((collection) => {
+	// 	const market: LendTableRow = {
+	// 		key: collection.HERC20ContractAddress,
+	// 		name: `${collection.name}/${collection.erc20Name}`,
+	// 		icon: collection.icon,
+	// 		erc20Icon: collection.erc20Icon,
+	// 		interest: 1,
+	// 		available: 0,
+	// 		value: 0,
+	// 		stats: []
+	// 	};
+	// 	return market;
+	// });
+	// return result;
 }
 
 //todo add graph later
