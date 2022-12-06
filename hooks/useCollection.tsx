@@ -288,21 +288,6 @@ export function useLend(
 	const isLoadingMarketData = results.some((query) => query.isLoading);
 	const isFetchingMarketData = results.some((query) => query.isFetching);
 	return [marketResult, isLoadingMarketData || isFetchingMarketData];
-
-	// const result = collections.map((collection) => {
-	// 	const market: LendTableRow = {
-	// 		key: collection.HERC20ContractAddress,
-	// 		name: `${collection.name}/${collection.erc20Name}`,
-	// 		icon: collection.icon,
-	// 		erc20Icon: collection.erc20Icon,
-	// 		interest: 1,
-	// 		available: 0,
-	// 		value: 0,
-	// 		stats: []
-	// 	};
-	// 	return market;
-	// });
-	// return result;
 }
 
 //todo add graph later
