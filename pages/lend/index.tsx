@@ -47,7 +47,7 @@ const Lend: NextPage = () => {
 		getContractsByHTokenAddr(HERC20ContractAddr);
 
 	/*    Begin insert data into table */
-	const [lendData, isLoadingMarketData] = useLend(
+	const [lendData, isLoadingLendData] = useLend(
 		currentUser,
 		collections,
 		htokenHelperContractAddress
@@ -57,7 +57,7 @@ const Lend: NextPage = () => {
 		setTableData(lendData);
 		setTableDataFiltered(lendData);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoadingMarketData]);
+	}, [isLoadingLendData]);
 
 	/*   End insert data into table */
 
