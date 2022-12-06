@@ -16,9 +16,9 @@ export type MarketTablePosition = {
 	couponId: string;
 	image: string;
 	healthLvl?: number;
-	debt?: number;
-	available?: number;
-	value?: number;
+	debt: string;
+	allowance: string;
+	NFTPrice: number;
 };
 
 export interface HoneyTableColumnType<RecordType> extends ColumnType<RecordType> {

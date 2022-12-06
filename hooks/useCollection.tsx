@@ -3,7 +3,7 @@ import { MarketTablePosition, MarketTableRow } from '../types/markets';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
-import { getMarketData, getUserCoupons } from './useHtokenHelper';
+import { getCouponData, getMarketData, getUserCoupons } from './useHtokenHelper';
 import { getImageUrlFromMetaData } from '../helpers/NFThelper';
 import { getMetaDataFromNFTId } from './useNFT';
 import { LendTableRow } from '../types/lend';
@@ -17,7 +17,10 @@ const defaultPosition: MarketTablePosition = {
 	name: '',
 	image: '',
 	tokenId: '',
-	couponId: ''
+	couponId: '',
+	debt: '',
+	allowance: '',
+	NFTPrice: 0
 };
 
 const defaultMarketData: MarketTableRow = {
@@ -139,11 +142,13 @@ export function usePositions(
 						try {
 							const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, coupon.NFTId);
 							const result: MarketTablePosition = {
-								// id: `${metaData.name}-${metaData.token_id}`, //id will be name-tokenId
 								name: metaData.name,
 								image: getImageUrlFromMetaData(metaData.metadata || ''),
 								tokenId: metaData.token_id,
-								couponId: coupon.couponId
+								couponId: coupon.couponId,
+								debt: '0',
+								allowance: '0',
+								NFTPrice: 0
 							};
 							return result;
 						} catch (e) {
@@ -161,15 +166,64 @@ export function usePositions(
 			};
 		})
 	);
-	const isLoadingPosition = results.some((query) => query.isLoading);
-	const isFetchingPosition = results.some((query) => query.isFetching);
-	const positions = results
+	const nftDetails = results
+		.map((result) => result.data || defaultPosition)
+		.filter((position) => position.image != '');
+	const couponDatas = useQueries(
+		nftDetails.map((nftDetail) => {
+			return {
+				queryKey: queryKeys.couponData(HERC20ContractAddress, nftDetail.couponId),
+				queryFn: async () => {
+					if (walletPublicKey != '' && HERC20ContractAddress != '') {
+						try {
+							const couponData = await getCouponData(
+								htokenHelperContractAddress,
+								HERC20ContractAddress,
+								nftDetail.couponId,
+								unit
+							);
+							const result: MarketTablePosition = {
+								name: nftDetail.name,
+								image: nftDetail.image,
+								tokenId: nftDetail.tokenId,
+								couponId: nftDetail.couponId,
+								debt: couponData.debt,
+								allowance: couponData.allowance,
+								NFTPrice: couponData.NFTPrice
+							};
+							return result;
+						} catch (e) {
+							console.error('Error fetching market position with error');
+							console.error(e);
+							return defaultPosition;
+						}
+					} else {
+						return defaultPosition;
+					}
+				},
+				staleTime: defaultCacheStaleTime,
+				retry: false,
+				enabled: results.length > 0
+			};
+		})
+	);
+	const positions = couponDatas
 		.map((result) => result.data || defaultPosition)
 		.filter((position) => position.image != '');
 
+	const isLoadingNFTDetail = results.some((query) => query.isLoading);
+	const isFetchingNFTDetail = results.some((query) => query.isFetching);
+	const isLoadingPosition = couponDatas.some((query) => query.isLoading);
+	const isFetchingPosition = couponDatas.some((query) => query.isFetching);
+
 	return [
 		positions,
-		isLoadingPosition || isFetchingPosition || isLoadingCoupons || isFetchingCoupons
+		isLoadingPosition ||
+			isFetchingPosition ||
+			isLoadingCoupons ||
+			isFetchingCoupons ||
+			isLoadingNFTDetail ||
+			isFetchingNFTDetail
 	];
 }
 

@@ -26,6 +26,8 @@ export const queryKeys = {
 		] as const,
 	borrowAmount: (HERC20ContractAddress: string, NFTTokenId: string) =>
 		['nft', 'borrow', HERC20ContractAddress, NFTTokenId] as const,
+	couponData: (HERC20ContractAddress: string, couponId: string) =>
+		['coupon', 'data', HERC20ContractAddress, couponId] as const,
 	totalSupply: (HERC20ContractAddress: string) =>
 		['asset', 'totalSupply', HERC20ContractAddress] as const,
 	totalBorrow: (HERC20ContractAddress: string) =>
