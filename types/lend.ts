@@ -5,8 +5,7 @@ export type LendTableRow = {
 	name: string;
 	icon: string;
 	erc20Icon: string;
-	interest: number;
+	rate: number;
 	available: number;
-	value: number;
-	stats: Array<TimestampPoint>;
+	supplied: number;
 };
