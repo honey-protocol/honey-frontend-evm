@@ -296,8 +296,7 @@ const Markets: NextPage = () => {
 						</HexaBoxContainer>
 					</div>
 					<div className={style.nameCellText}>
-						<div className={style.collectionName}>{row['name']}</div>
-
+						<div className={style.collectionName}>{`${row['name']} #${row['tokenId']}`}</div>
 						<HealthLvl healthLvl={0} />
 					</div>
 				</div>
@@ -361,7 +360,7 @@ const Markets: NextPage = () => {
 						</HexaBoxContainer>
 					</div>
 					<div className={style.nameCellText}>
-						<div className={style.collectionNameMobile}>{row['name']}</div>
+						<div className={style.collectionName}>{`${row['name']} #${row['tokenId']}`}</div>
 						<HealthLvl healthLvl={row.healthLvl || 0} />
 					</div>
 				</div>
