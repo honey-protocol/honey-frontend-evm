@@ -322,11 +322,11 @@ const Markets: NextPage = () => {
 			)
 		},
 		{
-			dataIndex: 'value',
+			dataIndex: 'NFTPrice',
 			width: columnsWidth[3],
-			render: (value) => (
+			render: (NFTPrice) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Value:'} value={'0'} />
+					<InfoBlock title={'Value:'} value={NFTPrice} />
 				</div>
 			)
 		},
