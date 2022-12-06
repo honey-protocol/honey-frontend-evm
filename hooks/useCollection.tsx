@@ -20,7 +20,7 @@ const defaultPosition: MarketTablePosition = {
 	couponId: '',
 	debt: '',
 	allowance: '',
-	NFTPrice: 0
+	value: 0
 };
 
 const defaultMarketData: MarketTableRow = {
@@ -148,7 +148,7 @@ export function usePositions(
 								couponId: coupon.couponId,
 								debt: '0',
 								allowance: '0',
-								NFTPrice: 0
+								value: 0
 							};
 							return result;
 						} catch (e) {
@@ -189,7 +189,7 @@ export function usePositions(
 								couponId: nftDetail.couponId,
 								debt: couponData.debt,
 								allowance: couponData.allowance,
-								NFTPrice: couponData.NFTPrice
+								value: couponData.NFTPrice
 							};
 							return result;
 						} catch (e) {

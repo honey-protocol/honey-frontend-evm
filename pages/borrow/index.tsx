@@ -326,7 +326,7 @@ const Markets: NextPage = () => {
 			width: columnsWidth[3],
 			render: (value) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Value:'} value={'0'} />
+					<InfoBlock title={'Value:'} value={fs(value)} />
 				</div>
 			)
 		},
