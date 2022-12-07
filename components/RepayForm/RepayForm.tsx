@@ -344,7 +344,7 @@ const RepayForm = (props: RepayProps) => {
 							}
 						/>
 
-						<HoneySlider
+						{/* <HoneySlider
 							currentValue={0}
 							maxValue={nftPrice || 0}
 							minAvailableValue={userDebt}
@@ -352,7 +352,7 @@ const RepayForm = (props: RepayProps) => {
 							dangerPosition={0.45 - userDebt / 1000}
 							maxAvailablePosition={collateralFactor}
 							isReadonly
-						/>
+						/> */}
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
@@ -379,7 +379,7 @@ const RepayForm = (props: RepayProps) => {
 							}
 						/>
 
-						<HoneySlider
+						{/* <HoneySlider
 							currentValue={0}
 							maxValue={nftPrice || 0}
 							minAvailableValue={newDebt}
@@ -387,7 +387,7 @@ const RepayForm = (props: RepayProps) => {
 							dangerPosition={0.45 - userDebt / 1000}
 							maxAvailablePosition={collateralFactor}
 							isReadonly
-						/>
+						/> */}
 					</div>
 				</div>
 
