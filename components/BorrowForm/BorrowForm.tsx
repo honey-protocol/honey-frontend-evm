@@ -442,7 +442,7 @@ const BorrowForm = (props: BorrowProps) => {
 										</a>
 									</span>
 								}
-								value={fp(10)}
+								value={fp(5)}
 							/>
 						</div>
 						<div className={cs(stylesBorrow.balance, styles.col)}>
