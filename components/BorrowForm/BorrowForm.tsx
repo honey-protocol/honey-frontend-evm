@@ -378,9 +378,10 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={`${fs(borrowedValue / collateralFactor)} ${
-								borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
-							}`}
+							// value={`${fs(borrowedValue / collateralFactor)} ${
+							// 	borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
+							// }`}
+							value={`N/A`}
 							valueSize="normal"
 							isDisabled={borrowedValue <= 0}
 							title={
@@ -424,9 +425,10 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={`${fs(newTotalDebt / collateralFactor)} ${
-								borrowedValue ? `(-${newLiqPercent.toFixed(0)}%)` : ''
-							}`}
+							// value={`${fs(newTotalDebt / collateralFactor)} ${
+							// 	borrowedValue ? `(-${newLiqPercent.toFixed(0)}%)` : ''
+							// }`}
+							value={`N/A`}
 							valueSize="normal"
 						/>
 					</div>
