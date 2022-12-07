@@ -68,7 +68,6 @@ const BorrowForm = (props: BorrowProps) => {
 		currentUser,
 		unit
 	);
-
 	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
 		hivemindContractAddress,
 		HERC20ContractAddress,
@@ -100,7 +99,8 @@ const BorrowForm = (props: BorrowProps) => {
 	/* initial all financial value here */
 	const borrowedValue = parseFloat(borrowAmount);
 	const loanToValue = borrowedValue / nftPrice;
-	const userAllowance = isLoadingPositions === false ? fetchAllowance(positions, NFTId) : 0;
+	const userAllowance = fetchAllowance(positions, NFTId);
+
 	//todo use data from blockchain
 	const borrowFee = 0.005; // 0,5%
 
