@@ -381,7 +381,7 @@ const BorrowForm = (props: BorrowProps) => {
 							// value={`${fs(borrowedValue / collateralFactor)} ${
 							// 	borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
 							// }`}
-							value={`N/A`}
+							value="N/A"
 							valueSize="normal"
 							isDisabled={borrowedValue <= 0}
 							title={
@@ -428,7 +428,7 @@ const BorrowForm = (props: BorrowProps) => {
 							// value={`${fs(newTotalDebt / collateralFactor)} ${
 							// 	borrowedValue ? `(-${newLiqPercent.toFixed(0)}%)` : ''
 							// }`}
-							value={`N/A`}
+							value={'N/A'}
 							valueSize="normal"
 						/>
 					</div>
