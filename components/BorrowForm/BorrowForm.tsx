@@ -27,6 +27,7 @@ import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from '../../hooks/useHtoke
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { borrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
+import { usePositions } from '../../hooks/useCollection';
 
 const {
 	format: f,
@@ -58,6 +59,16 @@ const BorrowForm = (props: BorrowProps) => {
 	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
 	const [sliderValue, setSliderValue] = useState(0);
 	const { toast, ToastComponent } = useToast();
+
+	const [positions, isLoadingPositions] = usePositions(
+		htokenHelperContractAddress,
+		HERC20ContractAddress,
+		nftContractAddress,
+		currentUser,
+		unit
+	);
+
+	useEffect(() => {}, [isLoadingPositions]);
 
 	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
 		hivemindContractAddress,
