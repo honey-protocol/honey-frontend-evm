@@ -216,7 +216,7 @@ const BorrowForm = (props: BorrowProps) => {
 						</HexaBoxContainer>
 					</div>
 					<div className={styles.nftName}>
-						{nft.name} {nft.id}
+						{nft.name} #{NFTId}
 					</div>
 				</div>
 				<div className={styles.row}>
