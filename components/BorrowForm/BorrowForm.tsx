@@ -265,7 +265,7 @@ const BorrowForm = (props: BorrowProps) => {
 								</span>
 							}
 						/>
-						<HoneySlider
+						{/* <HoneySlider
 							currentValue={0}
 							maxValue={nftPrice}
 							minAvailableValue={borrowedValue}
@@ -273,7 +273,7 @@ const BorrowForm = (props: BorrowProps) => {
 							dangerPosition={0.45 - borrowedValue / 1000}
 							maxAvailablePosition={collateralFactor}
 							isReadonly
-						/>
+						/> */}
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
@@ -298,7 +298,7 @@ const BorrowForm = (props: BorrowProps) => {
 							value={fp(((borrowedValue + newAdditionalDebt) / nftPrice) * 100)}
 							isDisabled={true}
 						/>
-						<HoneySlider
+						{/* <HoneySlider
 							currentValue={sliderValue * 1.1}
 							maxValue={nftPrice}
 							minAvailableValue={borrowedValue}
@@ -306,7 +306,7 @@ const BorrowForm = (props: BorrowProps) => {
 							dangerPosition={0.45 - borrowedValue / 1000}
 							maxAvailablePosition={(userAllowance + borrowedValue) / nftPrice}
 							isReadonly
-						/>
+						/> */}
 					</div>
 				</div>
 
