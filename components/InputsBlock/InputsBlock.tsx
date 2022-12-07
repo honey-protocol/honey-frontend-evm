@@ -47,6 +47,7 @@ export const InputsBlock: FC<InputsBlockProps> = ({
 			onChangeFirstInput(parseFloat(value));
 		} else {
 			onChangeFirstInput(undefined);
+			onChangeSecondInput(undefined);
 		}
 	};
 
@@ -55,6 +56,7 @@ export const InputsBlock: FC<InputsBlockProps> = ({
 		if (isValidNumericInput(value) && value !== '') {
 			onChangeSecondInput(Number(value) < maxValue ? Number(value) : maxValue);
 		} else {
+			onChangeFirstInput(undefined);
 			onChangeSecondInput(undefined);
 		}
 	};
