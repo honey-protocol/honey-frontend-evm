@@ -296,7 +296,7 @@ const Markets: NextPage = () => {
 					</div>
 					<div className={style.nameCellText}>
 						<div className={style.collectionName}>{`${row['name']} #${row['tokenId']}`}</div>
-						<HealthLvl healthLvl={0} />
+						{/* <HealthLvl healthLvl={0} /> */}
 					</div>
 				</div>
 			)
