@@ -441,9 +441,10 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={`${fs(userDebt / collateralFactor)} ${
-								userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''
-							}`}
+							// value={`${fs(userDebt / collateralFactor)} ${
+							// 	userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''
+							// }`}
+							value="N/A"
 							valueSize="normal"
 							title={
 								<span className={hAlign}>
@@ -486,9 +487,10 @@ const RepayForm = (props: RepayProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={`${fs(newDebt / collateralFactor)} ${
-								userDebt ? `(-${newLiqPercent.toFixed(0)}%)` : ''
-							}`}
+							// value={`${fs(newDebt / collateralFactor)} ${
+							// 	userDebt ? `(-${newLiqPercent.toFixed(0)}%)` : ''
+							// }`}
+							value="N/A"
 							valueSize="normal"
 						/>
 					</div>
