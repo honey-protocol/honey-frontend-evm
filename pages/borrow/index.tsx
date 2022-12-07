@@ -62,8 +62,7 @@ const Markets: NextPage = () => {
 	);
 	useEffect(() => {
 		setTableData(marketData);
-		setTableDataFiltered(marketData);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		setTableDataFiltered(marketData); // eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isLoadingMarketData]);
 
 	const [positions, isLoadingPositions] = usePositions(

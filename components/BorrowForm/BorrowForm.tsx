@@ -27,6 +27,9 @@ import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from '../../hooks/useHtoke
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { borrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
+import { usePositions } from '../../hooks/useCollection';
+import { fetchAllowance } from 'helpers/utils';
+import { fromWei, Unit } from 'web3-utils';
 
 const {
 	format: f,
@@ -59,6 +62,13 @@ const BorrowForm = (props: BorrowProps) => {
 	const [sliderValue, setSliderValue] = useState(0);
 	const { toast, ToastComponent } = useToast();
 
+	const [positions, isLoadingPositions] = usePositions(
+		htokenHelperContractAddress,
+		HERC20ContractAddress,
+		nftContractAddress,
+		currentUser,
+		unit
+	);
 	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
 		hivemindContractAddress,
 		HERC20ContractAddress,
@@ -86,14 +96,12 @@ const BorrowForm = (props: BorrowProps) => {
 		NFTId,
 		unit
 	);
-
 	/* initial all financial value here */
 	const borrowedValue = parseFloat(borrowAmount);
 	const loanToValue = borrowedValue / nftPrice;
-	const userAllowance = parseFloat(maxBorrowAmount) - borrowedValue;
+	const userAllowance = fetchAllowance(positions, NFTId);
 	//todo use data from blockchain
-	const borrowFee = 0.005; // 0,5%
-
+	const borrowFee = 0.005; // ,5%
 	const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
 	const newTotalDebt = newAdditionalDebt ? borrowedValue + newAdditionalDebt : borrowedValue;
 	/* end initial all  financial value here */
@@ -109,7 +117,8 @@ const BorrowForm = (props: BorrowProps) => {
 			isLoadingNFTPrice ||
 			isLoadingUnderlyingPrice ||
 			isLoadingBorrowAmount ||
-			isLoadingMaxBorrow
+			isLoadingMaxBorrow ||
+			isLoadingPositions
 		) {
 			toast.processing();
 		} else {
@@ -205,7 +214,7 @@ const BorrowForm = (props: BorrowProps) => {
 						</HexaBoxContainer>
 					</div>
 					<div className={styles.nftName}>
-						{nft.name} {nft.id}
+						{nft.name} #{NFTId}
 					</div>
 				</div>
 				<div className={styles.row}>
@@ -368,9 +377,7 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={`${fs(borrowedValue / collateralFactor)} ${
-								borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
-							}`}
+							value={`N/A`}
 							valueSize="normal"
 							isDisabled={borrowedValue <= 0}
 							title={
@@ -414,9 +421,7 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={`${fs(newTotalDebt / collateralFactor)} ${
-								borrowedValue ? `(-${newLiqPercent.toFixed(0)}%)` : ''
-							}`}
+							value={`N/A`}
 							valueSize="normal"
 						/>
 					</div>
