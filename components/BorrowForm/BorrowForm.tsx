@@ -472,8 +472,9 @@ const BorrowForm = (props: BorrowProps) => {
 					minAvailableValue={borrowedValue}
 					maxSafePosition={0.3 - borrowedValue / 1000}
 					dangerPosition={0.45 - borrowedValue / 1000}
-					maxAvailablePosition={collateralFactor}
+					maxAvailablePosition={0.5}
 					onChange={handleSliderChange}
+					labels={[0, 25, 50]}
 				/>
 			</>
 		);
