@@ -58,8 +58,8 @@ const BorrowForm = (props: BorrowProps) => {
 		unit
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
 
-	const [valueUSD, setValueUSD] = useState<number>(0);
-	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
+	const [valueUSD, setValueUSD] = useState<number | undefined>(0);
+	const [valueUnderlying, setValueUnderlying] = useState<number | undefined>(0);
 	const [sliderValue, setSliderValue] = useState(0);
 	const { toast, ToastComponent } = useToast();
 
@@ -94,8 +94,9 @@ const BorrowForm = (props: BorrowProps) => {
 	const loanToValue = borrowedValue / nftPrice;
 	const userAllowance = fetchAllowance(positions, NFTId);
 	//todo use data from blockchain
-	const borrowFee = 0.005; // ,5%
-	const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
+	const borrowFee = 0.005; // 0,5%
+
+	const newAdditionalDebt = (valueUnderlying ?? 0) * (1 + borrowFee);
 	const newTotalDebt = newAdditionalDebt ? borrowedValue + newAdditionalDebt : borrowedValue;
 	/* end initial all  financial value here */
 
@@ -137,8 +138,8 @@ const BorrowForm = (props: BorrowProps) => {
 	const handleUsdInputChange = (usdValue: number | undefined) => {
 		if (userAllowance <= 0) return;
 		if (!usdValue) {
-			setValueUSD(0);
-			setValueUnderlying(0);
+			setValueUSD(undefined);
+			setValueUnderlying(undefined);
 			setSliderValue(0);
 			return;
 		}
@@ -150,12 +151,11 @@ const BorrowForm = (props: BorrowProps) => {
 	const handleUnderlyingInputChange = (UnderlyingValue: number | undefined) => {
 		if (userAllowance <= 0) return;
 		if (!UnderlyingValue) {
-			setValueUSD(0);
-			setValueUnderlying(0);
+			setValueUSD(undefined);
+			setValueUnderlying(undefined);
 			setSliderValue(0);
 			return;
 		}
-
 		setValueUSD(UnderlyingValue * underlyingPrice);
 		setValueUnderlying(UnderlyingValue);
 		setSliderValue(UnderlyingValue);
@@ -169,7 +169,7 @@ const BorrowForm = (props: BorrowProps) => {
 			await borrowMutation.mutateAsync({
 				HERC20ContractAddress,
 				NFTTokenId: nft.tokenId,
-				amount: valueUnderlying.toString(),
+				amount: (valueUnderlying ?? 0).toString(),
 				unit
 			});
 			console.log('borrow succeed');
@@ -449,8 +449,8 @@ const BorrowForm = (props: BorrowProps) => {
 										Borrow Fee <div className={questionIcon} />
 									</span>
 								}
-								value={fs(valueUnderlying * borrowFee)}
-								//TODO: add link to docs
+								value={fs((valueUnderlying ?? 0) * borrowFee)}
+								// TODO: add link to docs
 								toolTipLabel={
 									<span>
 										Borrow Fee is a{' '}
@@ -464,8 +464,8 @@ const BorrowForm = (props: BorrowProps) => {
 						</div>
 					</div>
 					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
+						firstInputValue={valueUSD ? p(f(valueUSD)) : undefined}
+						secondInputValue={valueUnderlying ? p(f(valueUnderlying)) : undefined}
 						onChangeFirstInput={handleUsdInputChange}
 						onChangeSecondInput={handleUnderlyingInputChange}
 						maxValue={userAllowance}
