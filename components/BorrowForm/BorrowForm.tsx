@@ -92,7 +92,7 @@ const BorrowForm = (props: BorrowProps) => {
 	const loanToValue = borrowedValue / nftPrice;
 	const userAllowance = parseFloat(maxBorrowAmount) - borrowedValue;
 	//todo use data from blockchain
-	const borrowFee = 0.025; // 2,5%
+	const borrowFee = 0.005; // 0,5%
 
 	const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
 	const newTotalDebt = newAdditionalDebt ? borrowedValue + newAdditionalDebt : borrowedValue;
