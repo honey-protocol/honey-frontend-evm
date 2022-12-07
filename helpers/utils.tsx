@@ -1,4 +1,5 @@
 import BN from 'bn.js';
+import { MarketTablePosition } from 'types/markets';
 
 /**
  * Check if null or undefined
@@ -42,4 +43,18 @@ export const RoundHalfDown = (val: number, decimals: number = 2): number => {
  */
 export const interestRateLend = (baseRate: number, supplied: string, available: string) => {
 	return baseRate * ((parseFloat(supplied) - parseFloat(available)) / parseFloat(supplied));
+};
+
+/**
+ * @description filter selected position from positions array
+ * @params positions
+ * @returns selected nft
+ */
+export const fetchAllowance = (positions: MarketTablePosition[], NFTId: string) => {
+	const filtered = positions.filter((position) => position.tokenId === NFTId);
+	if (filtered.length) {
+		return parseFloat(filtered[0].allowance);
+	} else {
+		return 0;
+	}
 };

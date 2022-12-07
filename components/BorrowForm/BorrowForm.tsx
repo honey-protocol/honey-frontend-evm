@@ -28,6 +28,7 @@ import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { borrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 import { usePositions } from '../../hooks/useCollection';
+import { fetchAllowance } from 'helpers/utils';
 
 const {
 	format: f,
@@ -68,8 +69,6 @@ const BorrowForm = (props: BorrowProps) => {
 		unit
 	);
 
-	useEffect(() => {}, [isLoadingPositions]);
-
 	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
 		hivemindContractAddress,
 		HERC20ContractAddress,
@@ -101,7 +100,7 @@ const BorrowForm = (props: BorrowProps) => {
 	/* initial all financial value here */
 	const borrowedValue = parseFloat(borrowAmount);
 	const loanToValue = borrowedValue / nftPrice;
-	const userAllowance = parseFloat(maxBorrowAmount) - borrowedValue;
+	const userAllowance = isLoadingPositions === false ? fetchAllowance(positions, NFTId) : 0;
 	//todo use data from blockchain
 	const borrowFee = 0.005; // 0,5%
 
