@@ -98,8 +98,8 @@ const RepayForm = (props: RepayProps) => {
 		currentUser
 	);
 
-	const [valueUSD, setValueUSD] = useState<number>();
-	const [valueUnderlying, setValueUnderlying] = useState<number>();
+	const [valueUSD, setValueUSD] = useState<number | undefined>(0);
+	const [valueUnderlying, setValueUnderlying] = useState<number | undefined>(0);
 	const [sliderValue, setSliderValue] = useState(0);
 	const { toast, ToastComponent } = useToast();
 	const [repayState, setRepayState] = useState('WAIT_FOR_APPROVAL');
@@ -155,9 +155,10 @@ const RepayForm = (props: RepayProps) => {
 	};
 
 	const handleUsdInputChange = (usdValue: number | undefined) => {
+		if (userAllowance <= 0) return;
 		if (!usdValue) {
-			setValueUSD(0);
-			setValueUnderlying(0);
+			setValueUSD(undefined);
+			setValueUnderlying(undefined);
 			setSliderValue(0);
 			return;
 		}
@@ -166,17 +167,18 @@ const RepayForm = (props: RepayProps) => {
 		setSliderValue(usdValue / underlyingPrice);
 	};
 
-	const handleUnderlyingInputChange = (underlyingValue: number | undefined) => {
-		if (!underlyingValue) {
+	const handleUnderlyingInputChange = (UnderlyingValue: number | undefined) => {
+		if (userAllowance <= 0) return;
+		if (!UnderlyingValue) {
 			setValueUSD(0);
 			setValueUnderlying(0);
 			setSliderValue(0);
 			return;
 		}
 
-		setValueUSD(underlyingValue * underlyingPrice);
-		setValueUnderlying(underlyingValue);
-		setSliderValue(underlyingValue);
+		setValueUSD(UnderlyingValue * underlyingPrice);
+		setValueUnderlying(UnderlyingValue);
+		setSliderValue(UnderlyingValue);
 	};
 	/*  end handle slider function   */
 
@@ -510,8 +512,8 @@ const RepayForm = (props: RepayProps) => {
 						</div>
 					</div>
 					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
+						firstInputValue={valueUSD ? p(f(valueUSD)) : undefined}
+						secondInputValue={valueUnderlying ? p(f(valueUnderlying)) : undefined}
 						onChangeFirstInput={handleUsdInputChange}
 						onChangeSecondInput={handleUnderlyingInputChange}
 						firstInputAddon={erc20Name}

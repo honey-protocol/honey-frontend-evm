@@ -63,8 +63,8 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 	);
 	const [totalBorrow, isLoadingTotalBorrow] = useGetTotalBorrow(HERC20ContractAddress, unit);
 
-	const [valueUSD, setValueUSD] = useState<number>(0);
-	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
+	const [valueUSD, setValueUSD] = useState<number | undefined>(0);
+	const [valueUnderlying, setValueUnderlying] = useState<number | undefined>(0);
 	const [sliderValue, setSliderValue] = useState(0);
 	const { toast, ToastComponent } = useToast();
 
@@ -107,28 +107,27 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 
 	const handleUsdInputChange = (usdValue: number | undefined) => {
 		if (!usdValue) {
-			setValueUSD(0);
-			setValueUnderlying(0);
+			setValueUSD(undefined);
+			setValueUnderlying(undefined);
 			setSliderValue(0);
 			return;
 		}
-
 		setValueUSD(usdValue);
 		setValueUnderlying(usdValue / underlyingPrice);
 		setSliderValue(usdValue / underlyingPrice);
 	};
 
-	const handleUnderlyingInputChange = (underlyingValue: number | undefined) => {
-		if (!underlyingValue) {
+	const handleUnderlyingInputChange = (UnderlyingValue: number | undefined) => {
+		if (!UnderlyingValue) {
 			setValueUSD(0);
 			setValueUnderlying(0);
 			setSliderValue(0);
 			return;
 		}
 
-		setValueUSD(underlyingValue * underlyingPrice);
-		setValueUnderlying(underlyingValue);
-		setSliderValue(underlyingValue);
+		setValueUSD(UnderlyingValue * underlyingPrice);
+		setValueUnderlying(UnderlyingValue);
+		setSliderValue(UnderlyingValue);
 	};
 
 	const withdraw = async () => {
@@ -239,8 +238,8 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 
 				<div className={styles.inputs}>
 					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
+						firstInputValue={valueUSD ? p(f(valueUSD)) : undefined}
+						secondInputValue={valueUnderlying ? p(f(valueUnderlying)) : undefined}
 						onChangeFirstInput={handleUsdInputChange}
 						onChangeSecondInput={handleUnderlyingInputChange}
 						maxValue={userTotalDeposits}
