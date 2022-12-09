@@ -187,7 +187,8 @@ const BorrowForm = (props: BorrowProps) => {
 	/*  end handling borrow function */
 
 	const liqPercent = ((nftPrice - borrowedValue / collateralFactor) / nftPrice) * 100;
-	const newLiqPercent = nftPrice ? ((nftPrice - newTotalDebt) / nftPrice) * 100 : 0;
+	const newLiqPercent =
+		newAdditionalDebt === 0 ? liqPercent : ((nftPrice - newTotalDebt) / nftPrice) * 100;
 
 	const renderContent = () => {
 		return (
