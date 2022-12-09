@@ -2,6 +2,8 @@ import React, { FC } from 'react';
 import * as style from './HealthLvl.css';
 import { HealthLvlProps, HealthLvlPoint } from './types';
 
+// const { formatPercent: fp } = formatNumber;
+
 const HealthLvl: FC<HealthLvlProps> = (props) => {
 	const { healthLvl } = props;
 
@@ -30,7 +32,7 @@ const HealthLvl: FC<HealthLvlProps> = (props) => {
 				</div>
 			);
 		}
-		return <div className={style.valueCell}>0</div>;
+		return <div className={style.valueCell}>NaN</div>;
 	};
 
 	return <>{healthLvl && getStatus(healthLvl)}</>;
