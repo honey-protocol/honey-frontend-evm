@@ -34,13 +34,19 @@ import useDisplayStore from '../../store/displayStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import HealthLvl from 'components/HealthLvl/HealthLvl';
 import c from 'classnames';
+import { useGetNFTPrice } from '../../hooks/useHtokenHelper';
+import { useGetBorrowAmount } from 'hooks/useCoupon';
+import useToast from 'hooks/useToast';
 
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 const Markets: NextPage = () => {
+	const COLLATERAL_FACTOR = 0.65;
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const [tableData, setTableData] = useState<MarketTableRow[]>([]);
 	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
+	const { toast, ToastComponent } = useToast();
+	const NFTId = useLoanFlowStore((state) => state.NFTId);
 	const {
 		HERC20ContractAddr: HERC20ContractAddress,
 		setHERC20ContractAddr,
@@ -72,6 +78,26 @@ const Markets: NextPage = () => {
 		currentUser,
 		unit
 	);
+	const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(
+		htokenHelperContractAddress,
+		HERC20ContractAddress
+	);
+	const [borrowAmount, isLoadingBorrowAmount] = useGetBorrowAmount(
+		HERC20ContractAddress,
+		NFTId,
+		unit
+	);
+	/* initial all financial value here */
+	const borrowedValue = parseFloat(borrowAmount);
+
+	useEffect(() => {
+		if (isLoadingNFTPrice || isLoadingBorrowAmount || isLoadingPositions) {
+			toast.processing();
+		} else {
+			toast.clear();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isLoadingNFTPrice, isLoadingBorrowAmount, isLoadingPositions]);
 
 	/*   End insert data into table */
 	/*    Begin filter function       */
@@ -280,7 +306,7 @@ const Markets: NextPage = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[isMyCollectionsFilterEnabled, tableData, searchQuery]
 	);
-
+	// positions in each market desktop
 	const expandColumns: ColumnType<MarketTablePosition>[] = [
 		{
 			dataIndex: ['name', 'image', 'tokenId'],
@@ -296,7 +322,9 @@ const Markets: NextPage = () => {
 					</div>
 					<div className={style.nameCellText}>
 						<div className={style.collectionName}>{`${row['name']} #${row['tokenId']}`}</div>
-						<HealthLvl healthLvl={0} />
+						<HealthLvl
+							healthLvl={((nftPrice - parseInt(row.debt) / COLLATERAL_FACTOR) / nftPrice) * 100}
+						/>
 					</div>
 				</div>
 			)
@@ -345,25 +373,29 @@ const Markets: NextPage = () => {
 			)
 		}
 	];
-
+	// positions in each market mobile
 	const expandColumnsMobile: ColumnType<MarketTablePosition>[] = [
 		{
 			dataIndex: ['name', 'image', 'tokenId'],
 			key: 'tokenId',
-			render: (text, row) => (
-				<div className={style.expandedRowNameCell}>
-					<div className={style.expandedRowIcon} />
-					<div className={style.collectionLogo}>
-						<HexaBoxContainer>
-							<Image src={row['image']} layout="fill" alt="nft icon" />
-						</HexaBoxContainer>
+			render: (text, row) => {
+				return (
+					<div className={style.expandedRowNameCell}>
+						<div className={style.expandedRowIcon} />
+						<div className={style.collectionLogo}>
+							<HexaBoxContainer>
+								<Image src={row['image']} layout="fill" alt="nft icon" />
+							</HexaBoxContainer>
+						</div>
+						<div className={style.nameCellText}>
+							<div className={style.collectionName}>{`${row['name']} #${row['tokenId']}`}</div>
+							<HealthLvl
+								healthLvl={((nftPrice - parseInt(row.debt) / COLLATERAL_FACTOR) / nftPrice) * 100}
+							/>
+						</div>
 					</div>
-					<div className={style.nameCellText}>
-						<div className={style.collectionName}>{`${row['name']} #${row['tokenId']}`}</div>
-						<HealthLvl healthLvl={row.healthLvl || 0} />
-					</div>
-				</div>
-			)
+				);
+			}
 		},
 		{
 			dataIndex: ['tokenId', 'couponId'],
