@@ -84,8 +84,8 @@ const DepositForm = (props: DepositFormProps) => {
 	);
 	const [totalBorrow, isLoadingTotalBorrow] = useGetTotalBorrow(HERC20ContractAddress, unit);
 
-	const [valueUSD, setValueUSD] = useState<number>(0);
-	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
+	const [valueUSD, setValueUSD] = useState<number | undefined>(0);
+	const [valueUnderlying, setValueUnderlying] = useState<number | undefined>(0);
 	const [sliderValue, setSliderValue] = useState(0);
 
 	/* initial all financial value here */
@@ -136,8 +136,8 @@ const DepositForm = (props: DepositFormProps) => {
 
 	const handleUsdInputChange = (usdValue: number | undefined) => {
 		if (!usdValue) {
-			setValueUSD(0);
-			setValueUnderlying(0);
+			setValueUSD(undefined);
+			setValueUnderlying(undefined);
 			setSliderValue(0);
 			return;
 		}
@@ -146,17 +146,17 @@ const DepositForm = (props: DepositFormProps) => {
 		setSliderValue(usdValue / underlyingPrice);
 	};
 
-	const handleUnderlyingInputChange = (underlyingValue: number | undefined) => {
-		if (!underlyingValue) {
+	const handleUnderlyingInputChange = (UnderlyingValue: number | undefined) => {
+		if (!UnderlyingValue) {
 			setValueUSD(0);
 			setValueUnderlying(0);
 			setSliderValue(0);
 			return;
 		}
 
-		setValueUSD(underlyingValue * underlyingPrice);
-		setValueUnderlying(underlyingValue);
-		setSliderValue(underlyingValue);
+		setValueUSD(UnderlyingValue * underlyingPrice);
+		setValueUnderlying(UnderlyingValue);
+		setSliderValue(UnderlyingValue);
 	};
 	/*  end handle slider function   */
 
@@ -189,11 +189,13 @@ const DepositForm = (props: DepositFormProps) => {
 					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)
 				);
 			} else if (depositState == 'WAIT_FOR_DEPOSIT') {
-				await depositUnderlyingMutation.mutateAsync({
-					HERC20ContractAddress,
-					amount: valueUnderlying.toFixed(18).toString(),
-					unit
-				});
+				if (valueUnderlying) {
+					await depositUnderlyingMutation.mutateAsync({
+						HERC20ContractAddress,
+						amount: valueUnderlying.toFixed(18).toString(),
+						unit
+					});
+				}
 				await queryClient.invalidateQueries(queryKeys.totalSupply(HERC20ContractAddress));
 				await queryClient.invalidateQueries(
 					queryKeys.userTotalSupply(walletPublicKey, HERC20ContractAddress)
@@ -287,8 +289,8 @@ const DepositForm = (props: DepositFormProps) => {
 
 				<div className={styles.inputs}>
 					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
+						firstInputValue={valueUSD ? p(f(valueUSD)) : undefined}
+						secondInputValue={valueUnderlying ? p(f(valueUnderlying)) : undefined}
 						onChangeFirstInput={handleUsdInputChange}
 						onChangeSecondInput={handleUnderlyingInputChange}
 						maxValue={maxValue}
