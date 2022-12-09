@@ -131,7 +131,8 @@ const BorrowForm = (props: BorrowProps) => {
 		isLoadingNFTPrice,
 		isLoadingUnderlyingPrice,
 		isLoadingBorrowAmount,
-		isLoadingMaxBorrow
+		isLoadingMaxBorrow,
+		isLoadingPositions
 	]);
 
 	/*   Begin handle slider function  */
