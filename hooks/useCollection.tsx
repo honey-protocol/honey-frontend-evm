@@ -3,7 +3,13 @@ import { MarketTablePosition, MarketTableRow } from '../types/markets';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
-import { getCouponData, getMarketData, getUserCoupons } from './useHtokenHelper';
+import {
+	getActiveCoupons,
+	getCouponData,
+	getMarketData,
+	getNFTPrice,
+	getUserCoupons
+} from './useHtokenHelper';
 import { getImageUrlFromMetaData } from '../helpers/NFThelper';
 import { getMetaDataFromNFTId } from './useNFT';
 import { LendTableRow } from '../types/lend';
@@ -32,6 +38,17 @@ const defaultMarketData: MarketTableRow = {
 	rate: 0,
 	available: 0,
 	supplied: 0
+};
+
+const defaultLiquidateTablePosition: LiquidateTablePosition = {
+	name: '',
+	image: '',
+	couponId: '',
+	tokenId: '',
+	healthLvl: 0,
+	untilLiquidation: 0,
+	debt: 0,
+	estimatedValue: 0
 };
 
 export function useMarket(
@@ -318,50 +335,75 @@ export function useLiquidation(
 }
 
 export function useLiquidationPositions(
-	HERC20ContractAddress: string
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	unit: Unit
 ): [LiquidateTablePosition[], boolean] {
-	const sdk = getBuiltGraphSDK();
-	const onSubgraphQuerySuccess = (data: ActiveCouponQueryQuery) => {
+	const onGetNFTPriceSuccess = (data: number) => {
 		return data;
 	};
-	const onSubGraphQueryError = () => {
-		return null;
+	const onGetNFTPriceError = (data: string) => {
+		return 0;
+	};
+	const onGetActiveCouponsSuccess = (data: coupon[]) => {
+		return data;
+	};
+	const onGetActiveCouponsError = (data: string) => {
+		return [];
 	};
 	const {
-		data: collateralsFromSubgraph,
-		isLoading,
-		isFetching
+		data: nftPriceResult,
+		isLoading: isLoadingNFTPrice,
+		isFetching: isFetchingNFTPrice
 	} = useQuery(
-		queryKeys.listCollateral(HERC20ContractAddress),
-		async () => {
-			if (HERC20ContractAddress != '') {
-				return await sdk.ActiveCouponByCollectionQuery({
-					HERC20ContractAddress: HERC20ContractAddress.toLowerCase()
-				});
-			} else {
-				return [];
-			}
+		queryKeys.nftPrice(HERC20ContractAddress),
+		() => {
+			return getNFTPrice(htokenHelperContractAddress, HERC20ContractAddress);
 		},
 		{
-			onSuccess: onSubgraphQuerySuccess,
-			onError: onSubGraphQueryError,
+			onSuccess: onGetNFTPriceSuccess,
+			onError: onGetNFTPriceError,
 			retry: false,
 			staleTime: defaultCacheStaleTime
 		}
 	);
-	const positionList = collateralsFromSubgraph?.coupons?.map((collateralObj) => {
+	const nftPrice = nftPriceResult || 0;
+	const {
+		data: collaterals,
+		isLoading: isLoadingCollaterals,
+		isFetching: isFetchingCollaterals
+	} = useQuery(
+		queryKeys.listCollateral(HERC20ContractAddress),
+		async () => {
+			if (HERC20ContractAddress != '' && htokenHelperContractAddress != '') {
+				return await getActiveCoupons(htokenHelperContractAddress, HERC20ContractAddress, unit);
+			} else {
+				return [] as Array<coupon>;
+			}
+		},
+		{
+			onSuccess: onGetActiveCouponsSuccess,
+			onError: onGetActiveCouponsError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	const positionList = collaterals?.map((collateralObj: coupon) => {
 		const result: LiquidateTablePosition = {
-			name: getNFTName(collateralObj.hTokenAddr),
-			image: getNFTDefaultImage(collateralObj.hTokenAddr),
-			couponId: collateralObj.couponID,
-			tokenId: collateralObj.collateralID,
-			healthLvl: 0.5,
-			untilLiquidation: 0.1,
-			debt: collateralObj.amount,
-			estimatedValue: 0.5
+			name: getNFTName(HERC20ContractAddress),
+			image: getNFTDefaultImage(HERC20ContractAddress),
+			couponId: collateralObj.couponId,
+			tokenId: collateralObj.NFTId,
+			healthLvl: 0,
+			untilLiquidation: 0,
+			debt: parseFloat(collateralObj.borrowAmount),
+			estimatedValue: nftPrice
 		};
 		return result;
 	});
 
-	return [positionList || [], isLoading || isFetching];
+	return [
+		positionList || [],
+		isLoadingNFTPrice || isFetchingNFTPrice || isLoadingCollaterals || isFetchingCollaterals
+	];
 }

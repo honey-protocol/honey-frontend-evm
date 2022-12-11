@@ -32,8 +32,7 @@ import { UserContext } from '../../contexts/userContext';
 import { collections } from '../../constants/NFTCollections';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { LiquidationWorkFlowType } from '../../types/workflows';
-
-export const LIQUIDATION_THRESHOLD = 0.65;
+import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 
 const { formatPercent: fp, formatERC20: fs, formatRoundDown: fd } = formatNumber;
 const Liquidate: NextPage = () => {
@@ -55,10 +54,13 @@ const Liquidate: NextPage = () => {
 	const [tableDataFiltered, setTableDataFiltered] = useState<LiquidateTableRow[]>([]);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([]);
 	const [isMyBidsFilterEnabled, setIsMyBidsFilterEnabled] = useState(false);
-	const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr);
-	const setHERC20ContractAddr = useLiquidationFlowStore((state) => state.setHERC20ContractAddr);
-	const setNFTId = useLiquidationFlowStore((state) => state.setNFTId);
-	const setWorkflow = useLiquidationFlowStore((state) => state.setWorkflow);
+	const {
+		HERC20ContractAddr: HERC20ContractAddress,
+		setHERC20ContractAddr,
+		setWorkflow,
+		setNFTId
+	} = useLiquidationFlowStore((state) => state);
+	const { htokenHelperContractAddress, unit } = getContractsByHTokenAddr(HERC20ContractAddress);
 
 	/*    Begin insert data into table */
 	const liquidateData = useLiquidation(currentUser, collections);
@@ -68,7 +70,11 @@ const Liquidate: NextPage = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const [positions, isLoadingPositions] = useLiquidationPositions(HERC20ContractAddress);
+	const [positions, isLoadingPositions] = useLiquidationPositions(
+		htokenHelperContractAddress,
+		HERC20ContractAddress,
+		unit
+	);
 	/*   End insert data into table */
 
 	const handleToggle = (checked: boolean) => {
