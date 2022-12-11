@@ -19,6 +19,7 @@ import { LiquidateTablePosition, LiquidateTableRow } from '../types/liquidate';
 import { ActiveCouponQueryQuery, getBuiltGraphSDK } from '../.graphclient';
 import { getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
 import { interestRateLend } from 'helpers/utils';
+import { getCollateralFactor } from './useHivemind';
 
 const defaultPosition: MarketTablePosition = {
 	name: '',
@@ -336,9 +337,37 @@ export function useLiquidation(
 
 export function useLiquidationPositions(
 	htokenHelperContractAddress: string,
+	hivemindContractAddress: string,
 	HERC20ContractAddress: string,
 	unit: Unit
 ): [LiquidateTablePosition[], boolean] {
+	const onGetCollateralFactorSuccess = (data: number) => {
+		return data;
+	};
+	const onGetCollateralFactorError = (data: string) => {
+		return '0';
+	};
+	const {
+		data: collateralFactorResult,
+		isLoading: isLoadingCollateralFactor,
+		isFetching: isFetchingCollateralFactor
+	} = useQuery(
+		queryKeys.collateralFactor(HERC20ContractAddress),
+		() => {
+			if (hivemindContractAddress != '' && HERC20ContractAddress != '') {
+				return getCollateralFactor(hivemindContractAddress, HERC20ContractAddress, unit);
+			} else {
+				return 0;
+			}
+		},
+		{
+			onSuccess: onGetCollateralFactorSuccess,
+			onError: onGetCollateralFactorError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	const collateralFactor = collateralFactorResult || 0;
 	const onGetNFTPriceSuccess = (data: number) => {
 		return data;
 	};
@@ -389,14 +418,16 @@ export function useLiquidationPositions(
 		}
 	);
 	const positionList = collaterals?.map((collateralObj: coupon) => {
+		const userDebt = parseFloat(collateralObj.borrowAmount);
+		const liquidationPrice = nftPrice * collateralFactor;
 		const result: LiquidateTablePosition = {
 			name: getNFTName(HERC20ContractAddress),
 			image: getNFTDefaultImage(HERC20ContractAddress),
 			couponId: collateralObj.couponId,
 			tokenId: collateralObj.NFTId,
-			healthLvl: 0,
-			untilLiquidation: 0,
-			debt: parseFloat(collateralObj.borrowAmount),
+			healthLvl: ((nftPrice - userDebt / collateralFactor) / nftPrice) * 100,
+			untilLiquidation: liquidationPrice - userDebt,
+			debt: userDebt,
 			estimatedValue: nftPrice
 		};
 		return result;
@@ -404,6 +435,11 @@ export function useLiquidationPositions(
 
 	return [
 		positionList || [],
-		isLoadingNFTPrice || isFetchingNFTPrice || isLoadingCollaterals || isFetchingCollaterals
+		isLoadingNFTPrice ||
+			isFetchingNFTPrice ||
+			isLoadingCollaterals ||
+			isFetchingCollaterals ||
+			isLoadingCollateralFactor ||
+			isFetchingCollateralFactor
 	];
 }

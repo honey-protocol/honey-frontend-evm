@@ -60,7 +60,8 @@ const Liquidate: NextPage = () => {
 		setWorkflow,
 		setNFTId
 	} = useLiquidationFlowStore((state) => state);
-	const { htokenHelperContractAddress, unit } = getContractsByHTokenAddr(HERC20ContractAddress);
+	const { htokenHelperContractAddress, hivemindContractAddress, unit } =
+		getContractsByHTokenAddr(HERC20ContractAddress);
 
 	/*    Begin insert data into table */
 	const liquidateData = useLiquidation(currentUser, collections);
@@ -72,6 +73,7 @@ const Liquidate: NextPage = () => {
 
 	const [positions, isLoadingPositions] = useLiquidationPositions(
 		htokenHelperContractAddress,
+		hivemindContractAddress,
 		HERC20ContractAddress,
 		unit
 	);
