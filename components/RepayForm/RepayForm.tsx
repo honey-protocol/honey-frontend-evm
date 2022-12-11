@@ -46,8 +46,12 @@ const RepayForm = (props: RepayProps) => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const queryClient = useQueryClient();
 	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
-	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
-	const NFTId = useLoanFlowStore((state) => state.NFTId);
+	const {
+		HERC20ContractAddr: HERC20ContractAddress,
+		setWorkflow,
+		NFTId,
+		couponId
+	} = useLoanFlowStore((state) => state);
 	const {
 		nftContractAddress,
 		htokenHelperContractAddress,
@@ -56,7 +60,6 @@ const RepayForm = (props: RepayProps) => {
 		erc20Name,
 		unit
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
-	const setWorkflow = useLoanFlowStore((state) => state.setWorkflow);
 	const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId);
 	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
 		hivemindContractAddress,
@@ -236,14 +239,7 @@ const RepayForm = (props: RepayProps) => {
 			} else if (repayState == 'WAIT_FOR_REPAY') {
 				await repayLoanMutation.mutateAsync();
 				console.log('Repay Succeed');
-				await queryClient.invalidateQueries(
-					queryKeys.maxBorrowFromNFT(
-						HERC20ContractAddress,
-						nftContractAddress,
-						walletPublicKey,
-						nft.tokenId
-					)
-				);
+				await queryClient.invalidateQueries(queryKeys.couponData(HERC20ContractAddress, couponId));
 				await queryClient.invalidateQueries(
 					queryKeys.borrowAmount(HERC20ContractAddress, nft.tokenId)
 				);

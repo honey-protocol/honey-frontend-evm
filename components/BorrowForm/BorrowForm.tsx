@@ -29,7 +29,6 @@ import { borrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 import { usePositions } from '../../hooks/useCollection';
 import { fetchAllowance } from 'helpers/utils';
-import { fromWei, Unit } from 'web3-utils';
 
 const {
 	format: f,
@@ -45,9 +44,12 @@ const BorrowForm = (props: BorrowProps) => {
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
-	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
-	const NFTId = useLoanFlowStore((state) => state.NFTId);
+	const {
+		HERC20ContractAddr: HERC20ContractAddress,
+		setWorkflow,
+		NFTId,
+		couponId
+	} = useLoanFlowStore((state) => state);
 	const {
 		nftContractAddress,
 		htokenHelperContractAddress,
@@ -55,7 +57,6 @@ const BorrowForm = (props: BorrowProps) => {
 		erc20Name,
 		unit
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
-	const setWorkflow = useLoanFlowStore((state) => state.setWorkflow);
 
 	const [valueUSD, setValueUSD] = useState<number>(0);
 	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
@@ -88,14 +89,6 @@ const BorrowForm = (props: BorrowProps) => {
 		NFTId,
 		unit
 	);
-	const [maxBorrowAmount, isLoadingMaxBorrow] = useGetMaxBorrowAmountFromNFT(
-		hivemindContractAddress,
-		HERC20ContractAddress,
-		nftContractAddress,
-		currentUser,
-		NFTId,
-		unit
-	);
 	/* initial all financial value here */
 	const borrowedValue = parseFloat(borrowAmount);
 	const loanToValue = borrowedValue / nftPrice;
@@ -117,7 +110,6 @@ const BorrowForm = (props: BorrowProps) => {
 			isLoadingNFTPrice ||
 			isLoadingUnderlyingPrice ||
 			isLoadingBorrowAmount ||
-			isLoadingMaxBorrow ||
 			isLoadingPositions
 		) {
 			toast.processing();
@@ -131,7 +123,6 @@ const BorrowForm = (props: BorrowProps) => {
 		isLoadingNFTPrice,
 		isLoadingUnderlyingPrice,
 		isLoadingBorrowAmount,
-		isLoadingMaxBorrow,
 		isLoadingPositions
 	]);
 
@@ -182,14 +173,7 @@ const BorrowForm = (props: BorrowProps) => {
 				unit
 			});
 			console.log('borrow succeed');
-			await queryClient.invalidateQueries(
-				queryKeys.maxBorrowFromNFT(
-					HERC20ContractAddress,
-					nftContractAddress,
-					walletPublicKey,
-					nft.tokenId
-				)
-			);
+			await queryClient.invalidateQueries(queryKeys.couponData(HERC20ContractAddress, couponId));
 			await queryClient.invalidateQueries(
 				queryKeys.borrowAmount(HERC20ContractAddress, nft.tokenId)
 			);
