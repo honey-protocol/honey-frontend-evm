@@ -419,14 +419,14 @@ export function useLiquidationPositions(
 	);
 	const positionList = collaterals?.map((collateralObj: coupon) => {
 		const userDebt = parseFloat(collateralObj.borrowAmount);
-		const liquidationPrice = nftPrice * collateralFactor;
+		const liquidationPrice = userDebt / collateralFactor;
 		const result: LiquidateTablePosition = {
 			name: getNFTName(HERC20ContractAddress),
 			image: getNFTDefaultImage(HERC20ContractAddress),
 			couponId: collateralObj.couponId,
 			tokenId: collateralObj.NFTId,
 			healthLvl: ((nftPrice - userDebt / collateralFactor) / nftPrice) * 100,
-			untilLiquidation: liquidationPrice - userDebt,
+			untilLiquidation: nftPrice - liquidationPrice,
 			debt: userDebt,
 			estimatedValue: nftPrice
 		};
