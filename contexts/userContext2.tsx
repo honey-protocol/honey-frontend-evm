@@ -1,6 +1,5 @@
 import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
-import { useQueryClient } from 'react-query';
 
 interface UserContextState {
 	walletAddress: string;
@@ -20,15 +19,11 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
 	const [walletAddress, setWalletAddress] = useState<string>('');
 	const [isMoralisAuthenticated, setIsMoralisAuthenticated] = useState(false);
 	const { authenticate, user, logout } = useMoralis();
-	const queryClient = useQueryClient();
 
 	const moralisAuthenticate = async () => {
 		if (!isMoralisAuthenticated) {
 			await authenticate({ signingMessage: 'Authorize linking of your wallet' });
 			console.log('logged in user:', user?.get('ethAddress'));
-			await queryClient.invalidateQueries(['user']);
-			await queryClient.invalidateQueries(['nft']);
-			await queryClient.invalidateQueries(['coupons']);
 			setIsMoralisAuthenticated(true);
 		}
 	};
