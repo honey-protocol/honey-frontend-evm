@@ -295,3 +295,41 @@ export const increaseCollectionBid = async ({
 	const receipt = await transaction.wait(confirmedBlocks);
 	console.log(receipt);
 };
+
+export async function getNFTBids(
+	marketContractAddress: string,
+	HERC20ContractAddress: string,
+	NFTTokenId: string
+): Promise<BidInfo> {
+	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
+	const options = {
+		chain: chain,
+		address: marketContractAddress,
+		function_name: 'viewAuctionSingle',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress, _collateralId: NFTTokenId }
+	};
+
+	// @ts-ignore
+	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
+	const highestBidder: string = result[1];
+	const highestBid = result[2] as string;
+	const bidders: Array<string> = result[3];
+	const bids: Array<string> = result[4];
+	const unlockTime: Array<number> = result[5];
+	const bidResult = bidders.map(function (bidder: any, i: number) {
+		const bid: Bid = {
+			bid: bids[i],
+			bidder: bidder,
+			unlockTimeStamp: unlockTime[i]
+		};
+		return bid;
+	});
+	const filteredBidResult = bidResult.filter((bid) => bid.bidder != blackHole);
+	const NFTBids: BidInfo = {
+		highestBidder: highestBidder == blackHole ? '' : highestBidder,
+		highestBid: highestBidder == blackHole ? '0' : highestBid,
+		bids: filteredBidResult
+	};
+	return NFTBids;
+}
