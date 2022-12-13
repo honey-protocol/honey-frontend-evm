@@ -14,7 +14,7 @@ import { hAlign } from 'styles/common.css';
 import useToast from 'hooks/useToast';
 import { LendWorkFlowType } from '../../types/workflows';
 import useDisplayStore from '../../store/displayStore';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { useMutation, useQueryClient } from 'react-query';
 import useLendFlowStore from '../../store/lendFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
@@ -38,9 +38,8 @@ const {
 const WithdrawForm = (props: WithdrawFormProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { walletAddress } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
 	const HERC20ContractAddress = useLendFlowStore((state) => state.HERC20ContractAddr);
 
 	const { htokenHelperContractAddress, ERC20ContractAddress, name, icon, erc20Name, unit } =
@@ -53,7 +52,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 	const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
-		currentUser,
+		walletAddress,
 		unit
 	);
 	const [totalUnderlyingBalance, isLoadingTotalUnderlyingBalance] = useGetTotalUnderlyingBalance(
@@ -149,10 +148,10 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 			console.log('Redeem Succeed');
 			await queryClient.invalidateQueries(queryKeys.totalSupply(HERC20ContractAddress));
 			await queryClient.invalidateQueries(
-				queryKeys.userTotalSupply(walletPublicKey, HERC20ContractAddress)
+				queryKeys.userTotalSupply(walletAddress, HERC20ContractAddress)
 			);
 			await queryClient.invalidateQueries(
-				queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
+				queryKeys.userBalance(walletAddress, ERC20ContractAddress)
 			);
 			handleSliderChange(0);
 			toast.success('Successful! Transaction complete');

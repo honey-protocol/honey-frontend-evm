@@ -19,7 +19,7 @@ import {
 	useGetUserUnderlyingBalance
 } from '../../hooks/useHtokenHelper';
 import useDisplayStore from '../../store/displayStore';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { useMutation, useQueryClient } from 'react-query';
 import { LendWorkFlowType } from '../../types/workflows';
 import useLendFlowStore from '../../store/lendFlowStore';
@@ -42,9 +42,8 @@ const {
 const DepositForm = (props: DepositFormProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { walletAddress } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
 	const HERC20ContractAddress = useLendFlowStore((state) => state.HERC20ContractAddr);
 
 	const {
@@ -63,18 +62,18 @@ const DepositForm = (props: DepositFormProps) => {
 	);
 	const [userBalance, isLoadingUserBalance] = useGetUserBalance(
 		ERC20ContractAddress,
-		currentUser,
+		walletAddress,
 		unit
 	);
 	const [approval, isLoadingApproval] = useCheckUnlimitedApproval(
 		ERC20ContractAddress,
 		HERC20ContractAddress,
-		currentUser
+		walletAddress
 	);
 	const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
-		currentUser,
+		walletAddress,
 		unit
 	);
 	const [totalUnderlyingBalance, isLoadingTotalUnderlyingBalance] = useGetTotalUnderlyingBalance(
@@ -186,7 +185,7 @@ const DepositForm = (props: DepositFormProps) => {
 				});
 				console.log('Approval succeed');
 				await queryClient.invalidateQueries(
-					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)
+					queryKeys.userApproval(walletAddress, ERC20ContractAddress, HERC20ContractAddress)
 				);
 			} else if (depositState == 'WAIT_FOR_DEPOSIT') {
 				await depositUnderlyingMutation.mutateAsync({
@@ -196,10 +195,10 @@ const DepositForm = (props: DepositFormProps) => {
 				});
 				await queryClient.invalidateQueries(queryKeys.totalSupply(HERC20ContractAddress));
 				await queryClient.invalidateQueries(
-					queryKeys.userTotalSupply(walletPublicKey, HERC20ContractAddress)
+					queryKeys.userTotalSupply(walletAddress, HERC20ContractAddress)
 				);
 				await queryClient.invalidateQueries(
-					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
+					queryKeys.userBalance(walletAddress, ERC20ContractAddress)
 				);
 				console.log('deposit succeed');
 			}

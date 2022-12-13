@@ -15,7 +15,7 @@ import cs from 'classnames';
 import useToast from 'hooks/useToast';
 import { LoanWorkFlowType } from '../../types/workflows';
 import useDisplayStore from '../../store/displayStore';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { useMutation, useQueryClient } from 'react-query';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
@@ -43,9 +43,8 @@ const {
 const RepayForm = (props: RepayProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { walletAddress } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
 	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
 	const NFTId = useLoanFlowStore((state) => state.NFTId);
 	const {
@@ -76,7 +75,7 @@ const RepayForm = (props: RepayProps) => {
 		hivemindContractAddress,
 		HERC20ContractAddress,
 		nftContractAddress,
-		currentUser,
+		walletAddress,
 		NFTId,
 		unit
 	);
@@ -86,13 +85,13 @@ const RepayForm = (props: RepayProps) => {
 	);
 	const [userBalance, isLoadingUserBalance] = useGetUserBalance(
 		ERC20ContractAddress,
-		currentUser,
+		walletAddress,
 		unit
 	);
 	const [approval, isLoadingApproval] = useCheckUnlimitedApproval(
 		ERC20ContractAddress,
 		HERC20ContractAddress,
-		currentUser
+		walletAddress
 	);
 
 	const [valueUSD, setValueUSD] = useState<number>();
@@ -219,10 +218,10 @@ const RepayForm = (props: RepayProps) => {
 				console.log('withdraw succeed');
 				setRepayState('DONE');
 				await queryClient.invalidateQueries(
-					queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey)
+					queryKeys.listUserCoupons(HERC20ContractAddress, walletAddress)
 				);
 				await queryClient.invalidateQueries(
-					queryKeys.listUserNFTs(walletPublicKey, nftContractAddress)
+					queryKeys.listUserNFTs(walletAddress, nftContractAddress)
 				);
 			} else if (repayState == 'WAIT_FOR_APPROVAL') {
 				await getApprovalMutation.mutateAsync({
@@ -231,7 +230,7 @@ const RepayForm = (props: RepayProps) => {
 				});
 				console.log('Approval succeed');
 				await queryClient.invalidateQueries(
-					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)
+					queryKeys.userApproval(walletAddress, ERC20ContractAddress, HERC20ContractAddress)
 				);
 			} else if (repayState == 'WAIT_FOR_REPAY') {
 				await repayLoanMutation.mutateAsync();
@@ -240,7 +239,7 @@ const RepayForm = (props: RepayProps) => {
 					queryKeys.maxBorrowFromNFT(
 						HERC20ContractAddress,
 						nftContractAddress,
-						walletPublicKey,
+						walletAddress,
 						nft.tokenId
 					)
 				);
@@ -248,7 +247,7 @@ const RepayForm = (props: RepayProps) => {
 					queryKeys.borrowAmount(HERC20ContractAddress, nft.tokenId)
 				);
 				await queryClient.invalidateQueries(
-					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
+					queryKeys.userBalance(walletAddress, ERC20ContractAddress)
 				);
 				handleSliderChange(0);
 			}

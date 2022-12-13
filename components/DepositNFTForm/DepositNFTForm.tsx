@@ -11,7 +11,7 @@ import SidebarScroll from '../SidebarScroll/SidebarScroll';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { LoanWorkFlowType } from '../../types/workflows';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { useMutation, useQueryClient } from 'react-query';
 import { useFetchNFTByUserByCollection, useIsNFTApproved } from '../../hooks/useNFT';
 import { useGetMaxBorrowableAmount } from '../../hooks/useHtokenHelper';
@@ -23,9 +23,8 @@ const { formatShortName: fsn } = formatNumber;
 
 const DepositNFTForm = (props: DepositNFTProps) => {
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { walletAddress } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
 	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
 	const { nftContractAddress, htokenHelperContractAddress, hivemindContractAddress, erc20Name } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
@@ -34,7 +33,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 	const { toast, ToastComponent } = useToast();
 
 	const [availableNFTs, isLoadingNFT] = useFetchNFTByUserByCollection(
-		currentUser,
+		walletAddress,
 		nftContractAddress
 	);
 	const [nftState, setNFTState] = useState('WAIT_FOR_APPROVAL');
@@ -95,10 +94,10 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 			} else if (nftState == 'WAIT_FOR_DEPOSIT') {
 				await depositNFTMutation.mutateAsync();
 				await queryClient.invalidateQueries(
-					queryKeys.listUserNFTs(walletPublicKey, nftContractAddress)
+					queryKeys.listUserNFTs(walletAddress, nftContractAddress)
 				);
 				await queryClient.invalidateQueries(
-					queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey)
+					queryKeys.listUserCoupons(HERC20ContractAddress, walletAddress)
 				);
 			} else if (nftState === 'FINISH_DEPOSIT') {
 				setSelectedNft(null);

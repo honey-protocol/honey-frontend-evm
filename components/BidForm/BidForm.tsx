@@ -15,7 +15,7 @@ import { hAlign } from 'styles/common.css';
 import { questionIcon } from 'styles/icons.css';
 import useToast from 'hooks/useToast';
 import useDisplayStore from 'store/displayStore';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { useMutation, useQueryClient } from 'react-query';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
@@ -60,9 +60,8 @@ const {
 const BidForm = (props: BidFormProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { walletAddress } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
 	const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr);
 
 	const {
@@ -81,13 +80,13 @@ const BidForm = (props: BidFormProps) => {
 	);
 	const [userBalance, isLoadingUserBalance] = useGetUserBalance(
 		ERC20ContractAddress,
-		currentUser,
+		walletAddress,
 		unit
 	);
 	const [approval, isLoadingApproval] = useCheckUnlimitedApproval(
 		ERC20ContractAddress,
 		marketContractAddress,
-		currentUser
+		walletAddress
 	);
 	const [bidInfo, isLoadingBidInfo] = useGetCollectionBids(
 		marketContractAddress,
@@ -100,7 +99,7 @@ const BidForm = (props: BidFormProps) => {
 	const [availableRefund, isLoadingAvailableRefund] = useGetAvailableRefund(
 		marketContractAddress,
 		ERC20ContractAddress,
-		walletPublicKey
+		walletAddress
 	);
 
 	const [valueUSD, setValueUSD] = useState<number>(0);
@@ -109,7 +108,7 @@ const BidForm = (props: BidFormProps) => {
 	const { toast, ToastComponent } = useToast();
 	const [bidState, setBidState] = useState('WAIT_FOR_APPROVAL');
 	const [isButtonDisable, setIsButtonDisable] = useState(true);
-	const minBid = getMinimumBid(minimumBid, userBid(walletPublicKey, bidInfo, unit), unit);
+	const minBid = getMinimumBid(minimumBid, userBid(walletAddress, bidInfo, unit), unit);
 
 	useEffect(() => {
 		if (
@@ -186,7 +185,7 @@ const BidForm = (props: BidFormProps) => {
 	const getBidState = () => {
 		if (!approval) {
 			setBidState('WAIT_FOR_APPROVAL');
-		} else if (hasBid(walletPublicKey, bidInfo)) {
+		} else if (hasBid(walletAddress, bidInfo)) {
 			setBidState('WAIT_FOR_INCREASE_BID');
 		} else {
 			setBidState('WAIT_FOR_BID');
@@ -209,10 +208,10 @@ const BidForm = (props: BidFormProps) => {
 				await withdrawRefundMutation.mutateAsync({ marketContractAddress, ERC20ContractAddress });
 				console.log('Withdraw bid succeed');
 				await queryClient.invalidateQueries(
-					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
+					queryKeys.userBalance(walletAddress, ERC20ContractAddress)
 				);
 				await queryClient.invalidateQueries(
-					queryKeys.userRefund(walletPublicKey, ERC20ContractAddress)
+					queryKeys.userRefund(walletAddress, ERC20ContractAddress)
 				);
 			} else {
 				await cancelBidMutation.mutateAsync({ marketContractAddress, HERC20ContractAddress });
@@ -221,7 +220,7 @@ const BidForm = (props: BidFormProps) => {
 					queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
 				);
 				await queryClient.invalidateQueries(
-					queryKeys.userRefund(walletPublicKey, ERC20ContractAddress)
+					queryKeys.userRefund(walletAddress, ERC20ContractAddress)
 				);
 			}
 			toast.success('Successful! Transaction complete');
@@ -236,7 +235,7 @@ const BidForm = (props: BidFormProps) => {
 	const currentBidTile = () => {
 		if (hasRefund(availableRefund)) {
 			return 'you have refund' as string;
-		} else if (isHighestBid(walletPublicKey, bidInfo)) {
+		} else if (isHighestBid(walletAddress, bidInfo)) {
 			return 'Your bid is #1' as string;
 		} else {
 			return 'Your bid is:' as string;
@@ -247,7 +246,7 @@ const BidForm = (props: BidFormProps) => {
 		if (hasRefund(availableRefund)) {
 			return userRefund(availableRefund, unit);
 		} else {
-			return userBid(walletPublicKey, bidInfo, unit);
+			return userBid(walletAddress, bidInfo, unit);
 		}
 	};
 
@@ -277,7 +276,7 @@ const BidForm = (props: BidFormProps) => {
 					queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
 				);
 				await queryClient.invalidateQueries(
-					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
+					queryKeys.userBalance(walletAddress, ERC20ContractAddress)
 				);
 			} else if (bidState == 'WAIT_FOR_APPROVAL') {
 				await getApprovalMutation.mutateAsync({
@@ -286,12 +285,12 @@ const BidForm = (props: BidFormProps) => {
 				});
 				console.log('Approval succeed');
 				await queryClient.invalidateQueries(
-					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, marketContractAddress)
+					queryKeys.userApproval(walletAddress, ERC20ContractAddress, marketContractAddress)
 				);
 				handleSliderChange(0);
 			} else if (bidState == 'WAIT_FOR_INCREASE_BID') {
 				const increaseAmount = getIncreaseAmount(
-					walletPublicKey,
+					walletAddress,
 					bidInfo,
 					p(f(valueUnderlying)),
 					unit
@@ -307,7 +306,7 @@ const BidForm = (props: BidFormProps) => {
 					queryKeys.listCollectionBids(marketContractAddress, HERC20ContractAddress)
 				);
 				await queryClient.invalidateQueries(
-					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
+					queryKeys.userBalance(walletAddress, ERC20ContractAddress)
 				);
 				handleSliderChange(0);
 			}
@@ -369,7 +368,7 @@ const BidForm = (props: BidFormProps) => {
 						/>
 					</div>
 				</div>
-				{(hasBid(walletPublicKey, bidInfo) || hasRefund(availableRefund)) && (
+				{(hasBid(walletAddress, bidInfo) || hasRefund(availableRefund)) && (
 					<div className={styles.row}>
 						<div className={styles.col}>
 							<CurrentBid

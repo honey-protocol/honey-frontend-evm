@@ -176,7 +176,7 @@ export async function getNFTList(ERC721ContractAddress: string, address: string)
 }
 
 export function useFetchNFTByUserByCollection(
-	user: MoralisType.User | null,
+	walletAddress: string,
 	ERC721ContractAddress: string
 ): [Array<NFT>, boolean] {
 	const onSuccess = (data: NFT[]) => {
@@ -185,16 +185,15 @@ export function useFetchNFTByUserByCollection(
 	const onError = () => {
 		return [] as NFT[];
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
 	const {
 		data: NFTs,
 		isLoading,
 		isFetching
 	} = useQuery(
-		queryKeys.listUserNFTs(walletPublicKey, ERC721ContractAddress),
+		queryKeys.listUserNFTs(walletAddress, ERC721ContractAddress),
 		() => {
-			if (walletPublicKey != '') {
-				return getNFTList(ERC721ContractAddress, walletPublicKey);
+			if (walletAddress != '') {
+				return getNFTList(ERC721ContractAddress, walletAddress);
 			} else {
 				return [] as Array<NFT>;
 			}

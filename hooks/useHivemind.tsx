@@ -38,7 +38,7 @@ export function useGetMaxBorrowAmountFromNFT(
 	hivemindContractAddress: string,
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
-	user: MoralisType.User | null,
+	walletAddress: string,
 	NFTId: string,
 	unit: Unit
 ): [string, boolean] {
@@ -48,22 +48,16 @@ export function useGetMaxBorrowAmountFromNFT(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
 	const {
 		data: amount,
 		isLoading,
 		isFetching
 	} = useQuery(
-		queryKeys.maxBorrowFromNFT(
-			HERC20ContractAddress,
-			ERC721ContractAddress,
-			walletPublicKey,
-			NFTId
-		),
+		queryKeys.maxBorrowFromNFT(HERC20ContractAddress, ERC721ContractAddress, walletAddress, NFTId),
 		() => {
 			if (
 				NFTId != '' &&
-				walletPublicKey != '' &&
+				walletAddress != '' &&
 				hivemindContractAddress != '' &&
 				HERC20ContractAddress != '' &&
 				ERC721ContractAddress != ''
@@ -72,7 +66,7 @@ export function useGetMaxBorrowAmountFromNFT(
 					hivemindContractAddress,
 					HERC20ContractAddress,
 					ERC721ContractAddress,
-					walletPublicKey,
+					walletAddress,
 					NFTId,
 					unit
 				);

@@ -23,7 +23,7 @@ import _ from 'lodash';
 import useDisplayStore from '../../store/displayStore';
 import { useLend } from '../../hooks/useCollection';
 import { collections } from '../../constants/NFTCollections';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import useLendFlowStore from '../../store/lendFlowStore';
 import { LendWorkFlowType } from '../../types/workflows';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
@@ -33,7 +33,7 @@ const { format: f, formatPercent: fp, formatERC20: fs } = formatNumber;
 
 const Lend: NextPage = () => {
 	const calculatedInterestRate = 0.1;
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { walletAddress } = useContext(UserContext);
 	const [tableData, setTableData] = useState<LendTableRow[]>([]);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([]);
 	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
@@ -48,7 +48,7 @@ const Lend: NextPage = () => {
 
 	/*    Begin insert data into table */
 	const [lendData, isLoadingLendData] = useLend(
-		currentUser,
+		walletAddress,
 		collections,
 		htokenHelperContractAddress
 	);

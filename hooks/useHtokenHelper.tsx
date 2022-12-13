@@ -117,7 +117,7 @@ export function useGetTotalUnderlyingBalance(
 export function useGetUserUnderlyingBalance(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
-	user: MoralisType.User | null,
+	walletAddress: string,
 	unit: Unit
 ): [string, boolean] {
 	const onSuccess = (data: string) => {
@@ -126,23 +126,18 @@ export function useGetUserUnderlyingBalance(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
 	const {
 		data: amount,
 		isLoading,
 		isFetching
 	} = useQuery(
-		queryKeys.userTotalSupply(walletPublicKey, HERC20ContractAddress),
+		queryKeys.userTotalSupply(walletAddress, HERC20ContractAddress),
 		() => {
-			if (
-				walletPublicKey != '' &&
-				htokenHelperContractAddress != '' &&
-				HERC20ContractAddress != ''
-			) {
+			if (walletAddress != '' && htokenHelperContractAddress != '' && HERC20ContractAddress != '') {
 				return getUserSupplyBalance(
 					htokenHelperContractAddress,
 					HERC20ContractAddress,
-					walletPublicKey,
+					walletAddress,
 					unit
 				);
 			} else {

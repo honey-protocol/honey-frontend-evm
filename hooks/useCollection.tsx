@@ -35,7 +35,7 @@ const defaultMarketData: MarketTableRow = {
 };
 
 export function useMarket(
-	user: MoralisType.User | null,
+	walletAddress: string | null,
 	collections: collection[],
 	htokenHelperContractAddress: string
 ): [MarketTableRow[], boolean] {
@@ -96,7 +96,7 @@ export function usePositions(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
-	user: MoralisType.User | null,
+	walletAddress: string,
 	unit: Unit
 ): [MarketTablePosition[], boolean] {
 	const onGetCouponsSuccess = (data: coupon[]) => {
@@ -105,19 +105,18 @@ export function usePositions(
 	const onGetCouponsError = () => {
 		return [] as coupon[];
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
 	const {
 		data: couponList,
 		isLoading: isLoadingCoupons,
 		isFetching: isFetchingCoupons
 	} = useQuery(
-		queryKeys.listUserCoupons(HERC20ContractAddress, walletPublicKey),
+		queryKeys.listUserCoupons(HERC20ContractAddress, walletAddress),
 		() => {
-			if (walletPublicKey != '' && HERC20ContractAddress != '') {
+			if (walletAddress != '' && HERC20ContractAddress != '') {
 				return getUserCoupons({
 					htokenHelperContractAddress,
 					HERC20ContractAddress,
-					userAddress: walletPublicKey,
+					userAddress: walletAddress,
 					unit
 				});
 			} else {
@@ -139,7 +138,7 @@ export function usePositions(
 			return {
 				queryKey: queryKeys.NFTDetail(ERC721ContractAddress, coupon.NFTId),
 				queryFn: async () => {
-					if (walletPublicKey != '' && ERC721ContractAddress != '') {
+					if (walletAddress != '' && ERC721ContractAddress != '') {
 						try {
 							const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, coupon.NFTId);
 							const result: MarketTablePosition = {
@@ -175,7 +174,7 @@ export function usePositions(
 			return {
 				queryKey: queryKeys.couponData(HERC20ContractAddress, nftDetail.couponId),
 				queryFn: async () => {
-					if (walletPublicKey != '' && HERC20ContractAddress != '') {
+					if (walletAddress != '' && HERC20ContractAddress != '') {
 						try {
 							const couponData = await getCouponData(
 								htokenHelperContractAddress,
@@ -229,7 +228,7 @@ export function usePositions(
 }
 
 export function useLend(
-	user: MoralisType.User | null,
+	walletAddress: string,
 	collections: collection[],
 	htokenHelperContractAddress: string
 ): [LendTableRow[], boolean] {
@@ -298,7 +297,7 @@ export function useLendPositions(): [Array<TimestampPoint>, boolean] {
 }
 
 export function useLiquidation(
-	user: MoralisType.User | null,
+	walletAddress: string,
 	collections: collection[]
 ): LiquidateTableRow[] {
 	const result = collections.map((collection) => {

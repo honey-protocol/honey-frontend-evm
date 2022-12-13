@@ -24,7 +24,7 @@ import { Typography } from 'antd';
 import { pageDescription, pageTitle } from '../../styles/common.css';
 import HoneyContent from '../../components/HoneyContent/HoneyContent';
 import EmptyStateDetails from '../../components/EmptyStateDetails/EmptyStateDetails';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { useMarket, usePositions } from '../../hooks/useCollection';
 import { collections } from '../../constants/NFTCollections';
 import HoneySider from '../../components/HoneySider/HoneySider';
@@ -37,7 +37,7 @@ import c from 'classnames';
 
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 const Markets: NextPage = () => {
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { walletAddress } = useContext(UserContext);
 	const [tableData, setTableData] = useState<MarketTableRow[]>([]);
 	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
@@ -56,7 +56,7 @@ const Markets: NextPage = () => {
 
 	/*    Begin insert data into table */
 	const [marketData, isLoadingMarketData] = useMarket(
-		currentUser,
+		walletAddress,
 		collections,
 		htokenHelperContractAddress
 	);
@@ -70,7 +70,7 @@ const Markets: NextPage = () => {
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
 		nftContractAddress,
-		currentUser,
+		walletAddress,
 		unit
 	);
 

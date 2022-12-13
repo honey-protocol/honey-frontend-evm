@@ -28,7 +28,7 @@ import LiquidateExpandTableMobile from 'components/LiquidateExpandTable/Liquidat
 import { LiquidateTablePosition } from '../../types/liquidate';
 import useDisplayStore from 'store/displayStore';
 import { useLiquidation, useLiquidationPositions, usePositions } from '../../hooks/useCollection';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { collections } from '../../constants/NFTCollections';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { LiquidationWorkFlowType } from '../../types/workflows';
@@ -50,7 +50,7 @@ const Liquidate: NextPage = () => {
 		document.body.classList.add('disable-scroll');
 	};
 
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { walletAddress } = useContext(UserContext);
 	const [tableData, setTableData] = useState<LiquidateTableRow[]>([]);
 	const [tableDataFiltered, setTableDataFiltered] = useState<LiquidateTableRow[]>([]);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([]);
@@ -61,7 +61,7 @@ const Liquidate: NextPage = () => {
 	const setWorkflow = useLiquidationFlowStore((state) => state.setWorkflow);
 
 	/*    Begin insert data into table */
-	const liquidateData = useLiquidation(currentUser, collections);
+	const liquidateData = useLiquidation(walletAddress, collections);
 	useEffect(() => {
 		setTableData(liquidateData);
 		setTableDataFiltered(liquidateData);

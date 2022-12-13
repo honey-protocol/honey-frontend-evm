@@ -16,7 +16,7 @@ import { questionIcon } from 'styles/icons.css';
 import useToast from 'hooks/useToast';
 import cs from 'classnames';
 import useDisplayStore from '../../store/displayStore';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { useMutation, useQueryClient } from 'react-query';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
@@ -40,9 +40,8 @@ const BorrowForm = (props: BorrowProps) => {
 	const {} = props;
 
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { walletAddress } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
 	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
 	const NFTId = useLoanFlowStore((state) => state.NFTId);
 	const {
@@ -82,7 +81,7 @@ const BorrowForm = (props: BorrowProps) => {
 		hivemindContractAddress,
 		HERC20ContractAddress,
 		nftContractAddress,
-		currentUser,
+		walletAddress,
 		NFTId,
 		unit
 	);
@@ -176,7 +175,7 @@ const BorrowForm = (props: BorrowProps) => {
 				queryKeys.maxBorrowFromNFT(
 					HERC20ContractAddress,
 					nftContractAddress,
-					walletPublicKey,
+					walletAddress,
 					nft.tokenId
 				)
 			);

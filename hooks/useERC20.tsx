@@ -115,7 +115,7 @@ export async function getAllowance(
 export function useCheckUnlimitedApproval(
 	ERC20ContractAddress: string,
 	contractAddress: string,
-	user: MoralisType.User | null
+	walletAddress: string
 ): [boolean, boolean] {
 	const onSuccess = (data: string) => {
 		return data;
@@ -123,16 +123,15 @@ export function useCheckUnlimitedApproval(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
 	const {
 		data: amount,
 		isLoading,
 		isFetching
 	} = useQuery(
-		queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, contractAddress),
+		queryKeys.userApproval(walletAddress, ERC20ContractAddress, contractAddress),
 		() => {
-			if (walletPublicKey != '' && ERC20ContractAddress != '' && contractAddress != '') {
-				return getAllowance(ERC20ContractAddress, contractAddress, walletPublicKey);
+			if (walletAddress != '' && ERC20ContractAddress != '' && contractAddress != '') {
+				return getAllowance(ERC20ContractAddress, contractAddress, walletAddress);
 			} else {
 				return '0';
 			}
@@ -169,7 +168,7 @@ export async function getUserBalance(
 
 export function useGetUserBalance(
 	ERC20ContractAddress: string,
-	user: MoralisType.User | null,
+	walletAddress: string,
 	unit: Unit
 ): [string, boolean] {
 	const onSuccess = (data: string) => {
@@ -178,16 +177,15 @@ export function useGetUserBalance(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
 	const {
 		data: amount,
 		isLoading,
 		isFetching
 	} = useQuery(
-		queryKeys.userBalance(walletPublicKey, ERC20ContractAddress),
+		queryKeys.userBalance(walletAddress, ERC20ContractAddress),
 		() => {
-			if (walletPublicKey != '' && ERC20ContractAddress != '') {
-				return getUserBalance(ERC20ContractAddress, walletPublicKey, unit);
+			if (walletAddress != '' && ERC20ContractAddress != '') {
+				return getUserBalance(ERC20ContractAddress, walletAddress, unit);
 			} else {
 				return '0';
 			}
