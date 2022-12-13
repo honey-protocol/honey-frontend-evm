@@ -65,5 +65,10 @@ export const queryKeys = {
 	listCollectionBids: (marketContractAddress: string, HERC20ContractAddress: string) =>
 		['bid', 'list', marketContractAddress, HERC20ContractAddress] as const,
 	listCollectionMinimumBid: (marketContractAddress: string, HERC20ContractAddress: string) =>
-		['bid', 'list', marketContractAddress, HERC20ContractAddress, 'minimum'] as const
+		['bid', 'list', marketContractAddress, HERC20ContractAddress, 'minimum'] as const,
+	listCollateralBids: (
+		marketContractAddress: string,
+		HERC20ContractAddress: string,
+		NFTId: string
+	) => ['bid', 'list', 'collateral', marketContractAddress, HERC20ContractAddress, NFTId] as const
 };

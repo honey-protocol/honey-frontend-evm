@@ -296,7 +296,7 @@ export const increaseCollectionBid = async ({
 	console.log(receipt);
 };
 
-export async function getNFTBids(
+export async function getCollateralBids(
 	marketContractAddress: string,
 	HERC20ContractAddress: string,
 	NFTTokenId: string
@@ -326,10 +326,49 @@ export async function getNFTBids(
 		return bid;
 	});
 	const filteredBidResult = bidResult.filter((bid) => bid.bidder != blackHole);
-	const NFTBids: BidInfo = {
+	const collateralBids: BidInfo = {
 		highestBidder: highestBidder == blackHole ? '' : highestBidder,
 		highestBid: highestBidder == blackHole ? '0' : highestBid,
 		bids: filteredBidResult
 	};
-	return NFTBids;
+	return collateralBids;
+}
+
+export function useGetCollateralBids(
+	marketContractAddress: string,
+	HERC20ContractAddress: string,
+	NFTTokenId: string
+): [BidInfo, boolean] {
+	const defaultCollateralBids: BidInfo = {
+		highestBidder: '',
+		highestBid: '0',
+		bids: []
+	};
+	const onSuccess = (data: BidInfo) => {
+		return data;
+	};
+	const onError = () => {
+		return defaultCollateralBids;
+	};
+	const {
+		data: collectionBids,
+		isLoading,
+		isFetching
+	} = useQuery(
+		queryKeys.listCollateralBids(marketContractAddress, HERC20ContractAddress, NFTTokenId),
+		() => {
+			if (HERC20ContractAddress != '' && marketContractAddress != '') {
+				return getCollateralBids(marketContractAddress, HERC20ContractAddress, NFTTokenId);
+			} else {
+				return defaultCollateralBids;
+			}
+		},
+		{
+			onSuccess,
+			onError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	return [collectionBids || defaultCollateralBids, isLoading || isFetching];
 }

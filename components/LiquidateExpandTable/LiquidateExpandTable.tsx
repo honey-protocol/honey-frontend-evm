@@ -11,13 +11,30 @@ import { InfoBlock } from '../InfoBlock/InfoBlock';
 import { formatNumber, formatNFTName } from '../../helpers/format';
 import HoneyTooltip from '../HoneyTooltip/HoneyTooltip';
 import HealthLvl from 'components/HealthLvl/HealthLvl';
+import { LiquidationWorkFlowType } from '../../types/workflows';
+import useLiquidationFlowStore from '../../store/liquidationFlowStore';
+import useDisplayStore from '../../store/displayStore';
+import * as style from '../../styles/markets.css';
+import HoneyButton from '../HoneyButton/HoneyButton';
 
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 
 type FilterType = 'most_critical' | 'max_debt' | 'most_valuable';
 
 export const LiquidateExpandTable: FC<{ data: LiquidateTablePosition[] }> = ({ data }) => {
+	const { setWorkflow, setNFTId, setCouponId } = useLiquidationFlowStore((state) => state);
+	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const [filter, setFilter] = useState<FilterType>('most_critical');
+	/*    begin sidebar interaction function          */
+	const initCollateralBidFlow = (tokenId: string, couponId: string) => {
+		setWorkflow(LiquidationWorkFlowType.none);
+		setNFTId(tokenId);
+		setCouponId(couponId);
+		setWorkflow(LiquidationWorkFlowType.collateralBid);
+		setIsSidebarVisibleInMobile(true);
+		document.body.classList.add('disable-scroll');
+	};
+	/* end sidebar interaction function          */
 
 	const expandColumns: ColumnType<LiquidateTablePosition>[] = useMemo(
 		() => [
@@ -69,6 +86,21 @@ export const LiquidateExpandTable: FC<{ data: LiquidateTablePosition[] }> = ({ d
 				render: (estimatedValue) => (
 					<div className={sharedStyles.expandedRowCell}>
 						<InfoBlock title={'Estimated value:'} value={fs(estimatedValue)} />
+					</div>
+				)
+			},
+			{
+				dataIndex: ['tokenId', 'couponId'],
+				key: 'tokenId',
+				title: '',
+				render: (text, row) => (
+					<div className={style.buttonsCell}>
+						<HoneyButton
+							variant="text"
+							onClick={(e) => initCollateralBidFlow(row['tokenId'], row['couponId'])}
+						>
+							Manage <div className={style.arrowRightIcon} />
+						</HoneyButton>
 					</div>
 				)
 			}

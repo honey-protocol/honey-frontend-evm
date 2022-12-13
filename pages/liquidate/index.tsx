@@ -25,9 +25,8 @@ import { Typography } from 'antd';
 import HoneyTableRow from 'components/HoneyTable/HoneyTableRow/HoneyTableRow';
 import HoneyTableNameCell from 'components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell';
 import LiquidateExpandTableMobile from 'components/LiquidateExpandTable/LiquidateExpandTableMobile';
-import { LiquidateTablePosition } from '../../types/liquidate';
 import useDisplayStore from 'store/displayStore';
-import { useLiquidation, useLiquidationPositions, usePositions } from '../../hooks/useCollection';
+import { useLiquidation, useLiquidationPositions } from '../../hooks/useCollection';
 import { UserContext } from '../../contexts/userContext';
 import { collections } from '../../constants/NFTCollections';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
@@ -58,7 +57,8 @@ const Liquidate: NextPage = () => {
 		HERC20ContractAddr: HERC20ContractAddress,
 		setHERC20ContractAddr,
 		setWorkflow,
-		setNFTId
+		setNFTId,
+		setCouponId
 	} = useLiquidationFlowStore((state) => state);
 	const { htokenHelperContractAddress, hivemindContractAddress, unit } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
@@ -116,7 +116,9 @@ const Liquidate: NextPage = () => {
 		setWorkflow(LiquidationWorkFlowType.none);
 		setHERC20ContractAddr(HERC20ContractAddress);
 		setNFTId('');
+		setCouponId('');
 		setWorkflow(LiquidationWorkFlowType.collectionBid);
+		setIsSidebarVisibleInMobile(true);
 		document.body.classList.add('disable-scroll');
 	};
 	/* end sidebar interaction function          */

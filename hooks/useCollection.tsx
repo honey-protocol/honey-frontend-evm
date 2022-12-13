@@ -387,7 +387,11 @@ export function useLiquidationPositions(
 	} = useQuery(
 		queryKeys.nftPrice(HERC20ContractAddress),
 		() => {
-			return getNFTPrice(htokenHelperContractAddress, HERC20ContractAddress);
+			if (htokenHelperContractAddress != '' && HERC20ContractAddress != '') {
+				return getNFTPrice(htokenHelperContractAddress, HERC20ContractAddress);
+			} else {
+				return 0;
+			}
 		},
 		{
 			onSuccess: onGetNFTPriceSuccess,

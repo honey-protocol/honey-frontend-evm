@@ -13,6 +13,10 @@ import { formatNumber, formatNFTName } from '../../helpers/format';
 import HoneyTooltip from '../HoneyTooltip/HoneyTooltip';
 import HealthLvl from 'components/HealthLvl/HealthLvl';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
+import * as style from '../../styles/markets.css';
+import useLiquidationFlowStore from '../../store/liquidationFlowStore';
+import useDisplayStore from '../../store/displayStore';
+import { LiquidationWorkFlowType } from '../../types/workflows';
 
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 
@@ -20,6 +24,18 @@ export const LiquidateExpandTableMobile: FC<{
 	data: LiquidateTablePosition[];
 	onPlaceBid: Function;
 }> = ({ data, onPlaceBid }) => {
+	const { setWorkflow, setNFTId, setCouponId } = useLiquidationFlowStore((state) => state);
+	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
+	/*    begin sidebar interaction function          */
+	const initCollateralBidFlow = (tokenId: string, couponId: string) => {
+		setWorkflow(LiquidationWorkFlowType.none);
+		setNFTId(tokenId);
+		setCouponId(couponId);
+		setWorkflow(LiquidationWorkFlowType.collateralBid);
+		setIsSidebarVisibleInMobile(true);
+		document.body.classList.add('disable-scroll');
+	};
+	/* end sidebar interaction function          */
 	const expandColumnsMobile: ColumnType<LiquidateTablePosition>[] = [
 		{
 			dataIndex: ['name', 'image', 'tokenId', 'healthLvl'],
@@ -46,6 +62,21 @@ export const LiquidateExpandTableMobile: FC<{
 			render: (untilLiquidation) => (
 				<div className={sharedStyles.expandedRowCell}>
 					<InfoBlock title={'Until liquidation:'} value={fs(untilLiquidation)} />
+				</div>
+			)
+		},
+		{
+			dataIndex: ['tokenId', 'couponId'],
+			key: 'tokenId',
+			title: '',
+			render: (text, row) => (
+				<div className={style.buttonsCell}>
+					<HoneyButton
+						variant="text"
+						onClick={(e) => initCollateralBidFlow(row['tokenId'], row['couponId'])}
+					>
+						Manage <div className={style.arrowRightIcon} />
+					</HoneyButton>
 				</div>
 			)
 		}

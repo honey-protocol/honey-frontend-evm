@@ -11,6 +11,7 @@ import { UserContext } from '../../contexts/userContext';
 import { useMoralis } from 'react-moralis';
 import { LiquidationWorkFlowType } from '../../types/workflows';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
+import NFTBidsList from '../NFTBidsList/NFTBidsList';
 
 type Tab = 'bid' | 'current';
 
@@ -76,6 +77,10 @@ const LiquidateSidebar = (props: LiquidateSidebarProps) => {
 				) : workflow == LiquidationWorkFlowType.collectionBid && activeTab === 'current' ? (
 					<>
 						<BidsList />
+					</>
+				) : workflow == LiquidationWorkFlowType.collateralBid && activeTab === 'current' ? (
+					<>
+						<NFTBidsList />
 					</>
 				) : (
 					<EmptyStateDetails
