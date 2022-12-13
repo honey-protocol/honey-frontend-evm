@@ -26,6 +26,7 @@ import {
 import { useGetTotalBorrow } from '../../hooks/useHerc20';
 import { withdrawUnderlyingHelper } from '../../helpers/repayHelper';
 import { queryKeys } from '../../helpers/queryHelper';
+import MoralisAuthButton from 'components/MoralisAuthButton/MoralisAuthButton';
 
 const {
 	format: f,
@@ -38,7 +39,7 @@ const {
 const WithdrawForm = (props: WithdrawFormProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { walletAddress } = useContext(UserContext);
+	const { walletAddress, isMoralisAuthenticated } = useContext(UserContext);
 	const queryClient = useQueryClient();
 	const HERC20ContractAddress = useLendFlowStore((state) => state.HERC20ContractAddr);
 
@@ -180,14 +181,18 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 							</HoneyButton>
 						</div>
 						<div className={styles.bigCol}>
-							<HoneyButton
-								variant="primary"
-								disabled={isWithdrawButtonDisabled()}
-								isFluid={true}
-								onClick={handleWithdraw}
-							>
-								Withdraw
-							</HoneyButton>
+							{isMoralisAuthenticated ? (
+								<HoneyButton
+									variant="primary"
+									disabled={isWithdrawButtonDisabled()}
+									isFluid={true}
+									onClick={handleWithdraw}
+								>
+									Withdraw
+								</HoneyButton>
+							) : (
+								<MoralisAuthButton />
+							)}
 						</div>
 					</div>
 				)

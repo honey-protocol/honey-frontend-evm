@@ -47,6 +47,7 @@ import {
 	weiToDecimal
 } from '../../helpers/liquidationHelper';
 import { fromWei } from 'web3-utils';
+import MoralisAuthButton from 'components/MoralisAuthButton/MoralisAuthButton';
 
 const {
 	format: f,
@@ -60,7 +61,7 @@ const {
 const BidForm = (props: BidFormProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { walletAddress } = useContext(UserContext);
+	const { walletAddress, isMoralisAuthenticated } = useContext(UserContext);
 	const queryClient = useQueryClient();
 	const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr);
 
@@ -338,14 +339,18 @@ const BidForm = (props: BidFormProps) => {
 							</HoneyButton>
 						</div>
 						<div className={styles.bigCol}>
-							<HoneyButton
-								variant="primary"
-								disabled={isSubmitButtonDisabled()}
-								isFluid={true}
-								onClick={onClick}
-							>
-								<>{buttonTitle()}</>
-							</HoneyButton>
+							{isMoralisAuthenticated ? (
+								<HoneyButton
+									variant="primary"
+									disabled={isSubmitButtonDisabled()}
+									isFluid={true}
+									onClick={onClick}
+								>
+									<>{buttonTitle()}</>
+								</HoneyButton>
+							) : (
+								<MoralisAuthButton />
+							)}
 						</div>
 					</div>
 				)

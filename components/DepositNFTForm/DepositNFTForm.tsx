@@ -18,12 +18,13 @@ import { useGetMaxBorrowableAmount } from '../../hooks/useHtokenHelper';
 import { depositNFTCollateral } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 import getDepositNFTApproval from '../../hooks/useERC721';
+import MoralisAuthButton from 'components/MoralisAuthButton/MoralisAuthButton';
 
 const { formatShortName: fsn } = formatNumber;
 
 const DepositNFTForm = (props: DepositNFTProps) => {
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { walletAddress } = useContext(UserContext);
+	const { walletAddress, isMoralisAuthenticated } = useContext(UserContext);
 	const queryClient = useQueryClient();
 	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
 	const { nftContractAddress, htokenHelperContractAddress, hivemindContractAddress, erc20Name } =
@@ -161,9 +162,13 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 					</HoneyButton>
 				</div>
 				<div className={styles.bigCol}>
-					<HoneyButton variant="primary" isFluid disabled={selectedNft == null} onClick={onClick}>
-						<>{buttonTitle()}</>
-					</HoneyButton>
+					{isMoralisAuthenticated ? (
+						<HoneyButton variant="primary" isFluid disabled={selectedNft == null} onClick={onClick}>
+							<>{buttonTitle()}</>
+						</HoneyButton>
+					) : (
+						<MoralisAuthButton />
+					)}
 				</div>
 			</div>
 		);

@@ -27,6 +27,7 @@ import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from '../../hooks/useHtoke
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { borrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
+import MoralisAuthButton from 'components/MoralisAuthButton/MoralisAuthButton';
 
 const {
 	format: f,
@@ -40,7 +41,7 @@ const BorrowForm = (props: BorrowProps) => {
 	const {} = props;
 
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { walletAddress } = useContext(UserContext);
+	const { walletAddress, isMoralisAuthenticated } = useContext(UserContext);
 	const queryClient = useQueryClient();
 	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
 	const NFTId = useLoanFlowStore((state) => state.NFTId);
@@ -506,14 +507,18 @@ const BorrowForm = (props: BorrowProps) => {
 					</HoneyButton>
 				</div>
 				<div className={styles.bigCol}>
-					<HoneyButton
-						variant="primary"
-						disabled={isBorrowButtonDisabled()}
-						isFluid
-						onClick={doBorrow}
-					>
-						Borrow
-					</HoneyButton>
+					{isMoralisAuthenticated ? (
+						<HoneyButton
+							variant="primary"
+							disabled={isBorrowButtonDisabled()}
+							isFluid
+							onClick={doBorrow}
+						>
+							Borrow
+						</HoneyButton>
+					) : (
+						<MoralisAuthButton />
+					)}
 				</div>
 			</div>
 		);

@@ -31,6 +31,7 @@ import {
 import { withdrawCollateral } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 import { repayBorrowHelper } from '../../helpers/repayHelper';
+import MoralisAuthButton from 'components/MoralisAuthButton/MoralisAuthButton';
 
 const {
 	format: f,
@@ -43,7 +44,7 @@ const {
 const RepayForm = (props: RepayProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { walletAddress } = useContext(UserContext);
+	const { walletAddress, isMoralisAuthenticated } = useContext(UserContext);
 	const queryClient = useQueryClient();
 	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
 	const NFTId = useLoanFlowStore((state) => state.NFTId);
@@ -540,14 +541,18 @@ const RepayForm = (props: RepayProps) => {
 					</HoneyButton>
 				</div>
 				<div className={styles.bigCol}>
-					<HoneyButton
-						variant="primary"
-						disabled={isRepayButtonDisabled()}
-						isFluid={true}
-						onClick={onClick}
-					>
-						<>{buttonTitle()}</>
-					</HoneyButton>
+					{isMoralisAuthenticated ? (
+						<HoneyButton
+							variant="primary"
+							disabled={isRepayButtonDisabled()}
+							isFluid={true}
+							onClick={onClick}
+						>
+							<>{buttonTitle()}</>
+						</HoneyButton>
+					) : (
+						<MoralisAuthButton />
+					)}
 				</div>
 			</div>
 		);

@@ -30,6 +30,7 @@ import {
 } from '../../hooks/useERC20';
 import { depositUnderlying, useGetTotalBorrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
+import MoralisAuthButton from 'components/MoralisAuthButton/MoralisAuthButton';
 
 const {
 	format: f,
@@ -42,7 +43,7 @@ const {
 const DepositForm = (props: DepositFormProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { walletAddress } = useContext(UserContext);
+	const { walletAddress, isMoralisAuthenticated } = useContext(UserContext);
 	const queryClient = useQueryClient();
 	const HERC20ContractAddress = useLendFlowStore((state) => state.HERC20ContractAddr);
 
@@ -228,14 +229,18 @@ const DepositForm = (props: DepositFormProps) => {
 							</HoneyButton>
 						</div>
 						<div className={styles.bigCol}>
-							<HoneyButton
-								variant="primary"
-								disabled={isDepositButtonDisabled()}
-								isFluid={true}
-								onClick={onClick}
-							>
-								<>{buttonTitle()}</>
-							</HoneyButton>
+							{isMoralisAuthenticated ? (
+								<HoneyButton
+									variant="primary"
+									disabled={isDepositButtonDisabled()}
+									isFluid={true}
+									onClick={onClick}
+								>
+									<>{buttonTitle()}</>
+								</HoneyButton>
+							) : (
+								<MoralisAuthButton />
+							)}
 						</div>
 					</div>
 				)
