@@ -1,6 +1,10 @@
 declare module '*.png';
 declare module '*.svg';
 
+interface Window {
+	ethereum: any;
+}
+
 //tokenAcc is same as pubkey,
 type NFT = {
 	id: string; //id will be name-tokenId

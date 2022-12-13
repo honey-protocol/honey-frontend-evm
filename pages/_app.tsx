@@ -6,7 +6,7 @@ import '../styles/globals.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { accentSequence, ThemeAccent } from 'helpers/themes/theme-utils';
-import { UserProvider } from '../contexts/userContext';
+import { UserProvider } from '../contexts/userContext2';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
