@@ -2,16 +2,13 @@ import React, { useContext, useState } from 'react';
 import * as styles from './LendSidebar.css';
 import { LendSidebarProps } from './types';
 import DepositForm from '../DepositForm/DepositForm';
-// import WithdrawForm from '../WithdrawForm/WithdrawForm';
 import HoneyTabs, { HoneyTabItem } from '../HoneyTabs/HoneyTabs';
 import EmptyStateDetails from '../EmptyStateDetails/EmptyStateDetails';
 import useDisplayStore from '../../store/displayStore';
 import { useQueryClient } from 'react-query';
 import useLendFlowStore from '../../store/lendFlowStore';
 import { LendWorkFlowType, LoanWorkFlowType } from '../../types/workflows';
-import { UserContext } from '../../contexts/userContext';
-import { useMoralis } from 'react-moralis';
-import BorrowForm from '../BorrowForm/BorrowForm';
+import { UserContext } from '../../contexts/userContext2';
 import WithdrawForm from '../WithdrawForm/WithdrawForm';
 
 type Tab = 'deposit' | 'withdraw';
@@ -35,19 +32,17 @@ const LendSidebar = (props: LendSidebarProps) => {
 	const handleTabChange = (tabKey: string) => {
 		setActiveTab(tabKey as Tab);
 	};
-	/*  end   tab function            */
-	/*  begin authentication function */
-	const { currentUser, setCurrentUser } = useContext(UserContext);
-	const { authenticate, user } = useMoralis();
-	const connect = async () => {
-		if (!currentUser) {
+	/*  end   tab function
+	 /*  begin authentication function */
+	const { walletAddress, connect } = useContext(UserContext);
+
+	const handleConnect = async () => {
+		if (!walletAddress) {
 			try {
-				await authenticate({ signingMessage: 'Authorize linking of your wallet' });
-				console.log('logged in user:', user?.get('ethAddress'));
+				await connect();
 				await queryClient.invalidateQueries(['user']);
 				await queryClient.invalidateQueries(['nft']);
 				await queryClient.invalidateQueries(['coupons']);
-				setCurrentUser(user);
 			} catch (e) {
 				console.log(e);
 			} finally {
@@ -60,7 +55,7 @@ const LendSidebar = (props: LendSidebarProps) => {
 	return (
 		<div className={styles.lendSidebarContainer}>
 			<HoneyTabs activeKey={activeTab} onTabChange={handleTabChange} items={items} active={true}>
-				{!currentUser ? (
+				{!walletAddress ? (
 					<EmptyStateDetails
 						icon={<div className={styles.lightIcon} />}
 						title="You didn’t connect any wallet yet"
@@ -68,7 +63,7 @@ const LendSidebar = (props: LendSidebarProps) => {
 						buttons={[
 							{
 								title: 'CONNECT WALLET',
-								onClick: connect
+								onClick: handleConnect
 							}
 						]}
 					/>

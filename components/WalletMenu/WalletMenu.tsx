@@ -6,7 +6,7 @@ import { formatAddress } from 'helpers/utils';
 import HoneyButton from 'components/HoneyButton/HoneyButton';
 import { WalletIcon } from 'icons/WalletIcon';
 import { useMoralis } from 'react-moralis';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { useQueryClient } from 'react-query';
 
 const { Title } = Typography;
@@ -14,32 +14,20 @@ const { Title } = Typography;
 const WalletMenu = () => {
 	const { authenticate, user, logout } = useMoralis();
 	const queryClient = useQueryClient();
-	const [walletAddress, setWalletAddress] = useState<string>('');
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { walletAddress, connect, disconnect } = useContext(UserContext);
 
-	useEffect(() => {
-		setWalletAddress(user?.get('ethAddress') || ('' as string));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentUser]);
-
-	const connect = async () => {
-		if (!currentUser) {
+	const handleConnect = async () => {
+		if (!walletAddress) {
 			try {
-				await authenticate({ signingMessage: 'Authorize linking of your wallet' });
+				await connect();
 				console.log('logged in user:', user?.get('ethAddress'));
 				await queryClient.invalidateQueries(['user']);
 				await queryClient.invalidateQueries(['nft']);
 				await queryClient.invalidateQueries(['coupons']);
-				setCurrentUser(user);
 			} catch (e) {
 				console.log(e);
 			}
 		}
-	};
-	const disconnect = async () => {
-		await logout;
-		console.log('log out:', user?.get('ethAddress'));
-		setCurrentUser(null);
 	};
 
 	const menu = (
@@ -54,8 +42,8 @@ const WalletMenu = () => {
 			]}
 		/>
 	);
-	return !currentUser ? (
-		<HoneyButton variant="primary" icon={<WalletIcon />} onClick={connect}>
+	return !walletAddress ? (
+		<HoneyButton variant="primary" icon={<WalletIcon />} onClick={handleConnect}>
 			CONNECT WALLET
 		</HoneyButton>
 	) : (

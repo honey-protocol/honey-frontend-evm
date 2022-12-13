@@ -7,7 +7,7 @@ import BidsList from '../BidsList/BidsList';
 import { LiquidateSidebarProps } from './types';
 import useDisplayStore from '../../store/displayStore';
 import { useQueryClient } from 'react-query';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { useMoralis } from 'react-moralis';
 import { LiquidationWorkFlowType } from '../../types/workflows';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
@@ -33,17 +33,15 @@ const LiquidateSidebar = (props: LiquidateSidebarProps) => {
 	];
 	/*  end   tab function            */
 	/*  begin authentication function */
-	const { currentUser, setCurrentUser } = useContext(UserContext);
-	const { authenticate, user } = useMoralis();
-	const connect = async () => {
-		if (!currentUser) {
+	const { walletAddress, connect } = useContext(UserContext);
+
+	const handleConnect = async () => {
+		if (!walletAddress) {
 			try {
-				await authenticate({ signingMessage: 'Authorize linking of your wallet' });
-				console.log('logged in user:', user?.get('ethAddress'));
+				await connect();
 				await queryClient.invalidateQueries(['user']);
 				await queryClient.invalidateQueries(['nft']);
 				await queryClient.invalidateQueries(['coupons']);
-				setCurrentUser(user);
 			} catch (e) {
 				console.log(e);
 			} finally {
@@ -57,7 +55,7 @@ const LiquidateSidebar = (props: LiquidateSidebarProps) => {
 	return (
 		<div className={styles.liquidateSidebarContainer}>
 			<HoneyTabs activeKey={activeTab} onTabChange={handleTabChange} items={items} active={true}>
-				{!currentUser ? (
+				{!walletAddress ? (
 					<EmptyStateDetails
 						icon={<div className={styles.lightIcon} />}
 						title="You didn’t connect any wallet yet"
@@ -65,7 +63,7 @@ const LiquidateSidebar = (props: LiquidateSidebarProps) => {
 						buttons={[
 							{
 								title: 'CONNECT WALLET',
-								onClick: connect
+								onClick: handleConnect
 							}
 						]}
 					/>

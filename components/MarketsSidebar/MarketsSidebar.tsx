@@ -3,7 +3,7 @@ import * as styles from './MarketsSidebar.css';
 import { MarketsSidebarProps } from './types';
 import HoneyTabs, { HoneyTabItem } from 'components/HoneyTabs/HoneyTabs';
 import EmptyStateDetails from 'components/EmptyStateDetails/EmptyStateDetails';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/userContext2';
 import { useMoralis } from 'react-moralis';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { LoanWorkFlowType } from '../../types/workflows';
@@ -31,17 +31,15 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
 	];
 	/*  end   tab function            */
 	/*  begin authentication function */
-	const { currentUser, setCurrentUser } = useContext(UserContext);
-	const { authenticate, user } = useMoralis();
-	const connect = async () => {
-		if (!currentUser) {
+	const { walletAddress, connect } = useContext(UserContext);
+
+	const handleConnect = async () => {
+		if (!walletAddress) {
 			try {
-				await authenticate({ signingMessage: 'Authorize linking of your wallet' });
-				console.log('logged in user:', user?.get('ethAddress'));
+				await connect();
 				await queryClient.invalidateQueries(['user']);
 				await queryClient.invalidateQueries(['nft']);
 				await queryClient.invalidateQueries(['coupons']);
-				setCurrentUser(user);
 			} catch (e) {
 				console.log(e);
 			} finally {
@@ -61,12 +59,12 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
 	return (
 		<div className={styles.marketsSidebarContainer}>
 			<HoneyTabs activeKey={activeTab} onTabChange={handleTabChange} items={items} active={true}>
-				{!currentUser ? (
+				{!walletAddress ? (
 					<EmptyStateDetails
 						icon={<div className={styles.lightIcon} />}
 						title="You didn’t connect any wallet yet"
 						description="First, choose a NFT collection"
-						buttons={[{ title: 'CONNECT WALLET', onClick: connect }]}
+						buttons={[{ title: 'CONNECT WALLET', onClick: handleConnect }]}
 					/>
 				) : !HERC20ContractAddr ? (
 					<EmptyStateDetails
