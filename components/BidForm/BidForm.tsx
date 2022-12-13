@@ -179,7 +179,7 @@ const BidForm = (props: BidFormProps) => {
 	/*  begin handling bid text and text */
 	const buttonTitle = () => {
 		if (bidState == 'WAIT_FOR_APPROVAL') return 'Approve';
-		else if (bidState == 'WAIT_FOR_INCREASE_BID') return 'Increase Bid';
+		else if (bidState == 'WAIT_FOR_INCREASE_BID') return 'Update Bid';
 		else return 'Place Bid';
 	};
 
