@@ -19,26 +19,28 @@ const WalletMenu = () => {
 
 	useEffect(() => {
 		setWalletAddress(user?.get('ethAddress') || ('' as string));
+		if (user != null && currentUser == null) {
+			console.log('logged in user:', user?.get('ethAddress'));
+			setCurrentUser(user);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentUser]);
+	}, [user]);
 
 	const connect = async () => {
 		if (!currentUser) {
 			try {
 				await authenticate({ signingMessage: 'Authorize linking of your wallet' });
-				console.log('logged in user:', user?.get('ethAddress'));
 				await queryClient.invalidateQueries(['user']);
 				await queryClient.invalidateQueries(['nft']);
 				await queryClient.invalidateQueries(['coupons']);
-				setCurrentUser(user);
 			} catch (e) {
 				console.log(e);
 			}
 		}
 	};
 	const disconnect = async () => {
-		await logout;
 		console.log('log out:', user?.get('ethAddress'));
+		await logout();
 		setCurrentUser(null);
 	};
 
