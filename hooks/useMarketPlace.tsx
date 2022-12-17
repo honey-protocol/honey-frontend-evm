@@ -176,7 +176,7 @@ export function useGetCollectionMinimumBid(
 			if (HERC20ContractAddress != '' && marketContractAddress != '') {
 				return getCollectionMinimumBid(marketContractAddress, HERC20ContractAddress);
 			} else {
-				return '';
+				return '0';
 			}
 		},
 		{
@@ -372,3 +372,153 @@ export function useGetCollateralBids(
 	);
 	return [collectionBids || defaultCollateralBids, isLoading || isFetching];
 }
+
+export interface bidCollateralVariables {
+	marketContractAddress: string;
+	HERC20ContractAddress: string;
+	NFTTokenId: string;
+	amount: string;
+	unit: Unit;
+}
+
+export const bidSingle = async ({
+	marketContractAddress: marketContractAddress,
+	HERC20ContractAddress: HERC20ContractAddress,
+	amount: amount,
+	NFTTokenId: NFTTokenId,
+	unit: unit
+}: bidCollateralVariables) => {
+	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
+	const options = {
+		chain: chain,
+		contractAddress: marketContractAddress,
+		functionName: 'bidSingle',
+		abi: ABI,
+		params: {
+			_hToken: HERC20ContractAddress,
+			_collateralId: NFTTokenId,
+			_amount: toWei(amount, unit)
+		}
+	};
+	const transaction = await Moralis.executeFunction(options);
+	console.log(`transaction hash: ${transaction.hash}`);
+
+	// @ts-ignore
+	const receipt = await transaction.wait(confirmedBlocks);
+	console.log(receipt);
+};
+
+export interface cancelCollateralBidVariables {
+	marketContractAddress: string;
+	HERC20ContractAddress: string;
+	NFTTokenId: string;
+}
+
+export const cancelCollateralBid = async ({
+	marketContractAddress: marketContractAddress,
+	HERC20ContractAddress: HERC20ContractAddress,
+	NFTTokenId: NFTTokenId
+}: cancelCollateralBidVariables) => {
+	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
+	const options = {
+		chain: chain,
+		contractAddress: marketContractAddress,
+		functionName: 'cancelBidSingle',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress, _collateralId: NFTTokenId }
+	};
+	const transaction = await Moralis.executeFunction(options);
+	console.log(`transaction hash: ${transaction.hash}`);
+
+	// @ts-ignore
+	const receipt = await transaction.wait(confirmedBlocks);
+	console.log(receipt);
+};
+
+export async function getCollateralMinimumBid(
+	marketContractAddress: string,
+	HERC20ContractAddress: string,
+	NFTTokenId: string
+) {
+	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
+	const options = {
+		chain: chain,
+		address: marketContractAddress,
+		function_name: 'viewMinimumNextBidSingle',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress, _collateralId: NFTTokenId }
+	};
+
+	// @ts-ignore
+	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
+	return result;
+}
+
+export function useGetCollateralMinimumBid(
+	marketContractAddress: string,
+	HERC20ContractAddress: string,
+	NFTTokenId: string
+): [string, boolean] {
+	const onSuccess = (data: string) => {
+		return data;
+	};
+	const onError = () => {
+		return '0';
+	};
+	const {
+		data: minimumBid,
+		isLoading,
+		isFetching
+	} = useQuery(
+		queryKeys.listCollateralMinimumBid(marketContractAddress, HERC20ContractAddress, NFTTokenId),
+		() => {
+			if (HERC20ContractAddress != '' && marketContractAddress != '' && NFTTokenId != '') {
+				return getCollateralMinimumBid(marketContractAddress, HERC20ContractAddress, NFTTokenId);
+			} else {
+				return '0';
+			}
+		},
+		{
+			onSuccess,
+			onError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	return [minimumBid || '', isLoading || isFetching];
+}
+
+export interface increaseCollateralBidVariables {
+	marketContractAddress: string;
+	HERC20ContractAddress: string;
+	increaseAmount: string;
+	NFTTokenId: string;
+	unit: Unit;
+}
+
+export const increaseCollateralBid = async ({
+	marketContractAddress: marketContractAddress,
+	HERC20ContractAddress: HERC20ContractAddress,
+	increaseAmount: increaseAmount,
+	NFTTokenId: NFTTokenId,
+	unit: unit
+}: increaseCollateralBidVariables) => {
+	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
+	const options = {
+		chain: chain,
+		contractAddress: marketContractAddress,
+		functionName: 'increaseBidSingle',
+		abi: ABI,
+		params: {
+			_hToken: HERC20ContractAddress,
+			_collateralId: NFTTokenId,
+			_increaseAmount: toWei(increaseAmount, unit)
+		}
+	};
+	const transaction = await Moralis.executeFunction(options);
+	console.log(`transaction hash: ${transaction.hash}`);
+
+	// @ts-ignore
+	const receipt = await transaction.wait(confirmedBlocks);
+	console.log(receipt);
+};
