@@ -8,6 +8,7 @@ import { WalletIcon } from 'icons/WalletIcon';
 import { useMoralis } from 'react-moralis';
 import { UserContext } from '../../contexts/userContext';
 import { useQueryClient } from 'react-query';
+import Moralis from 'moralis-v1';
 
 const { Title } = Typography;
 
@@ -21,7 +22,7 @@ const WalletMenu = () => {
 		setWalletAddress(user?.get('ethAddress') || ('' as string));
 		if (user != null && currentUser == null) {
 			console.log('logged in user:', user?.get('ethAddress'));
-			setCurrentUser(user);
+			Moralis.enableWeb3().then((r) => setCurrentUser(user));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
