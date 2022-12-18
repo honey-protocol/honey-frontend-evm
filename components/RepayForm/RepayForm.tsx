@@ -98,8 +98,8 @@ const RepayForm = (props: RepayProps) => {
 		currentUser
 	);
 
-	const [valueUSD, setValueUSD] = useState<number>();
-	const [valueUnderlying, setValueUnderlying] = useState<number>();
+	const [valueUSD, setValueUSD] = useState<number | undefined>(0);
+	const [valueUnderlying, setValueUnderlying] = useState<number | undefined>(0);
 	const [sliderValue, setSliderValue] = useState(0);
 	const { toast, ToastComponent } = useToast();
 	const [repayState, setRepayState] = useState('WAIT_FOR_APPROVAL');
@@ -155,9 +155,10 @@ const RepayForm = (props: RepayProps) => {
 	};
 
 	const handleUsdInputChange = (usdValue: number | undefined) => {
+		if (userAllowance <= 0) return;
 		if (!usdValue) {
-			setValueUSD(0);
-			setValueUnderlying(0);
+			setValueUSD(undefined);
+			setValueUnderlying(undefined);
 			setSliderValue(0);
 			return;
 		}
@@ -166,17 +167,18 @@ const RepayForm = (props: RepayProps) => {
 		setSliderValue(usdValue / underlyingPrice);
 	};
 
-	const handleUnderlyingInputChange = (underlyingValue: number | undefined) => {
-		if (!underlyingValue) {
+	const handleUnderlyingInputChange = (UnderlyingValue: number | undefined) => {
+		if (userAllowance <= 0) return;
+		if (!UnderlyingValue) {
 			setValueUSD(0);
 			setValueUnderlying(0);
 			setSliderValue(0);
 			return;
 		}
 
-		setValueUSD(underlyingValue * underlyingPrice);
-		setValueUnderlying(underlyingValue);
-		setSliderValue(underlyingValue);
+		setValueUSD(UnderlyingValue * underlyingPrice);
+		setValueUnderlying(UnderlyingValue);
+		setSliderValue(UnderlyingValue);
 	};
 	/*  end handle slider function   */
 
@@ -340,7 +342,7 @@ const RepayForm = (props: RepayProps) => {
 							}
 						/>
 
-						<HoneySlider
+						{/* <HoneySlider
 							currentValue={0}
 							maxValue={nftPrice || 0}
 							minAvailableValue={userDebt}
@@ -348,7 +350,7 @@ const RepayForm = (props: RepayProps) => {
 							dangerPosition={0.45 - userDebt / 1000}
 							maxAvailablePosition={collateralFactor}
 							isReadonly
-						/>
+						/> */}
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
@@ -359,7 +361,7 @@ const RepayForm = (props: RepayProps) => {
 								</span>
 							}
 							value={fp((newDebt / (nftPrice || 0)) * 100)}
-							isDisabled={true}
+							// isDisabled={true}
 							toolTipLabel={
 								<span>
 									Estimated{' '}
@@ -375,7 +377,7 @@ const RepayForm = (props: RepayProps) => {
 							}
 						/>
 
-						<HoneySlider
+						{/* <HoneySlider
 							currentValue={0}
 							maxValue={nftPrice || 0}
 							minAvailableValue={newDebt}
@@ -383,7 +385,7 @@ const RepayForm = (props: RepayProps) => {
 							dangerPosition={0.45 - userDebt / 1000}
 							maxAvailablePosition={collateralFactor}
 							isReadonly
-						/>
+						/> */}
 					</div>
 				</div>
 
@@ -420,7 +422,7 @@ const RepayForm = (props: RepayProps) => {
 								</span>
 							}
 							value={fs(newDebt < 0 ? 0 : newDebt)}
-							isDisabled={true}
+							// isDisabled={true}
 							toolTipLabel={
 								<span>
 									Estimated{' '}
@@ -441,9 +443,10 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={`${fs(userDebt / collateralFactor)} ${
-								userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''
-							}`}
+							// value={`${fs(userDebt / collateralFactor)} ${
+							// 	userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''
+							// }`}
+							value="N/A"
 							valueSize="normal"
 							title={
 								<span className={hAlign}>
@@ -467,7 +470,7 @@ const RepayForm = (props: RepayProps) => {
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							isDisabled={userDebt <= 0}
+							// isDisabled={userDebt <= 0}
 							title={
 								<span className={hAlign}>
 									New Liquidation price <div className={questionIcon} />
@@ -486,9 +489,10 @@ const RepayForm = (props: RepayProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={`${fs(newDebt / collateralFactor)} ${
-								userDebt ? `(-${newLiqPercent.toFixed(0)}%)` : ''
-							}`}
+							// value={`${fs(newDebt / collateralFactor)} ${
+							// 	userDebt ? `(-${newLiqPercent.toFixed(0)}%)` : ''
+							// }`}
+							value="N/A"
 							valueSize="normal"
 						/>
 					</div>
@@ -501,15 +505,15 @@ const RepayForm = (props: RepayProps) => {
 						</div>
 						<div className={cs(styles.balance, styles.col)}>
 							<InfoBlock
-								isDisabled
+								// isDisabled
 								title={'NEW Underlying balance'}
 								value={fs(underlyingBalance - (valueUnderlying || 0))}
 							/>
 						</div>
 					</div>
 					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
+						firstInputValue={valueUSD ? p(f(valueUSD)) : undefined}
+						secondInputValue={valueUnderlying ? p(f(valueUnderlying)) : undefined}
 						onChangeFirstInput={handleUsdInputChange}
 						onChangeSecondInput={handleUnderlyingInputChange}
 						firstInputAddon={erc20Name}

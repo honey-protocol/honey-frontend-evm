@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { style, globalStyle } from '@vanilla-extract/css';
 import { typography, vars } from '../../styles/theme.css';
 
 export const inputsBlockContainer = style({
@@ -40,6 +40,7 @@ export const input = style([
 		padding: '16px',
 		background: 'transparent',
 
+
 		selectors: {
 			'&:focus': {
 				borderColor: 'transparent',
@@ -52,6 +53,15 @@ export const input = style([
 		}
 	}
 ]);
+
+globalStyle(
+	`${input}, input::-webkit-outer-spin-button, input::-webkit-inner-spin-button `,
+	{
+		WebkitAppearance: 'none',
+		MozAppearance: 'textfield',
+		margin: 0
+	}
+);
 
 export const inputAddon = style([
 	typography.body,
