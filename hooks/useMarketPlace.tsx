@@ -381,7 +381,7 @@ export interface bidCollateralVariables {
 	unit: Unit;
 }
 
-export const bidSingle = async ({
+export const bidCollateral = async ({
 	marketContractAddress: marketContractAddress,
 	HERC20ContractAddress: HERC20ContractAddress,
 	amount: amount,
