@@ -138,7 +138,8 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 		isLoadingBidInfo,
 		isLoadingMinimumBid,
 		isLoadingAvailableRefund,
-		HERC20ContractAddress
+		HERC20ContractAddress,
+		NFTId
 	]);
 
 	// Put your validators here
