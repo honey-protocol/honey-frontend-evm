@@ -43,6 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				<MoralisProvider
 					appId={process.env.NEXT_PUBLIC_APP_ID as string}
 					serverUrl={process.env.NEXT_PUBLIC_SERVER_URL as string}
+					initializeOnMount={true}
 				>
 					<UserProvider>
 						{/* {children} */}

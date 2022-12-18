@@ -140,7 +140,10 @@ const BidForm = (props: BidFormProps) => {
 
 	// Put your validators here
 	const isSubmitButtonDisabled = () => {
-		return p(f(valueUnderlying)) < minBid;
+		if (bidState == 'WAIT_FOR_BID') return p(f(valueUnderlying)) < minBid;
+		else if (bidState == 'WAIT_FOR_INCREASE_BID')
+			return p(f(valueUnderlying)) + userBid(walletPublicKey, bidInfo, unit) < minBid;
+		else return false;
 	};
 
 	/*   Begin handle slider function  */
@@ -179,7 +182,7 @@ const BidForm = (props: BidFormProps) => {
 	/*  begin handling bid text and text */
 	const buttonTitle = () => {
 		if (bidState == 'WAIT_FOR_APPROVAL') return 'Approve';
-		else if (bidState == 'WAIT_FOR_INCREASE_BID') return 'Update Bid';
+		else if (bidState == 'WAIT_FOR_INCREASE_BID') return 'Increase Bid';
 		else return 'Place Bid';
 	};
 
@@ -290,16 +293,10 @@ const BidForm = (props: BidFormProps) => {
 				);
 				handleSliderChange(0);
 			} else if (bidState == 'WAIT_FOR_INCREASE_BID') {
-				const increaseAmount = getIncreaseAmount(
-					walletPublicKey,
-					bidInfo,
-					p(f(valueUnderlying)),
-					unit
-				);
 				await increaseBidMutation.mutateAsync({
 					marketContractAddress,
 					HERC20ContractAddress,
-					increaseAmount,
+					increaseAmount: p(f(valueUnderlying)).toString(),
 					unit
 				});
 				console.log('Increase Collection Bid succeed');

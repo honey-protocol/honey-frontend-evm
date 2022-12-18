@@ -105,6 +105,7 @@ export const LiquidateExpandTable: FC<{ data: LiquidateTablePosition[] }> = ({ d
 				)
 			}
 		],
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[filter]
 	);
 
