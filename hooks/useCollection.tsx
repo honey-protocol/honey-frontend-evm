@@ -345,7 +345,7 @@ export function useLiquidationPositions(
 		return data;
 	};
 	const onGetCollateralFactorError = (data: string) => {
-		return '0';
+		return 0;
 	};
 	const {
 		data: collateralFactorResult,

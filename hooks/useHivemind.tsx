@@ -119,7 +119,7 @@ export function useGetCollateralFactor(
 		return data;
 	};
 	const onError = (data: string) => {
-		return '0';
+		return 0;
 	};
 	const {
 		data: amount,
