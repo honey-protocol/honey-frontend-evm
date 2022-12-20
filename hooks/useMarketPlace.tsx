@@ -152,8 +152,8 @@ export async function getCollectionMinimumBid(
 	};
 
 	// @ts-ignore
-	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
-	return result;
+	const result = await Moralis.Web3API.native.runContractFunction(options);
+	return result.toString();
 }
 
 export function useGetCollectionMinimumBid(
@@ -450,8 +450,8 @@ export async function getCollateralMinimumBid(
 	};
 
 	// @ts-ignore
-	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
-	return result;
+	const result = await Moralis.Web3API.native.runContractFunction(options);
+	return result.toString();
 }
 
 export function useGetCollateralMinimumBid(

@@ -22,8 +22,8 @@ export async function getUserSupplyBalance(
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
-	const supplyBalance = fromWei(result, unit);
+	const result = await Moralis.Web3API.native.runContractFunction(options);
+	const supplyBalance = fromWei(result.toString(), unit);
 	return supplyBalance;
 }
 
@@ -42,8 +42,8 @@ export async function getTotalSupplyBalance(
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
-	const supplyBalance = fromWei(result, unit);
+	const result = await Moralis.Web3API.native.runContractFunction(options);
+	const supplyBalance = fromWei(result.toString(), unit);
 	return supplyBalance;
 }
 
@@ -175,8 +175,8 @@ export async function getNFTPriceInUSD(
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
-	const nftPrice = fromWei(result, unit);
+	const result = await Moralis.Web3API.native.runContractFunction(options);
+	const nftPrice = fromWei(result.toString(), unit);
 	return nftPrice;
 }
 

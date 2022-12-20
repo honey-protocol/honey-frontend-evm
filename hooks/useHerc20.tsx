@@ -118,7 +118,7 @@ export async function getBorrowFromCollateral(
 
 	// @ts-ignore
 	const result = await Moralis.Web3API.native.runContractFunction(options);
-	return fromWei(result, unit);
+	return fromWei(result.toString(), unit);
 }
 
 export async function repayBorrow(
@@ -195,8 +195,8 @@ export async function getTotalBorrow(HERC20ContractAddress: string, unit: Unit) 
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
-	return fromWei(result, unit);
+	const result = await Moralis.Web3API.native.runContractFunction(options);
+	return fromWei(result.toString(), unit);
 }
 
 export function useGetTotalBorrow(HERC20ContractAddress: string, unit: Unit): [string, boolean] {
@@ -241,6 +241,6 @@ export async function getTotalReserves(HERC20ContractAddress: string, unit: Unit
 
 	// @ts-ignore
 	const result = await Moralis.Web3API.native.runContractFunction(options);
-	const totalReserve = fromWei(result, unit);
+	const totalReserve = fromWei(result.toString(), unit);
 	return totalReserve;
 }

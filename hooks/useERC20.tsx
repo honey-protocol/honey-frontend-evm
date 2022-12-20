@@ -164,7 +164,7 @@ export async function getUserBalance(
 
 	// @ts-ignore
 	const result = await Moralis.Web3API.native.runContractFunction(options);
-	return fromWei(result, unit);
+	return fromWei(result.toString(), unit);
 }
 
 export function useGetUserBalance(

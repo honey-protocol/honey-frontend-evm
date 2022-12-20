@@ -106,8 +106,8 @@ export async function getCollateralFactor(
 		}
 	};
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
-	return parseFloat(fromWei(result, unit));
+	const result = await Moralis.Web3API.native.runContractFunction(options);
+	return parseFloat(fromWei(result.toString(), unit));
 }
 
 export function useGetCollateralFactor(
@@ -119,7 +119,7 @@ export function useGetCollateralFactor(
 		return data;
 	};
 	const onError = (data: string) => {
-		return '0';
+		return 0;
 	};
 	const {
 		data: amount,
