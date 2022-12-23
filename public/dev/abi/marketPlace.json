@@ -775,16 +775,6 @@
         "internalType": "contract IERC20",
         "name": "_token",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_start",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_end",
-        "type": "uint256"
       }
     ],
     "name": "_sweepToken",

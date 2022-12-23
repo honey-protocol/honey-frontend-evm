@@ -80,6 +80,11 @@
         "internalType": "contract HTokenI",
         "name": "_hToken",
         "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_hasDebt",
+        "type": "bool"
       }
     ],
     "name": "getActiveCoupons",
@@ -413,6 +418,35 @@
         "type": "address"
       }
     ],
+    "name": "getFrontendLiquidationData",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      }
+    ],
     "name": "getFrontendMarketData",
     "outputs": [
       {
@@ -428,6 +462,30 @@
       {
         "internalType": "uint256",
         "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract HTokenI",
+        "name": "_hToken",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_referred",
+        "type": "bool"
+      }
+    ],
+    "name": "getMarketBorrowFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "fee",
         "type": "uint256"
       }
     ],

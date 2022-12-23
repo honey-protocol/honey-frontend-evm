@@ -481,11 +481,16 @@
       },
       {
         "internalType": "uint256",
+        "name": "_newMaxLTVFactorMantissa",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "_newCollateralFactorMantissa",
         "type": "uint256"
       }
     ],
-    "name": "_setCollateralFactor",
+    "name": "_setFactors",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -504,24 +509,6 @@
       }
     ],
     "name": "_setMarketBorrowCaps",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_newMaxLTVFactorMantissa",
-        "type": "uint256"
-      }
-    ],
-    "name": "_setMaxLTVFactor",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

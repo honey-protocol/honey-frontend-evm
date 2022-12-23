@@ -11,7 +11,7 @@ function getCollections() {
 				unit: 'ether',
 				ERC721ContractAddress: '0x66ba090ed8e3d76680f25fd924c90f662daf0369',
 				ERC20ContractAddress: '0x2FC813E8562D2c52B7423C07AB1Fead3A195CF15',
-				HERC20ContractAddress: '0xF1424637f90D78e8B4c87A74D2316Aeb98C77d95'
+				HERC20ContractAddress: '0xfa57bE5884d7a21b1a8396999CF9ED7547027aA8'
 			},
 			{
 				name: 'BAYC',
@@ -21,7 +21,7 @@ function getCollections() {
 				unit: 'ether',
 				ERC721ContractAddress: '0x66ba090ed8e3d76680f25fd924c90f662daf0369',
 				ERC20ContractAddress: '0x3f657A7DB9B49DC364494A98CD49488f724d4c09',
-				HERC20ContractAddress: '0x10474Ce49166Bf2c2D41e9cED85bFE5D8C16F9d8'
+				HERC20ContractAddress: '0xcbe353B6eE82ddd4383167E32f0BEdfD2616976b'
 			},
 			{
 				name: 'AZUKI',
@@ -31,7 +31,7 @@ function getCollections() {
 				unit: 'ether',
 				ERC721ContractAddress: '0x060e5b59ad1095f643271f7b4dd492a9636e0812',
 				ERC20ContractAddress: '0x20C27c2f53da9704817bc71453064B5726650F64',
-				HERC20ContractAddress: '0x0221463a6118f02d219fcBF5C21a351Db2D4Ab70'
+				HERC20ContractAddress: '0x25F49192AfcF88A777161Ab9bf27646de0D53680'
 			}
 		] as collection[];
 	} else if (envName == 'prod') {
@@ -45,7 +45,7 @@ function getCollections() {
 				unit: 'ether',
 				ERC721ContractAddress: '0x66ba090ed8e3d76680f25fd924c90f662daf0369',
 				ERC20ContractAddress: '0x2FC813E8562D2c52B7423C07AB1Fead3A195CF15',
-				HERC20ContractAddress: '0xF1424637f90D78e8B4c87A74D2316Aeb98C77d95'
+				HERC20ContractAddress: '0xfa57bE5884d7a21b1a8396999CF9ED7547027aA8'
 			},
 			{
 				name: 'BAYC',
@@ -55,7 +55,7 @@ function getCollections() {
 				unit: 'ether',
 				ERC721ContractAddress: '0x66ba090ed8e3d76680f25fd924c90f662daf0369',
 				ERC20ContractAddress: '0x3f657A7DB9B49DC364494A98CD49488f724d4c09',
-				HERC20ContractAddress: '0x10474Ce49166Bf2c2D41e9cED85bFE5D8C16F9d8'
+				HERC20ContractAddress: '0xcbe353B6eE82ddd4383167E32f0BEdfD2616976b'
 			},
 			{
 				name: 'AZUKI',
@@ -65,7 +65,7 @@ function getCollections() {
 				unit: 'ether',
 				ERC721ContractAddress: '0x060e5b59ad1095f643271f7b4dd492a9636e0812',
 				ERC20ContractAddress: '0x20C27c2f53da9704817bc71453064B5726650F64',
-				HERC20ContractAddress: '0x0221463a6118f02d219fcBF5C21a351Db2D4Ab70'
+				HERC20ContractAddress: '0x25F49192AfcF88A777161Ab9bf27646de0D53680'
 			}
 		] as collection[];
 	} else {
@@ -76,18 +76,18 @@ function getCollections() {
 function getHelperContract() {
 	if (envName == 'dev') {
 		const contract: helperContract = {
-			htokenHelperContractAddress: '0xe2B0862935BA5F9A226fC15cDDFD22178230b6fA',
-			hivemindContractAddress: '0xa705A06f6A31a00Ccdd71E17258d2Ea0cBd2de36',
-			oracleContractAddress: '0x901135B6e80C3816031DAB0F0846AA1B1aE60FB1',
-			marketContractAddress: '0xE6736a60051271E2438d5612AE988dA3CE70Cea8'
+			htokenHelperContractAddress: '0x793a376B98080a11D6Cba7Eb8200e6E3ED88B0d8',
+			hivemindContractAddress: '0x4892644dfaBdb209E60437732c40d4BF88Ed1f76',
+			oracleContractAddress: '0xC920ca9976c8205731d41Ea7fAeE773e21E1E793',
+			marketContractAddress: '0xdd2223DC2a82671Fc6Abe97BC78d69449226d1CC'
 		};
 		return contract;
 	} else if (envName == 'prod') {
 		const contract: helperContract = {
-			htokenHelperContractAddress: '0xe2B0862935BA5F9A226fC15cDDFD22178230b6fA',
-			hivemindContractAddress: '0xa705A06f6A31a00Ccdd71E17258d2Ea0cBd2de36',
-			oracleContractAddress: '0x901135B6e80C3816031DAB0F0846AA1B1aE60FB1',
-			marketContractAddress: '0xE6736a60051271E2438d5612AE988dA3CE70Cea8'
+			htokenHelperContractAddress: '0x793a376B98080a11D6Cba7Eb8200e6E3ED88B0d8',
+			hivemindContractAddress: '0x4892644dfaBdb209E60437732c40d4BF88Ed1f76',
+			oracleContractAddress: '0xC920ca9976c8205731d41Ea7fAeE773e21E1E793',
+			marketContractAddress: '0xdd2223DC2a82671Fc6Abe97BC78d69449226d1CC'
 		};
 		return contract;
 	} else {
