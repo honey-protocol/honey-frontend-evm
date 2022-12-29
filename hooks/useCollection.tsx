@@ -502,8 +502,10 @@ export function useLiquidationPositions(
 		return result;
 	});
 
+	const filterPositionList = positionList?.filter((position) => position.debt > 0);
+
 	return [
-		positionList || [],
+		filterPositionList || [],
 		isLoadingNFTPrice ||
 			isFetchingNFTPrice ||
 			isLoadingCollaterals ||
