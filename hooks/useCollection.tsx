@@ -27,6 +27,7 @@ const defaultPosition: MarketTablePosition = {
 	tokenId: '',
 	couponId: '',
 	debt: '',
+	healthLvl: 0,
 	allowance: '',
 	value: 0
 };
@@ -114,6 +115,7 @@ export function usePositions(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
+	hivemindContractAddress: string,
 	user: MoralisType.User | null,
 	unit: Unit
 ): [MarketTablePosition[], boolean] {
@@ -152,10 +154,66 @@ export function usePositions(
 
 	const coupons = couponList || [];
 
+	const onGetCollateralFactorSuccess = (data: number) => {
+		return data;
+	};
+	const onGetCollateralFactorError = (data: string) => {
+		return 0;
+	};
+	const {
+		data: collateralFactorResult,
+		isLoading: isLoadingCollateralFactor,
+		isFetching: isFetchingCollateralFactor
+	} = useQuery(
+		queryKeys.collateralFactor(HERC20ContractAddress),
+		() => {
+			if (hivemindContractAddress != '' && HERC20ContractAddress != '') {
+				return getCollateralFactor(hivemindContractAddress, HERC20ContractAddress, unit);
+			} else {
+				return 0;
+			}
+		},
+		{
+			onSuccess: onGetCollateralFactorSuccess,
+			onError: onGetCollateralFactorError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	const collateralFactor = collateralFactorResult || 0;
+	const onGetNFTPriceSuccess = (data: number) => {
+		return data;
+	};
+	const onGetNFTPriceError = (data: string) => {
+		return 0;
+	};
+
+	const {
+		data: nftPriceResult,
+		isLoading: isLoadingNFTPrice,
+		isFetching: isFetchingNFTPrice
+	} = useQuery(
+		queryKeys.nftPrice(HERC20ContractAddress),
+		() => {
+			if (htokenHelperContractAddress != '' && HERC20ContractAddress != '') {
+				return getNFTPrice(htokenHelperContractAddress, HERC20ContractAddress);
+			} else {
+				return 0;
+			}
+		},
+		{
+			onSuccess: onGetNFTPriceSuccess,
+			onError: onGetNFTPriceError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	const nftPrice = nftPriceResult || 0;
+
 	const results = useQueries(
 		coupons.map((coupon) => {
 			return {
-				queryKey: queryKeys.NFTDetail(ERC721ContractAddress, coupon.NFTId),
+				queryKey: queryKeys.marketNFTDetail(ERC721ContractAddress, coupon.NFTId),
 				queryFn: async () => {
 					if (walletPublicKey != '' && ERC721ContractAddress != '') {
 						try {
@@ -166,6 +224,7 @@ export function usePositions(
 								tokenId: metaData.token_id,
 								couponId: coupon.couponId,
 								debt: '0',
+								healthLvl: 0,
 								allowance: '0',
 								value: 0
 							};
@@ -207,6 +266,8 @@ export function usePositions(
 								tokenId: nftDetail.tokenId,
 								couponId: nftDetail.couponId,
 								debt: couponData.debt,
+								healthLvl:
+									((nftPrice - parseFloat(couponData.debt) / collateralFactor) / nftPrice) * 100,
 								allowance: couponData.allowance,
 								value: couponData.NFTPrice
 							};
@@ -242,7 +303,11 @@ export function usePositions(
 			isLoadingCoupons ||
 			isFetchingCoupons ||
 			isLoadingNFTDetail ||
-			isFetchingNFTDetail
+			isFetchingNFTDetail ||
+			isLoadingCollateralFactor ||
+			isFetchingCollateralFactor ||
+			isLoadingNFTPrice ||
+			isFetchingNFTPrice
 	];
 }
 

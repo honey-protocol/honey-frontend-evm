@@ -67,6 +67,7 @@ const BorrowForm = (props: BorrowProps) => {
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
 		nftContractAddress,
+		hivemindContractAddress,
 		currentUser,
 		unit
 	);

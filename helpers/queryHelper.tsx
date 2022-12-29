@@ -43,6 +43,8 @@ export const queryKeys = {
 		['coupons', 'list', HERC20ContractAddress, walletPublicKey] as const,
 	NFTDetail: (ERC721ContractAddress: string, NFTId: string) =>
 		['nft', 'detail', ERC721ContractAddress, NFTId] as const,
+	marketNFTDetail: (ERC721ContractAddress: string, NFTId: string) =>
+		['nft', 'detail', ERC721ContractAddress, NFTId, 'market'] as const,
 	NFTApproval: (ERC721ContractAddress: string, HERC20ContractAddress: string, NFTId: string) =>
 		['nft', 'approval', ERC721ContractAddress, HERC20ContractAddress, NFTId] as const,
 	// statistic for user asset

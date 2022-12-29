@@ -51,7 +51,7 @@ const Markets: NextPage = () => {
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { width: windowWidth } = useWindowSize();
-	const { htokenHelperContractAddress, nftContractAddress, unit } =
+	const { htokenHelperContractAddress, hivemindContractAddress, nftContractAddress, unit } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
 
 	/*    Begin insert data into table */
@@ -69,6 +69,7 @@ const Markets: NextPage = () => {
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
 		nftContractAddress,
+		hivemindContractAddress,
 		currentUser,
 		unit
 	);
@@ -296,7 +297,7 @@ const Markets: NextPage = () => {
 					</div>
 					<div className={style.nameCellText}>
 						<div className={style.collectionName}>{`${row['name']} #${row['tokenId']}`}</div>
-						<HealthLvl healthLvl={0} />
+						<HealthLvl healthLvl={row['healthLvl']} />
 					</div>
 				</div>
 			)

@@ -15,7 +15,7 @@ export type MarketTablePosition = {
 	tokenId: string;
 	couponId: string;
 	image: string;
-	healthLvl?: number;
+	healthLvl: number;
 	debt: string;
 	allowance: string;
 	value: number;
