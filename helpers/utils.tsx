@@ -1,5 +1,6 @@
 import BN from 'bn.js';
 import { MarketTablePosition } from 'types/markets';
+import { LendTableRow } from '../types/lend';
 
 /**
  * Check if null or undefined
@@ -54,6 +55,20 @@ export const fetchAllowance = (positions: MarketTablePosition[], NFTId: string) 
 	const filtered = positions.filter((position) => position.tokenId === NFTId);
 	if (filtered.length) {
 		return parseFloat(filtered[0].allowance);
+	} else {
+		return 0;
+	}
+};
+
+/**
+ * @description return interest rate for specific collection
+ * @params positions
+ * @returns interest rate
+ */
+export const fetchInterestRate = (lendDatas: LendTableRow[], HERC20ContractAddress: string) => {
+	const lendData = lendDatas.filter((lendData) => lendData.key === HERC20ContractAddress);
+	if (lendData.length) {
+		return lendData[0].rate;
 	} else {
 		return 0;
 	}

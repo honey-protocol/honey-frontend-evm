@@ -30,6 +30,9 @@ import {
 } from '../../hooks/useERC20';
 import { depositUnderlying, useGetTotalBorrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
+import { useLend } from '../../hooks/useCollection';
+import { collections } from '../../constants/NFTCollections';
+import { fetchInterestRate } from '../../helpers/utils';
 
 const {
 	format: f,
@@ -83,6 +86,11 @@ const DepositForm = (props: DepositFormProps) => {
 		unit
 	);
 	const [totalBorrow, isLoadingTotalBorrow] = useGetTotalBorrow(HERC20ContractAddress, unit);
+	const [lendData, isLoadingLendData] = useLend(
+		currentUser,
+		collections,
+		htokenHelperContractAddress
+	);
 
 	const [valueUSD, setValueUSD] = useState<number>(0);
 	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
@@ -105,7 +113,8 @@ const DepositForm = (props: DepositFormProps) => {
 			isLoadingUserUnderlyingBalance ||
 			isLoadingTotalUnderlyingBalance ||
 			isLoadingTotalBorrow ||
-			isLoadingApproval
+			isLoadingApproval ||
+			isLoadingLendData
 		) {
 			toast.processing();
 		} else {
@@ -119,7 +128,8 @@ const DepositForm = (props: DepositFormProps) => {
 		isLoadingUserUnderlyingBalance,
 		isLoadingTotalUnderlyingBalance,
 		isLoadingTotalBorrow,
-		isLoadingApproval
+		isLoadingApproval,
+		isLoadingLendData
 	]);
 
 	// Put your validators here
@@ -261,7 +271,7 @@ const DepositForm = (props: DepositFormProps) => {
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fp()}
+							value={fp(fetchInterestRate(lendData, HERC20ContractAddress))}
 							valueSize="big"
 							toolTipLabel="APY is measured by compounding the weekly interest rate"
 							footer={

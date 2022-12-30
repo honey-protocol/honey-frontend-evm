@@ -26,6 +26,9 @@ import {
 import { useGetTotalBorrow } from '../../hooks/useHerc20';
 import { withdrawUnderlyingHelper } from '../../helpers/repayHelper';
 import { queryKeys } from '../../helpers/queryHelper';
+import { useLend } from '../../hooks/useCollection';
+import { collections } from '../../constants/NFTCollections';
+import { fetchInterestRate } from '../../helpers/utils';
 
 const {
 	format: f,
@@ -62,6 +65,11 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 		unit
 	);
 	const [totalBorrow, isLoadingTotalBorrow] = useGetTotalBorrow(HERC20ContractAddress, unit);
+	const [lendData, isLoadingLendData] = useLend(
+		currentUser,
+		collections,
+		htokenHelperContractAddress
+	);
 
 	const [valueUSD, setValueUSD] = useState<number>(0);
 	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
@@ -80,7 +88,8 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 			isLoadingUnderlyingPrice ||
 			isLoadingUserUnderlyingBalance ||
 			isLoadingTotalUnderlyingBalance ||
-			isLoadingTotalBorrow
+			isLoadingTotalBorrow ||
+			isLoadingLendData
 		) {
 			toast.processing();
 		} else {
@@ -91,7 +100,8 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 		isLoadingUnderlyingPrice,
 		isLoadingUserUnderlyingBalance,
 		isLoadingTotalUnderlyingBalance,
-		isLoadingTotalBorrow
+		isLoadingTotalBorrow,
+		isLoadingLendData
 	]);
 
 	// Put your validators here
@@ -213,7 +223,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fp()}
+							value={fp(fetchInterestRate(lendData, HERC20ContractAddress))}
 							valueSize="big"
 							toolTipLabel="APY is measured by compounding the weekly interest rate"
 							footer={
