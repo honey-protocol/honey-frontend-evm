@@ -278,12 +278,14 @@ const RepayForm = (props: RepayProps) => {
 							<Image src={nft.image} alt={nft.name} layout="fill" />
 						</HexaBoxContainer>
 					</div>
-					<div className={styles.nftName}>{nft.name}</div>
+					<div className={styles.nftName}>
+						{nft.name} #{NFTId}
+					</div>
 				</div>
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fsn(nftPrice)}
+							value={fs(nftPrice)}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
