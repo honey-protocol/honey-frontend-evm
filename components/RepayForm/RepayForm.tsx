@@ -493,7 +493,7 @@ const RepayForm = (props: RepayProps) => {
 								newDebt ? `(-${newLiqPercent.toFixed(0)}%)` : ''
 							}`}
 							valueSize="normal"
-							isDisabled={newDebt == 0 ? true : false}
+							isDisabled={newDebt == 0}
 						/>
 					</div>
 				</div>
