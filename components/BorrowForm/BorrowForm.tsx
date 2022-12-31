@@ -368,7 +368,7 @@ const BorrowForm = (props: BorrowProps) => {
 								borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
 							}`}
 							valueSize="normal"
-							isDisabled={borrowedValue == 0 ? true : false}
+							isDisabled={borrowedValue == 0}
 							title={
 								<span className={hAlign}>
 									Liquidation price <div className={questionIcon} />
@@ -413,7 +413,7 @@ const BorrowForm = (props: BorrowProps) => {
 								borrowedValue ? `(-${newLiqPercent.toFixed(0)}%)` : ''
 							}`}
 							valueSize="normal"
-							isDisabled={borrowedValue == 0 ? true : false}
+							isDisabled={borrowedValue == 0}
 						/>
 					</div>
 				</div>
