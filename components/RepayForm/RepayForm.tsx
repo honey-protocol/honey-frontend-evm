@@ -264,8 +264,10 @@ const RepayForm = (props: RepayProps) => {
 		document.body.classList.remove('disable-scroll');
 	};
 
-	const liqPercent = nftPrice ? ((nftPrice - userDebt) / collateralFactor / nftPrice) * 100 : 0;
-	const newLiqPercent = nftPrice ? ((nftPrice - newDebt) / nftPrice) * 100 : 0;
+	const liquidationPrice = userDebt / collateralFactor;
+	const newLiquidationPrice = newDebt / collateralFactor;
+	const liqPercent = nftPrice ? ((nftPrice - liquidationPrice) / nftPrice) * 100 : 0;
+	const newLiqPercent = nftPrice ? ((nftPrice - newLiquidationPrice) / nftPrice) * 100 : 0;
 
 	const renderContent = () => {
 		return (
@@ -445,9 +447,7 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={`${fs(userDebt / collateralFactor)} ${
-								userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''
-							}`}
+							value={`${fs(liquidationPrice)} ${userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''}`}
 							valueSize="normal"
 							title={
 								<span className={hAlign}>
@@ -471,7 +471,6 @@ const RepayForm = (props: RepayProps) => {
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							isDisabled={userDebt <= 0}
 							title={
 								<span className={hAlign}>
 									New Liquidation price <div className={questionIcon} />
@@ -490,10 +489,11 @@ const RepayForm = (props: RepayProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={`${fs(newDebt / collateralFactor)} ${
-								userDebt ? `(-${newLiqPercent.toFixed(0)}%)` : ''
+							value={`${fs(newLiquidationPrice)} ${
+								newDebt ? `(-${newLiqPercent.toFixed(0)}%)` : ''
 							}`}
 							valueSize="normal"
+							isDisabled={newDebt == 0 ? true : false}
 						/>
 					</div>
 				</div>
