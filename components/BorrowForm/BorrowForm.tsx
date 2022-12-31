@@ -187,8 +187,10 @@ const BorrowForm = (props: BorrowProps) => {
 	};
 	/*  end handling borrow function */
 
-	const liqPercent = ((nftPrice - borrowedValue / collateralFactor) / nftPrice) * 100;
-	const newLiqPercent = nftPrice ? ((nftPrice - newTotalDebt) / nftPrice) * 100 : 0;
+	const liquidationPrice = borrowedValue / collateralFactor;
+	const newLiquidationPrice = newTotalDebt / collateralFactor;
+	const liqPercent = nftPrice ? ((nftPrice - liquidationPrice) / nftPrice) * 100 : 0;
+	const newLiqPercent = nftPrice ? ((nftPrice - newLiquidationPrice) / nftPrice) * 100 : 0;
 
 	const renderContent = () => {
 		return (
@@ -359,13 +361,14 @@ const BorrowForm = (props: BorrowProps) => {
 						/>
 					</div>
 				</div>
-
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={`N/A`}
+							value={`${fs(liquidationPrice)} ${
+								borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
+							}`}
 							valueSize="normal"
-							isDisabled={borrowedValue <= 0}
+							isDisabled={borrowedValue == 0 ? true : false}
 							title={
 								<span className={hAlign}>
 									Liquidation price <div className={questionIcon} />
@@ -388,7 +391,6 @@ const BorrowForm = (props: BorrowProps) => {
 
 					<div className={styles.col}>
 						<InfoBlock
-							isDisabled={borrowedValue <= 0}
 							title={
 								<span className={hAlign}>
 									New Liquidation price <div className={questionIcon} />
@@ -407,8 +409,11 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={`N/A`}
+							value={`${fs(newLiquidationPrice)} ${
+								borrowedValue ? `(-${newLiqPercent.toFixed(0)}%)` : ''
+							}`}
 							valueSize="normal"
+							isDisabled={borrowedValue == 0 ? true : false}
 						/>
 					</div>
 				</div>
