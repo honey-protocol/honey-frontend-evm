@@ -31,6 +31,8 @@ import {
 import { withdrawCollateral } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 import { repayBorrowHelper } from '../../helpers/repayHelper';
+import { usePositions } from '../../hooks/useCollection';
+import { fetchAllowance } from '../../helpers/utils';
 
 const {
 	format: f,
@@ -75,12 +77,12 @@ const RepayForm = (props: RepayProps) => {
 		NFTId,
 		unit
 	);
-	const [maxBorrowAmount, isLoadingMaxBorrow] = useGetMaxBorrowAmountFromNFT(
-		hivemindContractAddress,
+	const [positions, isLoadingPositions] = usePositions(
+		htokenHelperContractAddress,
 		HERC20ContractAddress,
 		nftContractAddress,
+		hivemindContractAddress,
 		currentUser,
-		NFTId,
 		unit
 	);
 	const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(
@@ -106,7 +108,7 @@ const RepayForm = (props: RepayProps) => {
 
 	/* initial all financial value here */
 	const userDebt = parseFloat(borrowAmount);
-	const userAllowance = parseFloat(maxBorrowAmount) - userDebt;
+	const userAllowance = fetchAllowance(positions, NFTId);
 	const loanToValue = userDebt / nftPrice;
 	const maxValue = userDebt != 0 ? userDebt : userAllowance;
 	const underlyingBalance = parseFloat(userBalance);
@@ -120,7 +122,7 @@ const RepayForm = (props: RepayProps) => {
 			isLoadingBorrowAmount ||
 			isLoadingUnderlyingPrice ||
 			isLoadingCollateralFactor ||
-			isLoadingMaxBorrow ||
+			isLoadingPositions ||
 			isLoadingUserBalance ||
 			isLoadingApproval
 		) {
@@ -136,7 +138,7 @@ const RepayForm = (props: RepayProps) => {
 		isLoadingBorrowAmount,
 		isLoadingUnderlyingPrice,
 		isLoadingCollateralFactor,
-		isLoadingMaxBorrow,
+		isLoadingPositions,
 		isLoadingUserBalance,
 		isLoadingApproval,
 		nft

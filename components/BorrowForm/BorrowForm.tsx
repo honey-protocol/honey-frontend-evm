@@ -21,7 +21,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LoanWorkFlowType } from '../../types/workflows';
-import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from '../../hooks/useHivemind';
+import { useGetCollateralFactor } from '../../hooks/useHivemind';
 import { useGetMetaDataFromNFTId } from '../../hooks/useNFT';
 import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
