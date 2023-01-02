@@ -1,4 +1,4 @@
 export type NotificationCardProps = {
-  title: string;
-  description: string;
+	title: string;
+	description: string;
 };

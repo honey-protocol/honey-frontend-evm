@@ -1,14 +1,14 @@
 export type CollectionPosition = {
-  name: string;
-  value: number;
-  difference: number;
-  image: string;
+	name: string;
+	value: number;
+	difference: number;
+	image: string;
 };
 
 export interface SliderPositionProps {
-  position: CollectionPosition;
+	position: CollectionPosition;
 }
 
 export interface HoneyPositionsSliderProps {
-  positions: Array<CollectionPosition>;
+	positions: Array<CollectionPosition>;
 }

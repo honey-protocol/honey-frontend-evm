@@ -10,39 +10,39 @@ import { PositionType } from '../../types/dashboard';
 // };
 
 export type BorrowUserPosition = {
-  name: string;
-  tokenId: string;
-  couponId: string;
-  image: string;
-  riskLvl?: number;
-  debt?: number;
-  available?: number;
-  value?: number;
+	name: string;
+	tokenId: string;
+	couponId: string;
+	image: string;
+	riskLvl?: number;
+	debt?: number;
+	available?: number;
+	value?: number;
 };
 
 export type LendUserPosition = {
-  name: string;
-  deposit: number;
-  value: number;
-  available: number;
-  ir: number;
-  imageUrl: string;
-  id: string;
+	name: string;
+	deposit: number;
+	value: number;
+	available: number;
+	ir: number;
+	imageUrl: string;
+	id: string;
 };
 
 export interface HoneyCardGridProps {
-  borrowPositions: BorrowUserPosition[];
-  lendPositions: LendUserPosition[];
-  onChangePositionType: (value: PositionType) => void;
-  positionType: PositionType;
+	borrowPositions: BorrowUserPosition[];
+	lendPositions: LendUserPosition[];
+	onChangePositionType: (value: PositionType) => void;
+	positionType: PositionType;
 }
 
 export interface BorrowPositionCardProps {
-  position: BorrowUserPosition;
-  onSelect: (tokenId: string, couponId: string) => void;
+	position: BorrowUserPosition;
+	onSelect: (tokenId: string, couponId: string) => void;
 }
 
 export interface LendPositionCardProps {
-  position: LendUserPosition;
-  onSelect: (id: string) => void;
+	position: LendUserPosition;
+	onSelect: (id: string) => void;
 }
