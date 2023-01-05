@@ -6,6 +6,7 @@ import { defaultCacheStaleTime } from '../constants/constant';
 import {
 	getActiveCoupons,
 	getCouponData,
+	getLiquidationData,
 	getMarketData,
 	getNFTPrice,
 	getUserCoupons
@@ -40,6 +41,17 @@ const defaultMarketData: MarketTableRow = {
 	rate: 0,
 	available: 0,
 	supplied: 0
+};
+
+const defaultLiquidationData: LiquidateTableRow = {
+	key: '',
+	name: '',
+	icon: '',
+	erc20Icon: '',
+	risk: 0,
+	liqThreshold: 0,
+	totalDebt: 0,
+	tvl: 0
 };
 
 const defaultLiquidateTablePosition: LiquidateTablePosition = {
@@ -382,22 +394,62 @@ export function useLendPositions(): [Array<TimestampPoint>, boolean] {
 
 export function useLiquidation(
 	user: MoralisType.User | null,
-	collections: collection[]
-): LiquidateTableRow[] {
-	const result = collections.map((collection) => {
-		const liquidateTableRow: LiquidateTableRow = {
-			key: collection.HERC20ContractAddress,
-			name: `${collection.name}/${collection.erc20Name}`,
-			icon: collection.icon,
-			erc20Icon: collection.erc20Icon,
-			risk: 0.1,
-			liqThreshold: 0.75,
-			totalDebt: 30,
-			tvl: 15
-		};
-		return liquidateTableRow;
-	});
-	return result;
+	collections: collection[],
+	htokenHelperContractAddress: string
+): [LiquidateTableRow[], boolean] {
+	const results = useQueries(
+		collections.map((collection) => {
+			return {
+				queryKey: queryKeys.liquidationData(collection.HERC20ContractAddress),
+				queryFn: async () => {
+					if (htokenHelperContractAddress != '' || collection.HERC20ContractAddress != '') {
+						try {
+							const liquidationData = await getLiquidationData(
+								htokenHelperContractAddress,
+								collection.HERC20ContractAddress,
+								collection.unit
+							);
+							const liquidateTableRow: LiquidateTableRow = {
+								key: collection.HERC20ContractAddress,
+								name: `${collection.name}/${collection.erc20Name}`,
+								icon: collection.icon,
+								erc20Icon: collection.erc20Icon,
+								risk: 0.1,
+								liqThreshold: parseFloat(liquidationData.liquidationThreshold),
+								totalDebt: parseFloat(liquidationData.totalDebt),
+								tvl: liquidationData.tvl
+							};
+							return liquidateTableRow;
+						} catch (e) {
+							console.error('Error fetching liquidation data with error');
+							console.error(e);
+							const liquidateTableRow: LiquidateTableRow = {
+								key: collection.HERC20ContractAddress,
+								name: `${collection.name}/${collection.erc20Name}`,
+								icon: collection.icon,
+								erc20Icon: collection.erc20Icon,
+								risk: 0.1,
+								liqThreshold: 0.75,
+								totalDebt: 30,
+								tvl: 15
+							};
+							return liquidateTableRow;
+						}
+					} else {
+						return defaultLiquidationData;
+					}
+				},
+				staleTime: defaultCacheStaleTime,
+				retry: false
+			};
+		})
+	);
+	const liquidationResult = results
+		.map((result) => result.data || defaultLiquidationData)
+		.filter((data) => data.name != '');
+	const isLoadingLiquidationData = results.some((query) => query.isLoading);
+	const isFetchingLiquidationData = results.some((query) => query.isFetching);
+	return [liquidationResult, isLoadingLiquidationData || isFetchingLiquidationData];
 }
 
 export function useLiquidationPositions(

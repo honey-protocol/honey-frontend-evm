@@ -580,3 +580,37 @@ export async function getCouponData(
 
 	return resultData;
 }
+
+interface liquidationData {
+	liquidationThreshold: string;
+	totalDebt: string;
+	tvl: number;
+}
+
+export async function getLiquidationData(
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	unit: Unit
+) {
+	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
+	const options = {
+		chain: chain,
+		address: htokenHelperContractAddress,
+		function_name: 'getFrontendLiquidationData',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress }
+	};
+
+	// @ts-ignore
+	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const liquidationThreshold = result[0] as string;
+	const totalDebt = result[1] as string;
+	const tvl = result[2] as number;
+	const resultData: liquidationData = {
+		liquidationThreshold: fromWei(liquidationThreshold, unit),
+		totalDebt: fromWei(totalDebt, unit),
+		tvl: tvl / 10000.0
+	};
+
+	return resultData;
+}

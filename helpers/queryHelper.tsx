@@ -36,6 +36,8 @@ export const queryKeys = {
 		['asset', 'marketData', HERC20ContractAddress] as const,
 	lendData: (HERC20ContractAddress: string) =>
 		['asset', 'lendData', HERC20ContractAddress] as const,
+	liquidationData: (HERC20ContractAddress: string) =>
+		['asset', 'liquidationData', HERC20ContractAddress] as const,
 	// NFT section
 	listUserNFTs: (walletPublicKey: string, ERC721ContractAddress: string) =>
 		['nft', 'list', walletPublicKey, ERC721ContractAddress] as const,

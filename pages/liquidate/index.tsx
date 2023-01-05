@@ -64,12 +64,16 @@ const Liquidate: NextPage = () => {
 		getContractsByHTokenAddr(HERC20ContractAddress);
 
 	/*    Begin insert data into table */
-	const liquidateData = useLiquidation(currentUser, collections);
+	const [liquidateData, isLoadingLiquidateData] = useLiquidation(
+		currentUser,
+		collections,
+		htokenHelperContractAddress
+	);
 	useEffect(() => {
 		setTableData(liquidateData);
 		setTableDataFiltered(liquidateData);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [isLoadingLiquidateData]);
 
 	const [positions, isLoadingPositions] = useLiquidationPositions(
 		htokenHelperContractAddress,
