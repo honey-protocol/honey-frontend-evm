@@ -54,15 +54,14 @@ const defaultLiquidationData: LiquidateTableRow = {
 	tvl: 0
 };
 
-const defaultLiquidateTablePosition: LiquidateTablePosition = {
+const defaultLendData: LendTableRow = {
+	key: '',
 	name: '',
-	image: '',
-	couponId: '',
-	tokenId: '',
-	healthLvl: 0,
-	untilLiquidation: 0,
-	debt: 0,
-	estimatedValue: 0
+	icon: '',
+	erc20Icon: '',
+	available: 0,
+	supplied: 0,
+	rate: 0
 };
 
 export function useMarket(
@@ -369,7 +368,7 @@ export function useLend(
 							return result;
 						}
 					} else {
-						return defaultMarketData;
+						return defaultLendData;
 					}
 				},
 				staleTime: defaultCacheStaleTime,
@@ -377,12 +376,12 @@ export function useLend(
 			};
 		})
 	);
-	const marketResult = results
-		.map((result) => result.data || defaultMarketData)
+	const lendResult = results
+		.map((result) => result.data || defaultLendData)
 		.filter((data) => data.name != '');
-	const isLoadingMarketData = results.some((query) => query.isLoading);
-	const isFetchingMarketData = results.some((query) => query.isFetching);
-	return [marketResult, isLoadingMarketData || isFetchingMarketData];
+	const isLoadingLendData = results.some((query) => query.isLoading);
+	const isFetchingLendData = results.some((query) => query.isFetching);
+	return [lendResult, isLoadingLendData || isFetchingLendData];
 }
 
 //todo add graph later
