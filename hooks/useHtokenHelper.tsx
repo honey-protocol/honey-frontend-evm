@@ -416,7 +416,7 @@ export async function getActiveCoupons(
 		address: htokenHelperContractAddress,
 		function_name: 'getActiveCoupons',
 		abi: ABI,
-		params: { _hToken: HERC20ContractAddress }
+		params: { _hToken: HERC20ContractAddress, _hasDebt: true }
 	};
 	// @ts-ignore
 	const results: Array<any> = await Moralis.Web3API.native.runContractFunction(options);
