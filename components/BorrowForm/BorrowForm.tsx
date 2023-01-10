@@ -299,7 +299,7 @@ const BorrowForm = (props: BorrowProps) => {
 								</span>
 							}
 							value={fp(((borrowedValue + newAdditionalDebt) / nftPrice) * 100)}
-							isDisabled={true}
+							isDisabled={!Boolean(valueUnderlying)}
 						/>
 						<HoneySlider
 							currentValue={sliderValue * 1.1}
@@ -357,7 +357,7 @@ const BorrowForm = (props: BorrowProps) => {
 								</span>
 							}
 							value={fs(newTotalDebt < 0 ? 0 : newTotalDebt)}
-							isDisabled={true}
+							isDisabled={!Boolean(valueUnderlying)}
 						/>
 					</div>
 				</div>
@@ -413,7 +413,7 @@ const BorrowForm = (props: BorrowProps) => {
 								borrowedValue ? `(-${newLiqPercent.toFixed(0)}%)` : ''
 							}`}
 							valueSize="normal"
-							isDisabled={borrowedValue == 0}
+							isDisabled={!Boolean(valueUnderlying)}
 						/>
 					</div>
 				</div>

@@ -365,7 +365,7 @@ const RepayForm = (props: RepayProps) => {
 								</span>
 							}
 							value={fp((newDebt / (nftPrice || 0)) * 100)}
-							isDisabled={true}
+							isDisabled={!Boolean(valueUnderlying)}
 							toolTipLabel={
 								<span>
 									Estimated{' '}
@@ -426,7 +426,7 @@ const RepayForm = (props: RepayProps) => {
 								</span>
 							}
 							value={fs(newDebt < 0 ? 0 : newDebt)}
-							isDisabled={true}
+							isDisabled={!Boolean(valueUnderlying)}
 							toolTipLabel={
 								<span>
 									Estimated{' '}
@@ -493,7 +493,7 @@ const RepayForm = (props: RepayProps) => {
 								newDebt ? `(-${newLiqPercent.toFixed(0)}%)` : ''
 							}`}
 							valueSize="normal"
-							isDisabled={newDebt == 0}
+							isDisabled={!Boolean(valueUnderlying)}
 						/>
 					</div>
 				</div>
@@ -505,7 +505,7 @@ const RepayForm = (props: RepayProps) => {
 						</div>
 						<div className={cs(styles.balance, styles.col)}>
 							<InfoBlock
-								isDisabled
+								isDisabled={!Boolean(valueUnderlying)}
 								title={'NEW Underlying balance'}
 								value={fs(underlyingBalance - (valueUnderlying || 0))}
 							/>
