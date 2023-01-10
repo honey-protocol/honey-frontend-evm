@@ -1,11 +1,11 @@
 import React from 'react';
 import * as styles from './NotificationsList.css';
 import HoneyToggle from '../HoneyToggle/HoneyToggle';
-import { notificationListProps } from './types';
 import NotificationCard from '../NotificationCard/NotificationCard';
+import { NotificationListProps } from './types';
 
-const NotificationsList = (props: notificationListProps) => {
-	const { data } = props;
+const NotificationsList = (props: NotificationListProps) => {
+	const { notifications } = props;
 
 	return (
 		<div className={styles.notificationList}>
@@ -18,9 +18,9 @@ const NotificationsList = (props: notificationListProps) => {
 				</div>
 			</div>
 
-			{data.map((item, index) => (
+			{notifications.map((item, index) => (
 				<div className={styles.hasBorder} key={index}>
-					<NotificationCard {...item} />
+					<NotificationCard notification={item} />
 				</div>
 			))}
 		</div>

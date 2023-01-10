@@ -1,4 +1,5 @@
+import { HoneyNotification } from '../../types/dashboard';
+
 export type NotificationCardProps = {
-	title: string;
-	description: string;
+	notification: HoneyNotification;
 };

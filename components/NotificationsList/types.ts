@@ -1,5 +1,4 @@
-import { NotificationCardProps } from '../NotificationCard/types';
-
-export type notificationListProps = {
-	data: NotificationCardProps[];
+import { HoneyNotification } from '../../types/dashboard';
+export type NotificationListProps = {
+	notifications: HoneyNotification[];
 };
