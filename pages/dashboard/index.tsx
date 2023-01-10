@@ -12,7 +12,7 @@ import { HoneyProfileChart } from '../../components/HoneyProfileChart/HoneyProfi
 import useWindowSize from '../../hooks/useWindowSize';
 import { TABLET_BP } from '../../constants/breakpoints';
 import LendSidebar from '../../components/LendSidebar/LendSidebar';
-import { PositionType } from '../../types/dashboard';
+import { HoneyNotification, PositionType } from '../../types/dashboard';
 import useDisplayStore from 'store/displayStore';
 import {
 	useBorrowUserPositions,
@@ -30,11 +30,19 @@ const Dashboard: NextPage = () => {
 	const [userExposureData, isLoadingUserExposureData] = useGetUserExposureData();
 	const [userExposure, isLoadingUserExposure] = useGetUserExposure();
 	const [notifications, isLoadingNotification] = useNotification();
+	const [notificationList, setNotificationList] = useState<HoneyNotification[]>([]);
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const [positionType, setPositionType] = useState<PositionType>('borrow');
 	const { width } = useWindowSize();
-	const notificationList =
-		width >= TABLET_BP ? notifications.slice(0, 3) : notifications.slice(0, 1);
+
+	useEffect(() => {
+		if (width >= TABLET_BP) {
+			setNotificationList(notifications.slice(0, 3));
+		} else {
+			setNotificationList(notifications.slice(0, 1));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [notifications]);
 
 	const dashboardSidebar = () => (
 		<HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
