@@ -42,7 +42,7 @@ const Dashboard: NextPage = () => {
 			setNotificationList(notifications.slice(0, 1));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [notifications]);
+	}, [notifications, width]);
 
 	const dashboardSidebar = () => (
 		<HoneySider isMobileSidebarVisible={isSidebarVisibleInMobile}>
