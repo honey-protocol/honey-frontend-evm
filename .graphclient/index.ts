@@ -15,7 +15,7 @@ import { MeshTransform, MeshPlugin } from '@graphql-mesh/types';
 import GraphqlHandler from "@graphql-mesh/graphql"
 import BareMerger from "@graphql-mesh/merger-bare";
 import { printWithCache } from '@graphql-mesh/utils';
-import { createMeshHTTPHandler } from '@graphql-mesh/http';
+import { createMeshHTTPHandler, MeshHTTPHandler } from '@graphql-mesh/http';
 import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext, MeshInstance } from '@graphql-mesh/runtime';
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
@@ -185,6 +185,7 @@ export type Coupon = {
   collateralTokenAddr: Scalars['String'];
   hTokenAddr: Scalars['String'];
   active: Scalars['Boolean'];
+  owner: Scalars['String'];
   amount: Scalars['BigInt'];
   timestamp: Scalars['BigInt'];
   lastUpdateTimestamp: Scalars['BigInt'];
@@ -279,6 +280,26 @@ export type Coupon_filter = {
   active_not?: InputMaybe<Scalars['Boolean']>;
   active_in?: InputMaybe<Array<Scalars['Boolean']>>;
   active_not_in?: InputMaybe<Array<Scalars['Boolean']>>;
+  owner?: InputMaybe<Scalars['String']>;
+  owner_not?: InputMaybe<Scalars['String']>;
+  owner_gt?: InputMaybe<Scalars['String']>;
+  owner_lt?: InputMaybe<Scalars['String']>;
+  owner_gte?: InputMaybe<Scalars['String']>;
+  owner_lte?: InputMaybe<Scalars['String']>;
+  owner_in?: InputMaybe<Array<Scalars['String']>>;
+  owner_not_in?: InputMaybe<Array<Scalars['String']>>;
+  owner_contains?: InputMaybe<Scalars['String']>;
+  owner_contains_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_contains?: InputMaybe<Scalars['String']>;
+  owner_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  owner_starts_with?: InputMaybe<Scalars['String']>;
+  owner_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_starts_with?: InputMaybe<Scalars['String']>;
+  owner_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_ends_with?: InputMaybe<Scalars['String']>;
+  owner_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_ends_with?: InputMaybe<Scalars['String']>;
+  owner_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   amount?: InputMaybe<Scalars['BigInt']>;
   amount_not?: InputMaybe<Scalars['BigInt']>;
   amount_gt?: InputMaybe<Scalars['BigInt']>;
@@ -315,6 +336,7 @@ export type Coupon_orderBy =
   | 'collateralTokenAddr'
   | 'hTokenAddr'
   | 'active'
+  | 'owner'
   | 'amount'
   | 'timestamp'
   | 'lastUpdateTimestamp';
@@ -632,6 +654,7 @@ export type CouponResolvers<ContextType = MeshContext, ParentType extends Resolv
   collateralTokenAddr?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   hTokenAddr?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   active?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  owner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   amount?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   lastUpdateTimestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
@@ -732,7 +755,7 @@ const htokenSampleTransforms = [];
 const additionalTypeDefs = [] as any[];
 const htokenSampleHandler = new GraphqlHandler({
               name: "htoken-sample",
-              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/bowtiedfirefox/htoken-sample"},
+              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/bowtiedfirefox/honey-htoken"},
               baseDir,
               cache,
               pubsub,
@@ -777,6 +800,12 @@ const merger = new(BareMerger as any)({
           return printWithCache(ActiveCouponByCollectionQueryDocument);
         },
         location: 'ActiveCouponByCollectionQueryDocument.graphql'
+      },{
+        document: ActiveCouponByUserQueryDocument,
+        get rawSDL() {
+          return printWithCache(ActiveCouponByUserQueryDocument);
+        },
+        location: 'ActiveCouponByUserQueryDocument.graphql'
       }
     ];
     },
@@ -784,8 +813,8 @@ const merger = new(BareMerger as any)({
   };
 }
 
-export function createBuiltMeshHTTPHandler() {
-  return createMeshHTTPHandler({
+export function createBuiltMeshHTTPHandler(): MeshHTTPHandler<MeshContext> {
+  return createMeshHTTPHandler<MeshContext>({
     baseDir,
     getBuiltMesh: getBuiltGraphClient,
     rawServeConfig: undefined,
@@ -815,14 +844,14 @@ export function getBuiltGraphSDK<TGlobalContext = any, TOperationContext = any>(
   const sdkRequester$ = getBuiltGraphClient().then(({ sdkRequesterFactory }) => sdkRequesterFactory(globalContext));
   return getSdk<TOperationContext, TGlobalContext>((...args) => sdkRequester$.then(sdkRequester => sdkRequester(...args)));
 }
-export type CouponDataFragment = Pick<Coupon, 'collateralID' | 'couponID' | 'underlyingTokenAddr' | 'collateralTokenAddr' | 'hTokenAddr' | 'amount'>;
+export type CouponDataFragment = Pick<Coupon, 'collateralID' | 'couponID' | 'underlyingTokenAddr' | 'collateralTokenAddr' | 'hTokenAddr' | 'owner' | 'amount'>;
 
 export type ActiveCouponQueryQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type ActiveCouponQueryQuery = { coupons: Array<Pick<Coupon, 'collateralID' | 'couponID' | 'underlyingTokenAddr' | 'collateralTokenAddr' | 'hTokenAddr' | 'amount'>> };
+export type ActiveCouponQueryQuery = { coupons: Array<Pick<Coupon, 'collateralID' | 'couponID' | 'underlyingTokenAddr' | 'collateralTokenAddr' | 'hTokenAddr' | 'owner' | 'amount'>> };
 
 export type ActiveCouponByCollectionQueryQueryVariables = Exact<{
   HERC20ContractAddress: Scalars['String'];
@@ -830,7 +859,15 @@ export type ActiveCouponByCollectionQueryQueryVariables = Exact<{
 }>;
 
 
-export type ActiveCouponByCollectionQueryQuery = { coupons: Array<Pick<Coupon, 'collateralID' | 'couponID' | 'underlyingTokenAddr' | 'collateralTokenAddr' | 'hTokenAddr' | 'amount'>> };
+export type ActiveCouponByCollectionQueryQuery = { coupons: Array<Pick<Coupon, 'collateralID' | 'couponID' | 'underlyingTokenAddr' | 'collateralTokenAddr' | 'hTokenAddr' | 'owner' | 'amount'>> };
+
+export type ActiveCouponByUserQueryQueryVariables = Exact<{
+  userAddress: Scalars['String'];
+  first?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type ActiveCouponByUserQueryQuery = { coupons: Array<Pick<Coupon, 'collateralID' | 'couponID' | 'underlyingTokenAddr' | 'collateralTokenAddr' | 'hTokenAddr' | 'owner' | 'amount'>> };
 
 export const CouponDataFragmentDoc = gql`
     fragment CouponData on Coupon {
@@ -839,6 +876,7 @@ export const CouponDataFragmentDoc = gql`
   underlyingTokenAddr
   collateralTokenAddr
   hTokenAddr
+  owner
   amount
 }
     ` as unknown as DocumentNode<CouponDataFragment, unknown>;
@@ -866,6 +904,19 @@ export const ActiveCouponByCollectionQueryDocument = gql`
   }
 }
     ${CouponDataFragmentDoc}` as unknown as DocumentNode<ActiveCouponByCollectionQueryQuery, ActiveCouponByCollectionQueryQueryVariables>;
+export const ActiveCouponByUserQueryDocument = gql`
+    query ActiveCouponByUserQuery($userAddress: String!, $first: Int = 100) {
+  coupons(
+    first: $first
+    orderBy: underlyingTokenAddr
+    orderDirection: desc
+    where: {active: true, owner: $userAddress}
+  ) {
+    ...CouponData
+  }
+}
+    ${CouponDataFragmentDoc}` as unknown as DocumentNode<ActiveCouponByUserQueryQuery, ActiveCouponByUserQueryQueryVariables>;
+
 
 
 
@@ -877,6 +928,9 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     ActiveCouponByCollectionQuery(variables: ActiveCouponByCollectionQueryQueryVariables, options?: C): Promise<ActiveCouponByCollectionQueryQuery> {
       return requester<ActiveCouponByCollectionQueryQuery, ActiveCouponByCollectionQueryQueryVariables>(ActiveCouponByCollectionQueryDocument, variables, options) as Promise<ActiveCouponByCollectionQueryQuery>;
+    },
+    ActiveCouponByUserQuery(variables: ActiveCouponByUserQueryQueryVariables, options?: C): Promise<ActiveCouponByUserQueryQuery> {
+      return requester<ActiveCouponByUserQueryQuery, ActiveCouponByUserQueryQueryVariables>(ActiveCouponByUserQueryDocument, variables, options) as Promise<ActiveCouponByUserQueryQuery>;
     }
   };
 }

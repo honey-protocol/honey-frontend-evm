@@ -164,6 +164,7 @@ export type Coupon = {
   collateralTokenAddr: Scalars['String'];
   hTokenAddr: Scalars['String'];
   active: Scalars['Boolean'];
+  owner: Scalars['String'];
   amount: Scalars['BigInt'];
   timestamp: Scalars['BigInt'];
   lastUpdateTimestamp: Scalars['BigInt'];
@@ -258,6 +259,26 @@ export type Coupon_filter = {
   active_not?: InputMaybe<Scalars['Boolean']>;
   active_in?: InputMaybe<Array<Scalars['Boolean']>>;
   active_not_in?: InputMaybe<Array<Scalars['Boolean']>>;
+  owner?: InputMaybe<Scalars['String']>;
+  owner_not?: InputMaybe<Scalars['String']>;
+  owner_gt?: InputMaybe<Scalars['String']>;
+  owner_lt?: InputMaybe<Scalars['String']>;
+  owner_gte?: InputMaybe<Scalars['String']>;
+  owner_lte?: InputMaybe<Scalars['String']>;
+  owner_in?: InputMaybe<Array<Scalars['String']>>;
+  owner_not_in?: InputMaybe<Array<Scalars['String']>>;
+  owner_contains?: InputMaybe<Scalars['String']>;
+  owner_contains_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_contains?: InputMaybe<Scalars['String']>;
+  owner_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  owner_starts_with?: InputMaybe<Scalars['String']>;
+  owner_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_starts_with?: InputMaybe<Scalars['String']>;
+  owner_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_ends_with?: InputMaybe<Scalars['String']>;
+  owner_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_ends_with?: InputMaybe<Scalars['String']>;
+  owner_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   amount?: InputMaybe<Scalars['BigInt']>;
   amount_not?: InputMaybe<Scalars['BigInt']>;
   amount_gt?: InputMaybe<Scalars['BigInt']>;
@@ -294,6 +315,7 @@ export type Coupon_orderBy =
   | 'collateralTokenAddr'
   | 'hTokenAddr'
   | 'active'
+  | 'owner'
   | 'amount'
   | 'timestamp'
   | 'lastUpdateTimestamp';

@@ -4,5 +4,6 @@ fragment CouponData on Coupon {
 	underlyingTokenAddr
 	collateralTokenAddr
 	hTokenAddr
+	owner
 	amount
 }

@@ -162,6 +162,7 @@ type Coupon {
   collateralTokenAddr: String!
   hTokenAddr: String!
   active: Boolean!
+  owner: String!
   amount: BigInt!
   timestamp: BigInt!
   lastUpdateTimestamp: BigInt!
@@ -256,6 +257,26 @@ input Coupon_filter {
   active_not: Boolean
   active_in: [Boolean!]
   active_not_in: [Boolean!]
+  owner: String
+  owner_not: String
+  owner_gt: String
+  owner_lt: String
+  owner_gte: String
+  owner_lte: String
+  owner_in: [String!]
+  owner_not_in: [String!]
+  owner_contains: String
+  owner_contains_nocase: String
+  owner_not_contains: String
+  owner_not_contains_nocase: String
+  owner_starts_with: String
+  owner_starts_with_nocase: String
+  owner_not_starts_with: String
+  owner_not_starts_with_nocase: String
+  owner_ends_with: String
+  owner_ends_with_nocase: String
+  owner_not_ends_with: String
+  owner_not_ends_with_nocase: String
   amount: BigInt
   amount_not: BigInt
   amount_gt: BigInt
@@ -292,6 +313,7 @@ enum Coupon_orderBy {
   collateralTokenAddr
   hTokenAddr
   active
+  owner
   amount
   timestamp
   lastUpdateTimestamp

@@ -3,7 +3,7 @@ sources:
   - name: htoken-sample
     handler:
       graphql:
-        endpoint: https://api.thegraph.com/subgraphs/name/bowtiedfirefox/htoken-sample
+        endpoint: https://api.thegraph.com/subgraphs/name/bowtiedfirefox/honey-htoken
 
 documents:
   - ./graphql/**/*.graphql

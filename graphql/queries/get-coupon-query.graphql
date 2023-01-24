@@ -9,3 +9,9 @@ query ActiveCouponByCollectionQuery($HERC20ContractAddress: String!, $first: Int
 		...CouponData
 	}
 }
+
+query ActiveCouponByUserQuery($userAddress: String!, $first: Int = 100) {
+	coupons(first: $first, orderBy: underlyingTokenAddr, orderDirection: desc, where: { active: true, owner: $userAddress }) {
+		...CouponData
+	}
+}
