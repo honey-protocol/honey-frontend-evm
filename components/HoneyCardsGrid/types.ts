@@ -11,6 +11,7 @@ import { PositionType } from '../../types/dashboard';
 
 export type BorrowUserPosition = {
 	name: string;
+	HERC20ContractAddr: string;
 	tokenId: string;
 	couponId: string;
 	image: string;
@@ -39,7 +40,7 @@ export interface HoneyCardGridProps {
 
 export interface BorrowPositionCardProps {
 	position: BorrowUserPosition;
-	onSelect: (tokenId: string, couponId: string) => void;
+	onSelect: (HERC20ContractAddr: string, tokenId: string, couponId: string) => void;
 }
 
 export interface LendPositionCardProps {

@@ -26,20 +26,13 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 		const value = e.target.value;
 		setSearchValue(value);
 	}, []);
-
-	const setWorkflow = useLoanFlowStore((state) => state.setWorkflow);
-	const setNFTId = useLoanFlowStore((state) => state.setNFTId);
-	const setCouponId = useLoanFlowStore((state) => state.setCouponId);
-
+	const { setWorkflow, setNFTId, setHERC20ContractAddr, setCouponId } = useLoanFlowStore(
+		(state) => state
+	);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 
-	const initDepositNFTFlow = () => {
-		setWorkflow(LoanWorkFlowType.depositNFT);
-		setIsSidebarVisibleInMobile(true);
-		document.body.classList.add('disable-scroll');
-	};
-
-	const initLoanOrBorrowFlow = (tokenId: string, couponId: string) => {
+	const initLoanOrBorrowFlow = (HERC20ContractAddr: string, tokenId: string, couponId: string) => {
+		setHERC20ContractAddr(HERC20ContractAddr);
 		setNFTId(tokenId);
 		setCouponId(couponId);
 		setWorkflow(LoanWorkFlowType.loanOrBorrow);
@@ -52,7 +45,7 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 	//mock position generate
 
 	const borrowedPositions = borrowPositions.filter((position) => position.debt !== 0);
-	const notBorrowedPositions = borrowPositions.filter((position) => position.debt === 0);
+	const debtFreeBorrowedPositions = borrowPositions.filter((position) => position.debt === 0);
 
 	return (
 		<div className={styles.honeyCardsGrid}>
@@ -98,7 +91,7 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 									<BorrowPositionCard
 										position={position}
 										key={index}
-										onSelect={() => initLoanOrBorrowFlow(position.tokenId, position.couponId)}
+										onSelect={initLoanOrBorrowFlow}
 									/>
 								);
 						  })
@@ -106,7 +99,7 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 								<LendPositionCard position={position} key={index} onSelect={initLendFlow} />
 						  ))}
 				</div>
-				{Boolean(notBorrowedPositions.length) && positionType === 'borrow' && (
+				{Boolean(debtFreeBorrowedPositions.length) && positionType === 'borrow' && (
 					<>
 						<div className={styles.cardsDivider}>
 							<div className={styles.divider} />
@@ -114,8 +107,12 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 							<div className={styles.divider} />
 						</div>
 						<div className={styles.cardsGrid}>
-							{notBorrowedPositions.map((position, index) => (
-								<BorrowPositionCard position={position} key={index} onSelect={initDepositNFTFlow} />
+							{debtFreeBorrowedPositions.map((position, index) => (
+								<BorrowPositionCard
+									position={position}
+									key={index}
+									onSelect={initLoanOrBorrowFlow}
+								/>
 							))}
 						</div>
 					</>

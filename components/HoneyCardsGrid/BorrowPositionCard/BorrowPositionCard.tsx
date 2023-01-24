@@ -24,7 +24,7 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 			className={c(styles.positionCard, {
 				[styles.activeCard]: selectedNFTId === position.tokenId
 			})}
-			onClick={() => onSelect(position.tokenId, position.couponId)}
+			onClick={() => onSelect(position.HERC20ContractAddr, position.tokenId, position.couponId)}
 		>
 			<div className={styles.collectionIcon}>
 				<HexaBoxContainer>

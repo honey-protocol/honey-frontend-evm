@@ -31,6 +31,7 @@ export function useBorrowUserPositions(): [Array<BorrowUserPosition>, boolean] {
 	for (let i = 0; i < 20; i++) {
 		preparedPositions.push({
 			name: `Any user position #${i + 1000}`,
+			HERC20ContractAddr: '0xcbe353B6eE82ddd4383167E32f0BEdfD2616976b',
 			value: getMockPriceDebtValue().price,
 			debt: getMockPriceDebtValue().debt,
 			image: '/nfts/azuki.jpg',
@@ -42,6 +43,7 @@ export function useBorrowUserPositions(): [Array<BorrowUserPosition>, boolean] {
 	for (let j = 0; j < 5; j++) {
 		preparedPositions.push({
 			name: 'Any user position',
+			HERC20ContractAddr: '0xcbe353B6eE82ddd4383167E32f0BEdfD2616976b',
 			value: getMockPriceDebtValue().price,
 			debt: 0,
 			image: '/nfts/azuki.jpg',
