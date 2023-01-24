@@ -3,6 +3,14 @@ import { TimestampPoint } from '../components/HoneyChart/types';
 import { generateMockHistoryData } from '../helpers/chartUtils';
 import { CollectionPosition } from '../components/HoneyPositionsSlider/types';
 import { BorrowUserPosition, LendUserPosition } from '../components/HoneyCardsGrid/types';
+import { ActiveCouponQueryQuery, getBuiltGraphSDK } from '../.graphclient';
+import { useQuery } from 'react-query';
+import { queryKeys } from '../helpers/queryHelper';
+import { defaultCacheStaleTime } from '../constants/constant';
+import { getCollateralUnit, getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
+import { fromWei } from 'web3-utils';
+
+const sdk = getBuiltGraphSDK();
 
 //todo implement later
 export function useGetSliderPositions(): [Array<CollectionPosition>, boolean] {
@@ -19,40 +27,54 @@ export function useGetSliderPositions(): [Array<CollectionPosition>, boolean] {
 	return [mockData, false];
 }
 
-//todo implement later
-export function useBorrowUserPositions(): [Array<BorrowUserPosition>, boolean] {
+//todo convert to usd and use real nft price
+export function useBorrowUserPositions(
+	user: MoralisType.User | null
+): [Array<BorrowUserPosition>, boolean] {
+	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const onSubgraphQuerySuccess = (data: ActiveCouponQueryQuery) => {
+		return data;
+	};
+	const onSubGraphQueryError = () => {
+		return null;
+	};
+	const {
+		data: collateralsFromSubgraph,
+		isLoading: isLoadingCollaterals,
+		isFetching: isFetchingCollaterals
+	} = useQuery(
+		queryKeys.listUserCollateral(walletPublicKey),
+		async () => {
+			return await sdk.ActiveCouponByUserQuery({
+				userAddress: walletPublicKey.toLowerCase()
+			});
+		},
+		{
+			onSuccess: onSubgraphQuerySuccess,
+			onError: onSubGraphQueryError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
 	const getMockPriceDebtValue = () => {
 		const MAX_LTV = 0.5;
 		const price = Math.floor(Math.random() * 1000);
 		const debt = Math.floor(Math.random() * (price - (price / 100) * MAX_LTV));
 		return { price, debt };
 	};
-	const preparedPositions: BorrowUserPosition[] = [];
-	for (let i = 0; i < 20; i++) {
-		preparedPositions.push({
-			name: `Any user position #${i + 1000}`,
-			HERC20ContractAddr: '0xcbe353B6eE82ddd4383167E32f0BEdfD2616976b',
-			value: getMockPriceDebtValue().price,
-			debt: getMockPriceDebtValue().debt,
-			image: '/nfts/azuki.jpg',
-			tokenId: i.toString() + '_borrow',
-			available: 90,
-			couponId: ''
-		});
-	}
-	for (let j = 0; j < 5; j++) {
-		preparedPositions.push({
-			name: 'Any user position',
-			HERC20ContractAddr: '0xcbe353B6eE82ddd4383167E32f0BEdfD2616976b',
-			value: getMockPriceDebtValue().price,
-			debt: 0,
-			image: '/nfts/azuki.jpg',
-			tokenId: j.toString() + '_borrow_nodebt',
-			available: 90,
-			couponId: ''
-		});
-	}
-	return [preparedPositions, false];
+	const preparedPositions = collateralsFromSubgraph?.coupons?.map((collateralObj) => {
+		const result: BorrowUserPosition = {
+			name: `${getNFTName(collateralObj.hTokenAddr)}-${collateralObj.collateralID}`,
+			image: getNFTDefaultImage(collateralObj.hTokenAddr),
+			couponId: collateralObj.couponID,
+			tokenId: collateralObj.collateralID,
+			HERC20ContractAddr: collateralObj.hTokenAddr,
+			debt: fromWei(collateralObj.amount, getCollateralUnit(collateralObj.hTokenAddr)),
+			value: getMockPriceDebtValue().price
+		};
+		return result;
+	});
+	return [preparedPositions || [], isLoadingCollaterals || isFetchingCollaterals];
 }
 
 //todo implement later

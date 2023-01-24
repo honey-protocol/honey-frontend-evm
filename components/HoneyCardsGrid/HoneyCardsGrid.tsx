@@ -44,8 +44,8 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 
 	//mock position generate
 
-	const borrowedPositions = borrowPositions.filter((position) => position.debt !== 0);
-	const debtFreeBorrowedPositions = borrowPositions.filter((position) => position.debt === 0);
+	const borrowedPositions = borrowPositions.filter((position) => position.debt !== '0');
+	const debtFreeBorrowedPositions = borrowPositions.filter((position) => position.debt === '0');
 
 	return (
 		<div className={styles.honeyCardsGrid}>

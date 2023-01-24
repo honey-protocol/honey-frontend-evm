@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import HoneyContent from '../../components/HoneyContent/HoneyContent';
 import LayoutRedesign from '../../components/LayoutRedesign/LayoutRedesign';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import * as styles from '../../styles/dashboard.css';
 import { HoneyPositionsSlider } from '../../components/HoneyPositionsSlider/HoneyPositionsSlider';
 import NotificationsList from '../../components/NotificationsList/NotificationsList';
@@ -22,10 +22,12 @@ import {
 	useLendUserPositions
 } from '../../hooks/useDashBoard';
 import { useNotification } from '../../hooks/useNotification';
+import { UserContext } from '../../contexts/userContext';
 
 const Dashboard: NextPage = () => {
+	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const [sliderPositions, isLoadingSliderPositions] = useGetSliderPositions();
-	const [borrowUserPositions, isLoadingBorrowUserPositions] = useBorrowUserPositions();
+	const [borrowUserPositions, isLoadingBorrowUserPositions] = useBorrowUserPositions(currentUser);
 	const [lendUserPositions, isLoadingLendUserPositions] = useLendUserPositions();
 	const [userExposureData, isLoadingUserExposureData] = useGetUserExposureData();
 	const [userExposure, isLoadingUserExposure] = useGetUserExposure();

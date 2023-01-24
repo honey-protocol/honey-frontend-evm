@@ -37,12 +37,12 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 			</div>
 			<div className={styles.positionValues}>
 				<InfoBlock title="Floor price" value={fu(position.value)} />
-				<InfoBlock title="Debt" value={fu(position.debt)} />
+				<InfoBlock title="Debt" value={fu(parseFloat(position.debt))} />
 				<InfoBlock title="IR" value={fp((position.riskLvl ?? 0) * 100)} />
 			</div>
 			<div className={styles.divider} />
 			<BorrowPositionCardSlider
-				debt={position.debt ?? 0}
+				debt={parseFloat(position.debt)}
 				collateralValue={position.value ?? 0}
 				liquidationThreshold={LIQUIDATION_THRESHOLD}
 				maxLoanToValue={MAX_LTV}

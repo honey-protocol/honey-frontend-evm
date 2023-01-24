@@ -88,5 +88,7 @@ export const queryKeys = {
 			HERC20ContractAddress,
 			NFTId,
 			'minimum'
-		] as const
+		] as const,
+	//dashboard relate
+	listUserCollateral: (walletPublicKey: string) => ['collateral', 'user', walletPublicKey] as const
 };

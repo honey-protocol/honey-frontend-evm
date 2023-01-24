@@ -1,14 +1,5 @@
 import { PositionType } from '../../types/dashboard';
 
-// export type BorrowUserPosition = {
-//   name: string;
-//   price: number;
-//   debt: number;
-//   ir: number;
-//   imageUrl: string;
-//   id: string;
-// };
-
 export type BorrowUserPosition = {
 	name: string;
 	HERC20ContractAddr: string;
@@ -16,7 +7,7 @@ export type BorrowUserPosition = {
 	couponId: string;
 	image: string;
 	riskLvl?: number;
-	debt?: number;
+	debt: string;
 	available?: number;
 	value?: number;
 };
