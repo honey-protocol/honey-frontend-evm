@@ -7,3 +7,9 @@ fragment CouponData on Coupon {
 	owner
 	amount
 }
+
+fragment  UserUnderlyingData on UserUnderlying {
+	owner
+	amount
+	hTokenAddr
+}

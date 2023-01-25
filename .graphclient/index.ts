@@ -351,6 +351,8 @@ export type Query = {
   coupons: Array<Coupon>;
   collateral?: Maybe<Collateral>;
   collaterals: Array<Collateral>;
+  userUnderlying?: Maybe<UserUnderlying>;
+  userUnderlyings: Array<UserUnderlying>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
@@ -392,6 +394,24 @@ export type QuerycollateralsArgs = {
 };
 
 
+export type QueryuserUnderlyingArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryuserUnderlyingsArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<UserUnderlying_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<UserUnderlying_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
 export type Query_metaArgs = {
   block?: InputMaybe<Block_height>;
 };
@@ -401,6 +421,8 @@ export type Subscription = {
   coupons: Array<Coupon>;
   collateral?: Maybe<Collateral>;
   collaterals: Array<Collateral>;
+  userUnderlying?: Maybe<UserUnderlying>;
+  userUnderlyings: Array<UserUnderlying>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
@@ -442,9 +464,101 @@ export type SubscriptioncollateralsArgs = {
 };
 
 
+export type SubscriptionuserUnderlyingArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionuserUnderlyingsArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<UserUnderlying_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<UserUnderlying_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
 export type Subscription_metaArgs = {
   block?: InputMaybe<Block_height>;
 };
+
+export type UserUnderlying = {
+  id: Scalars['ID'];
+  hTokenAddr: Scalars['String'];
+  owner: Scalars['String'];
+  amount: Scalars['BigInt'];
+};
+
+export type UserUnderlying_filter = {
+  id?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  hTokenAddr?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not?: InputMaybe<Scalars['String']>;
+  hTokenAddr_gt?: InputMaybe<Scalars['String']>;
+  hTokenAddr_lt?: InputMaybe<Scalars['String']>;
+  hTokenAddr_gte?: InputMaybe<Scalars['String']>;
+  hTokenAddr_lte?: InputMaybe<Scalars['String']>;
+  hTokenAddr_in?: InputMaybe<Array<Scalars['String']>>;
+  hTokenAddr_not_in?: InputMaybe<Array<Scalars['String']>>;
+  hTokenAddr_contains?: InputMaybe<Scalars['String']>;
+  hTokenAddr_contains_nocase?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_contains?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  hTokenAddr_starts_with?: InputMaybe<Scalars['String']>;
+  hTokenAddr_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_starts_with?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  hTokenAddr_ends_with?: InputMaybe<Scalars['String']>;
+  hTokenAddr_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_ends_with?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  owner?: InputMaybe<Scalars['String']>;
+  owner_not?: InputMaybe<Scalars['String']>;
+  owner_gt?: InputMaybe<Scalars['String']>;
+  owner_lt?: InputMaybe<Scalars['String']>;
+  owner_gte?: InputMaybe<Scalars['String']>;
+  owner_lte?: InputMaybe<Scalars['String']>;
+  owner_in?: InputMaybe<Array<Scalars['String']>>;
+  owner_not_in?: InputMaybe<Array<Scalars['String']>>;
+  owner_contains?: InputMaybe<Scalars['String']>;
+  owner_contains_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_contains?: InputMaybe<Scalars['String']>;
+  owner_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  owner_starts_with?: InputMaybe<Scalars['String']>;
+  owner_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_starts_with?: InputMaybe<Scalars['String']>;
+  owner_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_ends_with?: InputMaybe<Scalars['String']>;
+  owner_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_ends_with?: InputMaybe<Scalars['String']>;
+  owner_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  amount?: InputMaybe<Scalars['BigInt']>;
+  amount_not?: InputMaybe<Scalars['BigInt']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']>;
+  amount_lt?: InputMaybe<Scalars['BigInt']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+};
+
+export type UserUnderlying_orderBy =
+  | 'id'
+  | 'hTokenAddr'
+  | 'owner'
+  | 'amount';
 
 export type _Block_ = {
   /** The hash of the block */
@@ -580,6 +694,9 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Subscription: ResolverTypeWrapper<{}>;
+  UserUnderlying: ResolverTypeWrapper<UserUnderlying>;
+  UserUnderlying_filter: UserUnderlying_filter;
+  UserUnderlying_orderBy: UserUnderlying_orderBy;
   _Block_: ResolverTypeWrapper<_Block_>;
   _Meta_: ResolverTypeWrapper<_Meta_>;
   _SubgraphErrorPolicy_: _SubgraphErrorPolicy_;
@@ -603,6 +720,8 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   String: Scalars['String'];
   Subscription: {};
+  UserUnderlying: UserUnderlying;
+  UserUnderlying_filter: UserUnderlying_filter;
   _Block_: _Block_;
   _Meta_: _Meta_;
 }>;
@@ -666,6 +785,8 @@ export type QueryResolvers<ContextType = MeshContext, ParentType extends Resolve
   coupons?: Resolver<Array<ResolversTypes['Coupon']>, ParentType, ContextType, RequireFields<QuerycouponsArgs, 'skip' | 'first' | 'subgraphError'>>;
   collateral?: Resolver<Maybe<ResolversTypes['Collateral']>, ParentType, ContextType, RequireFields<QuerycollateralArgs, 'id' | 'subgraphError'>>;
   collaterals?: Resolver<Array<ResolversTypes['Collateral']>, ParentType, ContextType, RequireFields<QuerycollateralsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  userUnderlying?: Resolver<Maybe<ResolversTypes['UserUnderlying']>, ParentType, ContextType, RequireFields<QueryuserUnderlyingArgs, 'id' | 'subgraphError'>>;
+  userUnderlyings?: Resolver<Array<ResolversTypes['UserUnderlying']>, ParentType, ContextType, RequireFields<QueryuserUnderlyingsArgs, 'skip' | 'first' | 'subgraphError'>>;
   _meta?: Resolver<Maybe<ResolversTypes['_Meta_']>, ParentType, ContextType, Partial<Query_metaArgs>>;
 }>;
 
@@ -674,7 +795,17 @@ export type SubscriptionResolvers<ContextType = MeshContext, ParentType extends 
   coupons?: SubscriptionResolver<Array<ResolversTypes['Coupon']>, "coupons", ParentType, ContextType, RequireFields<SubscriptioncouponsArgs, 'skip' | 'first' | 'subgraphError'>>;
   collateral?: SubscriptionResolver<Maybe<ResolversTypes['Collateral']>, "collateral", ParentType, ContextType, RequireFields<SubscriptioncollateralArgs, 'id' | 'subgraphError'>>;
   collaterals?: SubscriptionResolver<Array<ResolversTypes['Collateral']>, "collaterals", ParentType, ContextType, RequireFields<SubscriptioncollateralsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  userUnderlying?: SubscriptionResolver<Maybe<ResolversTypes['UserUnderlying']>, "userUnderlying", ParentType, ContextType, RequireFields<SubscriptionuserUnderlyingArgs, 'id' | 'subgraphError'>>;
+  userUnderlyings?: SubscriptionResolver<Array<ResolversTypes['UserUnderlying']>, "userUnderlyings", ParentType, ContextType, RequireFields<SubscriptionuserUnderlyingsArgs, 'skip' | 'first' | 'subgraphError'>>;
   _meta?: SubscriptionResolver<Maybe<ResolversTypes['_Meta_']>, "_meta", ParentType, ContextType, Partial<Subscription_metaArgs>>;
+}>;
+
+export type UserUnderlyingResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['UserUnderlying'] = ResolversParentTypes['UserUnderlying']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  hTokenAddr?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  owner?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  amount?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type _Block_Resolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['_Block_'] = ResolversParentTypes['_Block_']> = ResolversObject<{
@@ -699,6 +830,7 @@ export type Resolvers<ContextType = MeshContext> = ResolversObject<{
   Coupon?: CouponResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
+  UserUnderlying?: UserUnderlyingResolvers<ContextType>;
   _Block_?: _Block_Resolvers<ContextType>;
   _Meta_?: _Meta_Resolvers<ContextType>;
 }>;
@@ -806,6 +938,12 @@ const merger = new(BareMerger as any)({
           return printWithCache(ActiveCouponByUserQueryDocument);
         },
         location: 'ActiveCouponByUserQueryDocument.graphql'
+      },{
+        document: UnderlyingByUserQueryDocument,
+        get rawSDL() {
+          return printWithCache(UnderlyingByUserQueryDocument);
+        },
+        location: 'UnderlyingByUserQueryDocument.graphql'
       }
     ];
     },
@@ -846,6 +984,8 @@ export function getBuiltGraphSDK<TGlobalContext = any, TOperationContext = any>(
 }
 export type CouponDataFragment = Pick<Coupon, 'collateralID' | 'couponID' | 'underlyingTokenAddr' | 'collateralTokenAddr' | 'hTokenAddr' | 'owner' | 'amount'>;
 
+export type UserUnderlyingDataFragment = Pick<UserUnderlying, 'owner' | 'amount' | 'hTokenAddr'>;
+
 export type ActiveCouponQueryQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
 }>;
@@ -869,6 +1009,14 @@ export type ActiveCouponByUserQueryQueryVariables = Exact<{
 
 export type ActiveCouponByUserQueryQuery = { coupons: Array<Pick<Coupon, 'collateralID' | 'couponID' | 'underlyingTokenAddr' | 'collateralTokenAddr' | 'hTokenAddr' | 'owner' | 'amount'>> };
 
+export type UnderlyingByUserQueryQueryVariables = Exact<{
+  userAddress: Scalars['String'];
+  first?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type UnderlyingByUserQueryQuery = { userUnderlyings: Array<Pick<UserUnderlying, 'owner' | 'amount' | 'hTokenAddr'>> };
+
 export const CouponDataFragmentDoc = gql`
     fragment CouponData on Coupon {
   collateralID
@@ -880,6 +1028,13 @@ export const CouponDataFragmentDoc = gql`
   amount
 }
     ` as unknown as DocumentNode<CouponDataFragment, unknown>;
+export const UserUnderlyingDataFragmentDoc = gql`
+    fragment UserUnderlyingData on UserUnderlying {
+  owner
+  amount
+  hTokenAddr
+}
+    ` as unknown as DocumentNode<UserUnderlyingDataFragment, unknown>;
 export const ActiveCouponQueryDocument = gql`
     query ActiveCouponQuery($first: Int = 100) {
   coupons(
@@ -916,6 +1071,19 @@ export const ActiveCouponByUserQueryDocument = gql`
   }
 }
     ${CouponDataFragmentDoc}` as unknown as DocumentNode<ActiveCouponByUserQueryQuery, ActiveCouponByUserQueryQueryVariables>;
+export const UnderlyingByUserQueryDocument = gql`
+    query UnderlyingByUserQuery($userAddress: String!, $first: Int = 100) {
+  userUnderlyings(
+    first: $first
+    orderBy: hTokenAddr
+    orderDirection: desc
+    where: {owner: $userAddress}
+  ) {
+    ...UserUnderlyingData
+  }
+}
+    ${UserUnderlyingDataFragmentDoc}` as unknown as DocumentNode<UnderlyingByUserQueryQuery, UnderlyingByUserQueryQueryVariables>;
+
 
 
 
@@ -931,6 +1099,9 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     ActiveCouponByUserQuery(variables: ActiveCouponByUserQueryQueryVariables, options?: C): Promise<ActiveCouponByUserQueryQuery> {
       return requester<ActiveCouponByUserQueryQuery, ActiveCouponByUserQueryQueryVariables>(ActiveCouponByUserQueryDocument, variables, options) as Promise<ActiveCouponByUserQueryQuery>;
+    },
+    UnderlyingByUserQuery(variables: UnderlyingByUserQueryQueryVariables, options?: C): Promise<UnderlyingByUserQueryQuery> {
+      return requester<UnderlyingByUserQueryQuery, UnderlyingByUserQueryQueryVariables>(UnderlyingByUserQueryDocument, variables, options) as Promise<UnderlyingByUserQueryQuery>;
     }
   };
 }

@@ -330,6 +330,8 @@ export type Query = {
   coupons: Array<Coupon>;
   collateral?: Maybe<Collateral>;
   collaterals: Array<Collateral>;
+  userUnderlying?: Maybe<UserUnderlying>;
+  userUnderlyings: Array<UserUnderlying>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
@@ -371,6 +373,24 @@ export type QuerycollateralsArgs = {
 };
 
 
+export type QueryuserUnderlyingArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryuserUnderlyingsArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<UserUnderlying_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<UserUnderlying_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
 export type Query_metaArgs = {
   block?: InputMaybe<Block_height>;
 };
@@ -380,6 +400,8 @@ export type Subscription = {
   coupons: Array<Coupon>;
   collateral?: Maybe<Collateral>;
   collaterals: Array<Collateral>;
+  userUnderlying?: Maybe<UserUnderlying>;
+  userUnderlyings: Array<UserUnderlying>;
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
 };
@@ -421,9 +443,101 @@ export type SubscriptioncollateralsArgs = {
 };
 
 
+export type SubscriptionuserUnderlyingArgs = {
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionuserUnderlyingsArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<UserUnderlying_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<UserUnderlying_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
 export type Subscription_metaArgs = {
   block?: InputMaybe<Block_height>;
 };
+
+export type UserUnderlying = {
+  id: Scalars['ID'];
+  hTokenAddr: Scalars['String'];
+  owner: Scalars['String'];
+  amount: Scalars['BigInt'];
+};
+
+export type UserUnderlying_filter = {
+  id?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  hTokenAddr?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not?: InputMaybe<Scalars['String']>;
+  hTokenAddr_gt?: InputMaybe<Scalars['String']>;
+  hTokenAddr_lt?: InputMaybe<Scalars['String']>;
+  hTokenAddr_gte?: InputMaybe<Scalars['String']>;
+  hTokenAddr_lte?: InputMaybe<Scalars['String']>;
+  hTokenAddr_in?: InputMaybe<Array<Scalars['String']>>;
+  hTokenAddr_not_in?: InputMaybe<Array<Scalars['String']>>;
+  hTokenAddr_contains?: InputMaybe<Scalars['String']>;
+  hTokenAddr_contains_nocase?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_contains?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  hTokenAddr_starts_with?: InputMaybe<Scalars['String']>;
+  hTokenAddr_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_starts_with?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  hTokenAddr_ends_with?: InputMaybe<Scalars['String']>;
+  hTokenAddr_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_ends_with?: InputMaybe<Scalars['String']>;
+  hTokenAddr_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  owner?: InputMaybe<Scalars['String']>;
+  owner_not?: InputMaybe<Scalars['String']>;
+  owner_gt?: InputMaybe<Scalars['String']>;
+  owner_lt?: InputMaybe<Scalars['String']>;
+  owner_gte?: InputMaybe<Scalars['String']>;
+  owner_lte?: InputMaybe<Scalars['String']>;
+  owner_in?: InputMaybe<Array<Scalars['String']>>;
+  owner_not_in?: InputMaybe<Array<Scalars['String']>>;
+  owner_contains?: InputMaybe<Scalars['String']>;
+  owner_contains_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_contains?: InputMaybe<Scalars['String']>;
+  owner_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  owner_starts_with?: InputMaybe<Scalars['String']>;
+  owner_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_starts_with?: InputMaybe<Scalars['String']>;
+  owner_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_ends_with?: InputMaybe<Scalars['String']>;
+  owner_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  owner_not_ends_with?: InputMaybe<Scalars['String']>;
+  owner_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  amount?: InputMaybe<Scalars['BigInt']>;
+  amount_not?: InputMaybe<Scalars['BigInt']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']>;
+  amount_lt?: InputMaybe<Scalars['BigInt']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+};
+
+export type UserUnderlying_orderBy =
+  | 'id'
+  | 'hTokenAddr'
+  | 'owner'
+  | 'amount';
 
 export type _Block_ = {
   /** The hash of the block */
@@ -465,6 +579,10 @@ export type _SubgraphErrorPolicy_ =
   collateral: InContextSdkMethod<Query['collateral'], QuerycollateralArgs, MeshContext>,
   /** null **/
   collaterals: InContextSdkMethod<Query['collaterals'], QuerycollateralsArgs, MeshContext>,
+  /** null **/
+  userUnderlying: InContextSdkMethod<Query['userUnderlying'], QueryuserUnderlyingArgs, MeshContext>,
+  /** null **/
+  userUnderlyings: InContextSdkMethod<Query['userUnderlyings'], QueryuserUnderlyingsArgs, MeshContext>,
   /** Access to subgraph metadata **/
   _meta: InContextSdkMethod<Query['_meta'], Query_metaArgs, MeshContext>
   };
@@ -482,6 +600,10 @@ export type _SubgraphErrorPolicy_ =
   collateral: InContextSdkMethod<Subscription['collateral'], SubscriptioncollateralArgs, MeshContext>,
   /** null **/
   collaterals: InContextSdkMethod<Subscription['collaterals'], SubscriptioncollateralsArgs, MeshContext>,
+  /** null **/
+  userUnderlying: InContextSdkMethod<Subscription['userUnderlying'], SubscriptionuserUnderlyingArgs, MeshContext>,
+  /** null **/
+  userUnderlyings: InContextSdkMethod<Subscription['userUnderlyings'], SubscriptionuserUnderlyingsArgs, MeshContext>,
   /** Access to subgraph metadata **/
   _meta: InContextSdkMethod<Subscription['_meta'], Subscription_metaArgs, MeshContext>
   };

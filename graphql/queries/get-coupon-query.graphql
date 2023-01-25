@@ -15,3 +15,9 @@ query ActiveCouponByUserQuery($userAddress: String!, $first: Int = 100) {
 		...CouponData
 	}
 }
+
+query UnderlyingByUserQuery($userAddress: String!, $first: Int = 100) {
+	userUnderlyings(first: $first, orderBy: hTokenAddr, orderDirection: desc, where: { owner: $userAddress }) {
+		...UserUnderlyingData
+	}
+}
