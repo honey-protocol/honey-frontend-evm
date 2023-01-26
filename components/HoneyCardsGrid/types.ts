@@ -3,13 +3,14 @@ import { PositionType } from '../../types/dashboard';
 export type BorrowUserPosition = {
 	name: string;
 	HERC20ContractAddr: string;
+	erc20Name: string;
 	tokenId: string;
 	couponId: string;
 	image: string;
 	riskLvl?: number;
 	debt: string;
 	available?: number;
-	value?: number;
+	value: number;
 };
 
 export type LendUserPosition = {

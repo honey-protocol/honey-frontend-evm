@@ -110,7 +110,7 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 							{debtFreeBorrowedPositions.map((position, index) => (
 								<BorrowPositionCard
 									position={position}
-									key={index}
+									key={position.name}
 									onSelect={initLoanOrBorrowFlow}
 								/>
 							))}

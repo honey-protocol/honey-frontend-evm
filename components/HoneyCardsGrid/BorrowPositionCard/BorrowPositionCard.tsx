@@ -10,7 +10,7 @@ import HoneyTooltip from '../../HoneyTooltip/HoneyTooltip';
 import { BorrowPositionCardSlider } from '../../BorrowPositionCardSlider/BorrowPositionCardSlider';
 import useLoanFlowStore from 'store/loanFlowStore';
 
-const { formatUsd: fu, formatPercent: fp } = formatNumber;
+const { formatShortName: fsn, formatPercent: fp } = formatNumber;
 
 const MAX_LTV = 0.5;
 const LIQUIDATION_THRESHOLD = 0.65;
@@ -35,8 +35,8 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 				<div className={styles.arrowIcon} />
 			</div>
 			<div className={styles.positionValues}>
-				<InfoBlock title="Floor price" value={fu(position.value)} />
-				<InfoBlock title="Debt" value={fu(parseFloat(position.debt))} />
+				<InfoBlock title="Floor price" value={`${fsn(position.value)} ${position.erc20Name}`} />
+				<InfoBlock title="Debt" value={`${fsn(parseFloat(position.debt))} ${position.erc20Name}`} />
 				<InfoBlock title="IR" value={fp((position.riskLvl ?? 0) * 100)} />
 			</div>
 			<div className={styles.divider} />

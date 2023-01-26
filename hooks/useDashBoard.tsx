@@ -7,7 +7,12 @@ import { ActiveCouponQueryQuery, getBuiltGraphSDK } from '../.graphclient';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
-import { getCollateralUnit, getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
+import {
+	getCollateralUnit,
+	getERC20Name,
+	getNFTDefaultImage,
+	getNFTName
+} from '../helpers/collateralHelper';
 import { fromWei } from 'web3-utils';
 import { getMetaDataFromNFTId } from './useNFT';
 import { MarketTablePosition } from '../types/markets';
@@ -67,11 +72,12 @@ export function useBorrowUserPositions(
 	);
 	const preparedPositions = collateralsFromSubgraph?.coupons?.map((collateralObj) => {
 		const result: BorrowUserPosition = {
-			name: `${getNFTName(collateralObj.hTokenAddr)}-${collateralObj.collateralID}`,
+			name: `${getNFTName(collateralObj.hTokenAddr)}#${collateralObj.collateralID}`,
 			image: getNFTDefaultImage(collateralObj.hTokenAddr),
 			couponId: collateralObj.couponID,
 			tokenId: collateralObj.collateralID,
 			HERC20ContractAddr: collateralObj.hTokenAddr,
+			erc20Name: getERC20Name(collateralObj.hTokenAddr),
 			debt: fromWei(collateralObj.amount, getCollateralUnit(collateralObj.hTokenAddr)),
 			value: 0
 		};
