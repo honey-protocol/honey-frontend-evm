@@ -52,15 +52,6 @@ type helperContract = {
 	marketContractAddress: string;
 };
 
-type userCollectionStatistic = {
-	collectionName: string;
-	erc20Name: string;
-	userAddress: string;
-	borrow: number;
-	available: number;
-	position: number;
-};
-
 type asset = {
 	totalBorrow: string;
 	totalReserve: string;
@@ -75,4 +66,9 @@ type loan = {
 	active: boolean;
 	couponId: string;
 	owner: string;
+};
+
+type nftPrice = {
+	HERC20ContractAddress: string;
+	price: number;
 };

@@ -107,9 +107,10 @@ const RepayForm = (props: RepayProps) => {
 	const [repayState, setRepayState] = useState('WAIT_FOR_APPROVAL');
 
 	/* initial all financial value here */
+	const nftValue = nftPrice.price;
 	const userDebt = parseFloat(borrowAmount);
 	const userAllowance = fetchAllowance(positions, NFTId);
-	const loanToValue = userDebt / nftPrice;
+	const loanToValue = userDebt / nftValue;
 	const maxValue = userDebt != 0 ? userDebt : userAllowance;
 	const underlyingBalance = parseFloat(userBalance);
 	const newDebt = userDebt - (valueUnderlying ? valueUnderlying : 0);
@@ -266,8 +267,8 @@ const RepayForm = (props: RepayProps) => {
 
 	const liquidationPrice = userDebt / collateralFactor;
 	const newLiquidationPrice = newDebt / collateralFactor;
-	const liqPercent = nftPrice ? ((nftPrice - liquidationPrice) / nftPrice) * 100 : 0;
-	const newLiqPercent = nftPrice ? ((nftPrice - newLiquidationPrice) / nftPrice) * 100 : 0;
+	const liqPercent = nftPrice ? ((nftValue - liquidationPrice) / nftValue) * 100 : 0;
+	const newLiqPercent = nftPrice ? ((nftValue - newLiquidationPrice) / nftValue) * 100 : 0;
 
 	const renderContent = () => {
 		return (
@@ -285,7 +286,7 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(nftPrice)}
+							value={fs(nftValue)}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
@@ -348,7 +349,7 @@ const RepayForm = (props: RepayProps) => {
 
 						<HoneySlider
 							currentValue={0}
-							maxValue={nftPrice || 0}
+							maxValue={nftValue}
 							minAvailableValue={userDebt}
 							maxSafePosition={0.3 - userDebt / 1000}
 							dangerPosition={0.45 - userDebt / 1000}
@@ -364,7 +365,7 @@ const RepayForm = (props: RepayProps) => {
 									<div className={questionIcon} />
 								</span>
 							}
-							value={fp((newDebt / (nftPrice || 0)) * 100)}
+							value={fp((newDebt / nftValue) * 100)}
 							isDisabled={true}
 							toolTipLabel={
 								<span>
@@ -383,7 +384,7 @@ const RepayForm = (props: RepayProps) => {
 
 						<HoneySlider
 							currentValue={0}
-							maxValue={nftPrice || 0}
+							maxValue={nftValue}
 							minAvailableValue={newDebt}
 							maxSafePosition={0.3 - userDebt / 1000}
 							dangerPosition={0.45 - userDebt / 1000}

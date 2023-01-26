@@ -225,7 +225,11 @@ export async function getNFTPrice(
 
 	// @ts-ignore
 	const result: any = await Moralis.Web3API.native.runContractFunction(options);
-	return parseInt(result) / 10000.0;
+	const returnValue: nftPrice = {
+		HERC20ContractAddress: HERC20ContractAddress,
+		price: parseInt(result) / 10000.0
+	};
+	return returnValue;
 }
 
 export async function getAssets(
@@ -377,12 +381,16 @@ export function useGetMaxBorrowableAmount(
 export function useGetNFTPrice(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string
-): [number, boolean] {
-	const onSuccess = (data: number) => {
+): [nftPrice, boolean] {
+	const defaultValue: nftPrice = {
+		HERC20ContractAddress: '',
+		price: 0
+	};
+	const onSuccess = (data: nftPrice) => {
 		return data;
 	};
 	const onError = (data: string) => {
-		return 0;
+		return defaultValue;
 	};
 
 	const {
@@ -402,7 +410,7 @@ export function useGetNFTPrice(
 		}
 	);
 
-	return [amount || 0, isLoading || isFetching];
+	return [amount || defaultValue, isLoading || isFetching];
 }
 
 export async function getActiveCoupons(

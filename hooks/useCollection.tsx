@@ -192,11 +192,15 @@ export function usePositions(
 		}
 	);
 	const collateralFactor = collateralFactorResult || 0;
-	const onGetNFTPriceSuccess = (data: number) => {
+	const defaultNFTValue: nftPrice = {
+		HERC20ContractAddress: '',
+		price: 0
+	};
+	const onGetNFTPriceSuccess = (data: nftPrice) => {
 		return data;
 	};
 	const onGetNFTPriceError = (data: string) => {
-		return 0;
+		return defaultNFTValue;
 	};
 
 	const {
@@ -209,7 +213,11 @@ export function usePositions(
 			if (htokenHelperContractAddress != '' && HERC20ContractAddress != '') {
 				return getNFTPrice(htokenHelperContractAddress, HERC20ContractAddress);
 			} else {
-				return 0;
+				const result: nftPrice = {
+					HERC20ContractAddress: HERC20ContractAddress,
+					price: 0
+				};
+				return result;
 			}
 		},
 		{
@@ -219,7 +227,7 @@ export function usePositions(
 			staleTime: defaultCacheStaleTime
 		}
 	);
-	const nftPrice = nftPriceResult || 0;
+	const nftPrice = nftPriceResult || defaultNFTValue;
 
 	const results = useQueries(
 		coupons.map((coupon) => {
@@ -278,7 +286,9 @@ export function usePositions(
 								couponId: nftDetail.couponId,
 								debt: couponData.debt,
 								healthLvl:
-									((nftPrice - parseFloat(couponData.debt) / collateralFactor) / nftPrice) * 100,
+									((nftPrice.price - parseFloat(couponData.debt) / collateralFactor) /
+										nftPrice.price) *
+									100,
 								allowance: couponData.allowance,
 								value: couponData.NFTPrice
 							};
@@ -484,11 +494,15 @@ export function useLiquidationPositions(
 		}
 	);
 	const collateralFactor = collateralFactorResult || 0;
-	const onGetNFTPriceSuccess = (data: number) => {
+	const defaultNFTValue: nftPrice = {
+		HERC20ContractAddress: '',
+		price: 0
+	};
+	const onGetNFTPriceSuccess = (data: nftPrice) => {
 		return data;
 	};
 	const onGetNFTPriceError = (data: string) => {
-		return 0;
+		return defaultNFTValue;
 	};
 	const onGetActiveCouponsSuccess = (data: coupon[]) => {
 		return data;
@@ -506,7 +520,11 @@ export function useLiquidationPositions(
 			if (htokenHelperContractAddress != '' && HERC20ContractAddress != '') {
 				return getNFTPrice(htokenHelperContractAddress, HERC20ContractAddress);
 			} else {
-				return 0;
+				const result: nftPrice = {
+					HERC20ContractAddress: HERC20ContractAddress,
+					price: 0
+				};
+				return result;
 			}
 		},
 		{
@@ -516,7 +534,7 @@ export function useLiquidationPositions(
 			staleTime: defaultCacheStaleTime
 		}
 	);
-	const nftPrice = nftPriceResult || 0;
+	const nftPrice = nftPriceResult || defaultNFTValue;
 	const {
 		data: collaterals,
 		isLoading: isLoadingCollaterals,
@@ -545,10 +563,10 @@ export function useLiquidationPositions(
 			image: getNFTDefaultImage(HERC20ContractAddress),
 			couponId: collateralObj.couponId,
 			tokenId: collateralObj.NFTId,
-			healthLvl: ((nftPrice - userDebt / collateralFactor) / nftPrice) * 100,
-			untilLiquidation: nftPrice - liquidationPrice,
+			healthLvl: ((nftPrice.price - userDebt / collateralFactor) / nftPrice.price) * 100,
+			untilLiquidation: nftPrice.price - liquidationPrice,
 			debt: userDebt,
-			estimatedValue: nftPrice
+			estimatedValue: nftPrice.price
 		};
 		return result;
 	});

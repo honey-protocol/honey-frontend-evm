@@ -91,8 +91,9 @@ const BorrowForm = (props: BorrowProps) => {
 		unit
 	);
 	/* initial all financial value here */
+	const nftValue = nftPrice.price;
 	const borrowedValue = parseFloat(borrowAmount);
-	const loanToValue = borrowedValue / nftPrice;
+	const loanToValue = borrowedValue / nftValue;
 	const userAllowance = fetchAllowance(positions, NFTId);
 	//todo use data from blockchain
 	const borrowFee = 0.005; // ,5%
@@ -189,8 +190,8 @@ const BorrowForm = (props: BorrowProps) => {
 
 	const liquidationPrice = borrowedValue / collateralFactor;
 	const newLiquidationPrice = newTotalDebt / collateralFactor;
-	const liqPercent = nftPrice ? ((nftPrice - liquidationPrice) / nftPrice) * 100 : 0;
-	const newLiqPercent = nftPrice ? ((nftPrice - newLiquidationPrice) / nftPrice) * 100 : 0;
+	const liqPercent = nftPrice ? ((nftValue - liquidationPrice) / nftValue) * 100 : 0;
+	const newLiqPercent = nftPrice ? ((nftValue - newLiquidationPrice) / nftValue) * 100 : 0;
 
 	const renderContent = () => {
 		return (
@@ -208,7 +209,7 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fsn(nftPrice)}
+							value={fsn(nftValue)}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
@@ -270,7 +271,7 @@ const BorrowForm = (props: BorrowProps) => {
 						/>
 						<HoneySlider
 							currentValue={0}
-							maxValue={nftPrice}
+							maxValue={nftValue}
 							minAvailableValue={borrowedValue}
 							maxSafePosition={0.3 - borrowedValue / 1000}
 							dangerPosition={0.45 - borrowedValue / 1000}
@@ -298,16 +299,16 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={fp(((borrowedValue + newAdditionalDebt) / nftPrice) * 100)}
+							value={fp(((borrowedValue + newAdditionalDebt) / nftValue) * 100)}
 							isDisabled={true}
 						/>
 						<HoneySlider
 							currentValue={sliderValue * 1.1}
-							maxValue={nftPrice}
+							maxValue={nftValue}
 							minAvailableValue={borrowedValue}
 							maxSafePosition={0.3 - borrowedValue / 1000}
 							dangerPosition={0.45 - borrowedValue / 1000}
-							maxAvailablePosition={(userAllowance + borrowedValue) / nftPrice}
+							maxAvailablePosition={(userAllowance + borrowedValue) / nftValue}
 							isReadonly
 						/>
 					</div>
@@ -475,7 +476,7 @@ const BorrowForm = (props: BorrowProps) => {
 
 				<HoneySlider
 					currentValue={sliderValue}
-					maxValue={nftPrice}
+					maxValue={nftValue}
 					minAvailableValue={borrowedValue}
 					maxSafePosition={0.3 - borrowedValue / 1000}
 					dangerPosition={0.45 - borrowedValue / 1000}

@@ -5,7 +5,6 @@ import HexaBoxContainer from '../../HexaBoxContainer/HexaBoxContainer';
 import Image from 'next/image';
 import { InfoBlock } from '../../InfoBlock/InfoBlock';
 import { formatNumber, formatNFTName as fnn } from '../../../helpers/format';
-import { HoneySlider } from '../../HoneySlider/HoneySlider';
 import c from 'classnames';
 import HoneyTooltip from '../../HoneyTooltip/HoneyTooltip';
 import { BorrowPositionCardSlider } from '../../BorrowPositionCardSlider/BorrowPositionCardSlider';
