@@ -14,9 +14,6 @@ import {
 	getNFTName
 } from '../helpers/collateralHelper';
 import { fromWei } from 'web3-utils';
-import { getMetaDataFromNFTId } from './useNFT';
-import { MarketTablePosition } from '../types/markets';
-import { getImageUrlFromMetaData } from '../helpers/NFThelper';
 import { getNFTPrice } from './useHtokenHelper';
 import { getContractsByHTokenAddr } from '../helpers/generalHelper';
 

@@ -1,5 +1,4 @@
-import { blackHole, defaultNFTImage } from '../constants/constant';
-import getDepositNFTApproval, { getNFTApproved } from '../hooks/useERC721';
+import { defaultNFTImage } from '../constants/constant';
 
 export const getImageUrlFromMetaData = (metaData: string) => {
 	try {
