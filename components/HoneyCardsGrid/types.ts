@@ -37,5 +37,5 @@ export interface BorrowPositionCardProps {
 
 export interface LendPositionCardProps {
 	position: LendUserPosition;
-	onSelect: (id: string) => void;
+	onSelect: (HERC20ContractAddr: string) => void;
 }

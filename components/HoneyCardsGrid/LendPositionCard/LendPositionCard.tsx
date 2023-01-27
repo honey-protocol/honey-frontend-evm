@@ -7,16 +7,16 @@ import { InfoBlock } from '../../InfoBlock/InfoBlock';
 import { formatNumber, formatNFTName as fnn } from '../../../helpers/format';
 import c from 'classnames';
 import HoneyTooltip from '../../HoneyTooltip/HoneyTooltip';
-import useLoanFlowStore from 'store/loanFlowStore';
+import useLendFlowStore from 'store/lendFlowStore';
 
 const { formatShortName: fsn, formatPercent: fp } = formatNumber;
 
 export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect }) => {
-	const selectedNFTId = useLoanFlowStore((state) => state.NFTId);
+	const selectedMarket = useLendFlowStore((state) => state.HERC20ContractAddr);
 	return (
 		<div
 			className={c(styles.positionCard, {
-				[styles.activeCard]: selectedNFTId === position.id
+				[styles.activeCard]: selectedMarket === position.id
 			})}
 			onClick={() => onSelect(position.id)}
 		>

@@ -7,8 +7,9 @@ import { HoneyButtonTabs } from '../HoneyButtonTabs/HoneyButtonTabs';
 import SearchInput from '../SearchInput/SearchInput';
 import { LendPositionCard } from './LendPositionCard/LendPositionCard';
 import { PositionType } from '../../types/dashboard';
-import { LoanWorkFlowType } from 'types/workflows';
+import { LendWorkFlowType, LoanWorkFlowType } from 'types/workflows';
 import useDisplayStore from 'store/displayStore';
+import useLendFlowStore from 'store/lendFlowStore';
 import useLoanFlowStore from 'store/loanFlowStore';
 
 export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
@@ -29,6 +30,8 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 	const { setWorkflow, setNFTId, setHERC20ContractAddr, setCouponId } = useLoanFlowStore(
 		(state) => state
 	);
+	const { setWorkflow: setLendWorkflow, setHERC20ContractAddr: setLendHERC20ContractAddr } =
+		useLendFlowStore((state) => state);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 
 	const initLoanOrBorrowFlow = (HERC20ContractAddr: string, tokenId: string, couponId: string) => {
@@ -40,7 +43,12 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 		document.body.classList.add('disable-scroll');
 	};
 
-	const initLendFlow = () => {};
+	const initLendFlow = (HERC20ContractAddr: string) => {
+		setLendHERC20ContractAddr(HERC20ContractAddr);
+		setLendWorkflow(LendWorkFlowType.lendOrWithdraw);
+		setIsSidebarVisibleInMobile(true);
+		document.body.classList.add('disable-scroll');
+	};
 
 	const borrowedPositions = borrowPositions.filter((position) => position.debt !== '0');
 	const debtFreeBorrowedPositions = borrowPositions.filter((position) => position.debt === '0');
