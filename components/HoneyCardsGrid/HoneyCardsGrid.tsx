@@ -84,17 +84,17 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 			<div className={styles.gridContent}>
 				<div className={styles.cardsGrid}>
 					{positionType === 'borrow'
-						? borrowedPositions.map((position, index) => {
+						? borrowedPositions.map((position) => {
 								return (
 									<BorrowPositionCard
 										position={position}
-										key={index}
+										key={position.name}
 										onSelect={initLoanOrBorrowFlow}
 									/>
 								);
 						  })
-						: lendPositions.map((position, index) => (
-								<LendPositionCard position={position} key={index} onSelect={initLendFlow} />
+						: lendPositions.map((position) => (
+								<LendPositionCard position={position} key={position.id} onSelect={initLendFlow} />
 						  ))}
 				</div>
 				{Boolean(debtFreeBorrowedPositions.length) && positionType === 'borrow' && (
@@ -105,7 +105,7 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 							<div className={styles.divider} />
 						</div>
 						<div className={styles.cardsGrid}>
-							{debtFreeBorrowedPositions.map((position, index) => (
+							{debtFreeBorrowedPositions.map((position) => (
 								<BorrowPositionCard
 									position={position}
 									key={position.name}

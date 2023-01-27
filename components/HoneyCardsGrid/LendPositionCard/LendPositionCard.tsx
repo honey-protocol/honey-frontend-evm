@@ -9,7 +9,7 @@ import c from 'classnames';
 import HoneyTooltip from '../../HoneyTooltip/HoneyTooltip';
 import useLoanFlowStore from 'store/loanFlowStore';
 
-const { formatUsd: fu, formatPercent: fp } = formatNumber;
+const { formatShortName: fsn, formatPercent: fp } = formatNumber;
 
 export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect }) => {
 	const selectedNFTId = useLoanFlowStore((state) => state.NFTId);
@@ -34,9 +34,9 @@ export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect
 					title="IR"
 					value={<span className={styles.irValue}>{fp(position.ir * 100)}</span>}
 				/>
-				<InfoBlock title="Your Deposit" value={fu(position.deposit)} />
-				<InfoBlock title="Value" value={fu(position.value)} />
-				<InfoBlock title="Available" value={fu(position.available)} />
+				<InfoBlock title="Your Deposit" value={fsn(parseFloat(position.deposit))} />
+				<InfoBlock title="Value" value={fsn(position.value)} />
+				<InfoBlock title="Available" value={fsn(position.available)} />
 			</div>
 		</div>
 	);

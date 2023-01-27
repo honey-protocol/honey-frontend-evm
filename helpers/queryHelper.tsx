@@ -90,5 +90,6 @@ export const queryKeys = {
 			'minimum'
 		] as const,
 	//dashboard relate
-	listUserCollateral: (walletPublicKey: string) => ['collateral', 'user', walletPublicKey] as const
+	listUserCollateral: (walletPublicKey: string) => ['collateral', 'user', walletPublicKey] as const,
+	listUserUnderlying: (walletPublicKey: string) => ['underlying', 'user', walletPublicKey] as const
 };

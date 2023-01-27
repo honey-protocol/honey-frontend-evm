@@ -3,7 +3,11 @@ import { TimestampPoint } from '../components/HoneyChart/types';
 import { generateMockHistoryData } from '../helpers/chartUtils';
 import { CollectionPosition } from '../components/HoneyPositionsSlider/types';
 import { BorrowUserPosition, LendUserPosition } from '../components/HoneyCardsGrid/types';
-import { ActiveCouponQueryQuery, getBuiltGraphSDK } from '../.graphclient';
+import {
+	ActiveCouponQueryQuery,
+	getBuiltGraphSDK,
+	UnderlyingByUserQueryQuery
+} from '../.graphclient';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
@@ -34,7 +38,6 @@ export function useGetSliderPositions(): [Array<CollectionPosition>, boolean] {
 	return [mockData, false];
 }
 
-//todo convert to usd and use real nft price
 export function useBorrowUserPositions(
 	user: MoralisType.User | null
 ): [Array<BorrowUserPosition>, boolean] {
@@ -127,20 +130,48 @@ export function useBorrowUserPositions(
 }
 
 //todo implement later
-export function useLendUserPositions(): [Array<LendUserPosition>, boolean] {
-	const preparedPositions: LendUserPosition[] = [];
-	for (let i = 0; i < 20; i++) {
-		preparedPositions.push({
-			name: `Any user position #${i + 1000}`,
-			deposit: Math.random() * 1000,
+export function useLendUserPositions(
+	user: MoralisType.User | null
+): [Array<LendUserPosition>, boolean] {
+	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const onSubgraphQuerySuccess = (data: UnderlyingByUserQueryQuery) => {
+		return data;
+	};
+	const onSubGraphQueryError = () => {
+		return null;
+	};
+	const {
+		data: underlyingsFromSubgraph,
+		isLoading: isLoadingUnderlyings,
+		isFetching: isFetchingUnderlyings
+	} = useQuery(
+		queryKeys.listUserUnderlying(walletPublicKey),
+		async () => {
+			return await sdk.UnderlyingByUserQuery({
+				userAddress: walletPublicKey.toLowerCase()
+			});
+		},
+		{
+			onSuccess: onSubgraphQuerySuccess,
+			onError: onSubGraphQueryError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+	const lendUserPositions = underlyingsFromSubgraph?.userUnderlyings?.map((underlyingObj) => {
+		const result: LendUserPosition = {
+			name: `${getNFTName(underlyingObj.hTokenAddr)}/${getERC20Name(underlyingObj.hTokenAddr)}`,
+			deposit: fromWei(underlyingObj.amount, getCollateralUnit(underlyingObj.hTokenAddr)),
 			value: Math.random() * 1000,
 			ir: Math.random(),
 			available: Math.random() * 1000,
 			imageUrl: '/nfts/gecko.jpg',
-			id: i.toString() + '_lend'
-		});
-	}
-	return [preparedPositions, false];
+			id: underlyingObj.hTokenAddr
+		};
+		return result;
+	});
+
+	return [lendUserPositions || [], isLoadingUnderlyings || isFetchingUnderlyings];
 }
 
 //todo implement later

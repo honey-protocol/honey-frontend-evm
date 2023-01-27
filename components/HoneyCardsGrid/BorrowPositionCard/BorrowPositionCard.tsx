@@ -17,7 +17,6 @@ const LIQUIDATION_THRESHOLD = 0.65;
 
 export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSelect }) => {
 	const selectedNFTId = useLoanFlowStore((state) => state.NFTId);
-	if (!position) return null;
 	return (
 		<div
 			className={c(styles.positionCard, {

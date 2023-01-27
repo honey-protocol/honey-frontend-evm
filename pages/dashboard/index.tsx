@@ -28,7 +28,7 @@ const Dashboard: NextPage = () => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const [sliderPositions, isLoadingSliderPositions] = useGetSliderPositions();
 	const [borrowUserPositions, isLoadingBorrowUserPositions] = useBorrowUserPositions(currentUser);
-	const [lendUserPositions, isLoadingLendUserPositions] = useLendUserPositions();
+	const [lendUserPositions, isLoadingLendUserPositions] = useLendUserPositions(currentUser);
 	const [userExposureData, isLoadingUserExposureData] = useGetUserExposureData();
 	const [userExposure, isLoadingUserExposure] = useGetUserExposure();
 	const [notifications, isLoadingNotification] = useNotification();
