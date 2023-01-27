@@ -44,6 +44,7 @@ const BorrowForm = (props: BorrowProps) => {
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const queryClient = useQueryClient();
+	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
 	const {
 		HERC20ContractAddr: HERC20ContractAddress,
 		setWorkflow,
@@ -179,6 +180,7 @@ const BorrowForm = (props: BorrowProps) => {
 			await queryClient.invalidateQueries(
 				queryKeys.borrowAmount(HERC20ContractAddress, nft.tokenId)
 			);
+			await queryClient.invalidateQueries(queryKeys.listUserCollateral(walletPublicKey));
 			toast.success('Successful! Transaction complete');
 			handleSliderChange(0);
 		} catch (err: any) {

@@ -249,6 +249,7 @@ const RepayForm = (props: RepayProps) => {
 				await queryClient.invalidateQueries(
 					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
 				);
+				await queryClient.invalidateQueries(queryKeys.listUserCollateral(walletPublicKey));
 				handleSliderChange(0);
 			}
 			toast.success('Successful! Transaction complete');
