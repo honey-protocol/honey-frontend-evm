@@ -165,7 +165,7 @@ export function useLendUserPositions(
 			value: Math.random() * 1000,
 			ir: Math.random(),
 			available: Math.random() * 1000,
-			imageUrl: '/nfts/gecko.jpg',
+			image: getNFTDefaultImage(underlyingObj.hTokenAddr),
 			id: underlyingObj.hTokenAddr
 		};
 		return result;

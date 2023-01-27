@@ -19,7 +19,7 @@ export type LendUserPosition = {
 	value: number;
 	available: number;
 	ir: number;
-	imageUrl: string;
+	image: string;
 	id: string;
 };
 

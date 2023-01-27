@@ -22,7 +22,7 @@ export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect
 		>
 			<div className={styles.collectionIcon}>
 				<HexaBoxContainer>
-					<Image width={46} height={46} src={position.imageUrl} alt={'collection Icon'} />
+					<Image width={46} height={46} src={position.image} alt={'collection Icon'} />
 				</HexaBoxContainer>
 			</div>
 			<div className={styles.positionName}>
