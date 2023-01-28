@@ -212,6 +212,7 @@ const DepositForm = (props: DepositFormProps) => {
 					queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
 				);
 				await queryClient.invalidateQueries(queryKeys.listUserUnderlying(walletPublicKey));
+				await queryClient.invalidateQueries(queryKeys.lendData(HERC20ContractAddress));
 				console.log('deposit succeed');
 			}
 			toast.success('Successful! Transaction complete');

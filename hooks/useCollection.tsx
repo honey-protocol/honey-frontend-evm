@@ -9,7 +9,8 @@ import {
 	getLiquidationData,
 	getMarketData,
 	getNFTPrice,
-	getUserCoupons
+	getUserCoupons,
+	marketData
 } from './useHtokenHelper';
 import { getImageUrlFromMetaData } from '../helpers/NFThelper';
 import { getMetaDataFromNFTId } from './useNFT';
@@ -21,6 +22,8 @@ import { ActiveCouponQueryQuery, getBuiltGraphSDK } from '../.graphclient';
 import { getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
 import { interestRateLend } from 'helpers/utils';
 import { getCollateralFactor } from './useHivemind';
+import { fromWei } from 'web3-utils';
+import { getContractsByHTokenAddr } from '../helpers/generalHelper';
 
 const defaultPosition: MarketTablePosition = {
 	name: '',
@@ -62,6 +65,13 @@ const defaultLendData: LendTableRow = {
 	available: 0,
 	supplied: 0,
 	rate: 0
+};
+
+const defaultMarket: marketData = {
+	HERC20ContractAddress: '',
+	interestRate: 0,
+	supplied: '0',
+	available: '0'
 };
 
 export function useMarket(
@@ -344,41 +354,25 @@ export function useLend(
 				queryFn: async () => {
 					if (htokenHelperContractAddress != '' || collection.HERC20ContractAddress != '') {
 						try {
-							const marketData = await getMarketData(
+							const result = await getMarketData(
 								htokenHelperContractAddress,
 								collection.HERC20ContractAddress,
 								collection.unit
 							);
-							const result: LendTableRow = {
-								key: collection.HERC20ContractAddress,
-								name: `${collection.name}/${collection.erc20Name}`,
-								icon: collection.icon,
-								erc20Icon: collection.erc20Icon,
-								available: parseFloat(marketData.available),
-								supplied: parseFloat(marketData.supplied),
-								rate: interestRateLend(
-									marketData.interestRate,
-									marketData.supplied,
-									marketData.available
-								)
-							};
 							return result;
 						} catch (e) {
 							console.error('Error fetching market data with error');
 							console.error(e);
-							const result: LendTableRow = {
-								key: collection.HERC20ContractAddress,
-								name: `${collection.name}/${collection.erc20Name}`,
-								icon: collection.icon,
-								erc20Icon: collection.erc20Icon,
-								rate: 0,
-								available: 0,
-								supplied: 0
+							const result: marketData = {
+								HERC20ContractAddress: collection.HERC20ContractAddress,
+								interestRate: 0,
+								supplied: '0',
+								available: '0'
 							};
 							return result;
 						}
 					} else {
-						return defaultLendData;
+						return defaultMarket;
 					}
 				},
 				staleTime: defaultCacheStaleTime,
@@ -386,11 +380,26 @@ export function useLend(
 			};
 		})
 	);
-	const lendResult = results
-		.map((result) => result.data || defaultLendData)
-		.filter((data) => data.name != '');
+	const filteredResults = results
+		.map((result) => result.data || defaultMarket)
+		.filter((data) => data.HERC20ContractAddress != '');
 	const isLoadingLendData = results.some((query) => query.isLoading);
 	const isFetchingLendData = results.some((query) => query.isFetching);
+	const lendResult = filteredResults.map((marketData) => {
+		const { icon, erc20Icon, erc20Name, name } = getContractsByHTokenAddr(
+			marketData.HERC20ContractAddress
+		);
+		const result: LendTableRow = {
+			key: marketData.HERC20ContractAddress,
+			name: `${name}/${erc20Name}`,
+			icon: icon,
+			erc20Icon: erc20Icon,
+			available: parseFloat(marketData.available),
+			supplied: parseFloat(marketData.supplied),
+			rate: interestRateLend(marketData.interestRate, marketData.supplied, marketData.available)
+		};
+		return result;
+	});
 	return [lendResult, isLoadingLendData || isFetchingLendData];
 }
 

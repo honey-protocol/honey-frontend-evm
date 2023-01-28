@@ -165,6 +165,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 				queryKeys.userBalance(walletPublicKey, ERC20ContractAddress)
 			);
 			await queryClient.invalidateQueries(queryKeys.listUserUnderlying(walletPublicKey));
+			await queryClient.invalidateQueries(queryKeys.lendData(HERC20ContractAddress));
 			handleSliderChange(0);
 			toast.success('Successful! Transaction complete');
 		} catch (err) {
