@@ -87,7 +87,7 @@ export function useBorrowUserPositions(
 	const uniqueMarket: Array<string> = [
 		...new Set(positions.map((item) => item.HERC20ContractAddr))
 	];
-	const nftPricesQuries = useQueries(
+	const nftPricesQueries = useQueries(
 		uniqueMarket.map((HERC20ContractAddress) => {
 			const { htokenHelperContractAddress } = getContractsByHTokenAddr(HERC20ContractAddress);
 			return {
@@ -115,7 +115,7 @@ export function useBorrowUserPositions(
 			};
 		})
 	);
-	const nftPrices = nftPricesQuries
+	const nftPrices = nftPricesQueries
 		.map((result) => result.data || defaultValue)
 		.filter((position) => position.HERC20ContractAddress != '');
 	const resultPosition = positions.map((position) => {
@@ -126,7 +126,12 @@ export function useBorrowUserPositions(
 		position.value = nftPrice && nftPrice.length > 0 ? nftPrice[0].price : 0;
 		return position;
 	});
-	return [resultPosition, isLoadingCollaterals || isFetchingCollaterals];
+	const isLoadingNFTPrices = nftPricesQueries.some((query) => query.isLoading);
+	const isFetchingNFTPrices = nftPricesQueries.some((query) => query.isFetching);
+	return [
+		resultPosition,
+		isLoadingCollaterals || isFetchingCollaterals || isLoadingNFTPrices || isFetchingNFTPrices
+	];
 }
 
 //todo implement later

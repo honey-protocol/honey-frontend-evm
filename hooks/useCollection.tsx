@@ -18,11 +18,9 @@ import { LendTableRow } from '../types/lend';
 import { generateMockHistoryData } from '../helpers/chartUtils';
 import { TimestampPoint } from '../components/HoneyChart/types';
 import { LiquidateTablePosition, LiquidateTableRow } from '../types/liquidate';
-import { ActiveCouponQueryQuery, getBuiltGraphSDK } from '../.graphclient';
 import { getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
 import { interestRateLend } from 'helpers/utils';
 import { getCollateralFactor } from './useHivemind';
-import { fromWei } from 'web3-utils';
 import { getContractsByHTokenAddr } from '../helpers/generalHelper';
 
 const defaultPosition: MarketTablePosition = {
@@ -55,16 +53,6 @@ const defaultLiquidationData: LiquidateTableRow = {
 	liqThreshold: 0,
 	totalDebt: 0,
 	tvl: 0
-};
-
-const defaultLendData: LendTableRow = {
-	key: '',
-	name: '',
-	icon: '',
-	erc20Icon: '',
-	available: 0,
-	supplied: 0,
-	rate: 0
 };
 
 const defaultMarket: marketData = {
