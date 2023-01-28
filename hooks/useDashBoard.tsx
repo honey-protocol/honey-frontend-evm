@@ -18,8 +18,9 @@ import {
 	getNFTName
 } from '../helpers/collateralHelper';
 import { fromWei } from 'web3-utils';
-import { getNFTPrice } from './useHtokenHelper';
+import { getMarketData, getNFTPrice, marketData } from './useHtokenHelper';
 import { getContractsByHTokenAddr } from '../helpers/generalHelper';
+import { interestRateLend } from '../helpers/utils';
 
 const sdk = getBuiltGraphSDK();
 
@@ -139,6 +140,12 @@ export function useLendUserPositions(
 	user: MoralisType.User | null
 ): [Array<LendUserPosition>, boolean] {
 	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const defaultMarket: marketData = {
+		HERC20ContractAddress: '',
+		interestRate: 0,
+		supplied: '0',
+		available: '0'
+	};
 	const onSubgraphQuerySuccess = (data: UnderlyingByUserQueryQuery) => {
 		return data;
 	};
@@ -167,16 +174,67 @@ export function useLendUserPositions(
 		const result: LendUserPosition = {
 			name: `${getNFTName(underlyingObj.hTokenAddr)}/${getERC20Name(underlyingObj.hTokenAddr)}`,
 			deposit: fromWei(underlyingObj.amount, getCollateralUnit(underlyingObj.hTokenAddr)),
-			value: Math.random() * 1000,
-			ir: Math.random(),
-			available: Math.random() * 1000,
+			supplied: 0,
+			rate: 0,
+			available: 0,
 			image: getNFTDefaultImage(underlyingObj.hTokenAddr),
 			id: underlyingObj.hTokenAddr
 		};
 		return result;
 	});
+	const positions = lendUserPositions || [];
+	const uniqueMarket: Array<string> = [...new Set(positions.map((item) => item.id))];
+	const lendDataQueries = useQueries(
+		uniqueMarket.map((HERC20ContractAddress) => {
+			const { htokenHelperContractAddress, unit } = getContractsByHTokenAddr(HERC20ContractAddress);
+			return {
+				queryKey: queryKeys.lendData(HERC20ContractAddress),
+				queryFn: async () => {
+					if (htokenHelperContractAddress != '' || HERC20ContractAddress != '') {
+						try {
+							const result = await getMarketData(
+								htokenHelperContractAddress,
+								HERC20ContractAddress,
+								unit
+							);
+							return result;
+						} catch (e) {
+							console.error('Error fetching market data with error');
+							console.error(e);
+							const result: marketData = {
+								HERC20ContractAddress: HERC20ContractAddress,
+								interestRate: 0,
+								supplied: '0',
+								available: '0'
+							};
+							return result;
+						}
+					} else {
+						return defaultMarket;
+					}
+				},
+				staleTime: defaultCacheStaleTime,
+				retry: false
+			};
+		})
+	);
+	const lendDatas = lendDataQueries
+		.map((result) => result.data || defaultMarket)
+		.filter((data) => data.HERC20ContractAddress != '');
+	const resultPositions = positions.map((position) => {
+		const lendData = lendDatas.filter(
+			(data) => data.HERC20ContractAddress.toLowerCase() == position.id.toLowerCase()
+		);
+		if (lendData && lendData.length > 0) {
+			const data = lendData[0];
+			position.supplied = parseFloat(data.supplied);
+			position.available = parseFloat(data.available);
+			position.rate = interestRateLend(data.interestRate, data.supplied, data.available);
+		}
+		return position;
+	});
 
-	return [lendUserPositions || [], isLoadingUnderlyings || isFetchingUnderlyings];
+	return [resultPositions, isLoadingUnderlyings || isFetchingUnderlyings];
 }
 
 //todo implement later

@@ -16,9 +16,9 @@ export type BorrowUserPosition = {
 export type LendUserPosition = {
 	name: string;
 	deposit: string;
-	value: number;
+	supplied: number;
 	available: number;
-	ir: number;
+	rate: number;
 	image: string;
 	id: string;
 };
