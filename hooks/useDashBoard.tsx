@@ -234,7 +234,13 @@ export function useLendUserPositions(
 		return position;
 	});
 
-	return [resultPositions, isLoadingUnderlyings || isFetchingUnderlyings];
+	const isLoadingLendData = lendDataQueries.some((query) => query.isLoading);
+	const isFetchingLendData = lendDataQueries.some((query) => query.isFetching);
+
+	return [
+		resultPositions,
+		isLoadingUnderlyings || isFetchingUnderlyings || isLoadingLendData || isFetchingLendData
+	];
 }
 
 //todo implement later
