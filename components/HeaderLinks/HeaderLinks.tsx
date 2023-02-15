@@ -25,16 +25,6 @@ export const links = [
 		href: '/liquidate'
 	},
 	{
-		title: 'FARM',
-		href: '/farm',
-		disabled: true
-	},
-	{
-		title: 'GOVERNANCE',
-		href: '/governance',
-		disabled: true
-	},
-	{
 		title: 'DOCUMENTATION',
 		href: '/documentation'
 	},
@@ -45,6 +35,10 @@ export const links = [
 	{
 		title: 'LEGACY WEBSITE',
 		href: 'https://honeylend.netlify.app/farm'
+	},
+	{
+		title: 'SUPPORT',
+		href: 'https://discord.gg/honeydefi'
 	}
 ];
 
@@ -71,7 +65,7 @@ const HeaderDropdownMenu = () => {
 		const setLinksToDisplay = () => {
 			const width = window.innerWidth;
 			if (width > 1100) {
-				setLinkDisplayed(6);
+				setLinkDisplayed(5);
 			}
 			if (width < 1100 && width > 768) {
 				setLinkDisplayed(4);
@@ -95,11 +89,7 @@ const HeaderDropdownMenu = () => {
 						})}
 						key={i}
 					>
-						{link.disabled ? (
-							<HoneyButton disabled variant="textSecondary">
-								{link.title}
-							</HoneyButton>
-						) : (
+						{(
 							<Link href={link.href} passHref>
 								<HoneyButton variant="textSecondary">{link.title}</HoneyButton>
 							</Link>
