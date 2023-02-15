@@ -11,7 +11,7 @@ NFTs. This repo contains a Front-end interface built with NextJS and makes use o
   use NFTs as collateral (🛠 WIP)
 - <a href="https://moralis.io/" target="blank">Moralis:</a> for connecting to EVM wallets, fetching NFT and calling
   contract
-- <a href="https://degen-xyz.vercel.app/" target="blank">Degen-UI:</a> for styling accopanied
+- <a href="https://degen-xyz.vercel.app/" target="blank">Degen-UI:</a> for styling accompanied
   by <a href="https://vanilla-extract.style/documentation/setup/" target="blank">Vanilla-Extract</a> for custom CSS
   classes
 
@@ -26,7 +26,7 @@ In order to run this project you need to create a
 ```
 
 You need both NEXT_PUBLIC_SERVER_URL and NEXT_PUBLIC_APP_ID to run this application. Please go to https://moralis.io/ to
-sign up an account. or you can just follow this [tutorial](https://blog.logrocket.com/using-moralis-nextjs/)
+sign up an account.
 Currently contract is deployed to Polygon test net( Mumbai) only. Please set up your server in Moralis using Mumbai
 
 ```bash
