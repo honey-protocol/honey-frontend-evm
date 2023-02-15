@@ -15,7 +15,7 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import { getColumnSortStatus } from '../../helpers/tableUtils';
 import HoneySider from '../../components/HoneySider/HoneySider';
 import HoneyContent from '../../components/HoneyContent/HoneyContent';
-import { Typography } from 'antd';
+import { Typography, Space } from 'antd';
 import { pageDescription, pageTitle } from 'styles/common.css';
 import HoneyTableNameCell from 'components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell';
 import HoneyTableRow from 'components/HoneyTable/HoneyTableRow/HoneyTableRow';
@@ -28,8 +28,9 @@ import useLendFlowStore from '../../store/lendFlowStore';
 import { LendWorkFlowType } from '../../types/workflows';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LendTableRow } from 'types/lend';
-
+import HoneyToggle from 'components/HoneyToggle/HoneyToggle';
 const { format: f, formatPercent: fp, formatERC20: fs } = formatNumber;
+
 
 const Lend: NextPage = () => {
 	const calculatedInterestRate = 0.1;
@@ -37,6 +38,7 @@ const Lend: NextPage = () => {
 	const [tableData, setTableData] = useState<LendTableRow[]>([]);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([]);
 	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
+	const [showWeeklyRates, setShowWeeklyRates] = useState(false);
 
 	const setWorkFlow = useLendFlowStore((state) => state.setWorkflow);
 	const { setHERC20ContractAddr, HERC20ContractAddr } = useLendFlowStore((state) => state);
@@ -118,6 +120,19 @@ const Lend: NextPage = () => {
 		// </div>
 		null;
 
+	const WeeklyToggle = () => (
+			<div className={style.headerCell['disabled']}>
+			  <Space direction="horizontal">
+				<HoneyToggle
+				  onChange={(value) => setShowWeeklyRates(value)}
+					title="Weekly"
+					checked={showWeeklyRates}
+				/>{' '}
+				WEEKLY
+			  </Space>
+			</div>
+		  );
+
 	const SearchForm = () => {
 		return (
 			<SearchInput
@@ -158,7 +173,7 @@ const Lend: NextPage = () => {
 					const sortOrder = getColumnSortStatus(sortColumns, 'rate');
 					return (
 						<div className={style.headerCell[sortOrder === 'disabled' ? 'disabled' : 'active']}>
-							<span>Interest rate</span>
+							{showWeeklyRates ? <span>Weekly Rate</span> : <span>Yearly Rate</span> }
 							<div className={style.sortIcon[sortOrder]} />
 						</div>
 					);
@@ -166,7 +181,7 @@ const Lend: NextPage = () => {
 				dataIndex: 'rate',
 				sorter: (a, b) => a.rate - b.rate,
 				render: (rate: number) => {
-					return <div className={c(style.rateCell, style.lendRate)}>{fp(rate)}</div>;
+					return <div className={c(style.rateCell, style.lendRate)}>{fp(rate / (showWeeklyRates ? 52 : 1))}</div>;
 				}
 			},
 			{
@@ -205,7 +220,7 @@ const Lend: NextPage = () => {
 			},
 			{
 				width: columnsWidth[4],
-				title: MyCollectionsToggle,
+				title: WeeklyToggle,
 				render: (_: null, row: LendTableRow) => {
 					return (
 						<div className={style.buttonsCell}>
@@ -218,7 +233,7 @@ const Lend: NextPage = () => {
 			}
 		],
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[tableData, isMyCollectionsFilterEnabled, searchQuery]
+		[tableData, isMyCollectionsFilterEnabled, searchQuery, showWeeklyRates]
 	);
 
 	const columnsMobile: ColumnType<LendTableRow>[] = useMemo(
@@ -265,7 +280,7 @@ const Lend: NextPage = () => {
 			}
 		],
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isMyCollectionsFilterEnabled, tableData, searchQuery]
+		[isMyCollectionsFilterEnabled, tableData, searchQuery, showWeeklyRates]
 	);
 
 	const lendSidebar = () => (
@@ -330,7 +345,7 @@ const Lend: NextPage = () => {
 							<SearchForm />
 						</div>
 						<div className={style.mobileRow}>
-							<MyCollectionsToggle />
+							<WeeklyToggle />
 						</div>
 					</div>
 					<div className={c(style.mobileTableHeader)}>
