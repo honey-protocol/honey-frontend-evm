@@ -10,6 +10,7 @@ import _ from 'lodash';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Image from 'next/image';
 import HoneyButton from '../../components/HoneyButton/HoneyButton';
+import HoneyToggle from 'components/HoneyToggle/HoneyToggle';
 import classNames from 'classnames';
 import HexaBoxContainer from '../../components/HexaBoxContainer/HexaBoxContainer';
 import { getColumnSortStatus } from '../../helpers/tableUtils';
@@ -20,7 +21,7 @@ import { formatNumber } from '../../helpers/format';
 import HoneyTableNameCell from '../../components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell';
 import HoneyTableRow from '../../components/HoneyTable/HoneyTableRow/HoneyTableRow';
 import { InfoBlock } from '../../components/InfoBlock/InfoBlock';
-import { Typography } from 'antd';
+import { Typography, Space } from 'antd';
 import { pageDescription, pageTitle } from '../../styles/common.css';
 import HoneyContent from '../../components/HoneyContent/HoneyContent';
 import EmptyStateDetails from '../../components/EmptyStateDetails/EmptyStateDetails';
@@ -38,8 +39,9 @@ import c from 'classnames';
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 const Markets: NextPage = () => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const [showWeeklyRates, setShowWeeklyRates] = useState(true);
 	const [tableData, setTableData] = useState<MarketTableRow[]>([]);
-	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
+	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(true);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
 	const {
 		HERC20ContractAddr: HERC20ContractAddress,
@@ -133,6 +135,20 @@ const Markets: NextPage = () => {
 	// </div>
 
 	/* being table components         */
+
+	const WeeklyToggle = () => (
+		<div className={style.headerCell['disabled']}>
+		  <Space direction="horizontal">
+			<HoneyToggle
+			  onChange={(value) => setShowWeeklyRates(value)}
+				title="Weekly"
+				checked={showWeeklyRates}
+			/>{' '}
+			WEEKLY
+		  </Space>
+		</div>
+	  );
+
 	const SearchForm = () => {
 		return <SearchInput onChange={handleSearchInputChange} placeholder="Search by name" />;
 	};
@@ -168,7 +184,7 @@ const Markets: NextPage = () => {
 						const sortOrder = getColumnSortStatus(sortColumns, 'rate');
 						return (
 							<div className={style.headerCell[sortOrder === 'disabled' ? 'disabled' : 'active']}>
-								<span>Interest rate</span>
+								{showWeeklyRates ? <span>Weekly Rate</span> : <span>Yearly Rate</span> }
 								<div className={style.sortIcon[sortOrder]} />
 							</div>
 						);
@@ -177,7 +193,7 @@ const Markets: NextPage = () => {
 					hidden: windowWidth < TABLET_BP,
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
 					render: (rate: number) => {
-						return <div className={classNames(style.rateCell, style.borrowRate)}>{fp(rate)}</div>;
+						return <div className={c(style.rateCell, style.lendRate)}>{fp(rate / (showWeeklyRates ? 52 : 1))}</div>;
 					}
 				},
 
@@ -218,7 +234,7 @@ const Markets: NextPage = () => {
 				},
 				{
 					width: columnsWidth[4],
-					title: MyCollectionsToggle,
+					title: WeeklyToggle,
 					render: (_: null, row: MarketTableRow) => {
 						return (
 							<div className={style.buttonsCell}>
@@ -231,7 +247,7 @@ const Markets: NextPage = () => {
 				}
 			].filter((column) => !column.hidden),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isMyCollectionsFilterEnabled, tableData, searchQuery, windowWidth]
+		[isMyCollectionsFilterEnabled, tableData, searchQuery, windowWidth, showWeeklyRates]
 	);
 
 	const columnsMobile: ColumnType<MarketTableRow>[] = useMemo(
@@ -479,7 +495,7 @@ const Markets: NextPage = () => {
 							<SearchForm />
 						</div>
 						<div className={style.mobileRow}>
-							<MyCollectionsToggle />
+							<WeeklyToggle />
 						</div>
 					</div>
 					<div className={c(style.mobileTableHeader)}>
