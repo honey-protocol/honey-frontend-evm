@@ -1,6 +1,16 @@
 declare module '*.png';
 declare module '*.svg';
 
+declare global {
+	interface Window {
+		ethereum: import('ethers').providers.ExternalProvider;
+	}
+}
+
+interface Window {
+	ethereum: any;
+}
+
 //tokenAcc is same as pubkey,
 type NFT = {
 	id: string; //id will be name-tokenId
