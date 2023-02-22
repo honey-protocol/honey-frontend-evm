@@ -7,7 +7,7 @@ import c from 'classnames';
 import Image from 'next/image';
 
 const NftCard = (props: NftCardProps) => {
-	const { onClick, nft, text, hint, buttonText, hasBorder = true } = props;
+	const { onClick, nft, text, hint, buttonText, hasBorder = true, isSelected = false } = props;
 
 	const _onClick = useCallback(() => {
 		if (typeof onClick === 'function') {
@@ -17,7 +17,10 @@ const NftCard = (props: NftCardProps) => {
 	}, [nft]);
 
 	return (
-		<div className={c(styles.nftCard, { [styles.hasBorder]: hasBorder })} onClick={_onClick}>
+		<div
+			className={c(styles.nftCard, { [styles.hasBorder]: hasBorder && !isSelected })}
+			onClick={_onClick}
+		>
 			<div className={styles.nftImage}>
 				<HexaBoxContainer>
 					<Image src={nft.image} alt={'user nft'} layout="fill" />

@@ -10,5 +10,7 @@ export const listItem = style({
 
 export const selectedListItem = style({
 	border: `2px solid ${vars.colors.brownMiddle}`,
-	borderRadius: '10px'
+	borderRadius: '10px',
+	background: vars.colors.white,
+	marginTop: -3
 });

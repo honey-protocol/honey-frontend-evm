@@ -6,4 +6,5 @@ export type NftCardProps = {
 	hint?: string;
 	buttonText: string;
 	hasBorder?: boolean;
+	isSelected?: boolean;
 };
