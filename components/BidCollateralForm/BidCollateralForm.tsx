@@ -123,7 +123,7 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 			isLoadingMinimumBid ||
 			isLoadingAvailableRefund
 		) {
-			toast.processing();
+			toast.processing('Fetching bid details');
 			setIsButtonDisable(true);
 		} else {
 			getBidState();
