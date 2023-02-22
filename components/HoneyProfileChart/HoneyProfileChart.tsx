@@ -141,7 +141,7 @@ const ProfileChart: FC<ProfileChartProps> = ({ data = [], size, value }) => {
 			<div className={style.honeyChartHeader}>
 				<div className={style.chartTitle}>
 					<div className={style.chartTitleText}>
-						<span>My exposure</span>
+						<span>My locked balance</span>
 						<div className={style.titleTooltipIcon} />
 					</div>
 					<div className={style.chartTitleValue}>{fusd(value)}</div>
