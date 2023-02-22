@@ -453,13 +453,13 @@ const Markets: NextPage = () => {
 
 	return (
 		<LayoutRedesign>
-			<div>
-				<Typography.Title className={pageTitle}>Borrow</Typography.Title>
-				<Typography.Text className={pageDescription}>
-					Get instant liquidity using your NFTs as collateral{' '}
-				</Typography.Text>
-			</div>
 			<HoneyContent sidebar={marketSidebar()}>
+				<div>
+					<Typography.Title className={pageTitle}>Borrow</Typography.Title>
+					<Typography.Text className={pageDescription}>
+						Get instant liquidity using your NFTs as collateral{' '}
+					</Typography.Text>
+				</div>
 				<div className={style.hideTablet}>
 					<HoneyTable
 						hasRowsShadow={true}
