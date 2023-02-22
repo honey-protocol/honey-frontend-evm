@@ -35,6 +35,7 @@ const NftList = (props: NftListProps) => {
 							hasBorder={index !== data.length - 1 || item.id === selectedNFTId}
 							text={`${item.tokenId}`}
 							buttonText={buttonText}
+							isSelected={selectedNFTId === item.id}
 						/>
 					</div>
 				))}
