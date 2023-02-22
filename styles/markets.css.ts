@@ -456,7 +456,6 @@ export const dashedDivider = style({
 	backgroundSize: '20px 1px, 20px 1px, 1px 20px, 1px 20px',
 	'@media': {
 		[`screen and (min-width: ${breakpoints.tablet}px)`]: {
-			left: 70,
 			backgroundImage: `linear-gradient(to right, ${vars.colors.lightGrayTransparent} 50%, transparent 50%)`,
 			backgroundSize: '20px 2px, 20px 2px, 2px 20px, 2px 20px'
 		}
