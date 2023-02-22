@@ -155,6 +155,11 @@ const Liquidate: NextPage = () => {
 										<Image src={row['icon']} layout="fill" alt="nft icon" />
 									</HexaBoxContainer>
 								</div>
+								<div className={classNames(style.collectionLogo, style.secondaryLogo)}>
+									<HexaBoxContainer>
+										<Image src={row.erc20Icon} layout="fill" alt="nft icon" />
+									</HexaBoxContainer>
+								</div>
 							</div>
 							<div className={style.collectionName}>{row['name']}</div>
 						</div>
@@ -272,6 +277,11 @@ const Liquidate: NextPage = () => {
 											<div className={style.collectionLogo}>
 												<HexaBoxContainer>
 													<Image src={row['icon']} layout="fill" alt="nft icon" />
+												</HexaBoxContainer>
+											</div>
+											<div className={classNames(style.collectionLogo, style.secondaryLogo)}>
+												<HexaBoxContainer>
+													<Image src={row.erc20Icon} layout="fill" alt="nft icon" />
 												</HexaBoxContainer>
 											</div>
 										</div>

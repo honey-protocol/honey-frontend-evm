@@ -138,16 +138,16 @@ const Markets: NextPage = () => {
 
 	const WeeklyToggle = () => (
 		<div className={style.headerCell['disabled']}>
-		  <Space direction="horizontal">
-			<HoneyToggle
-			  onChange={(value) => setShowWeeklyRates(value)}
-				title="Weekly"
-				checked={showWeeklyRates}
-			/>{' '}
-			WEEKLY
-		  </Space>
+			<Space direction="horizontal">
+				<HoneyToggle
+					onChange={(value) => setShowWeeklyRates(value)}
+					title="Weekly"
+					checked={showWeeklyRates}
+				/>{' '}
+				WEEKLY
+			</Space>
 		</div>
-	  );
+	);
 
 	const SearchForm = () => {
 		return <SearchInput onChange={handleSearchInputChange} placeholder="Search by name" />;
@@ -172,6 +172,11 @@ const Markets: NextPage = () => {
 											<Image src={row['icon']} layout="fill" alt="nft icon" />
 										</HexaBoxContainer>
 									</div>
+									<div className={c(style.collectionLogo, style.secondaryLogo)}>
+										<HexaBoxContainer>
+											<Image src={row.erc20Icon} layout="fill" alt="nft icon" />
+										</HexaBoxContainer>
+									</div>
 								</div>
 								<div className={style.collectionName}>{row['name']}</div>
 							</div>
@@ -184,7 +189,7 @@ const Markets: NextPage = () => {
 						const sortOrder = getColumnSortStatus(sortColumns, 'rate');
 						return (
 							<div className={style.headerCell[sortOrder === 'disabled' ? 'disabled' : 'active']}>
-								{showWeeklyRates ? <span>Weekly Rate</span> : <span>Yearly Rate</span> }
+								{showWeeklyRates ? <span>Weekly Rate</span> : <span>Yearly Rate</span>}
 								<div className={style.sortIcon[sortOrder]} />
 							</div>
 						);
@@ -193,7 +198,11 @@ const Markets: NextPage = () => {
 					hidden: windowWidth < TABLET_BP,
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
 					render: (rate: number) => {
-						return <div className={c(style.rateCell, style.lendRate)}>{fp(rate / (showWeeklyRates ? 52 : 1))}</div>;
+						return (
+							<div className={c(style.rateCell, style.lendRate)}>
+								{fp(rate / (showWeeklyRates ? 52 : 1))}
+							</div>
+						);
 					}
 				},
 
@@ -266,6 +275,11 @@ const Markets: NextPage = () => {
 											<div className={style.collectionLogo}>
 												<HexaBoxContainer>
 													<Image src={row['icon']} layout="fill" alt="nft icon" />
+												</HexaBoxContainer>
+											</div>
+											<div className={c(style.collectionLogo, style.secondaryLogo)}>
+												<HexaBoxContainer>
+													<Image src={row.erc20Icon} layout="fill" alt="nft icon" />
 												</HexaBoxContainer>
 											</div>
 										</div>
