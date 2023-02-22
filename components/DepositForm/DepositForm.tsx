@@ -116,7 +116,7 @@ const DepositForm = (props: DepositFormProps) => {
 			isLoadingApproval ||
 			isLoadingLendData
 		) {
-			toast.processing();
+			toast.processing('Loading');
 		} else {
 			getDepositState();
 			toast.clear();

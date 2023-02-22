@@ -127,7 +127,7 @@ const RepayForm = (props: RepayProps) => {
 			isLoadingUserBalance ||
 			isLoadingApproval
 		) {
-			toast.processing();
+			toast.processing('Loading');
 		} else {
 			getRepayState();
 			toast.clear();

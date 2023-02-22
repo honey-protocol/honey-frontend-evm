@@ -115,7 +115,7 @@ const BorrowForm = (props: BorrowProps) => {
 			isLoadingBorrowAmount ||
 			isLoadingPositions
 		) {
-			toast.processing();
+			toast.processing('Loading');
 		} else {
 			toast.clear();
 		}
@@ -426,7 +426,8 @@ const BorrowForm = (props: BorrowProps) => {
 							<InfoBlock
 								title={
 									<span className={hAlign}>
-										Interest Rate<div className={questionIcon} />
+										Interest Rate
+										<div className={questionIcon} />
 									</span>
 								}
 								toolTipLabel={

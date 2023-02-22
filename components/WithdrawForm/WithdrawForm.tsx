@@ -91,7 +91,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 			isLoadingTotalBorrow ||
 			isLoadingLendData
 		) {
-			toast.processing();
+			toast.processing('Loading');
 		} else {
 			toast.clear();
 		}

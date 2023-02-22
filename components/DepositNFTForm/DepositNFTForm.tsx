@@ -57,7 +57,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 
 	useEffect(() => {
 		if (isLoadingNFT || isLoadingApproval || isLoadingMaxBorrow) {
-			toast.processing();
+			toast.processing('Loading');
 		} else {
 			toast.clear();
 		}

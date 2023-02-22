@@ -120,7 +120,7 @@ const BidForm = (props: BidFormProps) => {
 			isLoadingMinimumBid ||
 			isLoadingAvailableRefund
 		) {
-			toast.processing();
+			toast.processing('Loading');
 			setIsButtonDisable(true);
 		} else {
 			getBidState();
