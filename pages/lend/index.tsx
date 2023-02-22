@@ -31,7 +31,6 @@ import { LendTableRow } from 'types/lend';
 import HoneyToggle from 'components/HoneyToggle/HoneyToggle';
 const { format: f, formatPercent: fp, formatERC20: fs } = formatNumber;
 
-
 const Lend: NextPage = () => {
 	const calculatedInterestRate = 0.1;
 	const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -121,17 +120,17 @@ const Lend: NextPage = () => {
 		null;
 
 	const WeeklyToggle = () => (
-			<div className={style.headerCell['disabled']}>
-			  <Space direction="horizontal">
+		<div className={style.headerCell['disabled']}>
+			<Space direction="horizontal">
 				<HoneyToggle
-				  onChange={(value) => setShowWeeklyRates(value)}
+					onChange={(value) => setShowWeeklyRates(value)}
 					title="Weekly"
 					checked={showWeeklyRates}
 				/>{' '}
 				WEEKLY
-			  </Space>
-			</div>
-		  );
+			</Space>
+		</div>
+	);
 
 	const SearchForm = () => {
 		return (
@@ -161,6 +160,11 @@ const Lend: NextPage = () => {
 										<Image src={row['icon']} layout="fill" alt={'nft icon'} />
 									</HexaBoxContainer>
 								</div>
+								<div className={c(style.collectionLogo, style.secondaryLogo)}>
+									<HexaBoxContainer>
+										<Image src={row.erc20Icon} layout="fill" alt="nft icon" />
+									</HexaBoxContainer>
+								</div>
 							</div>
 							<div className={style.collectionName}>{row['name']}</div>
 						</div>
@@ -173,7 +177,7 @@ const Lend: NextPage = () => {
 					const sortOrder = getColumnSortStatus(sortColumns, 'rate');
 					return (
 						<div className={style.headerCell[sortOrder === 'disabled' ? 'disabled' : 'active']}>
-							{showWeeklyRates ? <span>Weekly Rate</span> : <span>Yearly Rate</span> }
+							{showWeeklyRates ? <span>Weekly Rate</span> : <span>Yearly Rate</span>}
 							<div className={style.sortIcon[sortOrder]} />
 						</div>
 					);
@@ -181,7 +185,11 @@ const Lend: NextPage = () => {
 				dataIndex: 'rate',
 				sorter: (a, b) => a.rate - b.rate,
 				render: (rate: number) => {
-					return <div className={c(style.rateCell, style.lendRate)}>{fp(rate / (showWeeklyRates ? 52 : 1))}</div>;
+					return (
+						<div className={c(style.rateCell, style.lendRate)}>
+							{fp(rate / (showWeeklyRates ? 52 : 1))}
+						</div>
+					);
 				}
 			},
 			{
@@ -252,6 +260,11 @@ const Lend: NextPage = () => {
 											<div className={style.collectionLogo}>
 												<HexaBoxContainer>
 													<Image src={row['icon']} layout="fill" alt={'collection logo'} />
+												</HexaBoxContainer>
+											</div>
+											<div className={c(style.collectionLogo, style.secondaryLogo)}>
+												<HexaBoxContainer>
+													<Image src={row.erc20Icon} layout="fill" alt="nft icon" />
 												</HexaBoxContainer>
 											</div>
 										</div>
