@@ -7,7 +7,7 @@ const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 module.exports = (phase, { defaultConfig }) => {
 	if (phase === PHASE_DEVELOPMENT_SERVER) {
 		const env = {
-			chain: 'mumbai',
+			chain: '0x13881', //MUMBAI
 			confirmedBlocks: 1,
 			envName: 'dev',
 			basePath: '/dev'
@@ -24,7 +24,7 @@ module.exports = (phase, { defaultConfig }) => {
 		return withVanillaExtract(devNextConfig);
 	} else {
 		const env = {
-			chain: 'mumbai',
+			chain: '0x13881', //MUMBAI
 			confirmedBlocks: 1,
 			envName: 'prod',
 			basePath: '/prod'
