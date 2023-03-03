@@ -13,6 +13,20 @@ import { useEffect } from 'react';
 import useLoanFlowStore from '../store/loanFlowStore';
 import useLendFlowStore from '../store/lendFlowStore';
 import useLiquidationFlowStore from '../store/liquidationFlowStore';
+import MoralisV2 from 'moralis';
+
+const initializeMoralis = async () => {
+	try {
+		console.log('Initializing moralis');
+		await MoralisV2.start({
+			apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY
+			// ...and any other configuration
+		});
+		console.log('Moralis initialized');
+	} catch (error) {
+		console.log('Failed to initialize moralis');
+	}
+};
 
 const queryClient = new QueryClient();
 
@@ -32,6 +46,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 			resetLiquidationFlowStore();
 		};
 		router.events.on('routeChangeStart', handleRouteChange);
+
+		//Initialize moralis
+		initializeMoralis();
+
 		return () => {
 			router.events.off('routeChangeStart', handleRouteChange);
 		};
