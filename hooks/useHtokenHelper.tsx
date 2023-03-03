@@ -5,6 +5,7 @@ import { fromWei, Unit } from 'web3-utils';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
+import MoralisV2 from 'moralis';
 
 export async function getUserSupplyBalance(
 	htokenHelperContractAddress: string,
@@ -16,13 +17,14 @@ export async function getUserSupplyBalance(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getAvailableUnderlyingForUser',
+		functionName: 'getAvailableUnderlyingForUser',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress, _account: address }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const supplyBalance = fromWei(result, unit);
 	return supplyBalance;
 }
@@ -36,13 +38,14 @@ export async function getTotalSupplyBalance(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getAvailableUnderlying',
+		functionName: 'getAvailableUnderlying',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const supplyBalance = fromWei(result, unit);
 	return supplyBalance;
 }
@@ -58,14 +61,15 @@ export async function getAllCollateral(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getAllCollateralPerHToken',
+		functionName: 'getAllCollateralPerHToken',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress, _startTokenId: start, _endTokenId: end }
 	};
 
 	// @ts-ignore
-	const results: Array<any> = await Moralis.Web3API.native.runContractFunction(options);
-	const loans = results.map((result) => {
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const results: any = response.result;
+	const loans = results.map((result: any) => {
 		const [id, active, owner, collateralId, borrowAmount, interestPerToken] = result;
 		const userLoan: loan = {
 			HERC20ContractAddress: HERC20ContractAddress,
@@ -77,7 +81,7 @@ export async function getAllCollateral(
 		};
 		return userLoan;
 	});
-	return loans.filter((loan) => loan.active && loan.borrowAmount != '0');
+	return loans.filter((loan: any) => loan.active && loan.borrowAmount != '0');
 }
 
 export function useGetTotalUnderlyingBalance(
@@ -169,13 +173,14 @@ export async function getNFTPriceInUSD(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getFloorPriceInUSD',
+		functionName: 'getFloorPriceInUSD',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const nftPrice = fromWei(result, unit);
 	return nftPrice;
 }
@@ -218,13 +223,14 @@ export async function getNFTPrice(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getFloorPriceInUnderlying',
+		functionName: 'getFloorPriceInUnderlying',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const returnValue: nftPrice = {
 		HERC20ContractAddress: HERC20ContractAddress,
 		price: parseInt(result) / 10000.0
@@ -241,13 +247,14 @@ export async function getAssets(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getAssets',
+		functionName: 'getAssets',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const totalBorrow = result[0] as string;
 	const totalReserve = result[1] as string;
 	const deposit = result[2] as string;
@@ -269,13 +276,14 @@ export async function getUnderlyingPriceInUSD(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getUnderlyingPriceInUSD',
+		functionName: 'getUnderlyingPriceInUSD',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return parseInt(result) / 10000.0;
 }
 
@@ -324,13 +332,14 @@ export async function getMaxBorrowableAmount(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getMaxBorrowableAmountInUnderlying',
+		functionName: 'getMaxBorrowableAmountInUnderlying',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress, _hivemind: hivemindContractAddress }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return parseInt(result) / 10000.0;
 }
 
@@ -422,13 +431,14 @@ export async function getActiveCoupons(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getActiveCoupons',
+		functionName: 'getActiveCoupons',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress, _hasDebt: true }
 	};
 	// @ts-ignore
-	const results: Array<any> = await Moralis.Web3API.native.runContractFunction(options);
-	const coupons = results.map((result) => {
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const results: any = response.result;
+	const coupons = results.map((result: any) => {
 		const [id, active, owner, collateralId, borrowAmount, debtShares] = result;
 		const userCoupon: coupon = {
 			NFTId: collateralId,
@@ -455,17 +465,20 @@ export const getUserCoupons = async ({
 	userAddress,
 	unit
 }: getUserCouponsVariables) => {
+	console.log('get coupon called');
 	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getUserCoupons',
+		functionName: 'getUserCoupons',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress, _user: userAddress }
 	};
+	console.log('called', chain);
 	// @ts-ignore
-	const results: Array<any> = await Moralis.Web3API.native.runContractFunction(options);
-	const coupons = results.map((result) => {
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const results: any = response.result;
+	const coupons = results.map((result: any) => {
 		const [id, active, owner, collateralId, borrowAmount, debtShares] = result;
 		const userCoupon: coupon = {
 			NFTId: collateralId,
@@ -476,7 +489,9 @@ export const getUserCoupons = async ({
 		};
 		return userCoupon;
 	});
-	return coupons.filter((coupon) => coupon.active);
+
+	console.log({ coupons });
+	return coupons.filter((coupon: any) => coupon.active);
 };
 
 export function useGetUserCoupons(
@@ -536,13 +551,14 @@ export async function getMarketData(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getFrontendMarketData',
+		functionName: 'getFrontendMarketData',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const interestRate = result[0] as number;
 	const supplied = result[1] as string;
 	const available = result[2] as string;
@@ -572,13 +588,14 @@ export async function getCouponData(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getFrontendCouponData',
+		functionName: 'getFrontendCouponData',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress, _couponId: couponId }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const debt = result[0] as string;
 	const allowance = result[1] as string;
 	const NFTPrice = result[2] as string;
@@ -606,13 +623,14 @@ export async function getLiquidationData(
 	const options = {
 		chain: chain,
 		address: htokenHelperContractAddress,
-		function_name: 'getFrontendLiquidationData',
+		functionName: 'getFrontendLiquidationData',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const liquidationThreshold = result[0] as string;
 	const totalDebt = result[1] as string;
 	const tvl = result[2] as number;

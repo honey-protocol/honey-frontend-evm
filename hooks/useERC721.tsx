@@ -2,6 +2,7 @@ import React from 'react';
 import Moralis from 'moralis-v1';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
 import { fromWei } from 'web3-utils';
+import MoralisV2 from 'moralis';
 
 export default async function getDepositNFTApproval(
 	ERC721ContractAddress: string,
@@ -29,12 +30,13 @@ export async function getNFTApproved(ERC721ContractAddress: string, NFTTokenId: 
 	const options = {
 		chain: chain,
 		address: ERC721ContractAddress,
-		function_name: 'getApproved',
+		functionName: 'getApproved',
 		abi: ABI,
 		params: { tokenId: NFTTokenId }
 	};
 
 	// @ts-ignore
-	const result = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return result;
 }

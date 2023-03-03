@@ -7,6 +7,7 @@ import { safeToWei } from '../helpers/repayHelper';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime, unlimited } from '../constants/constant';
+import MoralisV2 from 'moralis';
 
 export async function getDepositUnderlyingApproval(
 	ERC20ContractAddress: string,
@@ -103,13 +104,15 @@ export async function getAllowance(
 	const options = {
 		chain: chain,
 		address: ERC20ContractAddress,
-		function_name: 'allowance',
+		functionName: 'allowance',
 		abi: ABI,
 		params: { spender: contractAddress, owner: userAddress }
 	};
 
 	// @ts-ignore
-	return await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const results: any = response.result;
+	return results;
 }
 
 export function useCheckUnlimitedApproval(
@@ -157,13 +160,14 @@ export async function getUserBalance(
 	const options = {
 		chain: chain,
 		address: ERC20ContractAddress,
-		function_name: 'balanceOf',
+		functionName: 'balanceOf',
 		abi: ABI,
 		params: { account: userAddress }
 	};
 
 	// @ts-ignore
-	const result = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return fromWei(result, unit);
 }
 

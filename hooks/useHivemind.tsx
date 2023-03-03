@@ -5,6 +5,7 @@ import MoralisType from 'moralis-v1';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
+import MoralisV2 from 'moralis';
 
 export async function getMaxBorrowFromNFT(
 	hivemindContractAddress: string,
@@ -18,7 +19,7 @@ export async function getMaxBorrowFromNFT(
 	const options = {
 		chain: chain,
 		address: hivemindContractAddress,
-		function_name: 'getHypotheticalAccountLiquidity',
+		functionName: 'getHypotheticalAccountLiquidity',
 		abi: ABI,
 		params: {
 			_account: userAddress,
@@ -30,7 +31,8 @@ export async function getMaxBorrowFromNFT(
 		}
 	};
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return fromWei(result['liquidityTillLTV'], unit);
 }
 
@@ -99,14 +101,15 @@ export async function getCollateralFactor(
 	const options = {
 		chain: chain,
 		address: hivemindContractAddress,
-		function_name: 'getCollateralFactor',
+		functionName: 'getCollateralFactor',
 		abi: ABI,
 		params: {
 			_hToken: HERC20ContractAddress
 		}
 	};
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return parseFloat(fromWei(result, unit));
 }
 
