@@ -7,6 +7,7 @@ import { safeToWei } from '../helpers/repayHelper';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { blackHole, defaultCacheStaleTime } from '../constants/constant';
+import MoralisV2 from 'moralis';
 
 export async function depositNFTCollateral(HERC20ContractAddress: string, NFTTokenId: string) {
 	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
@@ -111,13 +112,14 @@ export async function getBorrowFromCollateral(
 	const options = {
 		chain: chain,
 		address: HERC20ContractAddress,
-		function_name: 'getDebtForCollateral',
+		functionName: 'getDebtForCollateral',
 		abi: ABI,
 		params: { _collateralId: NFTTokenId }
 	};
 
 	// @ts-ignore
-	const result = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return fromWei(result, unit);
 }
 
@@ -173,13 +175,14 @@ export async function getBorrowBalance(HERC20ContractAddress: string, address: s
 	const options = {
 		chain: chain,
 		address: HERC20ContractAddress,
-		function_name: 'getAccountSnapshot',
+		functionName: 'getAccountSnapshot',
 		abi: ABI,
 		params: { _account: address }
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const borrowBalance = fromWei(result[1], unit);
 	return borrowBalance;
 }
@@ -189,13 +192,14 @@ export async function getTotalBorrow(HERC20ContractAddress: string, unit: Unit) 
 	const options = {
 		chain: chain,
 		address: HERC20ContractAddress,
-		function_name: 'totalBorrows',
+		functionName: 'totalBorrows',
 		abi: ABI,
 		params: {}
 	};
 
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return fromWei(result, unit);
 }
 
@@ -234,13 +238,14 @@ export async function getTotalReserves(HERC20ContractAddress: string, unit: Unit
 	const options = {
 		chain: chain,
 		address: HERC20ContractAddress,
-		function_name: 'totalReserves',
+		functionName: 'totalReserves',
 		abi: ABI,
 		params: {}
 	};
 
 	// @ts-ignore
-	const result = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const totalReserve = fromWei(result, unit);
 	return totalReserve;
 }

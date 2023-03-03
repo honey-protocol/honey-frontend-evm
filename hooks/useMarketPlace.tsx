@@ -6,6 +6,7 @@ import { toWei, Unit } from 'web3-utils';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
 import Moralis from 'moralis-v1';
 import { Bid, BidInfo } from '../types/liquidate';
+import MoralisV2 from 'moralis';
 
 //we are going to let liquidation related function to return value with mantissa so we can do
 //high precision math in the front end
@@ -17,13 +18,14 @@ export async function getCollectionBids(
 	const options = {
 		chain: chain,
 		address: marketContractAddress,
-		function_name: 'viewAuctionCollection',
+		functionName: 'viewAuctionCollection',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
 
 	// @ts-ignore
-	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const highestBidder: string = result[1];
 	const highestBid = result[2] as string;
 	const bidders: Array<string> = result[3];
@@ -146,13 +148,14 @@ export async function getCollectionMinimumBid(
 	const options = {
 		chain: chain,
 		address: marketContractAddress,
-		function_name: 'viewMinimumNextBidCollection',
+		functionName: 'viewMinimumNextBidCollection',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress }
 	};
 
 	// @ts-ignore
-	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return result;
 }
 
@@ -198,13 +201,14 @@ export async function getAvailableRefund(
 	const options = {
 		chain: chain,
 		address: marketContractAddress,
-		function_name: 'viewAvailableRefund',
+		functionName: 'viewAvailableRefund',
 		abi: ABI,
 		params: { _token: ERC20ContractAddress, _user: userAddress }
 	};
 
 	// @ts-ignore
-	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return result;
 }
 
@@ -305,13 +309,14 @@ export async function getCollateralBids(
 	const options = {
 		chain: chain,
 		address: marketContractAddress,
-		function_name: 'viewAuctionSingle',
+		functionName: 'viewAuctionSingle',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress, _collateralId: NFTTokenId }
 	};
 
 	// @ts-ignore
-	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	const highestBidder: string = result[1];
 	const highestBid = result[2] as string;
 	const bidders: Array<string> = result[3];
@@ -444,13 +449,14 @@ export async function getCollateralMinimumBid(
 	const options = {
 		chain: chain,
 		address: marketContractAddress,
-		function_name: 'viewMinimumNextBidSingle',
+		functionName: 'viewMinimumNextBidSingle',
 		abi: ABI,
 		params: { _hToken: HERC20ContractAddress, _collateralId: NFTTokenId }
 	};
 
 	// @ts-ignore
-	const result: Array = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return result;
 }
 
