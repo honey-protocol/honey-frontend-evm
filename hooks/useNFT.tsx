@@ -8,6 +8,7 @@ import { getNFTApproved } from './useERC721';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
+import MoralisV2 from 'moralis';
 
 const defaultNFT: NFT = {
 	id: '',
@@ -21,12 +22,12 @@ export async function getMetaDataFromNFTId(ERC721ContractAddress: string, NFTId:
 	const options = {
 		chain: chain,
 		address: ERC721ContractAddress,
-		token_id: NFTId
+		tokenId: NFTId
 	};
 
 	// @ts-ignore
-	const result = await Moralis.Web3API.token.getTokenIdMetadata(options);
-	return result;
+	const response: any = await MoralisV2.EvmApi.nft.getNFTMetadata(options);
+	return response?.result;
 }
 
 export function useGetMetaDataFromNFTId(
@@ -49,7 +50,7 @@ export function useGetMetaDataFromNFTId(
 			if (ERC721ContractAddress != '' && NFTId != '') {
 				const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, NFTId);
 				const result: NFT = {
-					id: `${metaData.name}-${metaData.token_id}`, //id will be name-tokenId
+					id: `${metaData.name}-${metaData?.token_id}`, //id will be name-tokenId
 					name: metaData.name,
 					symbol: metaData.symbol,
 					image: getImageUrlFromMetaData(metaData.metadata || ''),
@@ -155,19 +156,19 @@ export async function getNFTList(ERC721ContractAddress: string, address: string)
 	const options = {
 		chain: chain,
 		address: address,
-		token_address: ERC721ContractAddress
+		tokenAddresses: [ERC721ContractAddress]
 	};
 
 	// @ts-ignore
-	const userNFTs = await Moralis.Web3API.account.getNFTsForContract(options);
+	const userNFTs = await MoralisV2.EvmApi.nft.getWalletNFTs(options);
 	const results = userNFTs?.result?.map((userNFT) => {
 		const result: NFT = {
-			id: `${userNFT.name}-${userNFT.token_id}`, //id will be name-tokenId
-			name: userNFT.name,
+			id: `${userNFT.name}-${userNFT.tokenId}`, //id will be name-tokenId
+			name: userNFT.name ?? '',
 			symbol: userNFT.symbol,
-			image: getImageUrlFromMetaData(userNFT.metadata || ''),
-			tokenId: userNFT.token_id,
-			contractAddress: userNFT.token_address
+			image: getImageUrlFromMetaData(JSON.stringify(userNFT.metadata) || ''),
+			tokenId: userNFT.tokenId.toString() ?? '',
+			contractAddress: userNFT.tokenAddress.format('lowercase')
 		};
 		return result;
 	});
