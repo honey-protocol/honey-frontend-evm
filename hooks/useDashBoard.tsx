@@ -21,6 +21,7 @@ import { fromWei } from 'web3-utils';
 import { getMarketData, getNFTPrice, marketData } from './useHtokenHelper';
 import { getContractsByHTokenAddr } from '../helpers/generalHelper';
 import { interestRateLend } from '../helpers/utils';
+import { TCurrentUser } from 'contexts/userContext';
 
 const sdk = getBuiltGraphSDK();
 
@@ -40,9 +41,9 @@ export function useGetSliderPositions(): [Array<CollectionPosition>, boolean] {
 }
 
 export function useBorrowUserPositions(
-	user: MoralisType.User | null
+	user: TCurrentUser | null
 ): [Array<BorrowUserPosition>, boolean] {
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const defaultValue: nftPrice = {
 		HERC20ContractAddress: '',
 		price: 0
@@ -137,9 +138,9 @@ export function useBorrowUserPositions(
 
 //todo implement later
 export function useLendUserPositions(
-	user: MoralisType.User | null
+	user: TCurrentUser | null
 ): [Array<LendUserPosition>, boolean] {
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const defaultMarket: marketData = {
 		HERC20ContractAddress: '',
 		interestRate: 0,

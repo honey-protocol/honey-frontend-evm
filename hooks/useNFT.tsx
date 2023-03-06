@@ -9,6 +9,7 @@ import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
 import MoralisV2 from 'moralis';
+import { TCurrentUser } from 'contexts/userContext';
 
 const defaultNFT: NFT = {
 	id: '',
@@ -161,7 +162,7 @@ export async function getNFTList(ERC721ContractAddress: string, address: string)
 
 	// @ts-ignore
 	const userNFTs = await MoralisV2.EvmApi.nft.getWalletNFTs(options);
-	const results = userNFTs?.result?.map((userNFT) => {
+	const results = userNFTs?.result?.map((userNFT: any) => {
 		const result: NFT = {
 			id: `${userNFT.name}-${userNFT.tokenId}`, //id will be name-tokenId
 			name: userNFT.name ?? '',
@@ -177,7 +178,7 @@ export async function getNFTList(ERC721ContractAddress: string, address: string)
 }
 
 export function useFetchNFTByUserByCollection(
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	ERC721ContractAddress: string
 ): [Array<NFT>, boolean] {
 	const onSuccess = (data: NFT[]) => {
@@ -186,7 +187,7 @@ export function useFetchNFTByUserByCollection(
 	const onError = () => {
 		return [] as NFT[];
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: NFTs,
 		isLoading,
