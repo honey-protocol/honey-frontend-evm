@@ -13,13 +13,14 @@ import { UserContext } from '../../contexts/userContext';
 import { useMoralis } from 'react-moralis';
 import BorrowForm from '../BorrowForm/BorrowForm';
 import WithdrawForm from '../WithdrawForm/WithdrawForm';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type Tab = 'deposit' | 'withdraw';
 
 const LendSidebar = (props: LendSidebarProps) => {
 	const {} = props;
 	const workflow = useLendFlowStore((state) => state.workflow);
-	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
+	const { openConnectModal } = useConnectModal();
 	const queryClient = useQueryClient();
 	/*  begin tab function            */
 	const items: [HoneyTabItem, HoneyTabItem] = [
@@ -36,27 +37,8 @@ const LendSidebar = (props: LendSidebarProps) => {
 		setActiveTab(tabKey as Tab);
 	};
 	/*  end   tab function            */
-	/*  begin authentication function */
-	const { currentUser, setCurrentUser } = useContext(UserContext);
-	const { authenticate, user } = useMoralis();
-	const connect = async () => {
-		if (!currentUser) {
-			try {
-				await authenticate({ signingMessage: 'Authorize linking of your wallet' });
-				console.log('logged in user:', user?.get('ethAddress'));
-				await queryClient.invalidateQueries(['user']);
-				await queryClient.invalidateQueries(['nft']);
-				await queryClient.invalidateQueries(['coupons']);
-				setCurrentUser(user);
-			} catch (e) {
-				console.log(e);
-			} finally {
-				setIsSidebarVisibleInMobile(false);
-				document.body.classList.remove('disable-scroll');
-			}
-		}
-	};
-	/* end authentication function */
+	const { currentUser } = useContext(UserContext);
+
 	return (
 		<div className={styles.lendSidebarContainer}>
 			<HoneyTabs activeKey={activeTab} onTabChange={handleTabChange} items={items} active={true}>
@@ -68,7 +50,7 @@ const LendSidebar = (props: LendSidebarProps) => {
 						buttons={[
 							{
 								title: 'CONNECT WALLET',
-								onClick: connect
+								onClick: openConnectModal
 							}
 						]}
 					/>

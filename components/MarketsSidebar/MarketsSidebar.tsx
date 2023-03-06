@@ -12,6 +12,7 @@ import { useQueryClient } from 'react-query';
 import DepositNFTForm from '../DepositNFTForm/DepositNFTForm';
 import BorrowForm from '../BorrowForm/BorrowForm';
 import RepayForm from '../RepayForm/RepayForm';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type Tab = 'borrow' | 'repay';
 
@@ -29,28 +30,12 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
 		{ label: 'Borrow', key: 'borrow' },
 		{ label: 'Repay', key: 'repay', disabled: Boolean(workflow != LoanWorkFlowType.loanOrBorrow) }
 	];
+
+	//Rainbowkit connect modalaads
+	const { openConnectModal } = useConnectModal();
 	/*  end   tab function            */
 	/*  begin authentication function */
-	const { currentUser, setCurrentUser } = useContext(UserContext);
-	const { authenticate, user } = useMoralis();
-	const connect = async () => {
-		if (!currentUser) {
-			try {
-				await authenticate({ signingMessage: 'Authorize linking of your wallet' });
-				console.log('logged in user:', user?.get('ethAddress'));
-				await queryClient.invalidateQueries(['user']);
-				await queryClient.invalidateQueries(['nft']);
-				await queryClient.invalidateQueries(['coupons']);
-				setCurrentUser(user);
-			} catch (e) {
-				console.log(e);
-			} finally {
-				setIsSidebarVisibleInMobile(false);
-				document.body.classList.remove('disable-scroll');
-			}
-		}
-	};
-	/* end authentication function */
+	const { currentUser } = useContext(UserContext);
 
 	const initDepositNFTFlow = () => {
 		setWorkflow(LoanWorkFlowType.depositNFT);
@@ -66,7 +51,7 @@ const MarketsSidebar = (props: MarketsSidebarProps) => {
 						icon={<div className={styles.lightIcon} />}
 						title="You didn’t connect any wallet yet"
 						description="First, choose a NFT collection"
-						buttons={[{ title: 'CONNECT WALLET', onClick: connect }]}
+						buttons={[{ title: 'CONNECT WALLET', onClick: openConnectModal }]}
 					/>
 				) : !HERC20ContractAddr ? (
 					<EmptyStateDetails
