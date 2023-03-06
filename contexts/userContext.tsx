@@ -1,11 +1,13 @@
 import React, { FC, ReactNode, useState } from 'react';
 import MoralisType from 'moralis-v1';
 
+export type TCurrentUser = {
+	address: string;
+};
+
 interface UserContextState {
-	currentUser: MoralisType.User | null;
-	setCurrentUser: React.Dispatch<
-		React.SetStateAction<MoralisType.User<MoralisType.Attributes> | null>
-	>;
+	currentUser: TCurrentUser | null;
+	setCurrentUser: React.Dispatch<React.SetStateAction<TCurrentUser | null>>;
 }
 
 const UserContext = React.createContext<UserContextState>({} as UserContextState);
@@ -15,7 +17,7 @@ interface UserProviderProps {
 }
 
 const UserProvider: FC<UserProviderProps> = ({ children }) => {
-	const [currentUser, setCurrentUser] = useState<MoralisType.User | null>(null);
+	const [currentUser, setCurrentUser] = useState<TCurrentUser | null>(null);
 	return (
 		<UserContext.Provider value={{ currentUser, setCurrentUser }}>{children}</UserContext.Provider>
 	);
