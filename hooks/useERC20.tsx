@@ -8,6 +8,7 @@ import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime, unlimited } from '../constants/constant';
 import MoralisV2 from 'moralis';
+import { TCurrentUser } from 'contexts/userContext';
 
 export async function getDepositUnderlyingApproval(
 	ERC20ContractAddress: string,
@@ -118,7 +119,7 @@ export async function getAllowance(
 export function useCheckUnlimitedApproval(
 	ERC20ContractAddress: string,
 	contractAddress: string,
-	user: MoralisType.User | null
+	user: TCurrentUser | null
 ): [boolean, boolean] {
 	const onSuccess = (data: string) => {
 		return data;
@@ -126,7 +127,7 @@ export function useCheckUnlimitedApproval(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: amount,
 		isLoading,
@@ -173,7 +174,7 @@ export async function getUserBalance(
 
 export function useGetUserBalance(
 	ERC20ContractAddress: string,
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	unit: Unit
 ): [string, boolean] {
 	const onSuccess = (data: string) => {
@@ -182,7 +183,7 @@ export function useGetUserBalance(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: amount,
 		isLoading,

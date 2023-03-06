@@ -6,6 +6,7 @@ import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
 import MoralisV2 from 'moralis';
+import { TCurrentUser } from 'contexts/userContext';
 
 export async function getUserSupplyBalance(
 	htokenHelperContractAddress: string,
@@ -121,7 +122,7 @@ export function useGetTotalUnderlyingBalance(
 export function useGetUserUnderlyingBalance(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	unit: Unit
 ): [string, boolean] {
 	const onSuccess = (data: string) => {
@@ -130,7 +131,7 @@ export function useGetUserUnderlyingBalance(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: amount,
 		isLoading,
@@ -497,7 +498,7 @@ export const getUserCoupons = async ({
 export function useGetUserCoupons(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	unit: Unit
 ): [Array<coupon>, boolean] {
 	const onSuccess = (data: coupon[]) => {
@@ -506,7 +507,7 @@ export function useGetUserCoupons(
 	const onError = () => {
 		return [] as coupon[];
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: coupons,
 		isLoading,

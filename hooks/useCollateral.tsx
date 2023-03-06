@@ -8,11 +8,12 @@ import {
 	getBuiltGraphSDK
 } from '../.graphclient';
 import { getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
+import { TCurrentUser } from 'contexts/userContext';
 
 const sdk = getBuiltGraphSDK();
 
 export function useFetchCollaterals(
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	HERC20ContractAddress: string
 ): [Array<collateral>, boolean] {
 	const onSubgraphQuerySuccess = (data: ActiveCouponQueryQuery) => {
@@ -21,7 +22,7 @@ export function useFetchCollaterals(
 	const onSubGraphQueryError = () => {
 		return null;
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: collateralsFromSubgraph,
 		isLoading,

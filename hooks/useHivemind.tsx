@@ -6,6 +6,7 @@ import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
 import MoralisV2 from 'moralis';
+import { TCurrentUser } from 'contexts/userContext';
 
 export async function getMaxBorrowFromNFT(
 	hivemindContractAddress: string,
@@ -40,7 +41,7 @@ export function useGetMaxBorrowAmountFromNFT(
 	hivemindContractAddress: string,
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	NFTId: string,
 	unit: Unit
 ): [string, boolean] {
@@ -50,7 +51,7 @@ export function useGetMaxBorrowAmountFromNFT(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: amount,
 		isLoading,

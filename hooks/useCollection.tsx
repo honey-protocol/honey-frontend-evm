@@ -22,6 +22,7 @@ import { getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
 import { interestRateLend } from 'helpers/utils';
 import { getCollateralFactor } from './useHivemind';
 import { getContractsByHTokenAddr } from '../helpers/generalHelper';
+import { TCurrentUser } from 'contexts/userContext';
 
 const defaultPosition: MarketTablePosition = {
 	name: '',
@@ -63,7 +64,7 @@ const defaultMarket: marketData = {
 };
 
 export function useMarket(
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	collections: collection[],
 	htokenHelperContractAddress: string
 ): [MarketTableRow[], boolean] {
@@ -125,7 +126,7 @@ export function usePositions(
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
 	hivemindContractAddress: string,
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	unit: Unit
 ): [MarketTablePosition[], boolean] {
 	const onGetCouponsSuccess = (data: coupon[]) => {
@@ -134,7 +135,7 @@ export function usePositions(
 	const onGetCouponsError = () => {
 		return [] as coupon[];
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: couponList,
 		isLoading: isLoadingCoupons,
@@ -331,7 +332,7 @@ export function usePositions(
 }
 
 export function useLend(
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	collections: collection[],
 	htokenHelperContractAddress: string
 ): [LendTableRow[], boolean] {
@@ -399,7 +400,7 @@ export function useLendPositions(): [Array<TimestampPoint>, boolean] {
 }
 
 export function useLiquidation(
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	collections: collection[],
 	htokenHelperContractAddress: string
 ): [LiquidateTableRow[], boolean] {
