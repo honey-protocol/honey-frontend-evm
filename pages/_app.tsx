@@ -20,7 +20,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 import { getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { mainnet, polygon, optimism, arbitrum, polygonMumbai } from 'wagmi/chains';
+import { polygon, bsc, arbitrum, polygonMumbai, fantom } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 const initializeMoralis = async () => {
@@ -37,7 +37,7 @@ const initializeMoralis = async () => {
 };
 
 const { chains, provider } = configureChains(
-	[mainnet, polygon, optimism, arbitrum, polygonMumbai],
+	[arbitrum, polygon, polygonMumbai, bsc, fantom],
 	[publicProvider()]
 );
 
