@@ -16,7 +16,8 @@ const WalletMenu = () => {
 		await queryClient.invalidateQueries(['user']);
 		await queryClient.invalidateQueries(['nft']);
 		await queryClient.invalidateQueries(['coupons']);
-	}, [queryClient]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	//Hide sidebar and enable scoll for mobile
 	const resetMobile = () => {
