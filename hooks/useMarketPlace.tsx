@@ -7,6 +7,7 @@ import { basePath, chain, confirmedBlocks } from '../constants/service';
 import Moralis from 'moralis-v1';
 import { Bid, BidInfo } from '../types/liquidate';
 import MoralisV2 from 'moralis';
+import { prepareWriteContract, writeContract } from '@wagmi/core';
 
 //we are going to let liquidation related function to return value with mantissa so we can do
 //high precision math in the front end
@@ -100,14 +101,14 @@ export const bidCollection = async ({
 	unit: unit
 }: bidCollectionVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: marketContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: marketContractAddress as `0x${string}`,
 		functionName: 'bidCollection',
 		abi: ABI,
-		params: { _hToken: HERC20ContractAddress, _amount: toWei(amount, unit) }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, toWei(amount, unit)]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -125,14 +126,14 @@ export const cancelCollectionBid = async ({
 	HERC20ContractAddress: HERC20ContractAddress
 }: cancelCollectionBidVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: marketContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: marketContractAddress as `0x${string}`,
 		functionName: 'cancelBidCollection',
 		abi: ABI,
-		params: { _hToken: HERC20ContractAddress }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -256,14 +257,14 @@ export const withdrawRefund = async ({
 	ERC20ContractAddress: ERC20ContractAddress
 }: withdrawRefundVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: marketContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: marketContractAddress as `0x${string}`,
 		functionName: 'withdrawRefund',
 		abi: ABI,
-		params: { _token: ERC20ContractAddress }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [ERC20ContractAddress]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -285,14 +286,14 @@ export const increaseCollectionBid = async ({
 	unit: unit
 }: increaseCollectionBidVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: marketContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: marketContractAddress as `0x${string}`,
 		functionName: 'increaseBidCollection',
 		abi: ABI,
-		params: { _hToken: HERC20ContractAddress, _increaseAmount: toWei(increaseAmount, unit) }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, toWei(increaseAmount, unit)]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -394,18 +395,14 @@ export const bidCollateral = async ({
 	unit: unit
 }: bidCollateralVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: marketContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: marketContractAddress as `0x${string}`,
 		functionName: 'bidSingle',
 		abi: ABI,
-		params: {
-			_hToken: HERC20ContractAddress,
-			_collateralId: NFTTokenId,
-			_amount: toWei(amount, unit)
-		}
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, NFTTokenId, toWei(amount, unit)]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -425,14 +422,14 @@ export const cancelCollateralBid = async ({
 	NFTTokenId: NFTTokenId
 }: cancelCollateralBidVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: marketContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: marketContractAddress as `0x${string}`,
 		functionName: 'cancelBidSingle',
 		abi: ABI,
-		params: { _hToken: HERC20ContractAddress, _collateralId: NFTTokenId }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, NFTTokenId]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -510,18 +507,14 @@ export const increaseCollateralBid = async ({
 	unit: unit
 }: increaseCollateralBidVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/marketPlace.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: marketContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: marketContractAddress as `0x${string}`,
 		functionName: 'increaseBidSingle',
 		abi: ABI,
-		params: {
-			_hToken: HERC20ContractAddress,
-			_collateralId: NFTTokenId,
-			_increaseAmount: toWei(increaseAmount, unit)
-		}
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, NFTTokenId, toWei(increaseAmount, unit)]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
