@@ -51,11 +51,11 @@ export function useGetMetaDataFromNFTId(
 			if (ERC721ContractAddress != '' && NFTId != '') {
 				const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, NFTId);
 				const result: NFT = {
-					id: `${metaData.name}-${metaData?.token_id}`, //id will be name-tokenId
+					id: `${metaData.name}-${metaData?.tokenId}`, //id will be name-tokenId
 					name: metaData.name,
 					symbol: metaData.symbol,
 					image: getImageUrlFromMetaData(metaData.metadata || ''),
-					tokenId: metaData.token_id,
+					tokenId: metaData.tokenId,
 					contractAddress: ERC721ContractAddress
 				};
 				return result;

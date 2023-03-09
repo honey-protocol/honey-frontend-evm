@@ -239,7 +239,7 @@ export function usePositions(
 							const result: MarketTablePosition = {
 								name: metaData.name,
 								image: getImageUrlFromMetaData(metaData.metadata || ''),
-								tokenId: metaData.token_id,
+								tokenId: metaData.tokenId,
 								couponId: coupon.couponId,
 								debt: '0',
 								healthLvl: 0,
