@@ -9,6 +9,7 @@ import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime, unlimited } from '../constants/constant';
 import MoralisV2 from 'moralis';
 import { TCurrentUser } from 'contexts/userContext';
+import { prepareWriteContract, writeContract } from '@wagmi/core';
 
 export async function getDepositUnderlyingApproval(
 	ERC20ContractAddress: string,
@@ -17,14 +18,14 @@ export async function getDepositUnderlyingApproval(
 	unit: Unit
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: ERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: ERC20ContractAddress as `0x${string}`,
 		functionName: 'approve',
 		abi: ABI,
-		params: { spender: HERC20ContractAddress, amount: safeToWei(amount, unit) }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, safeToWei(amount, unit)]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -39,14 +40,14 @@ export async function getRepayLoanApproval(
 	unit: Unit
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: ERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: ERC20ContractAddress as `0x${string}`,
 		functionName: 'approve',
 		abi: ABI,
-		params: { spender: HERC20ContractAddress, amount: safeToWei(amount, unit) }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, safeToWei(amount, unit)]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -64,14 +65,14 @@ export async function getUnlimitedApproval({
 	contractAddress
 }: getUnlimitedApprovalVariables) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: ERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: ERC20ContractAddress as `0x${string}`,
 		functionName: 'approve',
 		abi: ABI,
-		params: { spender: contractAddress, amount: unlimited }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [contractAddress, unlimited]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -81,14 +82,14 @@ export async function getUnlimitedApproval({
 
 export async function revokeApproval(ERC20ContractAddress: string, HERC20ContractAddress: string) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: ERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: ERC20ContractAddress as `0x${string}`,
 		functionName: 'approve',
 		abi: ABI,
-		params: { spender: HERC20ContractAddress, amount: '0' }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, '0']
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore

@@ -8,17 +8,18 @@ import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { blackHole, defaultCacheStaleTime } from '../constants/constant';
 import MoralisV2 from 'moralis';
+import { prepareWriteContract, writeContract } from '@wagmi/core';
 
 export async function depositNFTCollateral(HERC20ContractAddress: string, NFTTokenId: string) {
 	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: HERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: HERC20ContractAddress as `0x${string}`,
 		functionName: 'depositCollateral',
 		abi: ABI,
-		params: { _collateralIds: [NFTTokenId] }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [[NFTTokenId]]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -40,14 +41,14 @@ export const borrow = async ({
 	unit: unit
 }: borrowVariables) => {
 	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: HERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: HERC20ContractAddress as `0x${string}`,
 		functionName: 'borrow',
 		abi: ABI,
-		params: { _borrowAmount: safeToWei(amount, unit), _collateralId: NFTTokenId }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [safeToWei(amount, unit), NFTTokenId]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -67,14 +68,14 @@ export async function depositUnderlying({
 	unit: unit
 }: depositVariables) {
 	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: HERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: HERC20ContractAddress as `0x${string}`,
 		functionName: 'depositUnderlying',
 		abi: ABI,
-		params: { _amount: safeToWei(amount, unit), _to: blackHole }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [safeToWei(amount, unit), blackHole]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -88,14 +89,14 @@ export async function withdrawUnderlying(
 	unit: Unit
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: HERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: HERC20ContractAddress as `0x${string}`,
 		functionName: 'withdraw',
 		abi: ABI,
-		params: { _amount: safeToWei(amount, unit) }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [safeToWei(amount, unit)]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -130,14 +131,14 @@ export async function repayBorrow(
 	unit: Unit
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: HERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: HERC20ContractAddress as `0x${string}`,
 		functionName: 'repayBorrow',
 		abi: ABI,
-		params: { _repayAmount: safeToWei(amount, unit), _collateralId: NFTTokenId, _to: blackHole }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [safeToWei(amount, unit), NFTTokenId, blackHole]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -155,14 +156,14 @@ export async function withdrawCollateral({
 	NFTTokenId
 }: withdrawCollateralVariables) {
 	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: HERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: HERC20ContractAddress as `0x${string}`,
 		functionName: 'withdrawCollateral',
 		abi: ABI,
-		params: { _collateralIds: [NFTTokenId] }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [[NFTTokenId]]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore

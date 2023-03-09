@@ -3,6 +3,7 @@ import Moralis from 'moralis-v1';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
 import { fromWei } from 'web3-utils';
 import MoralisV2 from 'moralis';
+import { prepareWriteContract, writeContract } from '@wagmi/core';
 
 export default async function getDepositNFTApproval(
 	ERC721ContractAddress: string,
@@ -10,14 +11,14 @@ export default async function getDepositNFTApproval(
 	NFTTokenId: string
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC721.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: ERC721ContractAddress,
+	const options = await prepareWriteContract({
+		// chainId: chain,
+		address: ERC721ContractAddress as `0x${string}`,
 		functionName: 'approve',
 		abi: ABI,
-		params: { to: HERC20ContractAddress, tokenId: NFTTokenId }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, NFTTokenId]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
