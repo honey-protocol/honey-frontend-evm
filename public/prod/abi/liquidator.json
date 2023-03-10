@@ -1,12 +1,33 @@
 {
-  "contract": "0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d",
+  "contract": "0x524876A7BfbDdeE8c0f4E66A444e550A8483fdB9",
   "abi": [
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_treasury",
+          "type": "address"
+        },
+        {
+          "internalType": "contract ControllerI",
+          "name": "_controller",
+          "type": "address"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "constructor"
     },
     {
+      "inputs": [],
+      "name": "Initialized",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidCoupon",
+      "type": "error"
+    },
+    {
       "inputs": [
         {
           "internalType": "enum Error",
@@ -14,33 +35,28 @@
           "type": "uint8"
         }
       ],
-      "name": "ControllerError",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "enum Error",
-          "name": "error",
-          "type": "uint8"
-        }
-      ],
-      "name": "MarketError",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OracleNotUpdated",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "PausedAction",
+      "name": "LiquidatorError",
       "type": "error"
     },
     {
       "inputs": [],
       "name": "Unauthorized",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "error",
+          "type": "string"
+        }
+      ],
+      "name": "Unexpected",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Uninitialized",
       "type": "error"
     },
     {
@@ -53,43 +69,74 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "contract HTokenI",
+          "internalType": "address",
           "name": "_hToken",
           "type": "address"
         },
         {
-          "indexed": false,
-          "internalType": "string",
-          "name": "_action",
-          "type": "string"
+          "indexed": true,
+          "internalType": "address",
+          "name": "_borrower",
+          "type": "address"
         },
         {
           "indexed": false,
-          "internalType": "bool",
-          "name": "_pauseState",
-          "type": "bool"
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
         }
       ],
-      "name": "ActionPausedhToken",
+      "name": "BorrowRepaid",
       "type": "event"
     },
     {
       "anonymous": false,
       "inputs": [
+        {
+          "indexed": false,
+          "internalType": "contract ControllerI",
+          "name": "_oldController",
+          "type": "address"
+        },
         {
           "indexed": false,
           "internalType": "address",
-          "name": "_oldBorrowCapGuardian",
+          "name": "_newController",
           "type": "address"
-        },
+        }
+      ],
+      "name": "ControllerUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
         {
-          "indexed": false,
+          "indexed": true,
           "internalType": "address",
-          "name": "_newBorrowCapGuardian",
+          "name": "_droplet",
           "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "_path",
+          "type": "address[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amountIn",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amountOut",
+          "type": "uint256"
         }
       ],
-      "name": "BorrowCapGuardianUpdated",
+      "name": "DropletsSwapped",
       "type": "event"
     },
     {
@@ -97,68 +144,24 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "contract HTokenI",
+          "internalType": "address",
           "name": "_hToken",
           "type": "address"
         },
         {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_newBorrowCap",
-          "type": "uint256"
-        }
-      ],
-      "name": "BorrowCapUpdated",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
           "indexed": true,
-          "internalType": "contract HTokenI",
-          "name": "_market",
+          "internalType": "address",
+          "name": "_underlying",
           "type": "address"
         },
         {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_fee",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_referralFee",
-          "type": "uint256"
-        }
-      ],
-      "name": "BorrowFeePerMarketUpdated",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
           "indexed": true,
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
+          "internalType": "address",
+          "name": "_collateral",
           "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_oldCollateralFactorMantissa",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "_newCollateralFactorMantissa",
-          "type": "uint256"
         }
       ],
-      "name": "CollateralFactorUpdated",
+      "name": "HTokenInitialized",
       "type": "event"
     },
     {
@@ -171,7 +174,7 @@
           "type": "bool"
         }
       ],
-      "name": "ControllerPaused",
+      "name": "LiquidatorPaused",
       "type": "event"
     },
     {
@@ -179,18 +182,18 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
+          "internalType": "contract MarketplaceI",
+          "name": "_oldMarketplace",
           "type": "address"
         },
         {
-          "indexed": false,
-          "internalType": "address",
-          "name": "_account",
+          "indexed": true,
+          "internalType": "contract MarketplaceI",
+          "name": "_newMarketplace",
           "type": "address"
         }
       ],
-      "name": "MarketEntered",
+      "name": "MarketplaceUpdated",
       "type": "event"
     },
     {
@@ -198,69 +201,138 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
+          "internalType": "address",
+          "name": "_pair",
           "type": "address"
         },
         {
-          "indexed": false,
+          "indexed": true,
           "internalType": "address",
-          "name": "_account",
-          "type": "address"
-        }
-      ],
-      "name": "MarketExited",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        }
-      ],
-      "name": "MarketListed",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        }
-      ],
-      "name": "MarketRemoved",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "contract HTokenI",
           "name": "_hToken",
           "type": "address"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "_oldMaxLTVFactorMantissa",
+          "name": "_collateralId",
           "type": "uint256"
+        }
+      ],
+      "name": "NFT20LiquidationExecuted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_pair",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "NFT20PairInitialized",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_factory",
+          "type": "address"
+        }
+      ],
+      "name": "NFTFactoryInitialized",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "contract IERC721",
+          "name": "_collateralToken",
+          "type": "address"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "_newMaxLTVFactorMantissa",
+          "name": "_collateralId",
           "type": "uint256"
         }
       ],
-      "name": "NewMaxLTVFactor",
+      "name": "NFTWithdrawn",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_factory",
+          "type": "address"
+        }
+      ],
+      "name": "NFTXFactoryInitialized",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_pair",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
+        }
+      ],
+      "name": "NFTXLiquidationExecuted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_pair",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "NFTXVaultsInitialized",
       "type": "event"
     },
     {
@@ -280,38 +352,19 @@
       "anonymous": false,
       "inputs": [
         {
-          "indexed": false,
-          "internalType": "contract PermissionlessOracleI",
-          "name": "_oldPriceOracle",
+          "indexed": true,
+          "internalType": "contract IERC20",
+          "name": "_token",
           "type": "address"
         },
         {
           "indexed": false,
-          "internalType": "contract PermissionlessOracleI",
-          "name": "_newPriceOracle",
-          "type": "address"
+          "internalType": "uint256",
+          "name": "_qty",
+          "type": "uint256"
         }
       ],
-      "name": "PriceOracleUpdated",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "_oldSigner",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "_newSigner",
-          "type": "address"
-        }
-      ],
-      "name": "ReferralSignerUpdated",
+      "name": "ProfitsWithdrawn",
       "type": "event"
     },
     {
@@ -393,6 +446,63 @@
       "anonymous": false,
       "inputs": [
         {
+          "indexed": true,
+          "internalType": "contract IERC20",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_qty",
+          "type": "uint256"
+        }
+      ],
+      "name": "TokenSwept",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_oldTreasury",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_newTreasury",
+          "type": "address"
+        }
+      ],
+      "name": "TreasuryUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "contract IUniswapV2Router02",
+          "name": "_oldRouter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "contract IUniswapV2Router02",
+          "name": "_newRouter",
+          "type": "address"
+        }
+      ],
+      "name": "UniswapV2RouterUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": false,
           "internalType": "address",
           "name": "account",
@@ -417,12 +527,38 @@
     },
     {
       "inputs": [],
-      "name": "FACTORY_ROLE",
+      "name": "INITIALIZER_ROLE",
       "outputs": [
         {
           "internalType": "bytes32",
           "name": "",
           "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "LIQUIDATOR_ROLE",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "NFTXFactory",
+      "outputs": [
+        {
+          "internalType": "contract INFTXVaultFactory",
+          "name": "",
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -442,39 +578,16 @@
       "type": "function"
     },
     {
-      "inputs": [
+      "inputs": [],
+      "name": "SWAPPER_ROLE",
+      "outputs": [
         {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "_state",
-          "type": "bool"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_target",
-          "type": "uint256"
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
         }
       ],
-      "name": "_pauseComponent",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bool",
-          "name": "_state",
-          "type": "bool"
-        }
-      ],
-      "name": "_pauseController",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -485,115 +598,7 @@
           "type": "address"
         }
       ],
-      "name": "_removeMarket",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_market",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_fee",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_referralFee",
-          "type": "uint256"
-        }
-      ],
-      "name": "_setBorrowFeePerMarket",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_newLTVFactorMantissa",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_newCollateralFactorMantissa",
-          "type": "uint256"
-        }
-      ],
-      "name": "_setFactors",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI[]",
-          "name": "_hTokens",
-          "type": "address[]"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "_newBorrowCaps",
-          "type": "uint256[]"
-        }
-      ],
-      "name": "_setMarketBorrowCaps",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        },
-        {
-          "internalType": "contract PermissionlessOracleI",
-          "name": "_newOracle",
-          "type": "address"
-        }
-      ],
-      "name": "_setPriceOracle",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_newSigner",
-          "type": "address"
-        }
-      ],
-      "name": "_setReferralSigner",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        }
-      ],
-      "name": "_supportMarket",
+      "name": "_initializeHToken",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -614,14 +619,87 @@
           "internalType": "uint256",
           "name": "_collateralId",
           "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_borrowAmount",
-          "type": "uint256"
         }
       ],
-      "name": "borrowAllowed",
+      "name": "_manualCloseout",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "_state",
+          "type": "bool"
+        }
+      ],
+      "name": "_pauseLiquidator",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newController",
+          "type": "address"
+        }
+      ],
+      "name": "_setController",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract MarketplaceI",
+          "name": "_marketplace",
+          "type": "address"
+        }
+      ],
+      "name": "_setMarketplace",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newTreasury",
+          "type": "address"
+        }
+      ],
+      "name": "_setTreasury",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IUniswapV2Router02",
+          "name": "_uniswapV2Router",
+          "type": "address"
+        }
+      ],
+      "name": "_setUniswapV2Router",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "_token",
+          "type": "address"
+        }
+      ],
+      "name": "_sweepToken",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -630,275 +708,41 @@
       "inputs": [
         {
           "internalType": "contract HTokenI",
-          "name": "",
+          "name": "_hToken",
           "type": "address"
-        }
-      ],
-      "name": "borrowCaps",
-      "outputs": [
+        },
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "_collateralId",
           "type": "uint256"
         }
       ],
-      "stateMutability": "view",
+      "name": "_withdrawNFT",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "_token",
+          "type": "address"
+        }
+      ],
+      "name": "_withdrawProfits",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [],
-      "name": "borrowFeeCap",
+      "name": "controller",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "contract ControllerI",
           "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
           "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_account",
-          "type": "address"
-        }
-      ],
-      "name": "checkMembership",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_collateral",
-          "type": "address"
-        }
-      ],
-      "name": "collateralExistsInMarkets",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_depositor",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_collateralId",
-          "type": "uint256"
-        }
-      ],
-      "name": "depositCollateralAllowed",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_depositor",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "depositUnderlyingAllowed",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI[]",
-          "name": "_hTokens",
-          "type": "address[]"
-        }
-      ],
-      "name": "enterMarkets",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        }
-      ],
-      "name": "exitMarket",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        },
-        {
-          "internalType": "string",
-          "name": "_referral",
-          "type": "string"
-        },
-        {
-          "internalType": "bytes",
-          "name": "_signature",
-          "type": "bytes"
-        }
-      ],
-      "name": "getBorrowFeePerMarket",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_account",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_collateralId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_redeemTokens",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_borrowAmount",
-          "type": "uint256"
-        }
-      ],
-      "name": "getHypotheticalAccountLiquidity",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "liquidityTillLiquidation",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "shortfall",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "liquidityTillLTV",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        }
-      ],
-      "name": "getMarketData",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        }
-      ],
-      "name": "getReferralBorrowFeePerMarket",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -918,49 +762,6 @@
           "internalType": "bytes32",
           "name": "",
           "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "role",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint256",
-          "name": "index",
-          "type": "uint256"
-        }
-      ],
-      "name": "getRoleMember",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "role",
-          "type": "bytes32"
-        }
-      ],
-      "name": "getRoleMemberCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -1011,17 +812,107 @@
     {
       "inputs": [
         {
+          "internalType": "contract NFT20Factory",
+          "name": "_NFT20Factory",
+          "type": "address"
+        }
+      ],
+      "name": "initializeNFT20Factory",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "contract HTokenI",
           "name": "_hToken",
           "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_target",
-          "type": "uint256"
         }
       ],
-      "name": "isActionPaused",
+      "name": "initializeNFT20Pair",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract INFTXVaultFactory",
+          "name": "_NFTXFactory",
+          "type": "address"
+        }
+      ],
+      "name": "initializeNFTXFactory",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "initializeNFTXVault",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "isRegisteredHToken",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        }
+      ],
+      "name": "isRegisteredUnderlying",
       "outputs": [
         {
           "internalType": "bool",
@@ -1045,9 +936,15 @@
           "type": "uint256"
         }
       ],
-      "name": "liquidationAllowed",
-      "outputs": [],
-      "stateMutability": "view",
+      "name": "liquidateViaNFT20",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1056,14 +953,50 @@
           "internalType": "contract HTokenI",
           "name": "_hToken",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_vaultIndex",
+          "type": "uint256"
         }
       ],
-      "name": "marketExists",
+      "name": "liquidateViaNFTX",
       "outputs": [
         {
           "internalType": "bool",
           "name": "",
           "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "marketplace",
+      "outputs": [
+        {
+          "internalType": "contract MarketplaceI",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "niftyFactory",
+      "outputs": [
+        {
+          "internalType": "contract NFT20Factory",
+          "name": "",
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -1072,69 +1005,35 @@
     {
       "inputs": [
         {
-          "internalType": "contract HTokenI",
+          "internalType": "address",
           "name": "",
           "type": "address"
-        }
-      ],
-      "name": "marketPausedInfo",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "borrowPaused",
-          "type": "bool"
         },
         {
-          "internalType": "bool",
-          "name": "transferPaused",
-          "type": "bool"
-        },
-        {
-          "internalType": "bool",
-          "name": "redeemPaused",
-          "type": "bool"
-        },
-        {
-          "internalType": "bool",
-          "name": "liquidationPaused",
-          "type": "bool"
-        },
-        {
-          "internalType": "bool",
-          "name": "repayBorrowPaused",
-          "type": "bool"
-        },
-        {
-          "internalType": "bool",
-          "name": "depositPaused",
-          "type": "bool"
-        },
-        {
-          "internalType": "bool",
-          "name": "depositCollateralPaused",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        }
-      ],
-      "name": "oracle",
-      "outputs": [
-        {
-          "internalType": "contract PermissionlessOracleI",
+          "internalType": "address",
           "name": "",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
         }
       ],
-      "stateMutability": "view",
+      "name": "onERC721Received",
+      "outputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1154,31 +1053,76 @@
       "inputs": [
         {
           "internalType": "contract HTokenI",
-          "name": "_hToken",
+          "name": "",
           "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_redeemer",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_redeemTokens",
-          "type": "uint256"
         }
       ],
-      "name": "redeemAllowed",
-      "outputs": [],
+      "name": "poolToCollateralToken",
+      "outputs": [
+        {
+          "internalType": "contract IERC721",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "referralSigner",
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "poolToNFTXVaults",
       "outputs": [
         {
           "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "poolToNiftyPair",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "poolToUnderlyingToken",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
           "name": "",
           "type": "address"
         }
@@ -1207,29 +1151,6 @@
     {
       "inputs": [
         {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_repayAmount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_collateralId",
-          "type": "uint256"
-        }
-      ],
-      "name": "repayBorrowAllowed",
-      "outputs": [],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "bytes32",
           "name": "role",
           "type": "bytes32"
@@ -1249,7 +1170,7 @@
       "inputs": [
         {
           "internalType": "bytes4",
-          "name": "_interfaceId",
+          "name": "interfaceId",
           "type": "bytes4"
         }
       ],
@@ -1261,7 +1182,7 @@
           "type": "bool"
         }
       ],
-      "stateMutability": "pure",
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -1270,27 +1191,114 @@
           "internalType": "contract HTokenI",
           "name": "_hToken",
           "type": "address"
-        }
-      ],
-      "name": "transferAllowed",
-      "outputs": [],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
+        },
         {
           "internalType": "address",
-          "name": "_underlying",
+          "name": "_borrower",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_path",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amountIn",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amountOutMinimum",
+          "type": "uint256"
         }
       ],
-      "name": "underlyingExistsInMarkets",
+      "name": "swapNFT20DropletsAndRepayBorrow",
       "outputs": [
         {
           "internalType": "bool",
           "name": "",
           "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_vaultIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_borrower",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_path",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amountIn",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amountOutMinimum",
+          "type": "uint256"
+        }
+      ],
+      "name": "swapNFTXDropletsAndRepayBorrow",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "swapRouter",
+      "outputs": [
+        {
+          "internalType": "contract IUniswapV2Router02",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "treasury",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -1306,24 +1314,6 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract HTokenI",
-          "name": "_hToken",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_collateralId",
-          "type": "uint256"
-        }
-      ],
-      "name": "withdrawCollateralAllowed",
-      "outputs": [],
       "stateMutability": "view",
       "type": "function"
     }

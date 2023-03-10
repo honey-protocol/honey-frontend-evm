@@ -1,1 +1,1331 @@
-[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"enum Error","name":"error","type":"uint8"}],"name":"ControllerError","type":"error"},{"inputs":[{"internalType":"enum Error","name":"error","type":"uint8"}],"name":"MarketError","type":"error"},{"inputs":[],"name":"OracleNotUpdated","type":"error"},{"inputs":[],"name":"PausedAction","type":"error"},{"inputs":[],"name":"Unauthorized","type":"error"},{"inputs":[],"name":"WrongParams","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"indexed":false,"internalType":"string","name":"_action","type":"string"},{"indexed":false,"internalType":"bool","name":"_pauseState","type":"bool"}],"name":"ActionPausedhToken","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_oldBorrowCapGuardian","type":"address"},{"indexed":false,"internalType":"address","name":"_newBorrowCapGuardian","type":"address"}],"name":"BorrowCapGuardianUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"_newBorrowCap","type":"uint256"}],"name":"BorrowCapUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"contract HTokenI","name":"_market","type":"address"},{"indexed":false,"internalType":"uint256","name":"_fee","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_referralFee","type":"uint256"}],"name":"BorrowFeePerMarketUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"_oldCollateralFactorMantissa","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_newCollateralFactorMantissa","type":"uint256"}],"name":"CollateralFactorUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bool","name":"_paused","type":"bool"}],"name":"ControllerPaused","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"indexed":false,"internalType":"address","name":"_account","type":"address"}],"name":"MarketEntered","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"indexed":false,"internalType":"address","name":"_account","type":"address"}],"name":"MarketExited","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"contract HTokenI","name":"_hToken","type":"address"}],"name":"MarketListed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"contract HTokenI","name":"_hToken","type":"address"}],"name":"MarketRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"_oldMaxLTVFactorMantissa","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_newMaxLTVFactorMantissa","type":"uint256"}],"name":"NewMaxLTVFactor","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Paused","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"contract PermissionlessOracleI","name":"_oldPriceOracle","type":"address"},{"indexed":false,"internalType":"contract PermissionlessOracleI","name":"_newPriceOracle","type":"address"}],"name":"PriceOracleUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_oldSigner","type":"address"},{"indexed":false,"internalType":"address","name":"_newSigner","type":"address"}],"name":"ReferralSignerUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"previousAdminRole","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"newAdminRole","type":"bytes32"}],"name":"RoleAdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleGranted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleRevoked","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Unpaused","type":"event"},{"inputs":[],"name":"DEFAULT_ADMIN_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"FACTORY_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"PAUSER_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"bool","name":"_state","type":"bool"},{"internalType":"uint256","name":"_target","type":"uint256"}],"name":"_pauseComponent","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"_state","type":"bool"}],"name":"_pauseController","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"}],"name":"_removeMarket","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_market","type":"address"},{"internalType":"uint256","name":"_fee","type":"uint256"},{"internalType":"uint256","name":"_referralFee","type":"uint256"}],"name":"_setBorrowFeePerMarket","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"uint256","name":"_newLTVFactorMantissa","type":"uint256"},{"internalType":"uint256","name":"_newCollateralFactorMantissa","type":"uint256"}],"name":"_setFactors","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI[]","name":"_hTokens","type":"address[]"},{"internalType":"uint256[]","name":"_newBorrowCaps","type":"uint256[]"}],"name":"_setMarketBorrowCaps","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"contract PermissionlessOracleI","name":"_newOracle","type":"address"}],"name":"_setPriceOracle","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newSigner","type":"address"}],"name":"_setReferralSigner","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"}],"name":"_supportMarket","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"address","name":"_borrower","type":"address"},{"internalType":"uint256","name":"_collateralId","type":"uint256"},{"internalType":"uint256","name":"_borrowAmount","type":"uint256"}],"name":"borrowAllowed","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"","type":"address"}],"name":"borrowCaps","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"borrowFeeCap","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"address","name":"_account","type":"address"}],"name":"checkMembership","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_collateral","type":"address"}],"name":"collateralExistsInMarkets","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"address","name":"_depositor","type":"address"},{"internalType":"uint256","name":"_collateralId","type":"uint256"}],"name":"depositCollateralAllowed","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"address","name":"_depositor","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"depositUnderlyingAllowed","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI[]","name":"_hTokens","type":"address[]"}],"name":"enterMarkets","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"}],"name":"exitMarket","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"string","name":"_referral","type":"string"},{"internalType":"bytes","name":"_signature","type":"bytes"}],"name":"getBorrowFeePerMarket","outputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"address","name":"_account","type":"address"},{"internalType":"uint256","name":"_collateralId","type":"uint256"},{"internalType":"uint256","name":"_redeemTokens","type":"uint256"},{"internalType":"uint256","name":"_borrowAmount","type":"uint256"}],"name":"getHypotheticalAccountLiquidity","outputs":[{"internalType":"uint256","name":"liquidityTillLiquidation","type":"uint256"},{"internalType":"uint256","name":"shortfall","type":"uint256"},{"internalType":"uint256","name":"liquidityTillLTV","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"}],"name":"getMarketData","outputs":[{"internalType":"bool","name":"","type":"bool"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"}],"name":"getReferralBorrowFeePerMarket","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleAdmin","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"getRoleMember","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleMemberCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"grantRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"hasRole","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"uint256","name":"_target","type":"uint256"}],"name":"isActionPaused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"uint256","name":"_collateralId","type":"uint256"}],"name":"liquidationAllowed","outputs":[],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"}],"name":"marketExists","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"","type":"address"}],"name":"marketPausedInfo","outputs":[{"internalType":"bool","name":"borrowPaused","type":"bool"},{"internalType":"bool","name":"transferPaused","type":"bool"},{"internalType":"bool","name":"redeemPaused","type":"bool"},{"internalType":"bool","name":"liquidationPaused","type":"bool"},{"internalType":"bool","name":"repayBorrowPaused","type":"bool"},{"internalType":"bool","name":"depositPaused","type":"bool"},{"internalType":"bool","name":"depositCollateralPaused","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"}],"name":"oracle","outputs":[{"internalType":"contract PermissionlessOracleI","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"address","name":"_redeemer","type":"address"},{"internalType":"uint256","name":"_redeemTokens","type":"uint256"}],"name":"redeemAllowed","outputs":[],"stateMutability":"view","type":"function"},{"inputs":[],"name":"referralSigner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"renounceRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"uint256","name":"_repayAmount","type":"uint256"},{"internalType":"uint256","name":"_collateralId","type":"uint256"}],"name":"repayBorrowAllowed","outputs":[],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"revokeRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"_interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"}],"name":"transferAllowed","outputs":[],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_underlying","type":"address"}],"name":"underlyingExistsInMarkets","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"version","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract HTokenI","name":"_hToken","type":"address"},{"internalType":"uint256","name":"_collateralId","type":"uint256"}],"name":"withdrawCollateralAllowed","outputs":[],"stateMutability":"view","type":"function"}]
+{
+  "contract": "0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Error",
+          "name": "error",
+          "type": "uint8"
+        }
+      ],
+      "name": "ControllerError",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Error",
+          "name": "error",
+          "type": "uint8"
+        }
+      ],
+      "name": "MarketError",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "OracleNotUpdated",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "PausedAction",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "Unauthorized",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "WrongParams",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_action",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "_pauseState",
+          "type": "bool"
+        }
+      ],
+      "name": "ActionPausedhToken",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_oldBorrowCapGuardian",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_newBorrowCapGuardian",
+          "type": "address"
+        }
+      ],
+      "name": "BorrowCapGuardianUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_newBorrowCap",
+          "type": "uint256"
+        }
+      ],
+      "name": "BorrowCapUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract HTokenI",
+          "name": "_market",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_fee",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_referralFee",
+          "type": "uint256"
+        }
+      ],
+      "name": "BorrowFeePerMarketUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_oldCollateralFactorMantissa",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_newCollateralFactorMantissa",
+          "type": "uint256"
+        }
+      ],
+      "name": "CollateralFactorUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "_paused",
+          "type": "bool"
+        }
+      ],
+      "name": "ControllerPaused",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_account",
+          "type": "address"
+        }
+      ],
+      "name": "MarketEntered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_account",
+          "type": "address"
+        }
+      ],
+      "name": "MarketExited",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "MarketListed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "MarketRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_oldMaxLTVFactorMantissa",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_newMaxLTVFactorMantissa",
+          "type": "uint256"
+        }
+      ],
+      "name": "NewMaxLTVFactor",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "Paused",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "contract PermissionlessOracleI",
+          "name": "_oldPriceOracle",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "contract PermissionlessOracleI",
+          "name": "_newPriceOracle",
+          "type": "address"
+        }
+      ],
+      "name": "PriceOracleUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_oldSigner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_newSigner",
+          "type": "address"
+        }
+      ],
+      "name": "ReferralSignerUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "Unpaused",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "DEFAULT_ADMIN_ROLE",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "FACTORY_ROLE",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "PAUSER_ROLE",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_state",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_target",
+          "type": "uint256"
+        }
+      ],
+      "name": "_pauseComponent",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "_state",
+          "type": "bool"
+        }
+      ],
+      "name": "_pauseController",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "_removeMarket",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_market",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_fee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_referralFee",
+          "type": "uint256"
+        }
+      ],
+      "name": "_setBorrowFeePerMarket",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_newLTVFactorMantissa",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_newCollateralFactorMantissa",
+          "type": "uint256"
+        }
+      ],
+      "name": "_setFactors",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI[]",
+          "name": "_hTokens",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_newBorrowCaps",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "_setMarketBorrowCaps",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "contract PermissionlessOracleI",
+          "name": "_newOracle",
+          "type": "address"
+        }
+      ],
+      "name": "_setPriceOracle",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newSigner",
+          "type": "address"
+        }
+      ],
+      "name": "_setReferralSigner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "_supportMarket",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_borrower",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_borrowAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "borrowAllowed",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "borrowCaps",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "borrowFeeCap",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_account",
+          "type": "address"
+        }
+      ],
+      "name": "checkMembership",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_collateral",
+          "type": "address"
+        }
+      ],
+      "name": "collateralExistsInMarkets",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_depositor",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
+        }
+      ],
+      "name": "depositCollateralAllowed",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_depositor",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "depositUnderlyingAllowed",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI[]",
+          "name": "_hTokens",
+          "type": "address[]"
+        }
+      ],
+      "name": "enterMarkets",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "exitMarket",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "_referral",
+          "type": "string"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_signature",
+          "type": "bytes"
+        }
+      ],
+      "name": "getBorrowFeePerMarket",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_redeemTokens",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_borrowAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "getHypotheticalAccountLiquidity",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "liquidityTillLiquidation",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "shortfall",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "liquidityTillLTV",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getMarketData",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getReferralBorrowFeePerMarket",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleAdmin",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRoleMember",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRoleMemberCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "grantRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "hasRole",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_target",
+          "type": "uint256"
+        }
+      ],
+      "name": "isActionPaused",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
+        }
+      ],
+      "name": "liquidationAllowed",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "marketExists",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "marketPausedInfo",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "borrowPaused",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "transferPaused",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "redeemPaused",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "liquidationPaused",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "repayBorrowPaused",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "depositPaused",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "depositCollateralPaused",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "oracle",
+      "outputs": [
+        {
+          "internalType": "contract PermissionlessOracleI",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "paused",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_redeemer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_redeemTokens",
+          "type": "uint256"
+        }
+      ],
+      "name": "redeemAllowed",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "referralSigner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "renounceRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_repayAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
+        }
+      ],
+      "name": "repayBorrowAllowed",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "revokeRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "_interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "transferAllowed",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_underlying",
+          "type": "address"
+        }
+      ],
+      "name": "underlyingExistsInMarkets",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "version",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_collateralId",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawCollateralAllowed",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+}
