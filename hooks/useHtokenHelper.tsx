@@ -3,7 +3,7 @@ import { fromWei, Unit } from 'web3-utils';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
-import MoralisV2 from 'moralis';
+import Moralis from 'moralis';
 import { TCurrentUser } from 'contexts/userContext';
 
 export async function getUserSupplyBalance(
@@ -22,7 +22,7 @@ export async function getUserSupplyBalance(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const supplyBalance = fromWei(result, unit);
 	return supplyBalance;
@@ -43,7 +43,7 @@ export async function getTotalSupplyBalance(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const supplyBalance = fromWei(result, unit);
 	return supplyBalance;
@@ -66,7 +66,7 @@ export async function getAllCollateral(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const results: any = response.result;
 	const loans = results.map((result: any) => {
 		const [id, active, owner, collateralId, borrowAmount, interestPerToken] = result;
@@ -178,7 +178,7 @@ export async function getNFTPriceInUSD(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const nftPrice = fromWei(result, unit);
 	return nftPrice;
@@ -228,7 +228,7 @@ export async function getNFTPrice(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const returnValue: nftPrice = {
 		HERC20ContractAddress: HERC20ContractAddress,
@@ -252,7 +252,7 @@ export async function getAssets(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const totalBorrow = result[0] as string;
 	const totalReserve = result[1] as string;
@@ -281,7 +281,7 @@ export async function getUnderlyingPriceInUSD(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return parseInt(result) / 10000.0;
 }
@@ -337,7 +337,7 @@ export async function getMaxBorrowableAmount(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return parseInt(result) / 10000.0;
 }
@@ -435,7 +435,7 @@ export async function getActiveCoupons(
 		params: { _hToken: HERC20ContractAddress, _hasDebt: true }
 	};
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const results: any = response.result;
 	const coupons = results.map((result: any) => {
 		const [id, active, owner, collateralId, borrowAmount, debtShares] = result;
@@ -475,7 +475,7 @@ export const getUserCoupons = async ({
 	};
 	console.log('called', chain);
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const results: any = response.result;
 	const coupons = results.map((result: any) => {
 		const [id, active, owner, collateralId, borrowAmount, debtShares] = result;
@@ -556,7 +556,7 @@ export async function getMarketData(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const interestRate = result[0] as number;
 	const supplied = result[1] as string;
@@ -593,7 +593,7 @@ export async function getCouponData(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const debt = result[0] as string;
 	const allowance = result[1] as string;
@@ -628,7 +628,7 @@ export async function getLiquidationData(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const liquidationThreshold = result[0] as string;
 	const totalDebt = result[1] as string;

@@ -3,7 +3,7 @@ import { fromWei } from 'web3-utils';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
-import MoralisV2 from 'moralis';
+import Moralis from 'moralis';
 import { TCurrentUser } from 'contexts/userContext';
 
 export async function getMaxBorrowFromNFT(
@@ -30,7 +30,7 @@ export async function getMaxBorrowFromNFT(
 		}
 	};
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return fromWei(result['liquidityTillLTV'], unit);
 }
@@ -107,7 +107,7 @@ export async function getCollateralFactor(
 		}
 	};
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return parseFloat(fromWei(result, unit));
 }

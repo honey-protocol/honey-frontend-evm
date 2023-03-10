@@ -1,7 +1,7 @@
 import React from 'react';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
 import { fromWei } from 'web3-utils';
-import MoralisV2 from 'moralis';
+import Moralis from 'moralis';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
 
 export default async function getDepositNFTApproval(
@@ -36,7 +36,7 @@ export async function getNFTApproved(ERC721ContractAddress: string, NFTTokenId: 
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return result;
 }

@@ -4,7 +4,7 @@ import { safeToWei } from '../helpers/repayHelper';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { blackHole, defaultCacheStaleTime } from '../constants/constant';
-import MoralisV2 from 'moralis';
+import Moralis from 'moralis';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
 
 export async function depositNFTCollateral(HERC20ContractAddress: string, NFTTokenId: string) {
@@ -116,7 +116,7 @@ export async function getBorrowFromCollateral(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return fromWei(result, unit);
 }
@@ -179,7 +179,7 @@ export async function getBorrowBalance(HERC20ContractAddress: string, address: s
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const borrowBalance = fromWei(result[1], unit);
 	return borrowBalance;
@@ -196,7 +196,7 @@ export async function getTotalBorrow(HERC20ContractAddress: string, unit: Unit) 
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return fromWei(result, unit);
 }
@@ -242,7 +242,7 @@ export async function getTotalReserves(HERC20ContractAddress: string, unit: Unit
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const totalReserve = fromWei(result, unit);
 	return totalReserve;

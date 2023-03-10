@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 import useLoanFlowStore from '../store/loanFlowStore';
 import useLendFlowStore from '../store/lendFlowStore';
 import useLiquidationFlowStore from '../store/liquidationFlowStore';
-import MoralisV2 from 'moralis';
+import Moralis from 'moralis';
 import { vars } from 'styles/theme.css';
 
 import '@rainbow-me/rainbowkit/styles.css';
@@ -25,7 +25,7 @@ import { publicProvider } from 'wagmi/providers/public';
 const initializeMoralis = async () => {
 	try {
 		console.log('Initializing moralis');
-		await MoralisV2.start({
+		await Moralis.start({
 			apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY
 			// ...and any other configuration
 		});
