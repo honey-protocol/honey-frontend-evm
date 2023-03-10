@@ -1,7 +1,3 @@
-import { useState, useEffect, useRef, MutableRefObject, SetStateAction, Dispatch } from 'react';
-
-import MoralisType from 'moralis-v1';
-import Moralis from 'moralis-v1';
 import { chain } from '../constants/service';
 import { getImageUrlFromMetaData } from '../helpers/NFThelper';
 import { getNFTApproved } from './useERC721';

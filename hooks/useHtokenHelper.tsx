@@ -1,6 +1,4 @@
 import { basePath, chain } from '../constants/service';
-import Moralis from 'moralis-v1';
-import MoralisType from 'moralis-v1';
 import { fromWei, Unit } from 'web3-utils';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';

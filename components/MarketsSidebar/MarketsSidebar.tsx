@@ -4,7 +4,6 @@ import { MarketsSidebarProps } from './types';
 import HoneyTabs, { HoneyTabItem } from 'components/HoneyTabs/HoneyTabs';
 import EmptyStateDetails from 'components/EmptyStateDetails/EmptyStateDetails';
 import { UserContext } from '../../contexts/userContext';
-import { useMoralis } from 'react-moralis';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { LoanWorkFlowType } from '../../types/workflows';
 import useDisplayStore from '../../store/displayStore';

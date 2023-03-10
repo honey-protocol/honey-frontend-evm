@@ -1,10 +1,8 @@
-import MoralisType from 'moralis-v1';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { blackHole, defaultCacheStaleTime } from '../constants/constant';
 import { toWei, Unit } from 'web3-utils';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
-import Moralis from 'moralis-v1';
 import { Bid, BidInfo } from '../types/liquidate';
 import MoralisV2 from 'moralis';
 import { prepareWriteContract, writeContract } from '@wagmi/core';

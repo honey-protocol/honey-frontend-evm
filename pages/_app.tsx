@@ -1,5 +1,4 @@
 import type { AppProps } from 'next/app';
-import { MoralisProvider } from 'react-moralis';
 import { ThemeProvider } from 'degen';
 import 'degen/styles';
 import '../styles/globals.css';
@@ -90,17 +89,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 							accentColor: vars.colors.brownLight
 						})}
 					>
-						<MoralisProvider
-							appId={process.env.NEXT_PUBLIC_APP_ID as string}
-							serverUrl={process.env.NEXT_PUBLIC_SERVER_URL as string}
-							initializeOnMount={true}
-						>
-							<UserProvider>
-								{/* {children} */}
-								<Component {...pageProps} />
-								<ToastContainer theme="dark" position="top-right" />
-							</UserProvider>
-						</MoralisProvider>
+						<UserProvider>
+							{/* {children} */}
+							<Component {...pageProps} />
+							<ToastContainer theme="dark" position="top-right" />
+						</UserProvider>
 					</RainbowKitProvider>
 				</WagmiConfig>
 			</QueryClientProvider>

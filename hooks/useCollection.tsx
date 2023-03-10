@@ -1,4 +1,3 @@
-import MoralisType from 'moralis-v1';
 import { MarketTablePosition, MarketTableRow } from '../types/markets';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';

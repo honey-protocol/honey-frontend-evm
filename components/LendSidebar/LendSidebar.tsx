@@ -10,7 +10,6 @@ import { useQueryClient } from 'react-query';
 import useLendFlowStore from '../../store/lendFlowStore';
 import { LendWorkFlowType, LoanWorkFlowType } from '../../types/workflows';
 import { UserContext } from '../../contexts/userContext';
-import { useMoralis } from 'react-moralis';
 import BorrowForm from '../BorrowForm/BorrowForm';
 import WithdrawForm from '../WithdrawForm/WithdrawForm';
 import { useConnectModal } from '@rainbow-me/rainbowkit';

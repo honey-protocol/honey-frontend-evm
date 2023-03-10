@@ -16,7 +16,7 @@
     "@fontsource/inter": "^4.5.4",
     "@graphql-mesh/runtime": "^0.44.30",
     "@moralisweb3/evm-utils": "^2.14.3",
-		"@rainbow-me/rainbowkit": "^0.11.0",
+    "@rainbow-me/rainbowkit": "^0.11.0",
     "@types/lodash": "^4.14.186",
     "@vanilla-extract/babel-plugin": "^1.1.4",
     "@vanilla-extract/css": "^1.6.8",
@@ -29,18 +29,16 @@
     "bn.js": "^5.2.0",
     "decimal.js": "^10.4.2",
     "degen": "^0.0.69",
-		"ethers": "^5.5.1",
+    "ethers": "^5.5.1",
     "graphql": "^16.6.0",
     "jsbi": "^4.1.0",
     "lodash": "^4.17.21",
     "magic-sdk": "^8.1.0",
     "moralis": "^2.14.3",
-    "moralis-v1": "^1.11.0",
     "next": "12.1.0",
     "react": "17.0.2",
     "react-countdown": "^2.3.2",
     "react-dom": "17.0.2",
-    "react-moralis": "^1.4.2",
     "react-number-format": "^4.9.1",
     "react-query": "^3.39.1",
     "react-sizeme": "^3.0.2",
@@ -48,7 +46,7 @@
     "recharts": "^2.1.9",
     "sharp": "^0.31.1",
     "victory": "^36.6.8",
-		"wagmi": "^0.11.7",
+    "wagmi": "^0.11.7",
     "web3": "^1.7.1",
     "yarn": "^1.22.18",
     "zustand": "^4.1.1"
@@ -69,6 +67,6 @@
     "eslint-plugin-sonarjs": "^0.12.0",
     "eslint-plugin-unicorn": "^41.0.0",
     "prettier": "2.7.1",
-		"typescript": "4.7.4"
+    "typescript": "4.7.4"
   }
 }
