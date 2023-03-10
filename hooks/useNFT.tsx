@@ -50,7 +50,7 @@ export function useGetMetaDataFromNFTId(
 					id: `${metaData.name}-${metaData?.tokenId}`, //id will be name-tokenId
 					name: metaData.name,
 					symbol: metaData.symbol,
-					image: getImageUrlFromMetaData(metaData.metadata || ''),
+					image: getImageUrlFromMetaData(JSON.stringify(metaData.metadata) || ''),
 					tokenId: metaData.tokenId,
 					contractAddress: ERC721ContractAddress
 				};
@@ -84,7 +84,7 @@ export function useFetchNFTByUserCoupons(
 							id: `${metaData.name}-${metaData.token_id}`, //id will be name-tokenId
 							name: metaData.name,
 							symbol: metaData.symbol,
-							image: getImageUrlFromMetaData(metaData.metadata || ''),
+							image: getImageUrlFromMetaData(JSON.stringify(metaData.metadata) || ''),
 							tokenId: metaData.token_id,
 							contractAddress: ERC721ContractAddress
 						};
