@@ -1,14 +1,10 @@
-import { useState, useEffect, useRef, MutableRefObject, SetStateAction, Dispatch } from 'react';
-
-import MoralisType from 'moralis-v1';
-import Moralis from 'moralis-v1';
 import { chain } from '../constants/service';
 import { getImageUrlFromMetaData } from '../helpers/NFThelper';
 import { getNFTApproved } from './useERC721';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
-import MoralisV2 from 'moralis';
+import Moralis from 'moralis';
 import { TCurrentUser } from 'contexts/userContext';
 
 const defaultNFT: NFT = {
@@ -27,7 +23,7 @@ export async function getMetaDataFromNFTId(ERC721ContractAddress: string, NFTId:
 	};
 
 	// @ts-ignore
-	const response: any = await MoralisV2.EvmApi.nft.getNFTMetadata(options);
+	const response: any = await Moralis.EvmApi.nft.getNFTMetadata(options);
 	return response?.result;
 }
 
@@ -54,7 +50,7 @@ export function useGetMetaDataFromNFTId(
 					id: `${metaData.name}-${metaData?.tokenId}`, //id will be name-tokenId
 					name: metaData.name,
 					symbol: metaData.symbol,
-					image: getImageUrlFromMetaData(metaData.metadata || ''),
+					image: getImageUrlFromMetaData(JSON.stringify(metaData.metadata) || ''),
 					tokenId: metaData.tokenId,
 					contractAddress: ERC721ContractAddress
 				};
@@ -88,7 +84,7 @@ export function useFetchNFTByUserCoupons(
 							id: `${metaData.name}-${metaData.token_id}`, //id will be name-tokenId
 							name: metaData.name,
 							symbol: metaData.symbol,
-							image: getImageUrlFromMetaData(metaData.metadata || ''),
+							image: getImageUrlFromMetaData(JSON.stringify(metaData.metadata) || ''),
 							tokenId: metaData.token_id,
 							contractAddress: ERC721ContractAddress
 						};
@@ -161,7 +157,7 @@ export async function getNFTList(ERC721ContractAddress: string, address: string)
 	};
 
 	// @ts-ignore
-	const userNFTs = await MoralisV2.EvmApi.nft.getWalletNFTs(options);
+	const userNFTs = await Moralis.EvmApi.nft.getWalletNFTs(options);
 	const results = userNFTs?.result?.map((userNFT: any) => {
 		const result: NFT = {
 			id: `${userNFT.name}-${userNFT.tokenId}`, //id will be name-tokenId

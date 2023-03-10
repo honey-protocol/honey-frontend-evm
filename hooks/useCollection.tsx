@@ -1,4 +1,3 @@
-import MoralisType from 'moralis-v1';
 import { MarketTablePosition, MarketTableRow } from '../types/markets';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
@@ -238,7 +237,7 @@ export function usePositions(
 							const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, coupon.NFTId);
 							const result: MarketTablePosition = {
 								name: metaData.name,
-								image: getImageUrlFromMetaData(metaData.metadata || ''),
+								image: getImageUrlFromMetaData(JSON.stringify(metaData.metadata) || ''),
 								tokenId: metaData.tokenId,
 								couponId: coupon.couponId,
 								debt: '0',

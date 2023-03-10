@@ -1,13 +1,11 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import Moralis from 'moralis-v1';
 import { fromWei } from 'web3-utils';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
-import MoralisType from 'moralis-v1';
 import { safeToWei } from '../helpers/repayHelper';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime, unlimited } from '../constants/constant';
-import MoralisV2 from 'moralis';
+import Moralis from 'moralis';
 import { TCurrentUser } from 'contexts/userContext';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
 
@@ -112,7 +110,7 @@ export async function getAllowance(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const results: any = response.result;
 	return results;
 }
@@ -168,7 +166,7 @@ export async function getUserBalance(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return fromWei(result, unit);
 }

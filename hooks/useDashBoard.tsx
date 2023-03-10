@@ -1,4 +1,3 @@
-import MoralisType from 'moralis-v1';
 import { TimestampPoint } from '../components/HoneyChart/types';
 import { generateMockHistoryData } from '../helpers/chartUtils';
 import { CollectionPosition } from '../components/HoneyPositionsSlider/types';

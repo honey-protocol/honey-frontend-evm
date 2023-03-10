@@ -9,8 +9,11 @@ NFTs. This repo contains a Front-end interface built with NextJS and makes use o
 
 - <a href="https://github.com/honey-labs/honey-sdk" target="blank">Honey-SDK:</a> for permissionless lending pools that
   use NFTs as collateral (🛠 WIP)
-- <a href="https://moralis.io/" target="blank">Moralis:</a> for connecting to EVM wallets, fetching NFT and calling
-  contract
+
+- <a href="https://www.rainbowkit.com/" target="blank">Rainbowkit</a> for connecting to EVM wallets
+- <a href="https://moralis.io/" target="blank">Moralis:</a> for fetching NFT and calling
+  contract (read functions)
+- <a href="https://wagmi.sh/" target="blank">wagmi</a> for calling write functions on contract
 - <a href="https://degen-xyz.vercel.app/" target="blank">Degen-UI:</a> for styling accompanied
   by <a href="https://vanilla-extract.style/documentation/setup/" target="blank">Vanilla-Extract</a> for custom CSS
   classes
@@ -72,4 +75,3 @@ yarn graphclient build
 
 You need to update .graphclientrc.yaml if there are configurations changes such as new chain or new subgraph deployed.
 You need to update graphql under graphql folder if you are adding/modifying existed queries
-

@@ -1,12 +1,10 @@
-import MoralisType from 'moralis-v1';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { blackHole, defaultCacheStaleTime } from '../constants/constant';
 import { toWei, Unit } from 'web3-utils';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
-import Moralis from 'moralis-v1';
 import { Bid, BidInfo } from '../types/liquidate';
-import MoralisV2 from 'moralis';
+import Moralis from 'moralis';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
 
 //we are going to let liquidation related function to return value with mantissa so we can do
@@ -25,7 +23,7 @@ export async function getCollectionBids(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const highestBidder: string = result[1];
 	const highestBid = result[2] as string;
@@ -155,7 +153,7 @@ export async function getCollectionMinimumBid(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return result;
 }
@@ -208,7 +206,7 @@ export async function getAvailableRefund(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return result;
 }
@@ -316,7 +314,7 @@ export async function getCollateralBids(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	const highestBidder: string = result[1];
 	const highestBid = result[2] as string;
@@ -452,7 +450,7 @@ export async function getCollateralMinimumBid(
 	};
 
 	// @ts-ignore
-	const response = await MoralisV2.EvmApi.utils.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
 	return result;
 }

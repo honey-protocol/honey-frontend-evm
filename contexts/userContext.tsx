@@ -1,5 +1,4 @@
 import React, { FC, ReactNode, useState } from 'react';
-import MoralisType from 'moralis-v1';
 
 export type TCurrentUser = {
 	address: string;

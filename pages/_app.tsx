@@ -1,5 +1,4 @@
 import type { AppProps } from 'next/app';
-import { MoralisProvider } from 'react-moralis';
 import { ThemeProvider } from 'degen';
 import 'degen/styles';
 import '../styles/globals.css';
@@ -13,7 +12,7 @@ import { useEffect } from 'react';
 import useLoanFlowStore from '../store/loanFlowStore';
 import useLendFlowStore from '../store/lendFlowStore';
 import useLiquidationFlowStore from '../store/liquidationFlowStore';
-import MoralisV2 from 'moralis';
+import Moralis from 'moralis';
 import { vars } from 'styles/theme.css';
 
 import '@rainbow-me/rainbowkit/styles.css';
@@ -26,7 +25,7 @@ import { publicProvider } from 'wagmi/providers/public';
 const initializeMoralis = async () => {
 	try {
 		console.log('Initializing moralis');
-		await MoralisV2.start({
+		await Moralis.start({
 			apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY
 			// ...and any other configuration
 		});
@@ -42,7 +41,7 @@ const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-	appName: 'My RainbowKit App',
+	appName: 'Honey Finance',
 	chains
 });
 
@@ -90,17 +89,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 							accentColor: vars.colors.brownLight
 						})}
 					>
-						<MoralisProvider
-							appId={process.env.NEXT_PUBLIC_APP_ID as string}
-							serverUrl={process.env.NEXT_PUBLIC_SERVER_URL as string}
-							initializeOnMount={true}
-						>
-							<UserProvider>
-								{/* {children} */}
-								<Component {...pageProps} />
-								<ToastContainer theme="dark" position="top-right" />
-							</UserProvider>
-						</MoralisProvider>
+						<UserProvider>
+							{/* {children} */}
+							<Component {...pageProps} />
+							<ToastContainer theme="dark" position="top-right" />
+						</UserProvider>
 					</RainbowKitProvider>
 				</WagmiConfig>
 			</QueryClientProvider>
