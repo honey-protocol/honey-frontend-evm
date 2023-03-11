@@ -1,6 +1,4 @@
-{
-  "contract": "0x6cDD6EdDba720eddA2e651384aB958ED42386A1d",
-  "abi": [
+[
     {
       "inputs": [],
       "name": "WrongParams",
@@ -736,4 +734,3 @@
       "type": "function"
     }
   ]
-}

@@ -1,6 +1,4 @@
-{
-  "contract": "0xaE2522Da6A90F09E9C8637f930Ca76c249f3b59C",
-  "abi": [
+[
     {
       "inputs": [
         {
@@ -328,4 +326,3 @@
       "type": "function"
     }
   ]
-}

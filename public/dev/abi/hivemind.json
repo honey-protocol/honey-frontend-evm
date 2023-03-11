@@ -1,6 +1,4 @@
-{
-  "contract": "0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d",
-  "abi": [
+[
     {
       "inputs": [],
       "stateMutability": "nonpayable",
@@ -1328,4 +1326,3 @@
       "type": "function"
     }
   ]
-}
