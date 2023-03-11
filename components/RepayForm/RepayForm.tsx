@@ -33,6 +33,7 @@ import { queryKeys } from '../../helpers/queryHelper';
 import { repayBorrowHelper } from '../../helpers/repayHelper';
 import { usePositions } from '../../hooks/useCollection';
 import { fetchAllowance } from '../../helpers/utils';
+import imagePlaceholder from 'public/images/imagePlaceholder.png';
 
 const {
 	format: f,
@@ -277,7 +278,14 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.nftInfo}>
 					<div className={styles.nftImage}>
 						<HexaBoxContainer>
-							<Image src={nft.image} alt={nft.name} layout="fill" />
+							<Image
+								src={
+									// nft.image ||
+									imagePlaceholder
+								}
+								alt={nft.name}
+								layout="fill"
+							/>
 						</HexaBoxContainer>
 					</div>
 					<div className={styles.nftName}>

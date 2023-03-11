@@ -202,7 +202,14 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.nftInfo}>
 					<div className={styles.nftImage}>
 						<HexaBoxContainer>
-							<Image src={nft.image || imagePlaceholder} alt={nft.name} layout="fill" />
+							<Image
+								src={
+									// nft.image ||
+									imagePlaceholder
+								}
+								alt={nft.name}
+								layout="fill"
+							/>
 						</HexaBoxContainer>
 					</div>
 					<div className={styles.nftName}>
