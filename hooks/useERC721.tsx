@@ -37,9 +37,6 @@ export async function getNFTApproved(ERC721ContractAddress: string, NFTTokenId: 
 
 	// @ts-ignore
 	const response = await Moralis.EvmApi.utils.runContractFunction(options);
-	console.log(response);
-	console.log(options);
 	const result: any = response.result;
-	console.log(result);
 	return result;
 }
