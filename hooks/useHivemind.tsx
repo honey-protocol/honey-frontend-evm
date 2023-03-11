@@ -96,6 +96,7 @@ export async function getCollateralFactor(
 	HERC20ContractAddress: string,
 	unit: Unit
 ) {
+	return (0.5 * 10) ^ 18; // TODO: use real value
 	const ABI = await (await fetch(`${basePath}/abi/hivemind.json`)).json();
 	const options = {
 		chain: chain,
