@@ -109,8 +109,7 @@ export async function getCollateralFactor(
 	// @ts-ignore
 	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
-	console.log({ result });
-	return parseFloat(fromWei(result, unit));
+	return parseFloat(fromWei(result[2], unit));
 }
 
 export function useGetCollateralFactor(
