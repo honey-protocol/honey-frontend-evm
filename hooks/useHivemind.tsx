@@ -96,12 +96,11 @@ export async function getCollateralFactor(
 	HERC20ContractAddress: string,
 	unit: Unit
 ) {
-	return (0.5 * 10) ^ 18; // TODO: use real value
 	const ABI = await (await fetch(`${basePath}/abi/hivemind.json`)).json();
 	const options = {
 		chain: chain,
 		address: hivemindContractAddress,
-		functionName: 'getCollateralFactor',
+		functionName: 'getMarketData',
 		abi: ABI,
 		params: {
 			_hToken: HERC20ContractAddress
@@ -110,6 +109,7 @@ export async function getCollateralFactor(
 	// @ts-ignore
 	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
+	console.log({ result });
 	return parseFloat(fromWei(result, unit));
 }
 
