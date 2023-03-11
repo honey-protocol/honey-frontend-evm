@@ -6,6 +6,7 @@ import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
 import Moralis from 'moralis';
 import { TCurrentUser } from 'contexts/userContext';
+import { caseInsensitiveCompare } from '../helpers/generalHelper';
 
 const defaultNFT: NFT = {
 	id: '',
@@ -124,7 +125,7 @@ export function useIsNFTApproved(
 		NFTId: string
 	) => {
 		const approvalAddress = await getNFTApproved(ERC721ContractAddress, NFTId);
-		return approvalAddress == HERC20ContractAddress;
+		return caseInsensitiveCompare(approvalAddress, HERC20ContractAddress);
 	};
 	const {
 		data: isApproved,
