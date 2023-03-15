@@ -13,7 +13,7 @@ module.exports = (phase, { defaultConfig }) => {
 			basePath: '/dev'
 		};
 		const images = {
-			domains: ['bearsdeluxe.mypinata.cloud']
+			domains: ['bearsdeluxe.mypinata.cloud', 'ipfs.io']
 		};
 
 		const devNextConfig = {
@@ -30,7 +30,7 @@ module.exports = (phase, { defaultConfig }) => {
 			basePath: '/prod'
 		};
 		const images = {
-			domains: ['bearsdeluxe.mypinata.cloud']
+			domains: ['bearsdeluxe.mypinata.cloud', 'ipfs.io']
 		};
 		const ProdNextConfig = {
 			reactStrictMode: true,
