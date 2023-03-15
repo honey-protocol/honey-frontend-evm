@@ -104,6 +104,7 @@ const BorrowForm = (props: BorrowProps) => {
 	/* end initial all  financial value here */
 
 	const isBorrowButtonDisabled = () => {
+		if (!sliderValue) return true;
 		return userAllowance <= 0;
 	};
 
