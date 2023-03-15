@@ -21,7 +21,7 @@ import { formatNumber } from '../../helpers/format';
 import HoneyTableNameCell from '../../components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell';
 import HoneyTableRow from '../../components/HoneyTable/HoneyTableRow/HoneyTableRow';
 import { InfoBlock } from '../../components/InfoBlock/InfoBlock';
-import { Typography, Space } from 'antd';
+import { Typography, Space, Empty } from 'antd';
 import { pageDescription, pageTitle } from '../../styles/common.css';
 import HoneyContent from '../../components/HoneyContent/HoneyContent';
 import EmptyStateDetails from '../../components/EmptyStateDetails/EmptyStateDetails';
@@ -425,8 +425,14 @@ const Markets: NextPage = () => {
 					</HexaBoxContainer>
 				</div>
 				<div className={style.footerText}>
-					<span className={style.footerTitle}>You can add one more NFT to this market</span>
-					<span className={style.footerDescription}>Choose another NFT from same collection</span>
+					<span className={style.footerTitle}>
+						{positions.length
+							? 'You can add more NFTs to this market'
+							: 'Create positions by selecting an NFT from this collection'}
+					</span>
+					<span className={style.footerDescription}>{`Choose ${
+						positions.length ? 'another' : ''
+					} NFT from same collection`}</span>
 				</div>
 			</div>
 			<div className={style.footerButton}>
@@ -437,7 +443,8 @@ const Markets: NextPage = () => {
 					isFluid={windowWidth < TABLET_BP}
 				>
 					<div className={style.swapWalletIcon} />
-					Choose Another NFT
+					{`
+					Choose ${positions.length ? 'another' : 'YOUR'} NFT`}
 				</HoneyButton>
 			</div>
 		</div>
@@ -493,6 +500,14 @@ const Markets: NextPage = () => {
 													pagination={false}
 													showHeader={false}
 													footer={ExpandedTableFooter}
+													locale={{
+														emptyText: (
+															<Empty
+																image={Empty.PRESENTED_IMAGE_SIMPLE}
+																description="No loan positions"
+															/>
+														)
+													}}
 												/>
 											</div>
 										</div>
@@ -549,6 +564,14 @@ const Markets: NextPage = () => {
 													pagination={false}
 													showHeader={false}
 													footer={ExpandedTableFooter}
+													locale={{
+														emptyText: (
+															<Empty
+																image={Empty.PRESENTED_IMAGE_SIMPLE}
+																description="No loan positions"
+															/>
+														)
+													}}
 												/>
 											</div>
 										</div>
