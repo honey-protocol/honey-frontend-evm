@@ -34,6 +34,8 @@ import { repayBorrowHelper } from '../../helpers/repayHelper';
 import { usePositions } from '../../hooks/useCollection';
 import { fetchAllowance } from '../../helpers/utils';
 import imagePlaceholder from 'public/images/imagePlaceholder.png';
+import { Space } from 'antd';
+import HoneyWarning from 'components/HoneyWarning/HoneyWarning';
 
 const {
 	format: f,
@@ -112,7 +114,7 @@ const RepayForm = (props: RepayProps) => {
 	const userDebt = parseFloat(borrowAmount);
 	const userAllowance = fetchAllowance(positions, NFTId);
 	const loanToValue = userDebt / nftValue;
-	const maxValue = userDebt != 0 ? userDebt : userAllowance;
+	const maxValue = userDebt;
 	const underlyingBalance = parseFloat(userBalance);
 	const newDebt = userDebt - (valueUnderlying ? valueUnderlying : 0);
 	/* end initial all  financial value here */
@@ -514,21 +516,26 @@ const RepayForm = (props: RepayProps) => {
 							/>
 						</div>
 					</div>
-					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
-						onChangeFirstInput={handleUsdInputChange}
-						onChangeSecondInput={handleUnderlyingInputChange}
-						firstInputAddon={erc20Name}
-					/>
+
+					{userDebt !== 0 && (
+						<InputsBlock
+							firstInputValue={p(f(valueUSD))}
+							secondInputValue={p(f(valueUnderlying))}
+							onChangeFirstInput={handleUsdInputChange}
+							onChangeSecondInput={handleUnderlyingInputChange}
+							firstInputAddon={erc20Name}
+						/>
+					)}
 				</div>
 
-				<HoneySlider
-					currentValue={sliderValue}
-					maxValue={maxValue}
-					minAvailableValue={0}
-					onChange={handleSliderChange}
-				/>
+				{userDebt !== 0 && (
+					<HoneySlider
+						currentValue={sliderValue}
+						maxValue={maxValue}
+						minAvailableValue={0}
+						onChange={handleSliderChange}
+					/>
+				)}
 			</>
 		);
 	};
@@ -537,23 +544,29 @@ const RepayForm = (props: RepayProps) => {
 		return toast?.state ? (
 			<ToastComponent />
 		) : (
-			<div className={styles.buttons}>
-				<div className={styles.smallCol}>
-					<HoneyButton variant="secondary" onClick={handleCancel}>
-						Cancel
-					</HoneyButton>
+			<Space direction="vertical">
+				{userDebt === 0 && !toast.state && (
+					<HoneyWarning message="Your have no outstanding debt. You can claim your collateral" />
+				)}
+
+				<div className={styles.buttons}>
+					<div className={styles.smallCol}>
+						<HoneyButton variant="secondary" onClick={handleCancel}>
+							Cancel
+						</HoneyButton>
+					</div>
+					<div className={styles.bigCol}>
+						<HoneyButton
+							variant="primary"
+							disabled={isRepayButtonDisabled()}
+							isFluid={true}
+							onClick={onClick}
+						>
+							<>{buttonTitle()}</>
+						</HoneyButton>
+					</div>
 				</div>
-				<div className={styles.bigCol}>
-					<HoneyButton
-						variant="primary"
-						disabled={isRepayButtonDisabled()}
-						isFluid={true}
-						onClick={onClick}
-					>
-						<>{buttonTitle()}</>
-					</HoneyButton>
-				</div>
-			</div>
+			</Space>
 		);
 	};
 
