@@ -214,6 +214,7 @@ const DepositForm = (props: DepositFormProps) => {
 				await queryClient.invalidateQueries(queryKeys.listUserUnderlying(walletPublicKey));
 				await queryClient.invalidateQueries(queryKeys.lendData(HERC20ContractAddress));
 				console.log('deposit succeed');
+				handleUsdInputChange(undefined);
 			}
 			toast.success('Successful! Transaction complete');
 		} catch (err) {
