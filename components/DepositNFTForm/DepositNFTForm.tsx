@@ -153,7 +153,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 
 	const renderFooter = () => {
 		return toast?.state ? (
-			<ToastComponent />
+			ToastComponent
 		) : (
 			<div className={styles.buttons}>
 				<div className={styles.smallCol}>

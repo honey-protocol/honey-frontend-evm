@@ -542,7 +542,7 @@ const RepayForm = (props: RepayProps) => {
 
 	const renderFooter = () => {
 		return toast?.state ? (
-			<ToastComponent />
+			ToastComponent
 		) : (
 			<Space direction="vertical">
 				{userDebt === 0 && !toast.state && (
