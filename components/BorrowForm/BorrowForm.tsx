@@ -104,7 +104,7 @@ const BorrowForm = (props: BorrowProps) => {
 	/* end initial all  financial value here */
 
 	const isBorrowButtonDisabled = () => {
-		if (!sliderValue) return true;
+		if (!sliderValue || sliderValue < 0) return true;
 		return userAllowance <= 0;
 	};
 
@@ -203,7 +203,7 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.nftInfo}>
 					<div className={styles.nftImage}>
 						<HexaBoxContainer>
-							<Image src={nft.image ?? imagePlaceholder} alt={nft.name} layout="fill" />
+							<Image src={nft.image ? nft.image : imagePlaceholder} alt={nft.name} layout="fill" />
 						</HexaBoxContainer>
 					</div>
 					<div className={styles.nftName}>
@@ -254,40 +254,9 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fp(loanToValue * 100)}
-							toolTipLabel={
-								<span>
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://docs.honey.finance/learn/defi-lending#loan-to-value-ratio"
-									>
-										Loan-to-value ratio{' '}
-									</a>
-									measures the ratio of the debt, compared to the value of the collateral.
-								</span>
-							}
 							title={
 								<span className={hAlign}>
-									Loan-to-value % <div className={questionIcon} />
-								</span>
-							}
-						/>
-						<HoneySlider
-							currentValue={0}
-							maxValue={nftValue}
-							minAvailableValue={borrowedValue}
-							maxSafePosition={0.3 - borrowedValue / 1000}
-							dangerPosition={0.45 - borrowedValue / 1000}
-							maxAvailablePosition={collateralFactor}
-							isReadonly
-						/>
-					</div>
-					<div className={styles.col}>
-						<InfoBlock
-							title={
-								<span className={hAlign}>
-									New LTV %<div className={questionIcon} />
+									LTV %<div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
@@ -323,29 +292,7 @@ const BorrowForm = (props: BorrowProps) => {
 						<InfoBlock
 							title={
 								<span className={hAlign}>
-									Debt <div className={questionIcon} />
-								</span>
-							}
-							toolTipLabel={
-								<span>
-									Value borrowed from the lending pool, upon which interest accrues.{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://docs.honey.finance/learn/defi-lending#debt"
-									>
-										Learn more.
-									</a>
-								</span>
-							}
-							value={fs(borrowedValue)}
-						/>
-					</div>
-					<div className={styles.col}>
-						<InfoBlock
-							title={
-								<span className={hAlign}>
-									New debt + fees <div className={questionIcon} />
+									Debt + fees <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
@@ -365,40 +312,11 @@ const BorrowForm = (props: BorrowProps) => {
 							isDisabled={true}
 						/>
 					</div>
-				</div>
-				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={`${fs(liquidationPrice)} ${
-								borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
-							}`}
-							valueSize="normal"
-							isDisabled={borrowedValue == 0}
 							title={
 								<span className={hAlign}>
 									Liquidation price <div className={questionIcon} />
-								</span>
-							}
-							toolTipLabel={
-								<span>
-									Price at which the position (NFT) will be liquidated.{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href=" " //TODO: add link to docs
-									>
-										Learn more.
-									</a>
-								</span>
-							}
-						/>
-					</div>
-
-					<div className={styles.col}>
-						<InfoBlock
-							title={
-								<span className={hAlign}>
-									New Liquidation price <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
@@ -422,6 +340,7 @@ const BorrowForm = (props: BorrowProps) => {
 						/>
 					</div>
 				</div>
+				<div className={styles.row}></div>
 				<div className={styles.inputs}>
 					<div className={styles.row}>
 						<div className={cs(stylesBorrow.balance, styles.col)}>

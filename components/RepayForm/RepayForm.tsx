@@ -330,42 +330,9 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fp(loanToValue * 100)}
-							toolTipLabel={
-								<span>
-									Risk level is measured using the{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://docs.honey.finance/learn/defi-lending#loan-to-value-ratio"
-									>
-										loan-to-value ratio
-									</a>
-									, and determines how close a position is to being liquidated.
-								</span>
-							}
 							title={
 								<span className={hAlign}>
-									Risk level <div className={questionIcon} />
-								</span>
-							}
-						/>
-
-						<HoneySlider
-							currentValue={0}
-							maxValue={nftValue}
-							minAvailableValue={userDebt}
-							maxSafePosition={0.3 - userDebt / 1000}
-							dangerPosition={0.45 - userDebt / 1000}
-							maxAvailablePosition={collateralFactor}
-							isReadonly
-						/>
-					</div>
-					<div className={styles.col}>
-						<InfoBlock
-							title={
-								<span className={hAlign}>
-									New risk level
+									Risk level
 									<div className={questionIcon} />
 								</span>
 							}
@@ -407,29 +374,6 @@ const RepayForm = (props: RepayProps) => {
 									<div className={questionIcon} />
 								</span>
 							}
-							value={fs(userDebt)}
-							toolTipLabel={
-								<span>
-									Value borrowed from the lending pool, upon which interest accrues.{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://docs.honey.finance/learn/defi-lending#debt"
-									>
-										Learn more.
-									</a>
-								</span>
-							}
-						/>
-					</div>
-					<div className={styles.col}>
-						<InfoBlock
-							title={
-								<span className={hAlign}>
-									New debt
-									<div className={questionIcon} />
-								</span>
-							}
 							value={fs(newDebt < 0 ? 0 : newDebt)}
 							isDisabled={true}
 							toolTipLabel={
@@ -447,38 +391,12 @@ const RepayForm = (props: RepayProps) => {
 							}
 						/>
 					</div>
-				</div>
 
-				<div className={styles.row}>
-					<div className={styles.col}>
-						<InfoBlock
-							value={`${fs(liquidationPrice)} ${userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''}`}
-							valueSize="normal"
-							title={
-								<span className={hAlign}>
-									Liquidation price
-									<div className={questionIcon} />
-								</span>
-							}
-							toolTipLabel={
-								<span>
-									Price at which the position (NFT) will be liquidated.{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href=" " //TODO: add link to docs
-									>
-										Learn more.
-									</a>
-								</span>
-							}
-						/>
-					</div>
 					<div className={styles.col}>
 						<InfoBlock
 							title={
 								<span className={hAlign}>
-									New Liquidation price <div className={questionIcon} />
+									Liquidation price <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
@@ -544,7 +462,7 @@ const RepayForm = (props: RepayProps) => {
 		return toast?.state ? (
 			ToastComponent
 		) : (
-			<Space direction="vertical">
+			<Space direction="vertical" style={{ width: '100%' }}>
 				{userDebt === 0 && !toast.state && (
 					<HoneyWarning message="Your have no outstanding debt. You can claim your collateral" />
 				)}
