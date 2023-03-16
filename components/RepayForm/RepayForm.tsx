@@ -375,7 +375,7 @@ const RepayForm = (props: RepayProps) => {
 								</span>
 							}
 							value={fs(newDebt < 0 ? 0 : newDebt)}
-							isDisabled={true}
+							isDisabled={newDebt > 0 ? false : true}
 							toolTipLabel={
 								<span>
 									Estimated{' '}

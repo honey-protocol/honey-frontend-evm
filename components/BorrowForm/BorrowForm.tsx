@@ -273,7 +273,7 @@ const BorrowForm = (props: BorrowProps) => {
 								</span>
 							}
 							value={fp(((borrowedValue + newAdditionalDebt) / nftValue) * 100)}
-							isDisabled={true}
+							isDisabled={newTotalDebt > 0 ? false : true}
 						/>
 						<HoneySlider
 							currentValue={sliderValue * 1.1}
@@ -309,7 +309,7 @@ const BorrowForm = (props: BorrowProps) => {
 								</span>
 							}
 							value={fs(newTotalDebt < 0 ? 0 : newTotalDebt)}
-							isDisabled={true}
+							isDisabled={newTotalDebt > 0 ? false : true}
 						/>
 					</div>
 					<div className={styles.col}>
