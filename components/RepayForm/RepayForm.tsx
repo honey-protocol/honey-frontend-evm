@@ -150,6 +150,9 @@ const RepayForm = (props: RepayProps) => {
 
 	// Put your validators here
 	const isRepayButtonDisabled = () => {
+		if (sliderValue <= 0) {
+			return true;
+		}
 		return repayState == 'DONE';
 	};
 
