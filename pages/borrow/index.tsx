@@ -35,6 +35,7 @@ import useDisplayStore from '../../store/displayStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import HealthLvl from 'components/HealthLvl/HealthLvl';
 import c from 'classnames';
+import { useNetwork } from 'wagmi';
 
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 const Markets: NextPage = () => {
@@ -55,6 +56,8 @@ const Markets: NextPage = () => {
 	const { width: windowWidth } = useWindowSize();
 	const { htokenHelperContractAddress, hivemindContractAddress, nftContractAddress, unit } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
+
+	const { chain } = useNetwork();
 
 	/*    Begin insert data into table */
 	const [marketData, isLoadingMarketData] = useMarket(
@@ -466,11 +469,13 @@ const Markets: NextPage = () => {
 					<Typography.Text className={pageDescription}>
 						Get instant liquidity using your NFTs as collateral.{'   '}
 						<span style={{ marginLeft: '5px' }}>
-							<a target="_blank" href="https://bridge.arbitrum.io/" rel="noreferrer">
-								<HoneyButton style={{ display: 'inline' }} variant="text">
-									Bridge to Arbitrum
-								</HoneyButton>
-							</a>
+							{chain?.network === 'arbitrum' && (
+								<a target="_blank" href="https://bridge.arbitrum.io/" rel="noreferrer">
+									<HoneyButton style={{ display: 'inline' }} variant="text">
+										Bridge to Arbitrum
+									</HoneyButton>
+								</a>
+							)}
 						</span>
 					</Typography.Text>
 				</div>
