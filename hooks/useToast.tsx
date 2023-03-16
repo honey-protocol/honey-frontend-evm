@@ -26,6 +26,7 @@ const useToast = () => {
 				state={toast.state}
 				primaryText={toast.primaryText}
 				secondaryLink={toast.secondaryLink}
+				clearToast={() => setToast(null)}
 			/>
 		);
 	}, [toast?.state]);
@@ -58,7 +59,7 @@ const useToast = () => {
 					primaryText,
 					secondaryLink
 				});
-				clearToast();
+				// clearToast();
 			},
 
 			clear: clearToast,

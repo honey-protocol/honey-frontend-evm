@@ -22,7 +22,7 @@ export const toast = style({
 export const row = style({
 	display: 'flex',
 	justifyContent: 'space-between',
-	alignItems: 'flex-start',
+	alignItems: 'center',
 	gap: vars.space.small
 });
 
@@ -109,4 +109,18 @@ export const spinner = style({
 	minWidth: 18,
 	height: 18,
 	background: 'url("/images/spinner.svg") center center no-repeat'
+});
+
+export const toastCloseBtn = style({
+	cursor: 'pointer',
+	display: 'flex',
+	opacity: 0.6,
+	transition: 'opacity .3s',
+	':hover': {
+		opacity: 1
+	}
+});
+
+export const iconsContainer = style({
+	gap: 5
 });
