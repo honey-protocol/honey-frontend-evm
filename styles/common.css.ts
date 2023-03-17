@@ -1,5 +1,5 @@
-import { style } from '@vanilla-extract/css';
-import { breakpoints, typography } from './theme.css';
+import { globalStyle, style } from '@vanilla-extract/css';
+import { breakpoints, typography, vars } from './theme.css';
 
 export const container = style({
 	width: '100%',
@@ -38,3 +38,9 @@ export const pageDescription = style([
 	typography.description,
 	{ marginBottom: '20px', display: 'block' }
 ]);
+
+export const spinner = style({});
+
+globalStyle(`${spinner} .ant-spin-dot-item`, {
+	background: vars.colors.brownDark
+});

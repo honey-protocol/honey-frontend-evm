@@ -479,6 +479,13 @@ export const emptyStateContainer = style({
 	flex: 1
 });
 
+export const emptyTableSpinner = style({
+	height: '130px',
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center'
+});
+
 export const docIcon = style({
 	width: 52,
 	height: 52,

@@ -21,8 +21,8 @@ import { formatNumber } from '../../helpers/format';
 import HoneyTableNameCell from '../../components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell';
 import HoneyTableRow from '../../components/HoneyTable/HoneyTableRow/HoneyTableRow';
 import { InfoBlock } from '../../components/InfoBlock/InfoBlock';
-import { Typography, Space, Empty } from 'antd';
-import { pageDescription, pageTitle } from '../../styles/common.css';
+import { Typography, Space, Empty, Spin } from 'antd';
+import { pageDescription, pageTitle, spinner } from '../../styles/common.css';
 import HoneyContent from '../../components/HoneyContent/HoneyContent';
 import EmptyStateDetails from '../../components/EmptyStateDetails/EmptyStateDetails';
 import { UserContext } from '../../contexts/userContext';
@@ -513,11 +513,17 @@ const Markets: NextPage = () => {
 													showHeader={false}
 													footer={ExpandedTableFooter}
 													locale={{
-														emptyText: (
+														emptyText: !isLoadingPositions ? (
 															<Empty
 																image={Empty.PRESENTED_IMAGE_SIMPLE}
-																description="No loan positions"
+																description={
+																	currentUser?.address ? 'No loan positions' : 'Connect wallet'
+																}
 															/>
+														) : (
+															<div className={c(style.emptyTableSpinner, spinner)}>
+																<Spin />
+															</div>
 														)
 													}}
 												/>
@@ -577,11 +583,17 @@ const Markets: NextPage = () => {
 													showHeader={false}
 													footer={ExpandedTableFooter}
 													locale={{
-														emptyText: (
+														emptyText: !isLoadingPositions ? (
 															<Empty
 																image={Empty.PRESENTED_IMAGE_SIMPLE}
-																description="No loan positions"
+																description={
+																	currentUser?.address ? 'No loan positions' : 'Connect wallet'
+																}
 															/>
+														) : (
+															<div className={c(style.emptyTableSpinner, spinner)}>
+																<Spin />
+															</div>
 														)
 													}}
 												/>
