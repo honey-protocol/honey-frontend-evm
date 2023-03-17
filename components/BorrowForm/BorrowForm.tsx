@@ -23,7 +23,11 @@ import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LoanWorkFlowType } from '../../types/workflows';
 import { useGetCollateralFactor } from '../../hooks/useHivemind';
 import { useGetMetaDataFromNFTId } from '../../hooks/useNFT';
-import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
+import {
+	useGetMaxBorrowableAmount,
+	useGetNFTPrice,
+	useGetUnderlyingPriceInUSD
+} from '../../hooks/useHtokenHelper';
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { borrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
@@ -92,18 +96,25 @@ const BorrowForm = (props: BorrowProps) => {
 		NFTId,
 		unit
 	);
+
+	const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(
+		htokenHelperContractAddress,
+		HERC20ContractAddress,
+		hivemindContractAddress
+	);
 	/* initial all financial value here */
 	const nftValue = nftPrice.price;
 	const borrowedValue = parseFloat(borrowAmount);
 	const loanToValue = borrowedValue / nftValue;
 	const userAllowance = fetchAllowance(positions, NFTId);
 	//todo use data from blockchain
-	const borrowFee = 0.005; // ,5%
+	const borrowFee = 0.02; // 2%
 	const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
 	const newTotalDebt = newAdditionalDebt ? borrowedValue + newAdditionalDebt : borrowedValue;
 	/* end initial all  financial value here */
 
 	const isBorrowButtonDisabled = () => {
+		if (!sliderValue || sliderValue < 0) return true;
 		return userAllowance <= 0;
 	};
 
@@ -114,7 +125,8 @@ const BorrowForm = (props: BorrowProps) => {
 			isLoadingNFTPrice ||
 			isLoadingUnderlyingPrice ||
 			isLoadingBorrowAmount ||
-			isLoadingPositions
+			isLoadingPositions ||
+			isLoadingMaxBorrow
 		) {
 			toast.processing('Loading');
 		} else {
@@ -127,7 +139,8 @@ const BorrowForm = (props: BorrowProps) => {
 		isLoadingNFTPrice,
 		isLoadingUnderlyingPrice,
 		isLoadingBorrowAmount,
-		isLoadingPositions
+		isLoadingPositions,
+		isLoadingMaxBorrow
 	]);
 
 	/*   Begin handle slider function  */
@@ -202,14 +215,7 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.nftInfo}>
 					<div className={styles.nftImage}>
 						<HexaBoxContainer>
-							<Image
-								src={
-									// nft.image ||
-									imagePlaceholder
-								}
-								alt={nft.name}
-								layout="fill"
-							/>
+							<Image src={nft.image ? nft.image : imagePlaceholder} alt={nft.name} layout="fill" />
 						</HexaBoxContainer>
 					</div>
 					<div className={styles.nftName}>
@@ -260,40 +266,9 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fp(loanToValue * 100)}
-							toolTipLabel={
-								<span>
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://docs.honey.finance/learn/defi-lending#loan-to-value-ratio"
-									>
-										Loan-to-value ratio{' '}
-									</a>
-									measures the ratio of the debt, compared to the value of the collateral.
-								</span>
-							}
 							title={
 								<span className={hAlign}>
-									Loan-to-value % <div className={questionIcon} />
-								</span>
-							}
-						/>
-						<HoneySlider
-							currentValue={0}
-							maxValue={nftValue}
-							minAvailableValue={borrowedValue}
-							maxSafePosition={0.3 - borrowedValue / 1000}
-							dangerPosition={0.45 - borrowedValue / 1000}
-							maxAvailablePosition={collateralFactor}
-							isReadonly
-						/>
-					</div>
-					<div className={styles.col}>
-						<InfoBlock
-							title={
-								<span className={hAlign}>
-									New LTV %<div className={questionIcon} />
+									LTV %<div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
@@ -310,7 +285,7 @@ const BorrowForm = (props: BorrowProps) => {
 								</span>
 							}
 							value={fp(((borrowedValue + newAdditionalDebt) / nftValue) * 100)}
-							isDisabled={true}
+							isDisabled={newTotalDebt > 0 ? false : true}
 						/>
 						<HoneySlider
 							currentValue={sliderValue * 1.1}
@@ -318,7 +293,7 @@ const BorrowForm = (props: BorrowProps) => {
 							minAvailableValue={borrowedValue}
 							maxSafePosition={0.3 - borrowedValue / 1000}
 							dangerPosition={0.45 - borrowedValue / 1000}
-							maxAvailablePosition={(userAllowance + borrowedValue) / nftValue}
+							maxAvailablePosition={maxBorrow / nftValue}
 							isReadonly
 						/>
 					</div>
@@ -329,29 +304,7 @@ const BorrowForm = (props: BorrowProps) => {
 						<InfoBlock
 							title={
 								<span className={hAlign}>
-									Debt <div className={questionIcon} />
-								</span>
-							}
-							toolTipLabel={
-								<span>
-									Value borrowed from the lending pool, upon which interest accrues.{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://docs.honey.finance/learn/defi-lending#debt"
-									>
-										Learn more.
-									</a>
-								</span>
-							}
-							value={fs(borrowedValue)}
-						/>
-					</div>
-					<div className={styles.col}>
-						<InfoBlock
-							title={
-								<span className={hAlign}>
-									New debt + fees <div className={questionIcon} />
+									Debt + fees <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
@@ -368,43 +321,14 @@ const BorrowForm = (props: BorrowProps) => {
 								</span>
 							}
 							value={fs(newTotalDebt < 0 ? 0 : newTotalDebt)}
-							isDisabled={true}
+							isDisabled={newTotalDebt > 0 ? false : true}
 						/>
 					</div>
-				</div>
-				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={`${fs(liquidationPrice)} ${
-								borrowedValue ? `(-${liqPercent.toFixed(0)}%)` : ''
-							}`}
-							valueSize="normal"
-							isDisabled={borrowedValue == 0}
 							title={
 								<span className={hAlign}>
 									Liquidation price <div className={questionIcon} />
-								</span>
-							}
-							toolTipLabel={
-								<span>
-									Price at which the position (NFT) will be liquidated.{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href=" " //TODO: add link to docs
-									>
-										Learn more.
-									</a>
-								</span>
-							}
-						/>
-					</div>
-
-					<div className={styles.col}>
-						<InfoBlock
-							title={
-								<span className={hAlign}>
-									New Liquidation price <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
@@ -428,6 +352,7 @@ const BorrowForm = (props: BorrowProps) => {
 						/>
 					</div>
 				</div>
+				<div className={styles.row}></div>
 				<div className={styles.inputs}>
 					<div className={styles.row}>
 						<div className={cs(stylesBorrow.balance, styles.col)}>
@@ -491,7 +416,7 @@ const BorrowForm = (props: BorrowProps) => {
 					minAvailableValue={borrowedValue}
 					maxSafePosition={0.3 - borrowedValue / 1000}
 					dangerPosition={0.45 - borrowedValue / 1000}
-					maxAvailablePosition={collateralFactor}
+					maxAvailablePosition={maxBorrow / nftValue}
 					onChange={handleSliderChange}
 				/>
 			</>
@@ -506,7 +431,7 @@ const BorrowForm = (props: BorrowProps) => {
 
 	const renderFooter = () => {
 		return toast?.state ? (
-			<ToastComponent />
+			ToastComponent
 		) : (
 			<div className={styles.buttons}>
 				<div className={styles.smallCol}>

@@ -9,7 +9,12 @@ interface HoneyTooltipProps {
 
 const HoneyTooltip = (props: HoneyTooltipProps) => {
 	return (
-		<Tooltip placement="bottom" title={props.label} overlayClassName={styles.tooltip}>
+		<Tooltip
+			placement="bottom"
+			title={props.label}
+			trigger={['click']}
+			overlayClassName={styles.tooltip}
+		>
 			<div className={styles.container}>{props.children}</div>
 		</Tooltip>
 	);

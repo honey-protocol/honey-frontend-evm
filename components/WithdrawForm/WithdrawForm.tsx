@@ -184,7 +184,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 		<SidebarScroll
 			footer={
 				toast?.state ? (
-					<ToastComponent />
+					ToastComponent
 				) : (
 					<div className={styles.buttons}>
 						<div className={styles.smallCol}>
