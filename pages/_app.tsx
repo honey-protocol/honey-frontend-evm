@@ -35,10 +35,7 @@ const initializeMoralis = async () => {
 	}
 };
 
-const { chains, provider } = configureChains(
-	[arbitrum, polygon, polygonMumbai, bsc, fantom],
-	[publicProvider()]
-);
+const { chains, provider } = configureChains([arbitrum], [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
 	appName: 'Honey Finance',
