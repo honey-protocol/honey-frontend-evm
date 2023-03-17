@@ -24,14 +24,7 @@ const NftCard = (props: NftCardProps) => {
 		>
 			<div className={styles.nftImage}>
 				<HexaBoxContainer>
-					<Image
-						src={
-							// nft.image ||
-							imagePlaceholder
-						}
-						alt={'user nft'}
-						layout="fill"
-					/>
+					<Image src={nft.image || imagePlaceholder} alt={'user nft'} layout="fill" />
 				</HexaBoxContainer>
 			</div>
 			<div className={styles.nftRight}>

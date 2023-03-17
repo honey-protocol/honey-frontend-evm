@@ -13,7 +13,11 @@ module.exports = (phase, { defaultConfig }) => {
 			basePath: '/dev'
 		};
 		const images = {
-			domains: ['bearsdeluxe.mypinata.cloud', 'ipfs.io']
+			domains: [
+				'bearsdeluxe.mypinata.cloud',
+				'ipfs.io',
+				'bafybeidpr6zwp4cou32kxpu3uvdfw6vjtuybdd7rtpbdpys6bvaayypubi.ipfs.w3s.link'
+			]
 		};
 
 		const devNextConfig = {
@@ -30,7 +34,11 @@ module.exports = (phase, { defaultConfig }) => {
 			basePath: '/prod'
 		};
 		const images = {
-			domains: ['bearsdeluxe.mypinata.cloud', 'ipfs.io']
+			domains: [
+				'bearsdeluxe.mypinata.cloud',
+				'ipfs.io',
+				'bafybeidpr6zwp4cou32kxpu3uvdfw6vjtuybdd7rtpbdpys6bvaayypubi.ipfs.w3s.link'
+			]
 		};
 		const ProdNextConfig = {
 			reactStrictMode: true,
