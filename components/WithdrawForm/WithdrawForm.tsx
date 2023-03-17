@@ -43,7 +43,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
+	const walletPublicKey: string = currentUser?.address || '';
 	const HERC20ContractAddress = useLendFlowStore((state) => state.HERC20ContractAddr);
 
 	const { htokenHelperContractAddress, ERC20ContractAddress, name, icon, erc20Name, unit } =
@@ -184,7 +184,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 		<SidebarScroll
 			footer={
 				toast?.state ? (
-					<ToastComponent />
+					ToastComponent
 				) : (
 					<div className={styles.buttons}>
 						<div className={styles.smallCol}>

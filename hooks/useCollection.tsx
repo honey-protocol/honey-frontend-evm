@@ -1,4 +1,3 @@
-import MoralisType from 'moralis-v1';
 import { MarketTablePosition, MarketTableRow } from '../types/markets';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
@@ -22,6 +21,7 @@ import { getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
 import { interestRateLend } from 'helpers/utils';
 import { getCollateralFactor } from './useHivemind';
 import { getContractsByHTokenAddr } from '../helpers/generalHelper';
+import { TCurrentUser } from 'contexts/userContext';
 
 const defaultPosition: MarketTablePosition = {
 	name: '',
@@ -63,7 +63,7 @@ const defaultMarket: marketData = {
 };
 
 export function useMarket(
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	collections: collection[],
 	htokenHelperContractAddress: string
 ): [MarketTableRow[], boolean] {
@@ -125,7 +125,7 @@ export function usePositions(
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
 	hivemindContractAddress: string,
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	unit: Unit
 ): [MarketTablePosition[], boolean] {
 	const onGetCouponsSuccess = (data: coupon[]) => {
@@ -134,7 +134,7 @@ export function usePositions(
 	const onGetCouponsError = () => {
 		return [] as coupon[];
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: couponList,
 		isLoading: isLoadingCoupons,
@@ -237,8 +237,8 @@ export function usePositions(
 							const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, coupon.NFTId);
 							const result: MarketTablePosition = {
 								name: metaData.name,
-								image: getImageUrlFromMetaData(metaData.metadata || ''),
-								tokenId: metaData.token_id,
+								image: getImageUrlFromMetaData(JSON.stringify(metaData.metadata) || ''),
+								tokenId: metaData.tokenId,
 								couponId: coupon.couponId,
 								debt: '0',
 								healthLvl: 0,
@@ -331,7 +331,7 @@ export function usePositions(
 }
 
 export function useLend(
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	collections: collection[],
 	htokenHelperContractAddress: string
 ): [LendTableRow[], boolean] {
@@ -399,7 +399,7 @@ export function useLendPositions(): [Array<TimestampPoint>, boolean] {
 }
 
 export function useLiquidation(
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	collections: collection[],
 	htokenHelperContractAddress: string
 ): [LiquidateTableRow[], boolean] {

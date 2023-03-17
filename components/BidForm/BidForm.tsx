@@ -60,9 +60,9 @@ const {
 const BidForm = (props: BidFormProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { currentUser } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
+	const walletPublicKey: string = currentUser?.address || '';
 	const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr);
 
 	const {
@@ -327,7 +327,7 @@ const BidForm = (props: BidFormProps) => {
 		<SidebarScroll
 			footer={
 				toast.state ? (
-					<ToastComponent />
+					ToastComponent
 				) : (
 					<div className={styles.buttons}>
 						<div className={styles.smallCol}>

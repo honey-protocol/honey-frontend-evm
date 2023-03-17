@@ -1,5 +1,4 @@
 import type { AppProps } from 'next/app';
-import { MoralisProvider } from 'react-moralis';
 import { ThemeProvider } from 'degen';
 import 'degen/styles';
 import '../styles/globals.css';
@@ -13,6 +12,44 @@ import { useEffect } from 'react';
 import useLoanFlowStore from '../store/loanFlowStore';
 import useLendFlowStore from '../store/lendFlowStore';
 import useLiquidationFlowStore from '../store/liquidationFlowStore';
+import Moralis from 'moralis';
+import { vars } from 'styles/theme.css';
+
+import '@rainbow-me/rainbowkit/styles.css';
+
+import { getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { polygon, bsc, arbitrum, polygonMumbai, fantom } from 'wagmi/chains';
+import { publicProvider } from 'wagmi/providers/public';
+
+const initializeMoralis = async () => {
+	try {
+		console.log('Initializing moralis');
+		await Moralis.start({
+			apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY
+			// ...and any other configuration
+		});
+		console.log('Moralis initialized');
+	} catch (error) {
+		console.log('Failed to initialize moralis');
+	}
+};
+
+const { chains, provider } = configureChains(
+	[arbitrum, polygon, polygonMumbai, bsc, fantom],
+	[publicProvider()]
+);
+
+const { connectors } = getDefaultWallets({
+	appName: 'Honey Finance',
+	chains
+});
+
+const wagmiClient = createClient({
+	autoConnect: true,
+	connectors,
+	provider
+});
 
 const queryClient = new QueryClient();
 
@@ -32,6 +69,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 			resetLiquidationFlowStore();
 		};
 		router.events.on('routeChangeStart', handleRouteChange);
+
+		//Initialize moralis
+		initializeMoralis();
+
 		return () => {
 			router.events.off('routeChangeStart', handleRouteChange);
 		};
@@ -40,17 +81,21 @@ function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<ThemeProvider defaultMode="dark" defaultAccent={storedAccent || defaultAccent}>
 			<QueryClientProvider client={queryClient}>
-				<MoralisProvider
-					appId={process.env.NEXT_PUBLIC_APP_ID as string}
-					serverUrl={process.env.NEXT_PUBLIC_SERVER_URL as string}
-					initializeOnMount={true}
-				>
-					<UserProvider>
-						{/* {children} */}
-						<Component {...pageProps} />
-						<ToastContainer theme="dark" position="top-right" />
-					</UserProvider>
-				</MoralisProvider>
+				<WagmiConfig client={wagmiClient}>
+					<RainbowKitProvider
+						modalSize="compact"
+						chains={chains}
+						theme={lightTheme({
+							accentColor: vars.colors.brownLight
+						})}
+					>
+						<UserProvider>
+							{/* {children} */}
+							<Component {...pageProps} />
+							<ToastContainer theme="dark" position="top-right" />
+						</UserProvider>
+					</RainbowKitProvider>
+				</WagmiConfig>
 			</QueryClientProvider>
 		</ThemeProvider>
 	);

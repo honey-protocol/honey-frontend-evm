@@ -45,9 +45,9 @@ const {
 const DepositForm = (props: DepositFormProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { currentUser } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
+	const walletPublicKey: string = currentUser?.address || '';
 	const HERC20ContractAddress = useLendFlowStore((state) => state.HERC20ContractAddr);
 
 	const {
@@ -214,6 +214,7 @@ const DepositForm = (props: DepositFormProps) => {
 				await queryClient.invalidateQueries(queryKeys.listUserUnderlying(walletPublicKey));
 				await queryClient.invalidateQueries(queryKeys.lendData(HERC20ContractAddress));
 				console.log('deposit succeed');
+				handleUsdInputChange(undefined);
 			}
 			toast.success('Successful! Transaction complete');
 		} catch (err) {
@@ -232,7 +233,7 @@ const DepositForm = (props: DepositFormProps) => {
 		<SidebarScroll
 			footer={
 				toast?.state ? (
-					<ToastComponent />
+					ToastComponent
 				) : (
 					<div className={styles.buttons}>
 						<div className={styles.smallCol}>

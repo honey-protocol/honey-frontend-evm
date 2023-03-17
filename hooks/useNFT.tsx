@@ -1,13 +1,12 @@
-import { useState, useEffect, useRef, MutableRefObject, SetStateAction, Dispatch } from 'react';
-
-import MoralisType from 'moralis-v1';
-import Moralis from 'moralis-v1';
 import { chain } from '../constants/service';
 import { getImageUrlFromMetaData } from '../helpers/NFThelper';
 import { getNFTApproved } from './useERC721';
 import { useQueries, useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
+import Moralis from 'moralis';
+import { TCurrentUser } from 'contexts/userContext';
+import { caseInsensitiveCompare } from '../helpers/generalHelper';
 
 const defaultNFT: NFT = {
 	id: '',
@@ -21,12 +20,12 @@ export async function getMetaDataFromNFTId(ERC721ContractAddress: string, NFTId:
 	const options = {
 		chain: chain,
 		address: ERC721ContractAddress,
-		token_id: NFTId
+		tokenId: NFTId
 	};
 
 	// @ts-ignore
-	const result = await Moralis.Web3API.token.getTokenIdMetadata(options);
-	return result;
+	const response: any = await Moralis.EvmApi.nft.getNFTMetadata(options);
+	return response?.result;
 }
 
 export function useGetMetaDataFromNFTId(
@@ -49,11 +48,11 @@ export function useGetMetaDataFromNFTId(
 			if (ERC721ContractAddress != '' && NFTId != '') {
 				const metaData = await getMetaDataFromNFTId(ERC721ContractAddress, NFTId);
 				const result: NFT = {
-					id: `${metaData.name}-${metaData.token_id}`, //id will be name-tokenId
+					id: `${metaData.name}-${metaData?.tokenId}`, //id will be name-tokenId
 					name: metaData.name,
 					symbol: metaData.symbol,
-					image: getImageUrlFromMetaData(metaData.metadata || ''),
-					tokenId: metaData.token_id,
+					image: getImageUrlFromMetaData(JSON.stringify(metaData.metadata) || ''),
+					tokenId: metaData.tokenId,
 					contractAddress: ERC721ContractAddress
 				};
 				return result;
@@ -86,7 +85,7 @@ export function useFetchNFTByUserCoupons(
 							id: `${metaData.name}-${metaData.token_id}`, //id will be name-tokenId
 							name: metaData.name,
 							symbol: metaData.symbol,
-							image: getImageUrlFromMetaData(metaData.metadata || ''),
+							image: getImageUrlFromMetaData(JSON.stringify(metaData.metadata) || ''),
 							tokenId: metaData.token_id,
 							contractAddress: ERC721ContractAddress
 						};
@@ -126,7 +125,7 @@ export function useIsNFTApproved(
 		NFTId: string
 	) => {
 		const approvalAddress = await getNFTApproved(ERC721ContractAddress, NFTId);
-		return approvalAddress == HERC20ContractAddress;
+		return caseInsensitiveCompare(approvalAddress, HERC20ContractAddress);
 	};
 	const {
 		data: isApproved,
@@ -155,19 +154,19 @@ export async function getNFTList(ERC721ContractAddress: string, address: string)
 	const options = {
 		chain: chain,
 		address: address,
-		token_address: ERC721ContractAddress
+		tokenAddresses: [ERC721ContractAddress]
 	};
 
 	// @ts-ignore
-	const userNFTs = await Moralis.Web3API.account.getNFTsForContract(options);
-	const results = userNFTs?.result?.map((userNFT) => {
+	const userNFTs = await Moralis.EvmApi.nft.getWalletNFTs(options);
+	const results = userNFTs?.result?.map((userNFT: any) => {
 		const result: NFT = {
-			id: `${userNFT.name}-${userNFT.token_id}`, //id will be name-tokenId
-			name: userNFT.name,
+			id: `${userNFT.name}-${userNFT.tokenId}`, //id will be name-tokenId
+			name: userNFT.name ?? '',
 			symbol: userNFT.symbol,
-			image: getImageUrlFromMetaData(userNFT.metadata || ''),
-			tokenId: userNFT.token_id,
-			contractAddress: userNFT.token_address
+			image: getImageUrlFromMetaData(JSON.stringify(userNFT.metadata) || ''),
+			tokenId: userNFT.tokenId.toString() ?? '',
+			contractAddress: userNFT.tokenAddress.format('lowercase')
 		};
 		return result;
 	});
@@ -176,7 +175,7 @@ export async function getNFTList(ERC721ContractAddress: string, address: string)
 }
 
 export function useFetchNFTByUserByCollection(
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	ERC721ContractAddress: string
 ): [Array<NFT>, boolean] {
 	const onSuccess = (data: NFT[]) => {
@@ -185,7 +184,7 @@ export function useFetchNFTByUserByCollection(
 	const onError = () => {
 		return [] as NFT[];
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: NFTs,
 		isLoading,

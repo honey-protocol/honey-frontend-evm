@@ -1,7 +1,8 @@
 import React from 'react';
-import Moralis from 'moralis-v1';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
 import { fromWei } from 'web3-utils';
+import Moralis from 'moralis';
+import { prepareWriteContract, writeContract } from '@wagmi/core';
 
 export default async function getDepositNFTApproval(
 	ERC721ContractAddress: string,
@@ -9,14 +10,14 @@ export default async function getDepositNFTApproval(
 	NFTTokenId: string
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC721.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: ERC721ContractAddress,
+	const options = await prepareWriteContract({
+		// chainId: chain,
+		address: ERC721ContractAddress as `0x${string}`,
 		functionName: 'approve',
 		abi: ABI,
-		params: { to: HERC20ContractAddress, tokenId: NFTTokenId }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, NFTTokenId]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -29,12 +30,13 @@ export async function getNFTApproved(ERC721ContractAddress: string, NFTTokenId: 
 	const options = {
 		chain: chain,
 		address: ERC721ContractAddress,
-		function_name: 'getApproved',
+		functionName: 'getApproved',
 		abi: ABI,
 		params: { tokenId: NFTTokenId }
 	};
 
 	// @ts-ignore
-	const result = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return result;
 }

@@ -20,7 +20,11 @@ import { useMutation, useQueryClient } from 'react-query';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { useGetMetaDataFromNFTId } from '../../hooks/useNFT';
-import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
+import {
+	useGetMaxBorrowableAmount,
+	useGetNFTPrice,
+	useGetUnderlyingPriceInUSD
+} from '../../hooks/useHtokenHelper';
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from '../../hooks/useHivemind';
 import {
@@ -33,6 +37,9 @@ import { queryKeys } from '../../helpers/queryHelper';
 import { repayBorrowHelper } from '../../helpers/repayHelper';
 import { usePositions } from '../../hooks/useCollection';
 import { fetchAllowance } from '../../helpers/utils';
+import imagePlaceholder from 'public/images/imagePlaceholder.png';
+import { Space } from 'antd';
+import HoneyWarning from 'components/HoneyWarning/HoneyWarning';
 
 const {
 	format: f,
@@ -45,9 +52,9 @@ const {
 const RepayForm = (props: RepayProps) => {
 	const {} = props;
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { currentUser } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
+	const walletPublicKey: string = currentUser?.address || '';
 	const {
 		HERC20ContractAddr: HERC20ContractAddress,
 		setWorkflow,
@@ -67,6 +74,12 @@ const RepayForm = (props: RepayProps) => {
 		hivemindContractAddress,
 		HERC20ContractAddress,
 		unit
+	);
+
+	const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(
+		htokenHelperContractAddress,
+		HERC20ContractAddress,
+		hivemindContractAddress
 	);
 	const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(
 		htokenHelperContractAddress,
@@ -111,7 +124,7 @@ const RepayForm = (props: RepayProps) => {
 	const userDebt = parseFloat(borrowAmount);
 	const userAllowance = fetchAllowance(positions, NFTId);
 	const loanToValue = userDebt / nftValue;
-	const maxValue = userDebt != 0 ? userDebt : userAllowance;
+	const maxValue = userDebt;
 	const underlyingBalance = parseFloat(userBalance);
 	const newDebt = userDebt - (valueUnderlying ? valueUnderlying : 0);
 	/* end initial all  financial value here */
@@ -125,7 +138,8 @@ const RepayForm = (props: RepayProps) => {
 			isLoadingCollateralFactor ||
 			isLoadingPositions ||
 			isLoadingUserBalance ||
-			isLoadingApproval
+			isLoadingApproval ||
+			isLoadingMaxBorrow
 		) {
 			toast.processing('Loading');
 		} else {
@@ -142,11 +156,19 @@ const RepayForm = (props: RepayProps) => {
 		isLoadingPositions,
 		isLoadingUserBalance,
 		isLoadingApproval,
+		isLoadingMaxBorrow,
 		nft
 	]);
 
 	// Put your validators here
 	const isRepayButtonDisabled = () => {
+		//false when nft is claimable
+		if (repayState == 'WAIT_FOR_WITHDRAW') {
+			return false;
+		}
+		if (sliderValue <= 0) {
+			return true;
+		}
 		return repayState == 'DONE';
 	};
 
@@ -277,7 +299,7 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.nftInfo}>
 					<div className={styles.nftImage}>
 						<HexaBoxContainer>
-							<Image src={nft.image} alt={nft.name} layout="fill" />
+							<Image src={nft.image ?? imagePlaceholder} alt={nft.name} layout="fill" />
 						</HexaBoxContainer>
 					</div>
 					<div className={styles.nftName}>
@@ -327,42 +349,9 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fp(loanToValue * 100)}
-							toolTipLabel={
-								<span>
-									Risk level is measured using the{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://docs.honey.finance/learn/defi-lending#loan-to-value-ratio"
-									>
-										loan-to-value ratio
-									</a>
-									, and determines how close a position is to being liquidated.
-								</span>
-							}
 							title={
 								<span className={hAlign}>
-									Risk level <div className={questionIcon} />
-								</span>
-							}
-						/>
-
-						<HoneySlider
-							currentValue={0}
-							maxValue={nftValue}
-							minAvailableValue={userDebt}
-							maxSafePosition={0.3 - userDebt / 1000}
-							dangerPosition={0.45 - userDebt / 1000}
-							maxAvailablePosition={collateralFactor}
-							isReadonly
-						/>
-					</div>
-					<div className={styles.col}>
-						<InfoBlock
-							title={
-								<span className={hAlign}>
-									New risk level
+									Risk level
 									<div className={questionIcon} />
 								</span>
 							}
@@ -389,7 +378,7 @@ const RepayForm = (props: RepayProps) => {
 							minAvailableValue={newDebt}
 							maxSafePosition={0.3 - userDebt / 1000}
 							dangerPosition={0.45 - userDebt / 1000}
-							maxAvailablePosition={collateralFactor}
+							maxAvailablePosition={maxBorrow / nftValue}
 							isReadonly
 						/>
 					</div>
@@ -404,31 +393,8 @@ const RepayForm = (props: RepayProps) => {
 									<div className={questionIcon} />
 								</span>
 							}
-							value={fs(userDebt)}
-							toolTipLabel={
-								<span>
-									Value borrowed from the lending pool, upon which interest accrues.{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://docs.honey.finance/learn/defi-lending#debt"
-									>
-										Learn more.
-									</a>
-								</span>
-							}
-						/>
-					</div>
-					<div className={styles.col}>
-						<InfoBlock
-							title={
-								<span className={hAlign}>
-									New debt
-									<div className={questionIcon} />
-								</span>
-							}
 							value={fs(newDebt < 0 ? 0 : newDebt)}
-							isDisabled={true}
+							isDisabled={newDebt > 0 ? false : true}
 							toolTipLabel={
 								<span>
 									Estimated{' '}
@@ -444,38 +410,12 @@ const RepayForm = (props: RepayProps) => {
 							}
 						/>
 					</div>
-				</div>
 
-				<div className={styles.row}>
-					<div className={styles.col}>
-						<InfoBlock
-							value={`${fs(liquidationPrice)} ${userDebt ? `(-${liqPercent.toFixed(0)}%)` : ''}`}
-							valueSize="normal"
-							title={
-								<span className={hAlign}>
-									Liquidation price
-									<div className={questionIcon} />
-								</span>
-							}
-							toolTipLabel={
-								<span>
-									Price at which the position (NFT) will be liquidated.{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href=" " //TODO: add link to docs
-									>
-										Learn more.
-									</a>
-								</span>
-							}
-						/>
-					</div>
 					<div className={styles.col}>
 						<InfoBlock
 							title={
 								<span className={hAlign}>
-									New Liquidation price <div className={questionIcon} />
+									Liquidation price <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
@@ -513,46 +453,57 @@ const RepayForm = (props: RepayProps) => {
 							/>
 						</div>
 					</div>
-					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
-						onChangeFirstInput={handleUsdInputChange}
-						onChangeSecondInput={handleUnderlyingInputChange}
-						firstInputAddon={erc20Name}
-					/>
+
+					{userDebt !== 0 && (
+						<InputsBlock
+							firstInputValue={p(f(valueUSD))}
+							secondInputValue={p(f(valueUnderlying))}
+							onChangeFirstInput={handleUsdInputChange}
+							onChangeSecondInput={handleUnderlyingInputChange}
+							firstInputAddon={erc20Name}
+						/>
+					)}
 				</div>
 
-				<HoneySlider
-					currentValue={sliderValue}
-					maxValue={maxValue}
-					minAvailableValue={0}
-					onChange={handleSliderChange}
-				/>
+				{userDebt !== 0 && (
+					<HoneySlider
+						currentValue={sliderValue}
+						maxValue={maxValue}
+						minAvailableValue={0}
+						onChange={handleSliderChange}
+					/>
+				)}
 			</>
 		);
 	};
 
 	const renderFooter = () => {
 		return toast?.state ? (
-			<ToastComponent />
+			ToastComponent
 		) : (
-			<div className={styles.buttons}>
-				<div className={styles.smallCol}>
-					<HoneyButton variant="secondary" onClick={handleCancel}>
-						Cancel
-					</HoneyButton>
+			<Space direction="vertical" style={{ width: '100%' }}>
+				{userDebt === 0 && !toast.state && (
+					<HoneyWarning message="Your have no outstanding debt. You can claim your collateral" />
+				)}
+
+				<div className={styles.buttons}>
+					<div className={styles.smallCol}>
+						<HoneyButton variant="secondary" onClick={handleCancel}>
+							Cancel
+						</HoneyButton>
+					</div>
+					<div className={styles.bigCol}>
+						<HoneyButton
+							variant="primary"
+							disabled={isRepayButtonDisabled()}
+							isFluid={true}
+							onClick={onClick}
+						>
+							<>{buttonTitle()}</>
+						</HoneyButton>
+					</div>
 				</div>
-				<div className={styles.bigCol}>
-					<HoneyButton
-						variant="primary"
-						disabled={isRepayButtonDisabled()}
-						isFluid={true}
-						onClick={onClick}
-					>
-						<>{buttonTitle()}</>
-					</HoneyButton>
-				</div>
-			</div>
+			</Space>
 		);
 	};
 

@@ -6,20 +6,18 @@ import BidForm from '../BidForm/BidForm';
 import BidsList from '../BidsList/BidsList';
 import { LiquidateSidebarProps } from './types';
 import useDisplayStore from '../../store/displayStore';
-import { useQueryClient } from 'react-query';
 import { UserContext } from '../../contexts/userContext';
-import { useMoralis } from 'react-moralis';
 import { LiquidationWorkFlowType } from '../../types/workflows';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import NFTBidsList from '../NFTBidsList/NFTBidsList';
 import BidCollateralForm from '../BidCollateralForm/BidCollateralForm';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type Tab = 'bid' | 'current';
 
 const LiquidateSidebar = (props: LiquidateSidebarProps) => {
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const workflow = useLiquidationFlowStore((state) => state.workflow);
-	const queryClient = useQueryClient();
 	/*  begin tab function            */
 	const [activeTab, setActiveTab] = useState<Tab>('bid');
 	const handleTabChange = (tabKey: string) => {
@@ -34,27 +32,8 @@ const LiquidateSidebar = (props: LiquidateSidebarProps) => {
 		}
 	];
 	/*  end   tab function            */
-	/*  begin authentication function */
-	const { currentUser, setCurrentUser } = useContext(UserContext);
-	const { authenticate, user } = useMoralis();
-	const connect = async () => {
-		if (!currentUser) {
-			try {
-				await authenticate({ signingMessage: 'Authorize linking of your wallet' });
-				console.log('logged in user:', user?.get('ethAddress'));
-				await queryClient.invalidateQueries(['user']);
-				await queryClient.invalidateQueries(['nft']);
-				await queryClient.invalidateQueries(['coupons']);
-				setCurrentUser(user);
-			} catch (e) {
-				console.log(e);
-			} finally {
-				setIsSidebarVisibleInMobile(false);
-				document.body.classList.remove('disable-scroll');
-			}
-		}
-	};
-	/* end authentication function */
+	const { openConnectModal } = useConnectModal();
+	const { currentUser } = useContext(UserContext);
 
 	return (
 		<div className={styles.liquidateSidebarContainer}>
@@ -67,7 +46,7 @@ const LiquidateSidebar = (props: LiquidateSidebarProps) => {
 						buttons={[
 							{
 								title: 'CONNECT WALLET',
-								onClick: connect
+								onClick: openConnectModal
 							}
 						]}
 					/>

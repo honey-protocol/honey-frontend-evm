@@ -23,9 +23,9 @@ const { formatShortName: fsn } = formatNumber;
 
 const DepositNFTForm = (props: DepositNFTProps) => {
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
-	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { currentUser } = useContext(UserContext);
 	const queryClient = useQueryClient();
-	const walletPublicKey: string = currentUser?.get('ethAddress') || '';
+	const walletPublicKey: string = currentUser?.address || '';
 	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
 	const { nftContractAddress, htokenHelperContractAddress, hivemindContractAddress, erc20Name } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
@@ -153,7 +153,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 
 	const renderFooter = () => {
 		return toast?.state ? (
-			<ToastComponent />
+			ToastComponent
 		) : (
 			<div className={styles.buttons}>
 				<div className={styles.smallCol}>

@@ -1,10 +1,10 @@
 import { basePath, chain } from '../constants/service';
-import Moralis from 'moralis-v1';
 import { fromWei } from 'web3-utils';
-import MoralisType from 'moralis-v1';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime } from '../constants/constant';
+import Moralis from 'moralis';
+import { TCurrentUser } from 'contexts/userContext';
 
 export async function getMaxBorrowFromNFT(
 	hivemindContractAddress: string,
@@ -18,7 +18,7 @@ export async function getMaxBorrowFromNFT(
 	const options = {
 		chain: chain,
 		address: hivemindContractAddress,
-		function_name: 'getHypotheticalAccountLiquidity',
+		functionName: 'getHypotheticalAccountLiquidity',
 		abi: ABI,
 		params: {
 			_account: userAddress,
@@ -30,7 +30,8 @@ export async function getMaxBorrowFromNFT(
 		}
 	};
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return fromWei(result['liquidityTillLTV'], unit);
 }
 
@@ -38,7 +39,7 @@ export function useGetMaxBorrowAmountFromNFT(
 	hivemindContractAddress: string,
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	NFTId: string,
 	unit: Unit
 ): [string, boolean] {
@@ -48,7 +49,7 @@ export function useGetMaxBorrowAmountFromNFT(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: amount,
 		isLoading,
@@ -99,15 +100,16 @@ export async function getCollateralFactor(
 	const options = {
 		chain: chain,
 		address: hivemindContractAddress,
-		function_name: 'getCollateralFactor',
+		functionName: 'getMarketData',
 		abi: ABI,
 		params: {
 			_hToken: HERC20ContractAddress
 		}
 	};
 	// @ts-ignore
-	const result: any = await Moralis.Web3API.native.runContractFunction(options);
-	return parseFloat(fromWei(result, unit));
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
+	return parseFloat(fromWei(result[2], unit));
 }
 
 export function useGetCollateralFactor(

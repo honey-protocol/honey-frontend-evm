@@ -1,12 +1,13 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import Moralis from 'moralis-v1';
 import { fromWei } from 'web3-utils';
 import { basePath, chain, confirmedBlocks } from '../constants/service';
-import MoralisType from 'moralis-v1';
 import { safeToWei } from '../helpers/repayHelper';
 import { useQuery } from 'react-query';
 import { queryKeys } from '../helpers/queryHelper';
 import { defaultCacheStaleTime, unlimited } from '../constants/constant';
+import Moralis from 'moralis';
+import { TCurrentUser } from 'contexts/userContext';
+import { prepareWriteContract, writeContract } from '@wagmi/core';
 
 export async function getDepositUnderlyingApproval(
 	ERC20ContractAddress: string,
@@ -15,14 +16,14 @@ export async function getDepositUnderlyingApproval(
 	unit: Unit
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: ERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: ERC20ContractAddress as `0x${string}`,
 		functionName: 'approve',
 		abi: ABI,
-		params: { spender: HERC20ContractAddress, amount: safeToWei(amount, unit) }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, safeToWei(amount, unit)]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -37,14 +38,14 @@ export async function getRepayLoanApproval(
 	unit: Unit
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: ERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: ERC20ContractAddress as `0x${string}`,
 		functionName: 'approve',
 		abi: ABI,
-		params: { spender: HERC20ContractAddress, amount: safeToWei(amount, unit) }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, safeToWei(amount, unit)]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -62,14 +63,14 @@ export async function getUnlimitedApproval({
 	contractAddress
 }: getUnlimitedApprovalVariables) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: ERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: ERC20ContractAddress as `0x${string}`,
 		functionName: 'approve',
 		abi: ABI,
-		params: { spender: contractAddress, amount: unlimited }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [contractAddress, unlimited]
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -79,14 +80,14 @@ export async function getUnlimitedApproval({
 
 export async function revokeApproval(ERC20ContractAddress: string, HERC20ContractAddress: string) {
 	const ABI = await (await fetch(`${basePath}/abi/ERC20.json`)).json();
-	const options = {
-		chain: chain,
-		contractAddress: ERC20ContractAddress,
+	const options = await prepareWriteContract({
+		// chain: chain,
+		address: ERC20ContractAddress as `0x${string}`,
 		functionName: 'approve',
 		abi: ABI,
-		params: { spender: HERC20ContractAddress, amount: '0' }
-	};
-	const transaction = await Moralis.executeFunction(options);
+		args: [HERC20ContractAddress, '0']
+	});
+	const transaction = await writeContract(options);
 	console.log(`transaction hash: ${transaction.hash}`);
 
 	// @ts-ignore
@@ -103,19 +104,21 @@ export async function getAllowance(
 	const options = {
 		chain: chain,
 		address: ERC20ContractAddress,
-		function_name: 'allowance',
+		functionName: 'allowance',
 		abi: ABI,
 		params: { spender: contractAddress, owner: userAddress }
 	};
 
 	// @ts-ignore
-	return await Moralis.Web3API.native.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
+	const results: any = response.result;
+	return results;
 }
 
 export function useCheckUnlimitedApproval(
 	ERC20ContractAddress: string,
 	contractAddress: string,
-	user: MoralisType.User | null
+	user: TCurrentUser | null
 ): [boolean, boolean] {
 	const onSuccess = (data: string) => {
 		return data;
@@ -123,7 +126,7 @@ export function useCheckUnlimitedApproval(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: amount,
 		isLoading,
@@ -157,19 +160,20 @@ export async function getUserBalance(
 	const options = {
 		chain: chain,
 		address: ERC20ContractAddress,
-		function_name: 'balanceOf',
+		functionName: 'balanceOf',
 		abi: ABI,
 		params: { account: userAddress }
 	};
 
 	// @ts-ignore
-	const result = await Moralis.Web3API.native.runContractFunction(options);
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
 	return fromWei(result, unit);
 }
 
 export function useGetUserBalance(
 	ERC20ContractAddress: string,
-	user: MoralisType.User | null,
+	user: TCurrentUser | null,
 	unit: Unit
 ): [string, boolean] {
 	const onSuccess = (data: string) => {
@@ -178,7 +182,7 @@ export function useGetUserBalance(
 	const onError = (data: string) => {
 		return '0';
 	};
-	const walletPublicKey: string = user?.get('ethAddress') || '';
+	const walletPublicKey: string = user?.address || '';
 	const {
 		data: amount,
 		isLoading,
