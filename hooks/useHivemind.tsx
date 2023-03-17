@@ -100,7 +100,7 @@ export async function getCollateralFactor(
 	const options = {
 		chain: chain,
 		address: hivemindContractAddress,
-		functionName: 'getCollateralFactor',
+		functionName: 'getMarketData',
 		abi: ABI,
 		params: {
 			_hToken: HERC20ContractAddress
@@ -109,7 +109,7 @@ export async function getCollateralFactor(
 	// @ts-ignore
 	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
-	return parseFloat(fromWei(result, unit));
+	return parseFloat(fromWei(result[2], unit));
 }
 
 export function useGetCollateralFactor(

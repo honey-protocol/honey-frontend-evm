@@ -2,14 +2,14 @@ import React from 'react';
 
 export const numberFormatter = new Intl.NumberFormat('en-US', {
 	style: 'decimal',
-	minimumFractionDigits: 2,
-	maximumFractionDigits: 2
+	minimumFractionDigits: 3,
+	maximumFractionDigits: 3
 });
 
 export const numberFormatterMobile = new Intl.NumberFormat('en-US', {
 	style: 'decimal',
 	minimumFractionDigits: 0,
-	maximumFractionDigits: 2
+	maximumFractionDigits: 3
 });
 
 export const formatNumber = {

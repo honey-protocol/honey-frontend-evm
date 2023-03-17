@@ -337,7 +337,7 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 		<SidebarScroll
 			footer={
 				toast.state ? (
-					<ToastComponent />
+					ToastComponent
 				) : (
 					<div className={styles.buttons}>
 						<div className={styles.smallCol}>

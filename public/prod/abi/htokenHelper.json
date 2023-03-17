@@ -1,723 +1,736 @@
 [
-  {
-    "inputs": [],
-    "name": "WrongParams",
-    "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "contract PriceOracleI",
-        "name": "_oldOracle",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "contract PriceOracleI",
-        "name": "_newOracle",
-        "type": "address"
-      }
-    ],
-    "name": "OracleChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_oldThreshold",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_newThreshold",
-        "type": "uint256"
-      }
-    ],
-    "name": "ThresholdUpdated",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "DENOMINATOR",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "_hasDebt",
-        "type": "bool"
-      }
-    ],
-    "name": "getActiveCoupons",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint32",
-            "name": "id",
-            "type": "uint32"
-          },
-          {
-            "internalType": "uint8",
-            "name": "active",
-            "type": "uint8"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "collateralId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "borrowAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "debtShares",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct HTokenInternalI.Coupon[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_startTokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_endTokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getAllCollateralPerHToken",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint32",
-            "name": "id",
-            "type": "uint32"
-          },
-          {
-            "internalType": "uint8",
-            "name": "active",
-            "type": "uint8"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "collateralId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "borrowAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "debtShares",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct HTokenInternalI.Coupon[]",
-        "name": "coupons",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getAssets",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint32",
-            "name": "id",
-            "type": "uint32"
-          },
-          {
-            "internalType": "uint8",
-            "name": "active",
-            "type": "uint8"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "collateralId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "borrowAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "debtShares",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct HTokenInternalI.Coupon[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getAvailableUnderlying",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_account",
-        "type": "address"
-      }
-    ],
-    "name": "getAvailableUnderlyingForUser",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getAvailableUnderlyingToBorrow",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getCash",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getFloorPriceInUSD",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getFloorPriceInUnderlying",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_couponId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getFrontendCouponData",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getFrontendLiquidationData",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getFrontendMarketData",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "_referred",
-        "type": "bool"
-      }
-    ],
-    "name": "getMarketBorrowFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "fee",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getMarketOraclePrices",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "contract HivemindI",
-        "name": "_hivemind",
-        "type": "address"
-      }
-    ],
-    "name": "getMaxBorrowableAmountInUSD",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "contract HivemindI",
-        "name": "_hivemind",
-        "type": "address"
-      }
-    ],
-    "name": "getMaxBorrowableAmountInUnderlying",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      }
-    ],
-    "name": "getUnderlyingPriceInUSD",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      }
-    ],
-    "name": "getUserCouponIndices",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract HTokenI",
-        "name": "_hToken",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      }
-    ],
-    "name": "getUserCoupons",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint32",
-            "name": "id",
-            "type": "uint32"
-          },
-          {
-            "internalType": "uint8",
-            "name": "active",
-            "type": "uint8"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "collateralId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "borrowAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "debtShares",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct HTokenInternalI.Coupon[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_hTokenAddress",
-        "type": "address"
-      }
-    ],
-    "name": "uri",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-]
+    {
+      "inputs": [],
+      "name": "WrongParams",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "contract PermissionlessOracleI",
+          "name": "_oldOracle",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "contract PermissionlessOracleI",
+          "name": "_newOracle",
+          "type": "address"
+        }
+      ],
+      "name": "OracleChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_oldThreshold",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_newThreshold",
+          "type": "uint256"
+        }
+      ],
+      "name": "ThresholdUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "DENOMINATOR",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_hasDebt",
+          "type": "bool"
+        }
+      ],
+      "name": "getActiveCoupons",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint32",
+              "name": "id",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint8",
+              "name": "active",
+              "type": "uint8"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "collateralId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "borrowAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "debtShares",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct HTokenInternalI.Coupon[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_startTokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_endTokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAllCollateralPerHToken",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint32",
+              "name": "id",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint8",
+              "name": "active",
+              "type": "uint8"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "collateralId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "borrowAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "debtShares",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct HTokenInternalI.Coupon[]",
+          "name": "coupons",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getAssets",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint32",
+              "name": "id",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint8",
+              "name": "active",
+              "type": "uint8"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "collateralId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "borrowAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "debtShares",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct HTokenInternalI.Coupon[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getAvailableUnderlying",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_account",
+          "type": "address"
+        }
+      ],
+      "name": "getAvailableUnderlyingForUser",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getAvailableUnderlyingToBorrow",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getCash",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getFloorPriceInUSD",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getFloorPriceInUnderlying",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_couponId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getFrontendCouponData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getFrontendLiquidationData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getFrontendMarketData",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_referred",
+          "type": "bool"
+        }
+      ],
+      "name": "getMarketBorrowFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "fee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getMarketOraclePrices",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "contract ControllerI",
+          "name": "_controller",
+          "type": "address"
+        }
+      ],
+      "name": "getMaxBorrowableAmountInUSD",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "contract ControllerI",
+          "name": "_controller",
+          "type": "address"
+        }
+      ],
+      "name": "getMaxBorrowableAmountInUnderlying",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        }
+      ],
+      "name": "getUnderlyingPriceInUSD",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "getUserCouponIndices",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract HTokenI",
+          "name": "_hToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "getUserCoupons",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint32",
+              "name": "id",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint8",
+              "name": "active",
+              "type": "uint8"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "collateralId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "borrowAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "debtShares",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct HTokenInternalI.Coupon[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_hTokenAddress",
+          "type": "address"
+        }
+      ],
+      "name": "uri",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "version",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]

@@ -5,6 +5,7 @@ import HoneyButton from '../HoneyButton/HoneyButton';
 import { NftCardProps } from './types';
 import c from 'classnames';
 import Image from 'next/image';
+import imagePlaceholder from 'public/images/imagePlaceholder.png';
 
 const NftCard = (props: NftCardProps) => {
 	const { onClick, nft, text, hint, buttonText, hasBorder = true, isSelected = false } = props;
@@ -23,7 +24,7 @@ const NftCard = (props: NftCardProps) => {
 		>
 			<div className={styles.nftImage}>
 				<HexaBoxContainer>
-					<Image src={nft.image} alt={'user nft'} layout="fill" />
+					<Image src={nft.image || imagePlaceholder} alt={'user nft'} layout="fill" />
 				</HexaBoxContainer>
 			</div>
 			<div className={styles.nftRight}>

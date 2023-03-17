@@ -333,7 +333,7 @@ export async function getMaxBorrowableAmount(
 		address: htokenHelperContractAddress,
 		functionName: 'getMaxBorrowableAmountInUnderlying',
 		abi: ABI,
-		params: { _hToken: HERC20ContractAddress, _hivemind: hivemindContractAddress }
+		params: { _hToken: HERC20ContractAddress, _controller: hivemindContractAddress }
 	};
 
 	// @ts-ignore
