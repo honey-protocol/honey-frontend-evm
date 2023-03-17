@@ -394,7 +394,7 @@ const BorrowForm = (props: BorrowProps) => {
 										<a className={styles.extLink} target="blank" href=" ">
 											protocol fee{' '}
 										</a>
-										that is charged upon borrowing. For now it is set at 0,00%.
+										that is charged upon borrowing. For now it is set at 2,00%.
 									</span>
 								}
 							/>
