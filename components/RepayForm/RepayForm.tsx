@@ -162,6 +162,10 @@ const RepayForm = (props: RepayProps) => {
 
 	// Put your validators here
 	const isRepayButtonDisabled = () => {
+		//false when nft is claimable
+		if (repayState == 'WAIT_FOR_WITHDRAW') {
+			return false;
+		}
 		if (sliderValue <= 0) {
 			return true;
 		}
