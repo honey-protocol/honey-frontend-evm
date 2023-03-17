@@ -20,7 +20,11 @@ import { useMutation, useQueryClient } from 'react-query';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { useGetMetaDataFromNFTId } from '../../hooks/useNFT';
-import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
+import {
+	useGetMaxBorrowableAmount,
+	useGetNFTPrice,
+	useGetUnderlyingPriceInUSD
+} from '../../hooks/useHtokenHelper';
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from '../../hooks/useHivemind';
 import {
@@ -70,6 +74,12 @@ const RepayForm = (props: RepayProps) => {
 		hivemindContractAddress,
 		HERC20ContractAddress,
 		unit
+	);
+
+	const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(
+		htokenHelperContractAddress,
+		HERC20ContractAddress,
+		hivemindContractAddress
 	);
 	const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(
 		htokenHelperContractAddress,
@@ -128,7 +138,8 @@ const RepayForm = (props: RepayProps) => {
 			isLoadingCollateralFactor ||
 			isLoadingPositions ||
 			isLoadingUserBalance ||
-			isLoadingApproval
+			isLoadingApproval ||
+			isLoadingMaxBorrow
 		) {
 			toast.processing('Loading');
 		} else {
@@ -145,6 +156,7 @@ const RepayForm = (props: RepayProps) => {
 		isLoadingPositions,
 		isLoadingUserBalance,
 		isLoadingApproval,
+		isLoadingMaxBorrow,
 		nft
 	]);
 
@@ -362,7 +374,7 @@ const RepayForm = (props: RepayProps) => {
 							minAvailableValue={newDebt}
 							maxSafePosition={0.3 - userDebt / 1000}
 							dangerPosition={0.45 - userDebt / 1000}
-							maxAvailablePosition={collateralFactor}
+							maxAvailablePosition={maxBorrow / nftValue}
 							isReadonly
 						/>
 					</div>

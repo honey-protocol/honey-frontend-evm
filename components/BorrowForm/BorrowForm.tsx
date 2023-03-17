@@ -23,7 +23,11 @@ import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LoanWorkFlowType } from '../../types/workflows';
 import { useGetCollateralFactor } from '../../hooks/useHivemind';
 import { useGetMetaDataFromNFTId } from '../../hooks/useNFT';
-import { useGetNFTPrice, useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
+import {
+	useGetMaxBorrowableAmount,
+	useGetNFTPrice,
+	useGetUnderlyingPriceInUSD
+} from '../../hooks/useHtokenHelper';
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { borrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
@@ -92,13 +96,19 @@ const BorrowForm = (props: BorrowProps) => {
 		NFTId,
 		unit
 	);
+
+	const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(
+		htokenHelperContractAddress,
+		HERC20ContractAddress,
+		hivemindContractAddress
+	);
 	/* initial all financial value here */
 	const nftValue = nftPrice.price;
 	const borrowedValue = parseFloat(borrowAmount);
 	const loanToValue = borrowedValue / nftValue;
 	const userAllowance = fetchAllowance(positions, NFTId);
 	//todo use data from blockchain
-	const borrowFee = 0.005; // ,5%
+	const borrowFee = 0.02; // 2%
 	const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
 	const newTotalDebt = newAdditionalDebt ? borrowedValue + newAdditionalDebt : borrowedValue;
 	/* end initial all  financial value here */
@@ -115,7 +125,8 @@ const BorrowForm = (props: BorrowProps) => {
 			isLoadingNFTPrice ||
 			isLoadingUnderlyingPrice ||
 			isLoadingBorrowAmount ||
-			isLoadingPositions
+			isLoadingPositions ||
+			isLoadingMaxBorrow
 		) {
 			toast.processing('Loading');
 		} else {
@@ -128,7 +139,8 @@ const BorrowForm = (props: BorrowProps) => {
 		isLoadingNFTPrice,
 		isLoadingUnderlyingPrice,
 		isLoadingBorrowAmount,
-		isLoadingPositions
+		isLoadingPositions,
+		isLoadingMaxBorrow
 	]);
 
 	/*   Begin handle slider function  */
@@ -281,7 +293,7 @@ const BorrowForm = (props: BorrowProps) => {
 							minAvailableValue={borrowedValue}
 							maxSafePosition={0.3 - borrowedValue / 1000}
 							dangerPosition={0.45 - borrowedValue / 1000}
-							maxAvailablePosition={(userAllowance + borrowedValue) / nftValue}
+							maxAvailablePosition={maxBorrow / nftValue}
 							isReadonly
 						/>
 					</div>
@@ -404,7 +416,7 @@ const BorrowForm = (props: BorrowProps) => {
 					minAvailableValue={borrowedValue}
 					maxSafePosition={0.3 - borrowedValue / 1000}
 					dangerPosition={0.45 - borrowedValue / 1000}
-					maxAvailablePosition={collateralFactor}
+					maxAvailablePosition={maxBorrow / nftValue}
 					onChange={handleSliderChange}
 				/>
 			</>
