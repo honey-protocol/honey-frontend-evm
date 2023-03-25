@@ -142,6 +142,8 @@ input Collateral_filter {
   active_not_in: [Boolean!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Collateral_filter]
+  or: [Collateral_filter]
 }
 
 enum Collateral_orderBy {
@@ -151,6 +153,17 @@ enum Collateral_orderBy {
   collateralTokenAddr
   hTokenAddr
   activeCoupon
+  activeCoupon__id
+  activeCoupon__collateralID
+  activeCoupon__couponID
+  activeCoupon__underlyingTokenAddr
+  activeCoupon__collateralTokenAddr
+  activeCoupon__hTokenAddr
+  activeCoupon__active
+  activeCoupon__owner
+  activeCoupon__amount
+  activeCoupon__timestamp
+  activeCoupon__lastUpdateTimestamp
   active
 }
 
@@ -303,6 +316,8 @@ input Coupon_filter {
   lastUpdateTimestamp_not_in: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Coupon_filter]
+  or: [Coupon_filter]
 }
 
 enum Coupon_orderBy {
@@ -557,6 +572,8 @@ input UserUnderlying_filter {
   amount_not_in: [BigInt!]
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [UserUnderlying_filter]
+  or: [UserUnderlying_filter]
 }
 
 enum UserUnderlying_orderBy {

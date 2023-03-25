@@ -3,7 +3,7 @@
 import { InContextSdkMethod } from '@graphql-mesh/types';
 import { MeshContext } from '@graphql-mesh/runtime';
 
-export namespace HtokenSampleTypes {
+export namespace HoneyDashboardArbitrumTypes {
   export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -145,6 +145,8 @@ export type Collateral_filter = {
   active_not_in?: InputMaybe<Array<Scalars['Boolean']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Collateral_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Collateral_filter>>>;
 };
 
 export type Collateral_orderBy =
@@ -154,6 +156,17 @@ export type Collateral_orderBy =
   | 'collateralTokenAddr'
   | 'hTokenAddr'
   | 'activeCoupon'
+  | 'activeCoupon__id'
+  | 'activeCoupon__collateralID'
+  | 'activeCoupon__couponID'
+  | 'activeCoupon__underlyingTokenAddr'
+  | 'activeCoupon__collateralTokenAddr'
+  | 'activeCoupon__hTokenAddr'
+  | 'activeCoupon__active'
+  | 'activeCoupon__owner'
+  | 'activeCoupon__amount'
+  | 'activeCoupon__timestamp'
+  | 'activeCoupon__lastUpdateTimestamp'
   | 'active';
 
 export type Coupon = {
@@ -305,6 +318,8 @@ export type Coupon_filter = {
   lastUpdateTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Coupon_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Coupon_filter>>>;
 };
 
 export type Coupon_orderBy =
@@ -531,6 +546,8 @@ export type UserUnderlying_filter = {
   amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<UserUnderlying_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<UserUnderlying_filter>>>;
 };
 
 export type UserUnderlying_orderBy =
@@ -609,7 +626,7 @@ export type _SubgraphErrorPolicy_ =
   };
 
   export type Context = {
-      ["htoken-sample"]: { Query: QuerySdk, Mutation: MutationSdk, Subscription: SubscriptionSdk },
+      ["honey-dashboard-arbitrum"]: { Query: QuerySdk, Mutation: MutationSdk, Subscription: SubscriptionSdk },
       
     };
 }
