@@ -641,3 +641,56 @@ export async function getLiquidationData(
 
 	return resultData;
 }
+
+export const getBorrowFee = async (
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	unit: Unit
+) => {
+	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
+	const options = {
+		chain: chain,
+		address: htokenHelperContractAddress,
+		functionName: 'getMarketBorrowFee',
+		abi: ABI,
+		params: { _hToken: HERC20ContractAddress, _referred: true }
+	};
+
+	// @ts-ignore
+	const response = await Moralis.EvmApi.utils.runContractFunction(options);
+	const result: any = response.result;
+	return fromWei(result, unit);
+};
+
+export function useGetMarketBorrowFee(
+	htokenHelperContractAddress: string,
+	HERC20ContractAddress: string,
+	unit: Unit
+): [number, boolean] {
+	const defaultValue = 0.02;
+	const onSuccess = (data: number) => {
+		return data;
+	};
+	const onError = (data: string) => {
+		return defaultValue;
+	};
+
+	const {
+		data: amount,
+		isLoading,
+		isFetching
+	} = useQuery(
+		queryKeys.borrowFee(HERC20ContractAddress),
+		() => {
+			return getBorrowFee(htokenHelperContractAddress, HERC20ContractAddress, unit);
+		},
+		{
+			onSuccess,
+			onError,
+			retry: false,
+			staleTime: defaultCacheStaleTime
+		}
+	);
+
+	return [amount || defaultValue, isLoading || isFetching];
+}
