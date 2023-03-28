@@ -12,10 +12,10 @@ import * as styles from './SettingsModal.css';
 
 const supportedChains = [
 	{
-		name: 'Solana',
-		icon: <SolanaCircleIcon />,
-		value: 'solana',
-		href: 'https://beta.honey.finance'
+		name: 'Arbitrum',
+		value: '0xa4b1',
+		icon: <ArbitrumIcon />,
+		href: 'https://arbitrum.honey.finance'
 	},
 	{
 		name: 'Polygon',
@@ -24,10 +24,10 @@ const supportedChains = [
 		href: 'https://polygon.honey.finance'
 	},
 	{
-		name: 'Arbitrum',
-		value: '0xa4b1',
-		icon: <ArbitrumIcon />,
-		href: 'https://arbitrum.honey.finance'
+		name: 'Solana',
+		value: 'solana',
+		icon: <SolanaCircleIcon />,
+		href: 'https://solana.honey.finance'
 	}
 ];
 
