@@ -66,7 +66,7 @@ export const HoneySlider: FC<HoneySliderProps> = ({
 		if (isReadonly) return;
 		const newBorrowValue = ((maxAvailable - minAvailableValue) * value) / 100;
 		if (typeof onChange === 'function') {
-			onChange(newBorrowValue);
+			onChange(Number(newBorrowValue.toFixed(6)));
 		}
 	};
 
