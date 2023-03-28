@@ -104,7 +104,10 @@ export const HoneySlider: FC<HoneySliderProps> = ({
 			</div>
 			<div
 				className={styles.sliderWrapper}
-				style={{ width: availablePosition ? `${availablePosition * 100}%` : '100%' }}
+				style={{
+					display: availablePosition <= 0 ? 'none' : 'flex',
+					width: availablePosition ? `${availablePosition * 100}%` : '100%'
+				}}
 			>
 				{!isReadonly && (
 					<div className={styles.sliderHeader.secondary}>
