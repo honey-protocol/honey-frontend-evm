@@ -49,7 +49,7 @@ export const getPositionedLabels = ({
 		if (maxLeftSliderValue && labelPart <= leftSliderPart) {
 			preparedLabels.left[getLabelPosition(label, leftSliderPart)] = {
 				style: labelPart === 0 ? { transform: 'none !important' } : {},
-				label: fpr(0)
+				label: fpr(label, 0)
 			};
 		}
 		if (labelPart > leftSliderPart && labelPart <= lastLabelValue) {
