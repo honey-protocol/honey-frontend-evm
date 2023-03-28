@@ -57,7 +57,7 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 			<div className={styles.positionValues}>
 				<InfoBlock title="Floor price" value={`${fsn(position.value)} ${position.erc20Name}`} />
 				<InfoBlock title="Debt" value={`${fsn(parseFloat(position.debt))} ${position.erc20Name}`} />
-				<InfoBlock title="IR" value={fp((position.riskLvl ?? 0) * 100)} />
+				<InfoBlock title="IR" value={fp(5)} />
 			</div>
 			<div className={styles.divider} />
 			<BorrowPositionCardSlider
