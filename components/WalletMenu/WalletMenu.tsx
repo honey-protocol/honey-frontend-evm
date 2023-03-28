@@ -5,11 +5,15 @@ import { useQueryClient } from 'react-query';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import useDisplayStore from 'store/displayStore';
+import * as styles from './WalletMenu.css';
+import { SettingsIcon } from 'icons/SettingsIcon';
+import SettingsModal from 'components/SettingsModal/SettingsModal';
 
 const WalletMenu = () => {
 	const queryClient = useQueryClient();
 	const { setCurrentUser } = useContext(UserContext);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
+	const [showSettingsModal, setShowSettingsModal] = useState(false);
 
 	//Invalidate queries whenever isConnected or connected address changes
 	const invalidateQueries = useCallback(async () => {
@@ -36,7 +40,17 @@ const WalletMenu = () => {
 		setCurrentUser(address ? { address } : null);
 	}, [address]);
 
-	return <ConnectButton showBalance={false} />;
+	return (
+		<>
+			<SettingsModal visible={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
+			<Space>
+				<div className={styles.settingsIcon} onClick={() => setShowSettingsModal(true)}>
+					<SettingsIcon />
+				</div>
+				<ConnectButton showBalance={false} />
+			</Space>
+		</>
+	);
 };
 
 export default WalletMenu;

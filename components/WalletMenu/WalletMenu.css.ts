@@ -12,3 +12,9 @@ export const metamaskIcon = style({
 	height: 20,
 	background: 'url("/images/metamaskIcon.svg") center center no-repeat'
 });
+
+export const settingsIcon = style({
+	cursor: 'pointer',
+	width: 'unset',
+	marginRight: 10
+});
