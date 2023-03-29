@@ -21,11 +21,7 @@ import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LiquidationWorkFlowType } from '../../types/workflows';
 import { useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
-import {
-	getUnlimitedApproval,
-	useCheckUnlimitedApproval,
-	useGetUserBalance
-} from '../../hooks/useERC20';
+import { getUnlimitedApproval, useCheckApproval, useGetUserBalance } from '../../hooks/useERC20';
 import {
 	bidCollateral,
 	cancelCollateralBid,
@@ -85,11 +81,6 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 		currentUser,
 		unit
 	);
-	const [approval, isLoadingApproval] = useCheckUnlimitedApproval(
-		ERC20ContractAddress,
-		marketContractAddress,
-		currentUser
-	);
 	const [bidInfo, isLoadingBidInfo] = useGetCollateralBids(
 		marketContractAddress,
 		HERC20ContractAddress,
@@ -114,6 +105,13 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 	const [isButtonDisable, setIsButtonDisable] = useState(true);
 	const minBid = getMinimumBid(minimumBid, userBid(walletPublicKey, bidInfo, unit), unit);
 
+	const [approval, isLoadingApproval] = useCheckApproval(
+		ERC20ContractAddress,
+		marketContractAddress,
+		currentUser,
+		valueUnderlying,
+		unit
+	);
 	useEffect(() => {
 		if (
 			isLoadingUnderlyingPrice ||
@@ -139,7 +137,8 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 		isLoadingMinimumBid,
 		isLoadingAvailableRefund,
 		HERC20ContractAddress,
-		NFTId
+		NFTId,
+		approval
 	]);
 
 	// Put your validators here
