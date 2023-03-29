@@ -692,5 +692,5 @@ export function useGetMarketBorrowFee(
 		}
 	);
 
-	return [amount || defaultValue, isLoading || isFetching];
+	return [Number(amount) || defaultValue, isLoading || isFetching];
 }
