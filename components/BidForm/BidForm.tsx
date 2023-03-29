@@ -100,7 +100,7 @@ const BidForm = (props: BidFormProps) => {
 	const { toast, ToastComponent } = useToast();
 	const [bidState, setBidState] = useState('WAIT_FOR_APPROVAL');
 	const [isButtonDisable, setIsButtonDisable] = useState(true);
-	const minBid = getMinimumBid(minimumBid, userBid(walletPublicKey, bidInfo, unit), unit);
+	const minBid = getMinimumBid(minimumBid, userBid(walletPublicKey, bidInfo, unit).value, unit);
 
 	const [approval, isLoadingApproval] = useCheckApproval(
 		ERC20ContractAddress,
@@ -142,7 +142,7 @@ const BidForm = (props: BidFormProps) => {
 	const isSubmitButtonDisabled = () => {
 		if (bidState == 'WAIT_FOR_BID') return p(f(valueUnderlying)) < minBid;
 		else if (bidState == 'WAIT_FOR_INCREASE_BID')
-			return p(f(valueUnderlying)) + userBid(walletPublicKey, bidInfo, unit) < minBid;
+			return p(f(valueUnderlying)) + userBid(walletPublicKey, bidInfo, unit).value < minBid;
 		else return false;
 	};
 
@@ -246,9 +246,10 @@ const BidForm = (props: BidFormProps) => {
 		}
 	};
 
-	const currentBidValue = () => {
+	const currentBid = () => {
 		if (hasRefund(availableRefund)) {
-			return userRefund(availableRefund, unit);
+			const refund = userRefund(availableRefund, unit);
+			return { value: refund, unlockTime: 0 };
 		} else {
 			return userBid(walletPublicKey, bidInfo, unit);
 		}
@@ -370,10 +371,11 @@ const BidForm = (props: BidFormProps) => {
 						<div className={styles.col}>
 							<CurrentBid
 								disabled={isButtonDisable}
-								value={currentBidValue()}
+								value={currentBid().value}
 								title={currentBidTile()}
 								buttonText={currentBidButtonText()}
 								onClick={() => handleCurrentBid()}
+								unlockTime={currentBid().unlockTime}
 							/>
 						</div>
 					</div>
