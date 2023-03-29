@@ -14,7 +14,12 @@ export const SliderPosition: FC<SliderPositionProps> = ({ position }) => {
 		<div className={styles.honeyPosition}>
 			<div className={styles.collectionIconWrapper}>
 				<HexaBoxContainer>
-					<Image src={image} width={34} height={34} alt={'collection Icon'} />
+					<Image
+						src={`https://res.cloudinary.com/${process.env.CLOUDINARY_URI}/image/fetch/${image}`}
+						width={34}
+						height={34}
+						alt={'collection Icon'}
+					/>
 				</HexaBoxContainer>
 			</div>
 			<div className={styles.honeyPositionValues}>

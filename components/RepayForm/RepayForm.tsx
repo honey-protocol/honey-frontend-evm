@@ -299,7 +299,13 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.nftInfo}>
 					<div className={styles.nftImage}>
 						<HexaBoxContainer>
-							<Image src={nft.image ?? imagePlaceholder} alt={nft.name} layout="fill" />
+							<Image
+								src={`https://res.cloudinary.com/${process.env.CLOUDINARY_URI}/image/fetch/${
+									nft.image ?? imagePlaceholder
+								}`}
+								alt={nft.name}
+								layout="fill"
+							/>
 						</HexaBoxContainer>
 					</div>
 					<div className={styles.nftName}>
