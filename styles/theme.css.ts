@@ -31,7 +31,11 @@ export const vars = createGlobalTheme(':root', {
 		black: '#111111',
 
 		background: '#F5F5F5',
-		foreground: '#FFFFFF'
+		foreground: '#FFFFFF',
+
+		text: 'primary',
+		textSecondary: 'secondary',
+		textTertiary: 'tertiary'
 	},
 	space: {
 		none: '0',
