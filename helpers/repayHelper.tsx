@@ -11,7 +11,7 @@ export async function repayBorrowHelper(
 	unit: Unit,
 	borrowAmount: string
 ) {
-	if (userDebt - sliderValue >= 0.01) {
+	if (userDebt - sliderValue >= 0.001) {
 		await repayBorrow(HERC20ContractAddress, NFTTokenId, sliderValue.toFixed(18).toString(), unit);
 		console.log(`repay loan for amount: ${sliderValue}`);
 	} else {
