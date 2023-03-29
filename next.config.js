@@ -17,7 +17,10 @@ module.exports = (phase, { defaultConfig }) => {
 				'bearsdeluxe.mypinata.cloud',
 				'ipfs.io',
 				'bafybeidpr6zwp4cou32kxpu3uvdfw6vjtuybdd7rtpbdpys6bvaayypubi.ipfs.w3s.link',
-				'api.sandbox.game'
+				'api.sandbox.game',
+				'https://metadata.y00ts.com',
+				'https://bafybeigybl4254a53e7vestjhqmcgwbrq4uw3typghtgudvfqquosj7y44.ipfs.dweb.link/',
+				'https://bafybeih3zu2mzckrf4ylywokevxxn25k5k3hs4oa5lsxczdtdlfvgwccki.ipfs.nftstorage.link/'
 			]
 		};
 
