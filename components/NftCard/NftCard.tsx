@@ -24,7 +24,13 @@ const NftCard = (props: NftCardProps) => {
 		>
 			<div className={styles.nftImage}>
 				<HexaBoxContainer>
-					<Image src={nft.image || imagePlaceholder} alt={'user nft'} layout="fill" />
+					<Image
+						src={`https://res.cloudinary.com/${process.env.CLOUDINARY_URI}/image/fetch/${
+							nft.image || imagePlaceholder
+						}`}
+						alt={'user nft'}
+						layout="fill"
+					/>
 				</HexaBoxContainer>
 			</div>
 			<div className={styles.nftRight}>

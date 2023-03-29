@@ -259,7 +259,11 @@ const DepositForm = (props: DepositFormProps) => {
 				<div className={styles.nftInfo}>
 					<div className={styles.nftImage}>
 						<HexaBoxContainer>
-							<Image src={icon} alt={name} layout="fill" />
+							<Image
+								src={`https://res.cloudinary.com/${process.env.CLOUDINARY_URI}/image/fetch/${icon}`}
+								alt={name}
+								layout="fill"
+							/>
 						</HexaBoxContainer>
 					</div>
 					<div className={styles.nftName}>{name}</div>

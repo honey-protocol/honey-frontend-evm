@@ -325,7 +325,11 @@ const Markets: NextPage = () => {
 					<div className={style.expandedRowIcon} />
 					<div className={style.collectionLogo}>
 						<HexaBoxContainer>
-							<Image src={row['image']} layout="fill" alt="nft icon" />
+							<Image
+								src={`https://res.cloudinary.com/${process.env.CLOUDINARY_URI}/image/fetch/${row['image']}`}
+								layout="fill"
+								alt="nft icon"
+							/>
 						</HexaBoxContainer>
 					</div>
 					<div className={style.nameCellText}>
@@ -389,7 +393,11 @@ const Markets: NextPage = () => {
 					<div className={style.expandedRowIcon} />
 					<div className={style.collectionLogo}>
 						<HexaBoxContainer>
-							<Image src={row['image']} layout="fill" alt="nft icon" />
+							<Image
+								src={`https://res.cloudinary.com/${process.env.CLOUDINARY_URI}/image/fetch/${row['image']}`}
+								layout="fill"
+								alt="nft icon"
+							/>
 						</HexaBoxContainer>
 					</div>
 					<div className={style.nameCellText}>
