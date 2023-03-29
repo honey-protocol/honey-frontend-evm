@@ -29,7 +29,6 @@ export const bidCardCopyIcon = style({
 });
 
 export const bidCardLeft = style({
-	width: '100%',
 	overflow: 'hidden',
 	marginRight: '12px',
 	display: 'flex'
