@@ -26,9 +26,9 @@ export function hasBid(userAddress: string, bidInfo: BidInfo) {
 export function userBid(userAddress: string, bidInfo: BidInfo, unit: Unit) {
 	const bids = bidInfo.bids.filter((bid) => caseInsensitiveCompare(bid.bidder, userAddress));
 	if (bids.length == 0) {
-		return 0;
+		return { value: 0, unlockTime: 0 };
 	} else {
-		return parseFloat(fromWei(bids[0].bid, unit));
+		return { value: parseFloat(fromWei(bids[0].bid, unit)), unlockTime: bids[0].unlockTimeStamp };
 	}
 }
 

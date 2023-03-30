@@ -21,7 +21,7 @@ export const BorrowPositionCardSlider: FC<BorrowPositionCardSliderProps> = ({
 	const riskLevel = debt / collateralValue;
 	const maxAvailableValue = maxLoanToValue - riskLevel;
 	const safeZone = liquidationThreshold - maxLoanToValue;
-	const liquidateZone = 1 - safeZone - maxAvailableValue - riskLevel;
+	const liquidateZone = 1 - maxAvailableValue - riskLevel;
 
 	const isLiquidate = riskLevel > liquidationThreshold;
 
@@ -89,7 +89,7 @@ export const BorrowPositionCardSlider: FC<BorrowPositionCardSliderProps> = ({
 						</div>
 					)}
 
-					<div className={styles.sliderWrapperSafeZone} style={{ width: `${safeZone * 100}%` }}>
+					{/* <div className={styles.sliderWrapperSafeZone} style={{ width: `${safeZone * 100}%` }}>
 						<div className={styles.sliderHeader.secondary}> </div>
 						<Slider
 							className={c(styles.slider, styles.disabledBackgroundSlider)}
@@ -99,7 +99,7 @@ export const BorrowPositionCardSlider: FC<BorrowPositionCardSliderProps> = ({
 								backgroundColor: vars.colors.grayMiddle
 							}}
 						/>
-					</div>
+					</div> */}
 					<div className={styles.sliderWrapper} style={{ width: `${liquidateZone * 100}%` }}>
 						<div className={styles.sliderHeader.primary}>{`${formatNumber.formatPercentRounded(
 							liquidationThreshold * 100,

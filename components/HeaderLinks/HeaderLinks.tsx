@@ -26,7 +26,7 @@ export const links = [
 	},
 	{
 		title: 'DOCUMENTATION',
-		href: '/documentation'
+		href: 'https://docs.honey.finance'
 	},
 	{
 		title: 'FEEDBACK',
