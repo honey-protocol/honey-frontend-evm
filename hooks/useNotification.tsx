@@ -2,12 +2,16 @@ import { HoneyNotification } from '../types/dashboard';
 
 const mockNotifications: HoneyNotification[] = [
 	{
-		title: 'Arbitrum beta launch',
-		description: 'xyz'
+		title: 'Polygon Alpha Launch',
+		description: 'Alpha testing now live for Polygon!'
+	}
+	{
+		title: 'New Arbitrum Markets',
+		description: 'Lost Donkeys, Oreochads, Blueberry Club, Primapes'
 	},
 	{
-		title: 'New Markets',
-		description: 'Oreochads, xyz'
+		title: 'Arbitrum Alpha Launch',
+		description: 'Alpha testing now live for Arbitrum!'
 	}
 	// {
 	// 	title: 'Title of notification',
