@@ -4,7 +4,7 @@ const mockNotifications: HoneyNotification[] = [
 	{
 		title: 'Polygon Alpha Launch',
 		description: 'Alpha testing now live for Polygon!'
-	}
+	},
 	{
 		title: 'New Arbitrum Markets',
 		description: 'Lost Donkeys, Oreochads, Blueberry Club, Primapes'
