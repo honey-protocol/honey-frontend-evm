@@ -8,10 +8,10 @@ import { useRouter } from 'next/router';
 import cs from 'classnames';
 
 export const links = [
-	{
-		title: 'DASHBOARD',
-		href: '/dashboard'
-	},
+	// {
+	// 	title: 'DASHBOARD',
+	// 	href: '/dashboard'
+	// },
 	{
 		title: 'BORROW',
 		href: '/borrow'
