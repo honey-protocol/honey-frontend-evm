@@ -21,12 +21,12 @@ const supportedChains = [
 		icon: <ArbitrumIcon />,
 		href: 'https://arbitrum.honey.finance'
 	},
-	// {
-	// 	name: 'Polygon',
-	// 	value: '0x89',
-	// 	icon: <PolygonIcon />,
-	// 	href: 'https://polygon.honey.finance'
-	// },
+	{
+		name: 'Polygon',
+		value: '0x89',
+		icon: <PolygonIcon />,
+		href: 'https://polygon.honey.finance'
+	},
 	{
 		name: 'Solana',
 		value: 'solana',
