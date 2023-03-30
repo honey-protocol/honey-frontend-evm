@@ -8,10 +8,10 @@ import { useRouter } from 'next/router';
 import cs from 'classnames';
 
 export const links = [
-	{
-		title: 'DASHBOARD',
-		href: '/dashboard'
-	},
+	// {
+	// 	title: 'DASHBOARD',
+	// 	href: '/dashboard'
+	// },
 	{
 		title: 'BORROW',
 		href: '/borrow'
@@ -26,7 +26,7 @@ export const links = [
 	},
 	{
 		title: 'DOCUMENTATION',
-		href: '/documentation'
+		href: 'https://docs.honey.finance'
 	},
 	{
 		title: 'FEEDBACK',
@@ -89,11 +89,11 @@ const HeaderDropdownMenu = () => {
 						})}
 						key={i}
 					>
-						{(
+						{
 							<Link href={link.href} passHref>
 								<HoneyButton variant="textSecondary">{link.title}</HoneyButton>
 							</Link>
-						)}
+						}
 					</li>
 				))}
 			<li>

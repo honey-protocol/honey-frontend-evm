@@ -3,8 +3,9 @@ import { breakpoints, vars } from '../../styles/theme.css';
 
 export const honeySider = style({
 	width: '100%',
+	height: '100vh',
+	// height: 'auto',
 	maxWidth: 564,
-	height: 'calc(100vh - 0px)',
 	position: 'absolute',
 	zIndex: 10,
 	top: 0,
@@ -18,7 +19,7 @@ export const honeySider = style({
 	'@media': {
 		[`screen and (min-width: ${breakpoints.tablet}px)`]: {
 			maxWidth: 874,
-			height: 'calc(100vh - 102px)',
+			height: 'calc(100vh - 100px)',
 			zIndex: 1
 		},
 		[`screen and (min-width: ${breakpoints.desktop}px)`]: {
@@ -32,7 +33,7 @@ export const honeySider = style({
 });
 
 globalStyle(`${honeySider} > div:first-of-type`, {
-	height: 'calc(100% - 45px)'
+	height: 'calc(100% - 15px)'
 });
 
 export const isVisible = style({

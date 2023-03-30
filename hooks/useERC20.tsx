@@ -115,10 +115,12 @@ export async function getAllowance(
 	return results;
 }
 
-export function useCheckUnlimitedApproval(
+export function useCheckApproval(
 	ERC20ContractAddress: string,
 	contractAddress: string,
-	user: TCurrentUser | null
+	user: TCurrentUser | null,
+	depositAmount: number,
+	unit?: Unit
 ): [boolean, boolean] {
 	const onSuccess = (data: string) => {
 		return data;
@@ -148,7 +150,7 @@ export function useCheckUnlimitedApproval(
 		}
 	);
 	const result = amount || '0';
-	return [result.length >= unlimited.length - 1, isLoading || isFetching];
+	return [Number(fromWei(result, unit)) >= depositAmount, isLoading || isFetching];
 }
 
 export async function getUserBalance(

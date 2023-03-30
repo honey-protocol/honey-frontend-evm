@@ -17,7 +17,7 @@ function getCollections() {
 				name: 'OreoChads',
 				icon: '/nfts/oreoChads.png',
 				erc20Name: 'WETH',
-				erc20Icon: '/erc20/WethIcon.png',
+				erc20Icon: '/erc20/EthIcon.png',
 				unit: 'ether',
 				ERC721ContractAddress: '0xebfd7babc5db1ec60783fa6085791a7782ee6077',
 				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
@@ -27,7 +27,7 @@ function getCollections() {
 				name: 'Blueberry',
 				icon: '/nfts/blueberry.png',
 				erc20Name: 'WETH',
-				erc20Icon: '/erc20/WethIcon.png',
+				erc20Icon: '/erc20/EthIcon.png',
 				unit: 'ether',
 				ERC721ContractAddress: '0x17f4baa9d35ee54ffbcb2608e20786473c7aa49f',
 				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
@@ -37,7 +37,7 @@ function getCollections() {
 				name: 'Primapes',
 				icon: '/nfts/primapes.png',
 				erc20Name: 'WETH',
-				erc20Icon: '/erc20/WethIcon.png',
+				erc20Icon: '/erc20/EthIcon.png',
 				unit: 'ether',
 				ERC721ContractAddress: '0x72c3205acf3eb2b37b0082240bf0b909a46c0993',
 				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
@@ -61,7 +61,7 @@ function getCollections() {
 				name: 'OreoChads',
 				icon: '/nfts/oreoChads.png',
 				erc20Name: 'WETH',
-				erc20Icon: '/erc20/WethIcon.png',
+				erc20Icon: '/erc20/EthIcon.png',
 				unit: 'ether',
 				ERC721ContractAddress: '0xebfd7babc5db1ec60783fa6085791a7782ee6077',
 				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
@@ -71,7 +71,7 @@ function getCollections() {
 				name: 'Blueberry',
 				icon: '/nfts/blueberry.png',
 				erc20Name: 'WETH',
-				erc20Icon: '/erc20/WethIcon.png',
+				erc20Icon: '/erc20/EthIcon.png',
 				unit: 'ether',
 				ERC721ContractAddress: '0x17f4baa9d35ee54ffbcb2608e20786473c7aa49f',
 				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
@@ -81,7 +81,7 @@ function getCollections() {
 				name: 'Primapes',
 				icon: '/nfts/primapes.png',
 				erc20Name: 'WETH',
-				erc20Icon: '/erc20/WethIcon.png',
+				erc20Icon: '/erc20/EthIcon.png',
 				unit: 'ether',
 				ERC721ContractAddress: '0x72c3205acf3eb2b37b0082240bf0b909a46c0993',
 				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
@@ -96,17 +96,17 @@ function getCollections() {
 function getHelperContract() {
 	if (envName == 'dev') {
 		const contract: helperContract = {
-			htokenHelperContractAddress: '0x6cDD6EdDba720eddA2e651384aB958ED42386A1d',
+			htokenHelperContractAddress: '0xADd6a063ACC059D3e5045B377822479Da9298DDf',
 			hivemindContractAddress: '0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d',
-			oracleContractAddress: '0x5C071a3FCd0A8A22633c47aC662bb62A356ED9Dd',
+			oracleContractAddress: '0xB3d108BD30C564181bCcdF419f34f87b10F5c76d',
 			marketContractAddress: '0x9a1EDb903B058298dd0b06f52876d9D45358B7cB'
 		};
 		return contract;
 	} else if (envName == 'prod') {
 		const contract: helperContract = {
-			htokenHelperContractAddress: '0x6cDD6EdDba720eddA2e651384aB958ED42386A1d',
+			htokenHelperContractAddress: '0xADd6a063ACC059D3e5045B377822479Da9298DDf',
 			hivemindContractAddress: '0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d',
-			oracleContractAddress: '0x5C071a3FCd0A8A22633c47aC662bb62A356ED9Dd',
+			oracleContractAddress: '0xB3d108BD30C564181bCcdF419f34f87b10F5c76d',
 			marketContractAddress: '0x9a1EDb903B058298dd0b06f52876d9D45358B7cB'
 		};
 		return contract;

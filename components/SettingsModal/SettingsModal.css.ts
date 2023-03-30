@@ -1,23 +1,24 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { typography, vars } from '../../styles/theme.css';
+import { typography, vars } from 'styles/theme.css';
 
-export const title = style({
-	...typography.body,
-	margin: '0px !important',
-	fontSize: '16px !important'
+export const divider = style({
+	background: vars.colors.grayMiddle,
+	height: 1.5,
+	width: '100%'
 });
 
-export const metamaskIcon = style({
-	width: 20,
-	height: 20,
-	background: 'url("/images/metamaskIcon.svg") center center no-repeat'
+export const settingsModalContent = style({
+	minWidth: 350,
+	background: vars.colors.white,
+	padding: 30
 });
 
-export const settingsIcon = style({
-	cursor: 'pointer',
-	width: 'unset',
-	marginRight: 10
+export const row = style({
+	width: '100%',
+	justifyContent: 'space-between'
 });
+
+export const settingTitle = style([typography.description]);
 
 export const dropdownSelect = style({
 	// background: 'red'

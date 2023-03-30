@@ -10,6 +10,8 @@ export const queryKeys = {
 		['nft', 'collateral', 'factor', HERC20ContractAddress] as const,
 	maxBorrow: (HERC20ContractAddress: string) =>
 		['nft', 'maxBorrow', HERC20ContractAddress] as const,
+	borrowFee: (HERC20ContractAddress: string) =>
+		['nft', 'borrowFee', HERC20ContractAddress] as const,
 	maxBorrowFromNFT: (
 		HERC20ContractAddress: string,
 		ERC721ContractAddress: string,
