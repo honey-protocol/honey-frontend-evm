@@ -12,10 +12,10 @@ const NotificationsList = (props: NotificationListProps) => {
 			<div className={styles.notification}>
 				<div className={styles.notificationTitle}>Notification</div>
 
-				<div className={styles.notificationToggle}>
+				{/* <div className={styles.notificationToggle}>
 					<HoneyToggle />
 					<span>Only important</span>
-				</div>
+				</div> */}
 			</div>
 
 			{notifications.map((item, index) => (

@@ -9,14 +9,35 @@ import c from 'classnames';
 import HoneyTooltip from '../../HoneyTooltip/HoneyTooltip';
 import { BorrowPositionCardSlider } from '../../BorrowPositionCardSlider/BorrowPositionCardSlider';
 import useLoanFlowStore from 'store/loanFlowStore';
+import { useGetMaxBorrowableAmount, useGetNFTPrice } from 'hooks/useHtokenHelper';
+import { getContractsByHTokenAddr } from 'helpers/generalHelper';
 
 const { formatShortName: fsn, formatPercent: fp } = formatNumber;
 
-const MAX_LTV = 0.5;
 const LIQUIDATION_THRESHOLD = 0.65;
 
 export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSelect }) => {
 	const selectedNFTId = useLoanFlowStore((state) => state.NFTId);
+
+	const {
+		nftContractAddress,
+		htokenHelperContractAddress,
+		hivemindContractAddress,
+		erc20Name,
+		unit
+	} = getContractsByHTokenAddr(position.HERC20ContractAddr);
+	const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(
+		htokenHelperContractAddress,
+		position.HERC20ContractAddr
+	);
+	const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(
+		htokenHelperContractAddress,
+		position.HERC20ContractAddr,
+		hivemindContractAddress
+	);
+	const nftValue = nftPrice.price;
+	const MAX_LTV = maxBorrow / nftValue;
+
 	return (
 		<div
 			className={c(styles.positionCard, {
@@ -41,7 +62,7 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 			<div className={styles.positionValues}>
 				<InfoBlock title="Floor price" value={`${fsn(position.value)} ${position.erc20Name}`} />
 				<InfoBlock title="Debt" value={`${fsn(parseFloat(position.debt))} ${position.erc20Name}`} />
-				<InfoBlock title="IR" value={fp((position.riskLvl ?? 0) * 100)} />
+				<InfoBlock title="IR" value={fp(5)} />
 			</div>
 			<div className={styles.divider} />
 			<BorrowPositionCardSlider

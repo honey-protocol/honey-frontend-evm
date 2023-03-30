@@ -16,6 +16,7 @@ import { PERIOD, PeriodName } from '../../constants/periods';
 import { getFormattedDate, getStartDate } from './utlis';
 import { formatNumber } from '../../helpers/format';
 import { HoneyButtonTabs } from '../HoneyButtonTabs/HoneyButtonTabs';
+import { InfoBlock } from 'components/InfoBlock/InfoBlock';
 
 const { formatToThousands: ftt, formatUsd: fusd } = formatNumber;
 
@@ -144,9 +145,10 @@ const ProfileChart: FC<ProfileChartProps> = ({ data = [], size, value }) => {
 						<span>My locked balance</span>
 						<div className={style.titleTooltipIcon} />
 					</div>
-					<div className={style.chartTitleValue}>{fusd(value)}</div>
+					{/* <div className={style.chartTitleValue}>{fusd(value)}</div> */}
+					<InfoBlock value="comming soon..." isDisabled />
 				</div>
-				<HoneyButtonTabs
+				{/* <HoneyButtonTabs
 					items={PERIOD_NAMES.map((slug) => ({
 						name: PERIODS_NAME_MAPPING[slug],
 						nameTablet: PERIODS_NAME_MAPPING_MOBILE[slug],
@@ -154,7 +156,7 @@ const ProfileChart: FC<ProfileChartProps> = ({ data = [], size, value }) => {
 					}))}
 					activeItemSlug={period}
 					onClick={(itemSlug) => setPeriod(itemSlug as PeriodName)}
-				/>
+				/> */}
 			</div>
 
 			<VictoryChart
@@ -192,7 +194,7 @@ const ProfileChart: FC<ProfileChartProps> = ({ data = [], size, value }) => {
 						}
 					}}
 				/>
-				<VictoryArea
+				{/* <VictoryArea
 					data={dataByPeriod}
 					style={{
 						data: {
@@ -201,8 +203,8 @@ const ProfileChart: FC<ProfileChartProps> = ({ data = [], size, value }) => {
 							stroke: 'transparent'
 						}
 					}}
-				/>
-				<VictoryLine
+				/> */}
+				{/* <VictoryLine
 					data={dataByPeriod}
 					style={{
 						data: {
@@ -212,7 +214,7 @@ const ProfileChart: FC<ProfileChartProps> = ({ data = [], size, value }) => {
 					}}
 					labels={() => ''}
 					labelComponent={<VictoryTooltip flyoutComponent={<CustomBarTooltip />} />}
-				/>
+				/> */}
 			</VictoryChart>
 
 			<svg style={{ height: 0 }}>

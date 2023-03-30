@@ -28,7 +28,14 @@ export const vars = createGlobalTheme(':root', {
 		whiteTransparent: 'rgba(255, 255, 255, 0.7)',
 
 		white: '#FFFFFF',
-		black: '#111111'
+		black: '#111111',
+
+		background: '#F5F5F5',
+		foreground: '#FFFFFF',
+
+		text: 'primary',
+		textSecondary: 'secondary',
+		textTertiary: 'tertiary'
 	},
 	space: {
 		none: '0',

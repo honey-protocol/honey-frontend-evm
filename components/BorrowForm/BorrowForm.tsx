@@ -24,6 +24,7 @@ import { LoanWorkFlowType } from '../../types/workflows';
 import { useGetCollateralFactor } from '../../hooks/useHivemind';
 import { useGetMetaDataFromNFTId } from '../../hooks/useNFT';
 import {
+	useGetMarketBorrowFee,
 	useGetMaxBorrowableAmount,
 	useGetNFTPrice,
 	useGetUnderlyingPriceInUSD
@@ -108,7 +109,11 @@ const BorrowForm = (props: BorrowProps) => {
 	const loanToValue = borrowedValue / nftValue;
 	const userAllowance = fetchAllowance(positions, NFTId);
 	//todo use data from blockchain
-	const borrowFee = 0.02; // 2%
+	const [borrowFee, isLoadingBorrowFee] = useGetMarketBorrowFee(
+		htokenHelperContractAddress,
+		HERC20ContractAddress,
+		unit
+	);
 	const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
 	const newTotalDebt = newAdditionalDebt ? borrowedValue + newAdditionalDebt : borrowedValue;
 	/* end initial all  financial value here */
@@ -125,6 +130,7 @@ const BorrowForm = (props: BorrowProps) => {
 			isLoadingNFTPrice ||
 			isLoadingUnderlyingPrice ||
 			isLoadingBorrowAmount ||
+			isLoadingBorrowFee ||
 			isLoadingPositions ||
 			isLoadingMaxBorrow
 		) {
@@ -140,7 +146,8 @@ const BorrowForm = (props: BorrowProps) => {
 		isLoadingUnderlyingPrice,
 		isLoadingBorrowAmount,
 		isLoadingPositions,
-		isLoadingMaxBorrow
+		isLoadingMaxBorrow,
+		isLoadingBorrowFee
 	]);
 
 	/*   Begin handle slider function  */
@@ -386,7 +393,6 @@ const BorrowForm = (props: BorrowProps) => {
 						</div>
 						<div className={cs(stylesBorrow.balance, styles.col)}>
 							<InfoBlock
-								isDisabled
 								title={
 									<span className={hAlign}>
 										Borrow Fee <div className={questionIcon} />

@@ -21,11 +21,7 @@ import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LiquidationWorkFlowType } from '../../types/workflows';
 import { useGetUnderlyingPriceInUSD } from '../../hooks/useHtokenHelper';
-import {
-	getUnlimitedApproval,
-	useCheckUnlimitedApproval,
-	useGetUserBalance
-} from '../../hooks/useERC20';
+import { getUnlimitedApproval, useCheckApproval, useGetUserBalance } from '../../hooks/useERC20';
 import {
 	bidCollateral,
 	cancelCollateralBid,
@@ -85,11 +81,6 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 		currentUser,
 		unit
 	);
-	const [approval, isLoadingApproval] = useCheckUnlimitedApproval(
-		ERC20ContractAddress,
-		marketContractAddress,
-		currentUser
-	);
 	const [bidInfo, isLoadingBidInfo] = useGetCollateralBids(
 		marketContractAddress,
 		HERC20ContractAddress,
@@ -112,8 +103,15 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 	const { toast, ToastComponent } = useToast();
 	const [bidState, setBidState] = useState('WAIT_FOR_APPROVAL');
 	const [isButtonDisable, setIsButtonDisable] = useState(true);
-	const minBid = getMinimumBid(minimumBid, userBid(walletPublicKey, bidInfo, unit), unit);
+	const minBid = getMinimumBid(minimumBid, userBid(walletPublicKey, bidInfo, unit).value, unit);
 
+	const [approval, isLoadingApproval] = useCheckApproval(
+		ERC20ContractAddress,
+		marketContractAddress,
+		currentUser,
+		valueUnderlying,
+		unit
+	);
 	useEffect(() => {
 		if (
 			isLoadingUnderlyingPrice ||
@@ -139,14 +137,15 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 		isLoadingMinimumBid,
 		isLoadingAvailableRefund,
 		HERC20ContractAddress,
-		NFTId
+		NFTId,
+		approval
 	]);
 
 	// Put your validators here
 	const isSubmitButtonDisabled = () => {
 		if (bidState == 'WAIT_FOR_BID') return p(f(valueUnderlying)) < minBid;
 		else if (bidState == 'WAIT_FOR_INCREASE_BID')
-			return p(f(valueUnderlying)) + userBid(walletPublicKey, bidInfo, unit) < minBid;
+			return p(f(valueUnderlying)) + userBid(walletPublicKey, bidInfo, unit).value < minBid;
 		else return false;
 	};
 
@@ -254,9 +253,10 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 		}
 	};
 
-	const currentBidValue = () => {
+	const currentBid = () => {
 		if (hasRefund(availableRefund)) {
-			return userRefund(availableRefund, unit);
+			const refund = userRefund(availableRefund, unit);
+			return { value: refund, unlockTime: 0 };
 		} else {
 			return userBid(walletPublicKey, bidInfo, unit);
 		}
@@ -381,10 +381,11 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 						<div className={styles.col}>
 							<CurrentBid
 								disabled={isButtonDisable}
-								value={currentBidValue()}
+								value={currentBid().value}
 								title={currentBidTile()}
 								buttonText={currentBidButtonText()}
 								onClick={() => handleCurrentBid()}
+								unlockTime={currentBid().unlockTime}
 							/>
 						</div>
 					</div>
