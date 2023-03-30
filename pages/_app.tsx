@@ -8,12 +8,13 @@ import { accentSequence, ThemeAccent } from 'helpers/themes/theme-utils';
 import { UserProvider } from '../contexts/userContext';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useLoanFlowStore from '../store/loanFlowStore';
 import useLendFlowStore from '../store/lendFlowStore';
 import useLiquidationFlowStore from '../store/liquidationFlowStore';
 import Moralis from 'moralis';
 import { vars } from 'styles/theme.css';
+import SecPopup from 'components/SecPopup/SecPopup';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
@@ -55,11 +56,14 @@ const storedAccent =
 	typeof window !== 'undefined' ? (localStorage.getItem('accent') as ThemeAccent) : undefined;
 
 function MyApp({ Component, pageProps }: AppProps) {
+	const [showPopup, setShowPopup] = useState(true);
 	const router = useRouter();
 	const resetLoanFlowStore = useLoanFlowStore((state) => state.reset);
 	const resetLendFlowStore = useLendFlowStore((state) => state.reset);
 	const resetLiquidationFlowStore = useLiquidationFlowStore((state) => state.reset);
 	useEffect(() => {
+		const cautionAgreed = localStorage.getItem('caution-agreed');
+		setShowPopup(cautionAgreed === 'true' ? false : true);
 		const handleRouteChange = (url: any, { shallow }: any) => {
 			resetLoanFlowStore();
 			resetLendFlowStore();
@@ -88,7 +92,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 					>
 						<UserProvider>
 							{/* {children} */}
-							<Component {...pageProps} />
+							{showPopup ? <SecPopup setShowPopup={setShowPopup} /> : <Component {...pageProps} />}
 							<ToastContainer theme="dark" position="top-right" />
 						</UserProvider>
 					</RainbowKitProvider>
