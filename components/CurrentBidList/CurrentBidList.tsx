@@ -1,5 +1,5 @@
+import BidListItem from 'components/BidListItem/BidListItem';
 import React from 'react';
-import CurrentBidCard from '../CurrentBidCard/CurrentBidCard';
 import { Bid } from '../../types/liquidate';
 
 type CurrentBidListProps = {
@@ -16,7 +16,7 @@ const CurrentBidList = (props: CurrentBidListProps) => {
 			{bids &&
 				bids.map((bid, index) => (
 					<div key={index}>
-						<CurrentBidCard
+						<BidListItem
 							bid={bid}
 							underlyingPrice={underlyingPrice}
 							hasBorder={index !== bids.length - 1}

@@ -1,9 +1,9 @@
 # .graphclientrc.yml
 sources:
-  - name: htoken-sample
+  - name: honey-dashboard-arbitrum
     handler:
       graphql:
-        endpoint: https://api.thegraph.com/subgraphs/name/bowtiedfirefox/honey-htoken
+        endpoint: https://api.thegraph.com/subgraphs/name/tomjpandolfi/honey-dashboard-arbitrum
 
 documents:
   - ./graphql/**/*.graphql

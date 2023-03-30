@@ -23,11 +23,7 @@ import { UserContext } from '../../contexts/userContext';
 import { useMutation, useQueryClient } from 'react-query';
 import { LendWorkFlowType } from '../../types/workflows';
 import useLendFlowStore from '../../store/lendFlowStore';
-import {
-	getUnlimitedApproval,
-	useCheckUnlimitedApproval,
-	useGetUserBalance
-} from '../../hooks/useERC20';
+import { getUnlimitedApproval, useCheckApproval, useGetUserBalance } from '../../hooks/useERC20';
 import { depositUnderlying, useGetTotalBorrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 import { useLend } from '../../hooks/useCollection';
@@ -69,11 +65,6 @@ const DepositForm = (props: DepositFormProps) => {
 		currentUser,
 		unit
 	);
-	const [approval, isLoadingApproval] = useCheckUnlimitedApproval(
-		ERC20ContractAddress,
-		HERC20ContractAddress,
-		currentUser
-	);
 	const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
@@ -95,6 +86,14 @@ const DepositForm = (props: DepositFormProps) => {
 	const [valueUSD, setValueUSD] = useState<number>(0);
 	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
 	const [sliderValue, setSliderValue] = useState(0);
+
+	const [approval, isLoadingApproval] = useCheckApproval(
+		ERC20ContractAddress,
+		HERC20ContractAddress,
+		currentUser,
+		valueUnderlying,
+		unit
+	);
 
 	/* initial all financial value here */
 	const { toast, ToastComponent } = useToast();

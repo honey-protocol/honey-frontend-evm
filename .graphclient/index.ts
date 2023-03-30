@@ -20,7 +20,7 @@ import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { ImportFn } from '@graphql-mesh/types';
-import type { HtokenSampleTypes } from './sources/htoken-sample/types';
+import type { HoneyDashboardArbitrumTypes } from './sources/honey-dashboard-arbitrum/types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -166,6 +166,8 @@ export type Collateral_filter = {
   active_not_in?: InputMaybe<Array<Scalars['Boolean']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Collateral_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Collateral_filter>>>;
 };
 
 export type Collateral_orderBy =
@@ -175,6 +177,17 @@ export type Collateral_orderBy =
   | 'collateralTokenAddr'
   | 'hTokenAddr'
   | 'activeCoupon'
+  | 'activeCoupon__id'
+  | 'activeCoupon__collateralID'
+  | 'activeCoupon__couponID'
+  | 'activeCoupon__underlyingTokenAddr'
+  | 'activeCoupon__collateralTokenAddr'
+  | 'activeCoupon__hTokenAddr'
+  | 'activeCoupon__active'
+  | 'activeCoupon__owner'
+  | 'activeCoupon__amount'
+  | 'activeCoupon__timestamp'
+  | 'activeCoupon__lastUpdateTimestamp'
   | 'active';
 
 export type Coupon = {
@@ -326,6 +339,8 @@ export type Coupon_filter = {
   lastUpdateTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Coupon_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<Coupon_filter>>>;
 };
 
 export type Coupon_orderBy =
@@ -552,6 +567,8 @@ export type UserUnderlying_filter = {
   amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<UserUnderlying_filter>>>;
+  or?: InputMaybe<Array<InputMaybe<UserUnderlying_filter>>>;
 };
 
 export type UserUnderlying_orderBy =
@@ -841,7 +858,7 @@ export type DirectiveResolvers<ContextType = MeshContext> = ResolversObject<{
   derivedFrom?: derivedFromDirectiveResolver<any, any, ContextType>;
 }>;
 
-export type MeshContext = HtokenSampleTypes.Context & BaseMeshContext;
+export type MeshContext = HoneyDashboardArbitrumTypes.Context & BaseMeshContext;
 
 
 import { fileURLToPath } from '@graphql-mesh/utils';
@@ -850,8 +867,8 @@ const baseDir = pathModule.join(pathModule.dirname(fileURLToPath(import.meta.url
 const importFn: ImportFn = <T>(moduleId: string) => {
   const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
   switch(relativeModuleId) {
-    case ".graphclient/sources/htoken-sample/introspectionSchema":
-      return import("./sources/htoken-sample/introspectionSchema") as T;
+    case ".graphclient/sources/honey-dashboard-arbitrum/introspectionSchema":
+      return import("./sources/honey-dashboard-arbitrum/introspectionSchema") as T;
     
     default:
       return Promise.reject(new Error(`Cannot find module '${relativeModuleId}'.`));
@@ -883,22 +900,22 @@ const cache = new (MeshCache as any)({
 const sources: MeshResolvedSource[] = [];
 const transforms: MeshTransform[] = [];
 const additionalEnvelopPlugins: MeshPlugin<any>[] = [];
-const htokenSampleTransforms = [];
+const honeyDashboardArbitrumTransforms = [];
 const additionalTypeDefs = [] as any[];
-const htokenSampleHandler = new GraphqlHandler({
-              name: "htoken-sample",
-              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/bowtiedfirefox/honey-htoken"},
+const honeyDashboardArbitrumHandler = new GraphqlHandler({
+              name: "honey-dashboard-arbitrum",
+              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/tomjpandolfi/honey-dashboard-arbitrum"},
               baseDir,
               cache,
               pubsub,
-              store: sourcesStore.child("htoken-sample"),
-              logger: logger.child("htoken-sample"),
+              store: sourcesStore.child("honey-dashboard-arbitrum"),
+              logger: logger.child("honey-dashboard-arbitrum"),
               importFn,
             });
 sources[0] = {
-          name: 'htoken-sample',
-          handler: htokenSampleHandler,
-          transforms: htokenSampleTransforms
+          name: 'honey-dashboard-arbitrum',
+          handler: honeyDashboardArbitrumHandler,
+          transforms: honeyDashboardArbitrumTransforms
         }
 const additionalResolvers = [] as any[]
 const merger = new(BareMerger as any)({
@@ -951,8 +968,8 @@ const merger = new(BareMerger as any)({
   };
 }
 
-export function createBuiltMeshHTTPHandler(): MeshHTTPHandler<MeshContext> {
-  return createMeshHTTPHandler<MeshContext>({
+export function createBuiltMeshHTTPHandler<TServerContext = {}>(): MeshHTTPHandler<TServerContext> {
+  return createMeshHTTPHandler<TServerContext>({
     baseDir,
     getBuiltMesh: getBuiltGraphClient,
     rawServeConfig: undefined,
