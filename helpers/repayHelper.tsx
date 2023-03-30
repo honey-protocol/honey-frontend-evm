@@ -28,7 +28,7 @@ export async function withdrawUnderlyingHelper(
 	unit: Unit,
 	userUnderlyingBalance: string
 ) {
-	if (userTotalDeposits - sliderValue >= 0.01) {
+	if (userTotalDeposits - sliderValue >= 0.001) {
 		await withdrawUnderlying(HERC20ContractAddress, sliderValue.toFixed(18).toString(), unit);
 		console.log(`redeem for amount: ${sliderValue}`);
 	} else {
