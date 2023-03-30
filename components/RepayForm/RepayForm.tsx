@@ -27,11 +27,7 @@ import {
 } from '../../hooks/useHtokenHelper';
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from '../../hooks/useHivemind';
-import {
-	getUnlimitedApproval,
-	useCheckUnlimitedApproval,
-	useGetUserBalance
-} from '../../hooks/useERC20';
+import { getUnlimitedApproval, useCheckApproval, useGetUserBalance } from '../../hooks/useERC20';
 import { withdrawCollateral } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 import { repayBorrowHelper } from '../../helpers/repayHelper';
@@ -107,18 +103,20 @@ const RepayForm = (props: RepayProps) => {
 		currentUser,
 		unit
 	);
-	const [approval, isLoadingApproval] = useCheckUnlimitedApproval(
-		ERC20ContractAddress,
-		HERC20ContractAddress,
-		currentUser
-	);
 
 	const [valueUSD, setValueUSD] = useState<number>();
-	const [valueUnderlying, setValueUnderlying] = useState<number>();
+	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
 	const [sliderValue, setSliderValue] = useState(0);
 	const { toast, ToastComponent } = useToast();
 	const [repayState, setRepayState] = useState('WAIT_FOR_APPROVAL');
 
+	const [approval, isLoadingApproval] = useCheckApproval(
+		ERC20ContractAddress,
+		HERC20ContractAddress,
+		currentUser,
+		valueUnderlying,
+		unit
+	);
 	/* initial all financial value here */
 	const nftValue = nftPrice.price;
 	const userDebt = parseFloat(borrowAmount);
@@ -157,7 +155,8 @@ const RepayForm = (props: RepayProps) => {
 		isLoadingUserBalance,
 		isLoadingApproval,
 		isLoadingMaxBorrow,
-		nft
+		nft,
+		approval
 	]);
 
 	// Put your validators here

@@ -39,18 +39,18 @@ export const notificationToggle = style([
 
 export const hasBorder = style({ position: 'relative' });
 
-globalStyle(`${hasBorder}:last-child:after`, {
-	position: 'absolute',
-	content: '',
-	bottom: '-8px',
-	left: '50%',
-	transform: 'translateX(-50%)',
-	width: 'calc(100% - 32px)',
-	height: 40,
-	borderRadius: 16,
-	background: vars.colors.white,
-	zIndex: 0
-});
+// globalStyle(`${hasBorder}:last-child:after`, {
+// 	position: 'absolute',
+// 	content: '',
+// 	bottom: '-8px',
+// 	left: '50%',
+// 	transform: 'translateX(-50%)',
+// 	width: 'calc(100% - 32px)',
+// 	height: 40,
+// 	borderRadius: 16,
+// 	background: vars.colors.white,
+// 	zIndex: 0
+// });
 
 globalStyle(`${hasBorder}:last-child::before`, {
 	position: 'absolute',

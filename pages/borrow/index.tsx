@@ -611,7 +611,7 @@ const Markets: NextPage = () => {
 							<EmptyStateDetails
 								icon={<div className={style.docIcon} />}
 								title="You didn’t use any collections yet"
-								description="Turn off the filter my collection and choose any collection to borrow money"
+								description="Turn off the filter my collection and choose any collection to borrow tokens"
 							/>
 						</div>
 					) : (

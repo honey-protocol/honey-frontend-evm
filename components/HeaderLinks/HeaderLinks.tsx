@@ -10,7 +10,7 @@ import cs from 'classnames';
 export const links = [
 	// {
 	// 	title: 'DASHBOARD',
-	// 	href: '/dashboard',
+	// 	href: '/dashboard'
 	// },
 	{
 		title: 'BORROW',
@@ -26,7 +26,7 @@ export const links = [
 	},
 	{
 		title: 'DOCUMENTATION',
-		href: '/documentation'
+		href: 'https://docs.honey.finance'
 	},
 	{
 		title: 'FEEDBACK',
