@@ -407,10 +407,10 @@ const BorrowForm = (props: BorrowProps) => {
 						</div>
 					</div>
 					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
-						onChangeFirstInput={handleUsdInputChange}
-						onChangeSecondInput={handleUnderlyingInputChange}
+						firstInputValue={p(f(valueUnderlying))}
+						secondInputValue={p(f(valueUSD))}
+						onChangeFirstInput={handleUnderlyingInputChange}
+						onChangeSecondInput={handleUsdInputChange}
 						maxValue={userAllowance}
 						firstInputAddon={erc20Name}
 					/>
