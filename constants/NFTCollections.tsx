@@ -42,6 +42,16 @@ function getCollections() {
 				ERC721ContractAddress: '0x72c3205acf3eb2b37b0082240bf0b909a46c0993',
 				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
 				HERC20ContractAddress: '0xb2585c40bbafb8a09637194ae478696d35e7e1a3'
+			},
+			{
+				name: 'Federal Frens',
+				icon: '/nfts/fedfrens.jpeg',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x00e3Dcb7fd5946DdE80D627b0723AF78249D7d49',
+				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+				HERC20ContractAddress: '0x4216b7e2560bac4a3b438455a3facc904b07d9ef'
 			}
 		] as collection[];
 	} else if (envName == 'prod') {
@@ -86,6 +96,16 @@ function getCollections() {
 				ERC721ContractAddress: '0x72c3205acf3eb2b37b0082240bf0b909a46c0993',
 				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
 				HERC20ContractAddress: '0xb2585c40bbafb8a09637194ae478696d35e7e1a3'
+			},
+			{
+				name: 'Federal Frens',
+				icon: '/nfts/fedfrens.jpeg',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x00e3Dcb7fd5946DdE80D627b0723AF78249D7d49',
+				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+				HERC20ContractAddress: '0x4216b7e2560bac4a3b438455a3facc904b07d9ef'
 			}
 		] as collection[];
 	} else {
