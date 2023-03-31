@@ -30,6 +30,6 @@ export const emptyStateDescription = style([
 ]);
 
 export const emptyStateWalletBtn = style({
-	marginTop: 12,
-	color: vars.colors.black
+	marginTop: 12
+	// color: vars.colors.black
 });
