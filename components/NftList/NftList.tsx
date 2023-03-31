@@ -4,8 +4,11 @@ import * as style from './NftList.css';
 import cs from 'classnames';
 import EmptyStateDetails from 'components/EmptyStateDetails/EmptyStateDetails';
 import { Empty } from 'antd';
+import { collections } from 'constants/NFTCollections';
 
-const yootsContractAddress = '0x670fd103b1a08628e9557cD66B87DeD841115190';
+const yootsContractAddress = collections.find(
+	(collection) => collection.name === 'Y00TS'
+)?.HERC20ContractAddress;
 
 type NftListProps = {
 	data: NFT[];
@@ -22,7 +25,6 @@ const NftList = (props: NftListProps) => {
 		setSelectedNFTId(nft.id);
 		selectNFT(nft);
 	}
-
 	return (
 		<div className={style.nftsListContainer}>
 			{data && data.length
@@ -53,7 +55,7 @@ const NftList = (props: NftListProps) => {
 								{
 									title: 'Unstake here',
 									variant: 'secondary',
-									href: 'https://www.y00ts.com/staking'
+									onClick: () => window.open('https://www.y00ts.com/staking')
 								}
 							]}
 						/>
