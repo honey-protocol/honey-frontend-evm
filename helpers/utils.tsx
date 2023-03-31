@@ -43,7 +43,8 @@ export const RoundHalfDown = (val: number, decimals: number = 2): number => {
  * @returns interest rate for lend market
  */
 export const interestRateLend = (baseRate: number, supplied: string, available: string) => {
-	return baseRate * ((parseFloat(supplied) - parseFloat(available)) / parseFloat(supplied));
+	const rate = baseRate * ((parseFloat(supplied) - parseFloat(available)) / parseFloat(supplied));
+	return rate > 0 ? rate : 0;
 };
 
 /**
@@ -68,7 +69,7 @@ export const fetchAllowance = (positions: MarketTablePosition[], NFTId: string) 
 export const fetchInterestRate = (lendDatas: LendTableRow[], HERC20ContractAddress: string) => {
 	const lendData = lendDatas.filter((lendData) => lendData.key === HERC20ContractAddress);
 	if (lendData.length) {
-		return lendData[0].rate;
+		return lendData[0].rate <= 0 ? 0 : 0;
 	} else {
 		return 0;
 	}

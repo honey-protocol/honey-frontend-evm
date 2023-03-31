@@ -11,10 +11,9 @@ import { BorrowPositionCardSlider } from '../../BorrowPositionCardSlider/BorrowP
 import useLoanFlowStore from 'store/loanFlowStore';
 import { useGetMaxBorrowableAmount, useGetNFTPrice } from 'hooks/useHtokenHelper';
 import { getContractsByHTokenAddr } from 'helpers/generalHelper';
+import { useGetCollateralFactor } from 'hooks/useHivemind';
 
 const { formatShortName: fsn, formatPercent: fp } = formatNumber;
-
-const LIQUIDATION_THRESHOLD = 0.65;
 
 export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSelect }) => {
 	const selectedNFTId = useLoanFlowStore((state) => state.NFTId);
@@ -26,6 +25,12 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 		erc20Name,
 		unit
 	} = getContractsByHTokenAddr(position.HERC20ContractAddr);
+
+	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
+		hivemindContractAddress,
+		position.HERC20ContractAddr,
+		unit
+	);
 	const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(
 		htokenHelperContractAddress,
 		position.HERC20ContractAddr
@@ -68,7 +73,7 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 			<BorrowPositionCardSlider
 				debt={parseFloat(position.debt)}
 				collateralValue={position.value ?? 0}
-				liquidationThreshold={LIQUIDATION_THRESHOLD}
+				liquidationThreshold={collateralFactor}
 				maxLoanToValue={MAX_LTV}
 			/>
 		</div>

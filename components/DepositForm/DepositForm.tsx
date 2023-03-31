@@ -128,11 +128,13 @@ const DepositForm = (props: DepositFormProps) => {
 		isLoadingTotalUnderlyingBalance,
 		isLoadingTotalBorrow,
 		isLoadingApproval,
-		isLoadingLendData
+		isLoadingLendData,
+		approval
 	]);
 
 	// Put your validators here
 	const isDepositButtonDisabled = () => {
+		if (maxValue === 0 || valueUnderlying > maxValue) return true;
 		return false;
 	};
 
@@ -171,6 +173,7 @@ const DepositForm = (props: DepositFormProps) => {
 
 	/*  begin handling borrow function */
 	const buttonTitle = () => {
+		if (maxValue === 0 || valueUnderlying > maxValue) return 'Insufficient balance';
 		if (depositState == 'WAIT_FOR_APPROVAL') return 'Approve';
 		else if (depositState == 'WAIT_FOR_DEPOSIT') return 'Deposit';
 	};
@@ -299,10 +302,10 @@ const DepositForm = (props: DepositFormProps) => {
 
 				<div className={styles.inputs}>
 					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
-						onChangeFirstInput={handleUsdInputChange}
-						onChangeSecondInput={handleUnderlyingInputChange}
+						firstInputValue={p(f(valueUnderlying))}
+						secondInputValue={p(f(valueUSD))}
+						onChangeFirstInput={handleUnderlyingInputChange}
+						onChangeSecondInput={handleUsdInputChange}
 						maxValue={maxValue}
 						firstInputAddon={erc20Name}
 					/>

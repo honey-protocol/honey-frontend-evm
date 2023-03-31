@@ -1,9 +1,12 @@
 import { ChangeEvent, FC } from 'react';
 import * as styles from './InputsBlock.css';
 import Image from 'next/image';
-import SOLIcon from './assets/SOL.svg';
 import { formatNumber } from '../../helpers/format';
 import EqualIcon from './assets/equalIcon.svg';
+import HoneyFormattedNumericInput from '../HoneyFormattedNumericInput/HoneyFormattedInput';
+import { ValueType } from 'rc-input-number/lib/utils/MiniDecimal';
+import { isNil } from '../../helpers/utils';
+import SOLIcon from './assets/SOL.svg';
 
 interface InputsBlockProps {
 	firstInputValue: number | undefined;
@@ -24,7 +27,6 @@ export const InputsBlock: FC<InputsBlockProps> = ({
 	onChangeFirstInput,
 	onChangeSecondInput,
 	maxValue = Infinity,
-	//todo we should pass them as jsx element instead of hardcoding
 	delimiterIcon = (
 		<div className={styles.delimiterIcon}>
 			<Image src={EqualIcon} alt={'equal icon'} />
@@ -37,48 +39,51 @@ export const InputsBlock: FC<InputsBlockProps> = ({
 	),
 	secondInputAddon = <> USD </>
 }) => {
-	const isValidNumericInput = (value: string) => {
-		return Number.isFinite(Number(value));
-	};
-
-	const handleUsdChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-		if (isValidNumericInput(value) && value !== '') {
-			onChangeFirstInput(parseFloat(value));
-		} else {
+	const handleFirstInputChange = (value: ValueType | null) => {
+		if (isNil(value)) {
 			onChangeFirstInput(undefined);
+		} else {
+			onChangeFirstInput(Number(value) < maxValue ? Number(value) : maxValue);
 		}
 	};
 
-	const handleTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const value = event.target.value;
-		if (isValidNumericInput(value) && value !== '') {
-			onChangeSecondInput(Number(value) < maxValue ? Number(value) : maxValue);
-		} else {
+	const handleSecondInputChange = (value: ValueType | null) => {
+		if (isNil(value)) {
 			onChangeSecondInput(undefined);
+		} else {
+			onChangeSecondInput(Number(value));
 		}
+	};
+
+	const defaultInputFormatted = (value: ValueType | undefined) => {
+		// TODO: pass decimals as props if needed
+		return value ? formatNumber.formatTokenInput(String(value), 9) : '';
 	};
 
 	return (
 		<div className={styles.inputsBlockContainer}>
 			<div className={styles.inputWrapper}>
-				<input
+				<HoneyFormattedNumericInput
 					className={styles.input}
-					type="number"
 					placeholder="0.00"
-					value={secondInputValue}
-					onChange={handleTokenChange}
+					value={firstInputValue}
+					decimalSeparator="."
+					formatter={defaultInputFormatted}
+					onChange={handleFirstInputChange}
+					bordered={false}
 				/>
 				<div className={styles.inputAddon}>{firstInputAddon}</div>
 			</div>
 			<div className={styles.equalSignContainer}>{delimiterIcon}</div>
 			<div className={styles.inputWrapper}>
-				<input
+				<HoneyFormattedNumericInput
 					className={styles.input}
-					type="number"
 					placeholder="0.00"
-					value={firstInputValue}
-					onChange={handleUsdChange}
+					value={secondInputValue}
+					formatter={defaultInputFormatted}
+					decimalSeparator="."
+					onChange={handleSecondInputChange}
+					bordered={false}
 				/>
 				<div className={styles.inputAddon}>{secondInputAddon}</div>
 			</div>

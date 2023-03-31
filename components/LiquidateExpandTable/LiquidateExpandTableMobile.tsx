@@ -51,7 +51,9 @@ export const LiquidateExpandTableMobile: FC<{
 						</HexaBoxContainer>
 					</div>
 					<div className={sharedStyles.nameCellText}>
-						<div className={sharedStyles.collectionNameMobile}>{row['name']}</div>
+						<div
+							className={sharedStyles.collectionNameMobile}
+						>{`${row['name']} #${row['tokenId']}`}</div>{' '}
 						<HealthLvl healthLvl={row['healthLvl']} />
 					</div>
 				</div>
