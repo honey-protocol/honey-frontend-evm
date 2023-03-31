@@ -339,7 +339,7 @@ const RepayForm = (props: RepayProps) => {
 								</span>
 							}
 							toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
-								60
+								40
 							)}`}
 						/>
 					</div>
