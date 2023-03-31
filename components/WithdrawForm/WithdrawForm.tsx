@@ -251,10 +251,10 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 
 				<div className={styles.inputs}>
 					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
-						onChangeFirstInput={handleUsdInputChange}
-						onChangeSecondInput={handleUnderlyingInputChange}
+						firstInputValue={p(f(valueUnderlying))}
+						secondInputValue={p(f(valueUSD))}
+						onChangeFirstInput={handleUnderlyingInputChange}
+						onChangeSecondInput={handleUsdInputChange}
 						maxValue={userTotalDeposits}
 						firstInputAddon={erc20Name}
 					/>

@@ -142,6 +142,27 @@ export const formatNumber = {
 				.replace(new RegExp('\\' + thousandSeparator, 'g'), '')
 				.replace(new RegExp('\\' + decimalSeparator), '.')
 		);
+	},
+
+	formatTokenInput: (input: string, decimals: number | undefined) => {
+		const [integersValue, decimalsValue] = input.split('.');
+
+		if (!decimalsValue || decimalsValue.length === 0) {
+			return input;
+		}
+
+		return `${integersValue}.${decimalsValue.slice(0, decimals)}`;
+	},
+	formatTokenAllDecimals: (amount: number, decimals: number) => {
+		if (amount <= 0) {
+			return String(amount);
+		}
+
+		return new Intl.NumberFormat('en-US', {
+			style: 'decimal',
+			minimumFractionDigits: 0,
+			maximumFractionDigits: decimals
+		}).format(amount);
 	}
 };
 

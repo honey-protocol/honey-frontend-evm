@@ -455,10 +455,10 @@ const RepayForm = (props: RepayProps) => {
 
 					{userDebt !== 0 && (
 						<InputsBlock
-							firstInputValue={p(f(valueUSD))}
-							secondInputValue={p(f(valueUnderlying))}
-							onChangeFirstInput={handleUsdInputChange}
-							onChangeSecondInput={handleUnderlyingInputChange}
+							firstInputValue={p(f(valueUnderlying))}
+							secondInputValue={p(f(valueUSD))}
+							onChangeFirstInput={handleUnderlyingInputChange}
+							onChangeSecondInput={handleUsdInputChange}
 							firstInputAddon={erc20Name}
 						/>
 					)}
