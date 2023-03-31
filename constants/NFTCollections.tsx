@@ -45,7 +45,7 @@ function getCollections() {
 			},
 			{
 				name: 'Federal Frens',
-				icon: '/nfts/fedfrens.jpeg',
+				icon: '/nfts/fedfrens.png',
 				erc20Name: 'WETH',
 				erc20Icon: '/erc20/EthIcon.png',
 				unit: 'ether',
@@ -99,7 +99,7 @@ function getCollections() {
 			},
 			{
 				name: 'Federal Frens',
-				icon: '/nfts/fedfrens.jpeg',
+				icon: '/nfts/fedfrens.png',
 				erc20Name: 'WETH',
 				erc20Icon: '/erc20/EthIcon.png',
 				unit: 'ether',
