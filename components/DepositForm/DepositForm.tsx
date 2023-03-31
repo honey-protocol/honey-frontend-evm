@@ -128,7 +128,8 @@ const DepositForm = (props: DepositFormProps) => {
 		isLoadingTotalUnderlyingBalance,
 		isLoadingTotalBorrow,
 		isLoadingApproval,
-		isLoadingLendData
+		isLoadingLendData,
+		approval
 	]);
 
 	// Put your validators here
