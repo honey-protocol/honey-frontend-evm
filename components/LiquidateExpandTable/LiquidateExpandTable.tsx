@@ -54,7 +54,9 @@ export const LiquidateExpandTable: FC<{ data: LiquidateTablePosition[] }> = ({ d
 						</div>
 						<div className={sharedStyles.nameCellText}>
 							<HoneyTooltip label={row['name']}>
-								<div className={sharedStyles.collectionName}>{formatNFTName(row['name'])}</div>
+								<div
+									className={sharedStyles.collectionName}
+								>{`${row['name']} #${row['tokenId']}`}</div>
 							</HoneyTooltip>
 							<HealthLvl healthLvl={row['healthLvl']} />
 						</div>
