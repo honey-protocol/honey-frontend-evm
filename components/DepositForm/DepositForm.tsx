@@ -134,6 +134,7 @@ const DepositForm = (props: DepositFormProps) => {
 
 	// Put your validators here
 	const isDepositButtonDisabled = () => {
+		if (maxValue === 0 || valueUnderlying > maxValue) return true;
 		return false;
 	};
 
@@ -172,6 +173,7 @@ const DepositForm = (props: DepositFormProps) => {
 
 	/*  begin handling borrow function */
 	const buttonTitle = () => {
+		if (maxValue === 0 || valueUnderlying > maxValue) return 'Insufficient balance';
 		if (depositState == 'WAIT_FOR_APPROVAL') return 'Approve';
 		else if (depositState == 'WAIT_FOR_DEPOSIT') return 'Deposit';
 	};

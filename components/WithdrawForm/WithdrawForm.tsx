@@ -106,6 +106,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 
 	// Put your validators here
 	const isWithdrawButtonDisabled = () => {
+		if (userTotalDeposits === 0 || valueUnderlying > userTotalDeposits) return true;
 		return false;
 	};
 
@@ -199,7 +200,9 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 								isFluid={true}
 								onClick={handleWithdraw}
 							>
-								Withdraw
+								{userTotalDeposits === 0 || valueUnderlying > userTotalDeposits
+									? 'Insufficient balance'
+									: 'Withdraw'}
 							</HoneyButton>
 						</div>
 					</div>
