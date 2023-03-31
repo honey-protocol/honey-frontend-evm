@@ -1,7 +1,9 @@
 import { style } from '@vanilla-extract/css';
 import { vars } from 'styles/theme.css';
 
-export const nftsListContainer = style({});
+export const nftsListContainer = style({
+	height: '100%'
+});
 
 export const listItem = style({
 	paddingTop: 14

@@ -140,6 +140,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 					data={availableNFTs}
 					selectNFT={selectNFT}
 					buttonText={`${fsn(maxBorrow)} ${erc20Name}`}
+					HERC20ContractAddress={HERC20ContractAddress}
 				/>
 			</>
 		);
