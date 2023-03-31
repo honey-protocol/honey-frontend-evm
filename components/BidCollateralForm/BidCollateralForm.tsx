@@ -426,10 +426,10 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 
 				<div className={styles.inputs}>
 					<InputsBlock
-						firstInputValue={p(f(valueUSD))}
-						secondInputValue={p(f(valueUnderlying))}
-						onChangeFirstInput={handleUsdInputChange}
-						onChangeSecondInput={handleUnderlyingInputChange}
+						firstInputValue={p(f(valueUnderlying))}
+						secondInputValue={p(f(valueUSD))}
+						onChangeFirstInput={handleUnderlyingInputChange}
+						onChangeSecondInput={handleUsdInputChange}
 						maxValue={parseFloat(userBalance)}
 						firstInputAddon={erc20Name}
 					/>
