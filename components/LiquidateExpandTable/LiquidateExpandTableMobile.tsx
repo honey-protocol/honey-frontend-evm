@@ -47,15 +47,13 @@ export const LiquidateExpandTableMobile: FC<{
 					<div className={sharedStyles.expandedRowIcon} />
 					<div className={sharedStyles.collectionLogo}>
 						<HexaBoxContainer>
-							<Image
-								src={`https://res.cloudinary.com/${process.env.CLOUDINARY_URI}/image/fetch/${row['image']}`}
-								layout="fill"
-								alt={'collection logo'}
-							/>
+							<Image src={row['image']} layout="fill" alt={'collection logo'} />
 						</HexaBoxContainer>
 					</div>
 					<div className={sharedStyles.nameCellText}>
-						<div className={sharedStyles.collectionNameMobile}>{row['name']}</div>
+						<div
+							className={sharedStyles.collectionNameMobile}
+						>{`${row['name']} #${row['tokenId']}`}</div>{' '}
 						<HealthLvl healthLvl={row['healthLvl']} />
 					</div>
 				</div>
