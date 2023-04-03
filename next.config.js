@@ -23,7 +23,8 @@ module.exports = (phase, { defaultConfig }) => {
 				// 'https://metadata.y00ts.com/y/*',
 				// 'https://bafybeigybl4254a53e7vestjhqmcgwbrq4uw3typghtgudvfqquosj7y44.ipfs.dweb.link/',
 				// 'https://bafybeih3zu2mzckrf4ylywokevxxn25k5k3hs4oa5lsxczdtdlfvgwccki.ipfs.nftstorage.link/',
-				'res.cloudinary.com'
+				'res.cloudinary.com',
+				'firebasestorage.googleapis.com'
 			]
 		};
 
@@ -50,7 +51,8 @@ module.exports = (phase, { defaultConfig }) => {
 				// 'https://metadata.y00ts.com/y/*',
 				// 'https://bafybeigybl4254a53e7vestjhqmcgwbrq4uw3typghtgudvfqquosj7y44.ipfs.dweb.link/',
 				// 'https://bafybeih3zu2mzckrf4ylywokevxxn25k5k3hs4oa5lsxczdtdlfvgwccki.ipfs.nftstorage.link/',
-				'res.cloudinary.com'
+				'res.cloudinary.com',
+				'firebasestorage.googleapis.com'
 			]
 		};
 		const ProdNextConfig = {
