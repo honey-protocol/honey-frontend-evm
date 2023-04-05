@@ -96,7 +96,8 @@ const DepositForm = (props: DepositFormProps) => {
 	);
 
 	/* initial all financial value here */
-	const { toast, ToastComponent } = useToast();
+	const { toast: fetchToast, ToastComponent: FetchToastComponent } = useToast();
+	const { toast: transactionToast, ToastComponent: TransactionToastComponent } = useToast();
 	const [depositState, setDepositState] = useState('WAIT_FOR_APPROVAL');
 	const totalUnderlyingInMarket = parseFloat(totalUnderlyingBalance);
 	const totalBorrowAmount = parseFloat(totalBorrow);
@@ -115,10 +116,10 @@ const DepositForm = (props: DepositFormProps) => {
 			isLoadingApproval ||
 			isLoadingLendData
 		) {
-			toast.processing('Loading');
+			fetchToast.processing('Loading');
 		} else {
 			getDepositState();
-			toast.clear();
+			fetchToast.clear(0);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
@@ -190,7 +191,7 @@ const DepositForm = (props: DepositFormProps) => {
 	const depositUnderlyingMutation = useMutation(depositUnderlying);
 	const onClick = async () => {
 		try {
-			toast.processing();
+			transactionToast.processing();
 			if (depositState == 'WAIT_FOR_APPROVAL') {
 				await getApprovalMutation.mutateAsync({
 					ERC20ContractAddress,
@@ -215,13 +216,16 @@ const DepositForm = (props: DepositFormProps) => {
 				);
 				await queryClient.invalidateQueries(queryKeys.listUserUnderlying(walletPublicKey));
 				await queryClient.invalidateQueries(queryKeys.lendData(HERC20ContractAddress));
+				await queryClient.invalidateQueries(
+					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)
+				);
 				console.log('deposit succeed');
 				handleUsdInputChange(undefined);
 			}
-			toast.success('Successful! Transaction complete');
+			transactionToast.success('Successful! Transaction complete');
 		} catch (err) {
 			console.error(err);
-			toast.error('Sorry! Transaction failed');
+			transactionToast.error('Sorry! Transaction failed');
 		}
 	};
 
@@ -231,10 +235,12 @@ const DepositForm = (props: DepositFormProps) => {
 		document.body.classList.remove('disable-scroll');
 	};
 
+	const ToastComponent = transactionToast.state ? TransactionToastComponent : FetchToastComponent;
+
 	return (
 		<SidebarScroll
 			footer={
-				toast?.state ? (
+				fetchToast?.state || transactionToast.state ? (
 					ToastComponent
 				) : (
 					<div className={styles.buttons}>
