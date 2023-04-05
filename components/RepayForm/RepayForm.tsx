@@ -107,7 +107,9 @@ const RepayForm = (props: RepayProps) => {
 	const [valueUSD, setValueUSD] = useState<number>();
 	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
 	const [sliderValue, setSliderValue] = useState(0);
-	const { toast, ToastComponent } = useToast();
+	const { toast: fetchToast, ToastComponent: FetchToastComponent } = useToast();
+	const { toast: transactionToast, ToastComponent: TransactionToastComponent } = useToast();
+
 	const [repayState, setRepayState] = useState('WAIT_FOR_APPROVAL');
 
 	const [approval, isLoadingApproval] = useCheckApproval(
@@ -139,10 +141,10 @@ const RepayForm = (props: RepayProps) => {
 			isLoadingApproval ||
 			isLoadingMaxBorrow
 		) {
-			toast.processing('Loading');
+			fetchToast.processing('Loading');
 		} else {
 			getRepayState();
-			toast.clear();
+			fetchToast.clear();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
@@ -240,7 +242,7 @@ const RepayForm = (props: RepayProps) => {
 	const getApprovalMutation = useMutation(getUnlimitedApproval);
 	const onClick = async () => {
 		try {
-			toast.processing();
+			transactionToast.processing();
 			if (repayState == 'WAIT_FOR_WITHDRAW') {
 				await withdrawMutation.mutateAsync({ HERC20ContractAddress, NFTTokenId: nft.tokenId });
 				console.log('withdraw succeed');
@@ -263,6 +265,9 @@ const RepayForm = (props: RepayProps) => {
 			} else if (repayState == 'WAIT_FOR_REPAY') {
 				await repayLoanMutation.mutateAsync();
 				console.log('Repay Succeed');
+				await queryClient.invalidateQueries(
+					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)
+				);
 				await queryClient.invalidateQueries(queryKeys.couponData(HERC20ContractAddress, couponId));
 				await queryClient.invalidateQueries(
 					queryKeys.borrowAmount(HERC20ContractAddress, nft.tokenId)
@@ -273,10 +278,10 @@ const RepayForm = (props: RepayProps) => {
 				await queryClient.invalidateQueries(queryKeys.listUserCollateral(walletPublicKey));
 				handleSliderChange(0);
 			}
-			toast.success('Successful! Transaction complete');
+			transactionToast.success('Successful! Transaction complete');
 		} catch (err) {
 			console.error(err);
-			toast.error('Sorry! Transaction failed');
+			transactionToast.error('Sorry! Transaction failed');
 		}
 	};
 	/*  end handling borrow function */
@@ -476,12 +481,14 @@ const RepayForm = (props: RepayProps) => {
 		);
 	};
 
+	const ToastComponent = transactionToast.state ? TransactionToastComponent : FetchToastComponent;
+
 	const renderFooter = () => {
-		return toast?.state ? (
+		return fetchToast?.state || transactionToast.state ? (
 			ToastComponent
 		) : (
 			<Space direction="vertical" style={{ width: '100%' }}>
-				{userDebt === 0 && !toast.state && (
+				{userDebt === 0 && !(fetchToast?.state || transactionToast.state) && (
 					<HoneyWarning message="Your have no outstanding debt. You can claim your collateral" />
 				)}
 
