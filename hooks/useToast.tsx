@@ -31,10 +31,10 @@ const useToast = () => {
 		);
 	}, [toast?.state]);
 
-	const clearToast = () => {
+	const clearToast = (timeout?: number) => {
 		setTimeout(() => {
 			setToast(null);
-		}, toastRemoveDelay);
+		}, timeout ?? toastRemoveDelay);
 	};
 
 	return {
