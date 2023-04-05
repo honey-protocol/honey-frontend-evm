@@ -31,7 +31,8 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 		getContractsByHTokenAddr(HERC20ContractAddress);
 	const setWorkflow = useLoanFlowStore((state) => state.setWorkflow);
 	const [selectedNft, setSelectedNft] = useState<NFT | null>(null);
-	const { toast, ToastComponent } = useToast();
+	const { toast: fetchToast, ToastComponent: FetchToastComponent } = useToast();
+	const { toast: transactionToast, ToastComponent: TransactionToastComponent } = useToast();
 
 	const [availableNFTs, isLoadingNFT] = useFetchNFTByUserByCollection(
 		currentUser,
@@ -57,9 +58,9 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 
 	useEffect(() => {
 		if (isLoadingNFT || isLoadingApproval || isLoadingMaxBorrow) {
-			toast.processing('Loading');
+			fetchToast.processing('Loading');
 		} else {
-			toast.clear();
+			fetchToast.clear();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isLoadingNFT, isLoadingApproval, isLoadingMaxBorrow]);
@@ -82,7 +83,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 
 	const onClick = async () => {
 		try {
-			toast.processing();
+			transactionToast.processing();
 			if (nftState == 'WAIT_FOR_APPROVAL') {
 				await getApprovalMutation.mutateAsync();
 				await queryClient.invalidateQueries(
@@ -103,10 +104,10 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 			} else if (nftState === 'FINISH_DEPOSIT') {
 				setSelectedNft(null);
 			}
-			toast.success('Successful! Transaction complete');
+			transactionToast.success('Successful! Transaction complete');
 		} catch (err) {
 			console.error(err);
-			toast.error('Sorry! Transaction failed');
+			transactionToast.error('Sorry! Transaction failed');
 		}
 	};
 
@@ -152,8 +153,10 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 		document.body.classList.remove('disable-scroll');
 	};
 
+	const ToastComponent = transactionToast.state ? TransactionToastComponent : FetchToastComponent;
+
 	const renderFooter = () => {
-		return toast?.state ? (
+		return fetchToast?.state || transactionToast.state ? (
 			ToastComponent
 		) : (
 			<div className={styles.buttons}>
