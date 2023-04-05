@@ -265,6 +265,9 @@ const RepayForm = (props: RepayProps) => {
 			} else if (repayState == 'WAIT_FOR_REPAY') {
 				await repayLoanMutation.mutateAsync();
 				console.log('Repay Succeed');
+				await queryClient.invalidateQueries(
+					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)
+				);
 				await queryClient.invalidateQueries(queryKeys.couponData(HERC20ContractAddress, couponId));
 				await queryClient.invalidateQueries(
 					queryKeys.borrowAmount(HERC20ContractAddress, nft.tokenId)
