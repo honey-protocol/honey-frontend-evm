@@ -215,6 +215,9 @@ const DepositForm = (props: DepositFormProps) => {
 				);
 				await queryClient.invalidateQueries(queryKeys.listUserUnderlying(walletPublicKey));
 				await queryClient.invalidateQueries(queryKeys.lendData(HERC20ContractAddress));
+				await queryClient.invalidateQueries(
+					queryKeys.userApproval(walletPublicKey, ERC20ContractAddress, HERC20ContractAddress)
+				);
 				console.log('deposit succeed');
 				handleUsdInputChange(undefined);
 			}
