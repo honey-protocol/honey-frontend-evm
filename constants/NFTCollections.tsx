@@ -81,7 +81,7 @@ function getCollections() {
 			{
 				name: 'Chicken-Derby',
 				icon: '/nfts/derby.png',
-				erc20Name: 'MATIC',
+				erc20Name: 'W-MATIC',
 				erc20Icon: '/erc20/MaticIcon.png',
 				unit: 'ether',
 				ERC721ContractAddress: '0x8634666bA15AdA4bbC83B9DbF285F73D9e46e4C2',
