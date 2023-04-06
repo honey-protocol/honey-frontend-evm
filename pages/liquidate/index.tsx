@@ -292,8 +292,16 @@ const Liquidate: NextPage = () => {
 								}
 								rightSide={
 									<div className={style.buttonsCell}>
-										<HoneyButton variant="text">
-											View <div className={style.arrowIcon} />
+										<HoneyButton
+											variant="text"
+											onClick={() => {
+												expandedRowKeys.length && expandedRowKeys[0] === row.key
+													? setExpandedRowKeys([])
+													: setExpandedRowKeys([row.key]);
+											}}
+										>
+											{expandedRowKeys.length && expandedRowKeys[0] === row.key ? 'Hide' : 'View'}
+											<div className={style.arrowIcon} />
 										</HoneyButton>
 									</div>
 								}
@@ -310,7 +318,7 @@ const Liquidate: NextPage = () => {
 			}
 		],
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isMyBidsFilterEnabled, tableData, searchQuery]
+		[isMyBidsFilterEnabled, tableData, searchQuery, expandedRowKeys]
 	);
 
 	const liquidateSidebar = () => (
@@ -350,7 +358,11 @@ const Liquidate: NextPage = () => {
 								return (
 									<div className={style.expandSection}>
 										<div className={style.dashedDivider} />
-										<LiquidateExpandTable data={positions} formatDecimals={record.formatDecimals} />
+										<LiquidateExpandTable
+											data={positions}
+											isLoadingPositions={isLoadingPositions}
+											formatDecimals={record.formatDecimals}
+										/>
 									</div>
 								);
 							}
@@ -382,19 +394,17 @@ const Liquidate: NextPage = () => {
 						expandable={{
 							// we use our own custom expand column
 							showExpandColumn: false,
-							onExpand: (expanded, row) => {
-								initCollectionBidFlow(row.key);
-								setExpandedRowKeys(expanded ? [row.key] : []);
-							},
+							onExpand: (expanded, row) => {},
 							expandedRowKeys,
 							expandedRowRender: (record) => {
 								return (
-									<div className={style.expandSection} onClick={showMobileSidebar}>
+									<div className={style.expandSection}>
 										<div className={style.dashedDivider} />
 										<LiquidateExpandTableMobile
 											data={positions}
-											onPlaceBid={showMobileSidebar}
+											isLoadingPositions={isLoadingPositions}
 											formatDecimals={record.formatDecimals}
+											onBidCollection={() => initCollectionBidFlow(record.key)}
 										/>
 									</div>
 								);
