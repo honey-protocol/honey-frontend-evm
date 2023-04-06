@@ -15,9 +15,9 @@ const SecPopup = (props: { setShowPopup: Function }) => {
 					Honey Finance
 				</div>
 
-				<h1 className={styles.secPopupTitle}>
+				{/* <h1 className={styles.secPopupTitle}>
 					Honey Finance is unavailable to residents and citizens of the United States of America.
-				</h1>
+				</h1> */}
 
 				<p className={styles.secPopupText}>
 					Please take caution when using honey.finance and other defi products. Persons accessing
