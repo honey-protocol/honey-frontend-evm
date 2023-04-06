@@ -1,7 +1,7 @@
-import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
+import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import * as styles from './HoneyCardsGrid.css';
 import c from 'classnames';
-import { HoneyCardGridProps } from './types';
+import { BorrowUserPosition, HoneyCardGridProps, LendUserPosition } from './types';
 import { BorrowPositionCard } from './BorrowPositionCard/BorrowPositionCard';
 import { HoneyButtonTabs } from '../HoneyButtonTabs/HoneyButtonTabs';
 import SearchInput from '../SearchInput/SearchInput';
@@ -11,6 +11,7 @@ import { LendWorkFlowType, LoanWorkFlowType } from 'types/workflows';
 import useDisplayStore from 'store/displayStore';
 import useLendFlowStore from 'store/lendFlowStore';
 import useLoanFlowStore from 'store/loanFlowStore';
+import _ from 'lodash';
 
 export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 	borrowPositions,
@@ -21,12 +22,56 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 	type PositionByValue = 'high_risk' | 'high_ir' | 'high_debt';
 	const [positionByValue, setPositionByValue] = useState<PositionByValue>('high_risk');
 
+	/*    Begin filter function       */
 	const [searchValue, setSearchValue] = useState<string | undefined>();
+	const [displayedBorrowPositions, setDisplayedBorrowPositions] = useState<BorrowUserPosition[]>(
+		[]
+	);
+	const [displayedLendPositions, setDisplayedLendPositions] = useState<LendUserPosition[]>([]);
 
-	const handleSearchInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value;
-		setSearchValue(value);
-	}, []);
+	const displayedData = useMemo(
+		() => (positionType === 'borrow' ? borrowPositions : lendPositions),
+		[positionType, borrowPositions, lendPositions]
+	);
+
+	const onSearch = (searchTerm: string): any[] => {
+		if (!searchTerm) {
+			return [...displayedData];
+		}
+		const r = new RegExp(searchTerm, 'gmi');
+		return [...displayedData].filter((row) => {
+			return r.test(row.name);
+		});
+	};
+
+	const debouncedSearch = useCallback(
+		_.debounce((criteria: string) => {
+			if (positionType == 'borrow') {
+				setDisplayedBorrowPositions(onSearch(criteria));
+			} else if (positionType === 'lend') {
+				setDisplayedLendPositions(onSearch(criteria));
+			}
+			setSearchValue(criteria);
+		}, 500),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[displayedData]
+	);
+
+	const handleSearchInputChange = useCallback(
+		(e: ChangeEvent<HTMLInputElement>) => {
+			const value = e.target.value;
+			debouncedSearch(value);
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[displayedData]
+	);
+
+	useEffect(() => {
+		setDisplayedBorrowPositions(borrowPositions);
+		setDisplayedLendPositions(lendPositions); // eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [borrowPositions, lendPositions]);
+	/*    End filter function  */
+
 	const { setWorkflow, setNFTId, setHERC20ContractAddr, setCouponId } = useLoanFlowStore(
 		(state) => state
 	);
@@ -92,7 +137,7 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 			<div className={styles.gridContent}>
 				<div className={styles.cardsGrid}>
 					{positionType === 'borrow'
-						? borrowedPositions.map((position) => {
+						? displayedBorrowPositions.map((position) => {
 								return (
 									<BorrowPositionCard
 										position={position}
@@ -101,7 +146,7 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 									/>
 								);
 						  })
-						: lendPositions.map((position) => (
+						: displayedLendPositions.map((position) => (
 								<LendPositionCard position={position} key={position.id} onSelect={initLendFlow} />
 						  ))}
 				</div>
