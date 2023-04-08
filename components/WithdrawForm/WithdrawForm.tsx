@@ -74,7 +74,8 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 	const [valueUSD, setValueUSD] = useState<number>(0);
 	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
 	const [sliderValue, setSliderValue] = useState(0);
-	const { toast, ToastComponent } = useToast();
+	const { toast: fetchToast, ToastComponent: FetchToastComponent } = useToast();
+	const { toast: transactionToast, ToastComponent: TransactionToastComponent } = useToast();
 
 	/* initial all financial value here */
 	const userTotalDeposits = parseFloat(userUnderlyingBalance);
@@ -91,9 +92,9 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 			isLoadingTotalBorrow ||
 			isLoadingLendData
 		) {
-			toast.processing('Loading');
+			fetchToast.processing('Loading');
 		} else {
-			toast.clear();
+			fetchToast.clear();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
@@ -155,7 +156,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 
 	const handleWithdraw = async () => {
 		try {
-			toast.processing();
+			transactionToast.processing();
 			await withdrawMutation.mutateAsync();
 			console.log('Redeem Succeed');
 			await queryClient.invalidateQueries(queryKeys.totalSupply(HERC20ContractAddress));
@@ -168,10 +169,10 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 			await queryClient.invalidateQueries(queryKeys.listUserUnderlying(walletPublicKey));
 			await queryClient.invalidateQueries(queryKeys.lendData(HERC20ContractAddress));
 			handleSliderChange(0);
-			toast.success('Successful! Transaction complete');
+			transactionToast.success('Successful! Transaction complete');
 		} catch (err) {
 			console.error(err);
-			toast.error('Sorry! Transaction failed');
+			transactionToast.error('Sorry! Transaction failed');
 		}
 	};
 
@@ -181,10 +182,12 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 		document.body.classList.remove('disable-scroll');
 	};
 
+	const ToastComponent = transactionToast.state ? TransactionToastComponent : FetchToastComponent;
+
 	return (
 		<SidebarScroll
 			footer={
-				toast?.state ? (
+				fetchToast?.state || transactionToast.state ? (
 					ToastComponent
 				) : (
 					<div className={styles.buttons}>

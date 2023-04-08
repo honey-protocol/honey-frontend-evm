@@ -100,7 +100,8 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 	const [valueUSD, setValueUSD] = useState<number>(0);
 	const [valueUnderlying, setValueUnderlying] = useState<number>(0);
 	const [sliderValue, setSliderValue] = useState(0);
-	const { toast, ToastComponent } = useToast();
+	const { toast: fetchToast, ToastComponent: FetchToastComponent } = useToast();
+	const { toast: transactionToast, ToastComponent: TransactionToastComponent } = useToast();
 	const [bidState, setBidState] = useState('WAIT_FOR_APPROVAL');
 	const [isButtonDisable, setIsButtonDisable] = useState(true);
 	const minBid = getMinimumBid(minimumBid, userBid(walletPublicKey, bidInfo, unit).value, unit);
@@ -121,11 +122,11 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 			isLoadingMinimumBid ||
 			isLoadingAvailableRefund
 		) {
-			toast.processing('Fetching bid details');
+			fetchToast.processing('Fetching bid details');
 			setIsButtonDisable(true);
 		} else {
 			getBidState();
-			toast.clear();
+			fetchToast.clear(0);
 			setIsButtonDisable(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,7 +210,7 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 	/* Begin handling refund or cancel bid function */
 	const handleCurrentBid = async () => {
 		try {
-			toast.processing();
+			transactionToast.processing();
 			setIsButtonDisable(true);
 			if (hasRefund(availableRefund)) {
 				await withdrawRefundMutation.mutateAsync({ marketContractAddress, ERC20ContractAddress });
@@ -234,10 +235,10 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 					queryKeys.userRefund(walletPublicKey, ERC20ContractAddress)
 				);
 			}
-			toast.success('Successful! Transaction complete');
+			transactionToast.success('Successful! Transaction complete');
 		} catch (err) {
 			console.error(err);
-			toast.error('Sorry! Transaction failed');
+			transactionToast.error('Sorry! Transaction failed');
 		} finally {
 			setIsButtonDisable(false);
 		}
@@ -274,7 +275,7 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 
 	const onClick = async () => {
 		try {
-			toast.processing();
+			transactionToast.processing();
 			setIsButtonDisable(true);
 			if (bidState == 'WAIT_FOR_BID') {
 				await bidMutation.mutateAsync({
@@ -318,10 +319,10 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 				);
 				handleSliderChange(0);
 			}
-			toast.success('Successful! Transaction complete');
+			transactionToast.success('Successful! Transaction complete');
 		} catch (err) {
 			console.error(err);
-			toast.error('Sorry! Transaction failed');
+			transactionToast.error('Sorry! Transaction failed');
 		} finally {
 			setIsButtonDisable(false);
 		}
@@ -333,10 +334,12 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 		document.body.classList.remove('disable-scroll');
 	};
 
+	const ToastComponent = transactionToast.state ? TransactionToastComponent : FetchToastComponent;
+
 	return (
 		<SidebarScroll
 			footer={
-				toast.state ? (
+				fetchToast?.state || transactionToast.state ? (
 					ToastComponent
 				) : (
 					<div className={styles.buttons}>
