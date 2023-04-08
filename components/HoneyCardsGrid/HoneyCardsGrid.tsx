@@ -13,14 +13,17 @@ import useLendFlowStore from 'store/lendFlowStore';
 import useLoanFlowStore from 'store/loanFlowStore';
 import _ from 'lodash';
 
+type borrowPositionByValue = 'riskLvl' | 'debt';
+type lendPositionByValue = 'rate' | 'deposit';
 export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 	borrowPositions,
 	lendPositions,
 	positionType,
 	onChangePositionType
 }) => {
-	type PositionByValue = 'high_risk' | 'high_ir' | 'high_debt';
-	const [positionByValue, setPositionByValue] = useState<PositionByValue>('high_risk');
+	const [borrowPositionByValue, setBorrowPositionByValue] =
+		useState<borrowPositionByValue>('riskLvl');
+	const [lendPositionByValue, setLendPositionByValue] = useState<lendPositionByValue>('rate');
 
 	/*    Begin filter function       */
 	const [searchValue, setSearchValue] = useState<string | undefined>();
@@ -70,6 +73,31 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 		setDisplayedBorrowPositions(borrowPositions);
 		setDisplayedLendPositions(lendPositions); // eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [borrowPositions, lendPositions]);
+
+	const sortBorrowPositions = (sortValue: borrowPositionByValue) => {
+		setSearchValue(undefined);
+		if (sortValue === 'riskLvl') {
+			let sortedResult = borrowPositions.sort((a, b) => {
+				return Number(b.debt) / b.value - Number(a.debt) / a.value;
+			});
+			console.log({ sortedResult }, '@www');
+			setDisplayedBorrowPositions(sortedResult);
+		} else {
+			let sortedResult = borrowPositions.sort(
+				(a, b) => Number(b[sortValue]) - Number(a[sortValue])
+			);
+			console.log({ sortedResult }, '@www');
+			setDisplayedBorrowPositions(sortedResult);
+		}
+	};
+
+	const sortLendPositions = (sortValue: lendPositionByValue) => {
+		setSearchValue(undefined);
+		let sortedResult = lendPositions.sort((a, b) => Number(a[sortValue]) - Number(b[sortValue]));
+		console.log({ sortedResult }, '@www');
+		setDisplayedLendPositions(sortedResult);
+	};
+
 	/*    End filter function  */
 
 	const { setWorkflow, setNFTId, setHERC20ContractAddr, setCouponId } = useLoanFlowStore(
@@ -123,16 +151,33 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 					/>
 				</div>
 
-				<HoneyButtonTabs
-					items={[
-						{ name: 'High risk', slug: 'high_risk' },
-						{ name: 'High IR', slug: 'high_ir' },
-						{ name: 'High Debt', slug: 'high_debt' }
-					]}
-					isFullWidth
-					activeItemSlug={positionByValue}
-					onClick={(slug) => setPositionByValue(slug as PositionByValue)}
-				/>
+				{positionType === 'borrow' ? (
+					<HoneyButtonTabs
+						items={[
+							{ name: 'High risk', slug: 'riskLvl' },
+							{ name: 'High Debt', slug: 'debt' }
+						]}
+						isFullWidth
+						activeItemSlug={borrowPositionByValue}
+						onClick={(slug) => {
+							setBorrowPositionByValue(slug as borrowPositionByValue);
+							sortBorrowPositions(slug as borrowPositionByValue);
+						}}
+					/>
+				) : (
+					<HoneyButtonTabs
+						items={[
+							{ name: 'High IR', slug: 'rate' },
+							{ name: 'High deposit', slug: 'deposit' }
+						]}
+						isFullWidth
+						activeItemSlug={lendPositionByValue}
+						onClick={(slug) => {
+							setLendPositionByValue(slug as lendPositionByValue);
+							sortLendPositions(slug as lendPositionByValue);
+						}}
+					/>
+				)}
 			</div>
 			<div className={styles.gridContent}>
 				<div className={styles.cardsGrid}>
