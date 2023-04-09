@@ -39,6 +39,7 @@ const defaultMarketData: MarketTableRow = {
 	name: '',
 	icon: '',
 	erc20Icon: '',
+	formatDecimals: 0,
 	rate: 0,
 	available: 0,
 	supplied: 0
@@ -84,6 +85,7 @@ export function useMarket(
 								name: `${collection.name}/${collection.erc20Name}`,
 								icon: collection.icon,
 								erc20Icon: collection.erc20Icon,
+								formatDecimals: collection.formatDecimals,
 								rate: marketData.interestRate,
 								available: parseFloat(marketData.available),
 								supplied: parseFloat(marketData.supplied)
@@ -97,6 +99,7 @@ export function useMarket(
 								name: `${collection.name}/${collection.erc20Name}`,
 								icon: collection.icon,
 								erc20Icon: collection.erc20Icon,
+								formatDecimals: collection.formatDecimals,
 								rate: 0,
 								available: 0,
 								supplied: 0
