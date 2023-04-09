@@ -1,30 +1,33 @@
 import React from 'react';
 
-export const numberFormatter = new Intl.NumberFormat('en-US', {
-	style: 'decimal',
-	minimumFractionDigits: 3,
-	maximumFractionDigits: 3
-});
+export const getNumberFormatter = (decimals?: number) => {
+	const numberFormatter = new Intl.NumberFormat('en-US', {
+		style: 'decimal',
+		minimumFractionDigits: decimals ?? 3,
+		maximumFractionDigits: decimals ?? 3
+	});
 
-export const numberFormatterMobile = new Intl.NumberFormat('en-US', {
-	style: 'decimal',
-	minimumFractionDigits: 0,
-	maximumFractionDigits: 3
-});
+	const numberFormatterMobile = new Intl.NumberFormat('en-US', {
+		style: 'decimal',
+		minimumFractionDigits: 0,
+		maximumFractionDigits: decimals ?? 3
+	});
+	return { numberFormatter, numberFormatterMobile };
+};
 
 export const formatNumber = {
-	format: (val?: number): string => {
+	format: (val?: number, decimals?: number): string => {
 		if (!val) {
 			return '0';
 		}
-		return numberFormatter.format(val);
+		return getNumberFormatter(decimals).numberFormatter.format(val);
 	},
 
-	formatMobile: (val?: number): string => {
+	formatMobile: (val?: number, decimals?: number): string => {
 		if (!val) {
 			return '0';
 		}
-		return numberFormatterMobile.format(val);
+		return getNumberFormatter(decimals).numberFormatterMobile.format(val);
 	},
 
 	/**
@@ -42,15 +45,17 @@ export const formatNumber = {
 		const decimalsUpdated = (decimals || 0) + significantDigits - 1;
 		decimals = Math.min(decimalsUpdated, value.toString().length);
 
-		return numberFormatter.format(Math.floor(value * 10 ** decimals) / 10 ** decimals);
+		return getNumberFormatter(decimals).numberFormatter.format(
+			Math.floor(value * 10 ** decimals) / 10 ** decimals
+		);
 	},
 
 	/**
 	 * Works as formatNumber.format but adds % at the end
 	 * @param val
 	 */
-	formatPercent: (val?: number) => {
-		return `${formatNumber.format(val)} %`;
+	formatPercent: (val?: number, decimals?: number) => {
+		return `${formatNumber.format(val, decimals)} %`;
 	},
 
 	/**
@@ -70,13 +75,12 @@ export const formatNumber = {
 	 * Works as formatNumber.format but adds $ at the start of the string
 	 * @param val
 	 */
-	formatUsd: (val?: number) => {
-		return `$ ${formatNumber.format(val)}`;
+	formatUsd: (val?: number, decimals?: number) => {
+		return `$ ${formatNumber.format(val, decimals)}`;
 	},
 
-	formatUsdMobile: (val?: number) => {
-		return `$ ${formatNumber.formatMobile(val)}`;
-		return `$ ${formatNumber.format(val)}`;
+	formatUsdMobile: (val?: number, decimals?: number) => {
+		return `$ ${formatNumber.formatMobile(val, decimals)}`;
 	},
 
 	/**
@@ -86,7 +90,7 @@ export const formatNumber = {
 	 */
 	formatShortName: (value: number, decimals = 2): string => {
 		if (value < 1000) {
-			return String(formatNumber.format(value));
+			return String(formatNumber.format(value, decimals));
 		}
 		const templates = [
 			{ value: 1, symbol: '' },
@@ -114,8 +118,8 @@ export const formatNumber = {
 	 * Works as formatNumber.format but adds [currency] at the start of the string
 	 * @param val
 	 */
-	formatERC20: (val?: number) => {
-		return `${formatNumber.format(val)}`;
+	formatERC20: (val?: number, decimals?: number) => {
+		return `${formatNumber.format(val, decimals)}`;
 	},
 
 	formatToThousands: (value: number): string => {
