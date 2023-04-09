@@ -54,8 +54,13 @@ const Markets: NextPage = () => {
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { width: windowWidth } = useWindowSize();
-	const { htokenHelperContractAddress, hivemindContractAddress, nftContractAddress, unit } =
-		getContractsByHTokenAddr(HERC20ContractAddress);
+	const {
+		htokenHelperContractAddress,
+		hivemindContractAddress,
+		nftContractAddress,
+		unit,
+		formatDecimals
+	} = getContractsByHTokenAddr(HERC20ContractAddress);
 
 	const { chain } = useNetwork();
 
@@ -203,7 +208,7 @@ const Markets: NextPage = () => {
 					render: (rate: number) => {
 						return (
 							<div className={c(style.rateCell, style.lendRate)}>
-								{fp(rate / (showWeeklyRates ? 52 : 1))}
+								{fp(rate / (showWeeklyRates ? 52 : 1), 2)}
 							</div>
 						);
 					}
@@ -222,8 +227,8 @@ const Markets: NextPage = () => {
 					},
 					dataIndex: 'supplied',
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.supplied - b.supplied,
-					render: (supplied: number) => {
-						return <div className={style.valueCell}>{fs(supplied)}</div>;
+					render: (supplied: number, row: MarketTableRow) => {
+						return <div className={style.valueCell}>{fs(supplied, row.formatDecimals)}</div>;
 					}
 				},
 				{
@@ -240,8 +245,8 @@ const Markets: NextPage = () => {
 					dataIndex: 'available',
 					hidden: windowWidth < TABLET_BP,
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.available - b.available,
-					render: (available: number) => {
-						return <div className={style.availableCell}>{fs(available)}</div>;
+					render: (available: number, row: MarketTableRow) => {
+						return <div className={style.availableCell}>{fs(available, row.formatDecimals)}</div>;
 					}
 				},
 				{
@@ -288,7 +293,7 @@ const Markets: NextPage = () => {
 										</div>
 										<div className={style.nameCellMobile}>
 											<div className={style.collectionName}>{row['name']}</div>
-											<div className={style.rateCellMobile}>{fp(row.rate)}</div>
+											<div className={style.rateCellMobile}>{fp(row.rate, 2)}</div>
 										</div>
 									</>
 								}
@@ -340,7 +345,7 @@ const Markets: NextPage = () => {
 			width: columnsWidth[1],
 			render: (debt) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Debt:'} value={fs(debt)} />
+					<InfoBlock title={'Debt:'} value={fs(debt, formatDecimals)} />
 				</div>
 			)
 		},
@@ -349,7 +354,7 @@ const Markets: NextPage = () => {
 			width: columnsWidth[2],
 			render: (allowance) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Allowance:'} value={fs(allowance)} />
+					<InfoBlock title={'Allowance:'} value={fs(allowance, formatDecimals)} />
 				</div>
 			)
 		},
@@ -358,7 +363,7 @@ const Markets: NextPage = () => {
 			width: columnsWidth[3],
 			render: (value) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Value:'} value={fs(value)} />
+					<InfoBlock title={'Value:'} value={fs(value, formatDecimals)} />
 				</div>
 			)
 		},
