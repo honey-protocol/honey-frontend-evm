@@ -9,7 +9,7 @@ import { sortBids } from '../../helpers/liquidationHelper';
 
 const BidsList = () => {
 	const HERC20ContractAddress = useLiquidationFlowStore((state) => state.HERC20ContractAddr);
-	const { htokenHelperContractAddress, marketContractAddress, unit } =
+	const { htokenHelperContractAddress, marketContractAddress, unit, formatDecimals } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
 	const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(
 		htokenHelperContractAddress,
@@ -27,6 +27,7 @@ const BidsList = () => {
 					bids={sortBids(bidInfo.bids)}
 					underlyingPrice={underlyingPrice}
 					unit={unit}
+					formatDecimals={formatDecimals ?? 0}
 				/>
 			</div>
 		</SidebarScroll>
