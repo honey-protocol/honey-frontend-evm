@@ -50,6 +50,7 @@ const defaultLiquidationData: LiquidateTableRow = {
 	name: '',
 	icon: '',
 	erc20Icon: '',
+	formatDecimals: 2,
 	risk: 0,
 	liqThreshold: 0,
 	totalDebt: 0,
@@ -377,7 +378,7 @@ export function useLend(
 	const isLoadingLendData = results.some((query) => query.isLoading);
 	const isFetchingLendData = results.some((query) => query.isFetching);
 	const lendResult = filteredResults.map((marketData) => {
-		const { icon, erc20Icon, erc20Name, name } = getContractsByHTokenAddr(
+		const { icon, erc20Icon, erc20Name, name, formatDecimals } = getContractsByHTokenAddr(
 			marketData.HERC20ContractAddress
 		);
 		const result: LendTableRow = {
@@ -385,6 +386,7 @@ export function useLend(
 			name: `${name}/${erc20Name}`,
 			icon: icon,
 			erc20Icon: erc20Icon,
+			formatDecimals: formatDecimals ?? 1,
 			available: parseFloat(marketData.available),
 			supplied: parseFloat(marketData.supplied),
 			rate: interestRateLend(marketData.interestRate, marketData.supplied, marketData.available)
@@ -423,6 +425,7 @@ export function useLiquidation(
 								name: `${collection.name}/${collection.erc20Name}`,
 								icon: collection.icon,
 								erc20Icon: collection.erc20Icon,
+								formatDecimals: collection.formatDecimals,
 								risk: 0.1,
 								liqThreshold: parseFloat(liquidationData.liquidationThreshold),
 								totalDebt: parseFloat(liquidationData.totalDebt),
@@ -437,6 +440,7 @@ export function useLiquidation(
 								name: `${collection.name}/${collection.erc20Name}`,
 								icon: collection.icon,
 								erc20Icon: collection.erc20Icon,
+								formatDecimals: collection.formatDecimals,
 								risk: 0.1,
 								liqThreshold: 0.75,
 								totalDebt: 30,

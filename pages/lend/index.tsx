@@ -44,7 +44,7 @@ const Lend: NextPage = () => {
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 
-	const { htokenHelperContractAddress, nftContractAddress, unit } =
+	const { htokenHelperContractAddress, nftContractAddress, unit, formatDecimals } =
 		getContractsByHTokenAddr(HERC20ContractAddr);
 
 	/*    Begin insert data into table */
@@ -187,7 +187,7 @@ const Lend: NextPage = () => {
 				render: (rate: number) => {
 					return (
 						<div className={c(style.rateCell, style.lendRate)}>
-							{fp(rate / (showWeeklyRates ? 52 : 1))}
+							{fp(rate / (showWeeklyRates ? 52 : 1), 2)}
 						</div>
 					);
 				}
@@ -205,8 +205,8 @@ const Lend: NextPage = () => {
 				},
 				dataIndex: 'supplied',
 				sorter: (a, b) => a.supplied - b.supplied,
-				render: (supplied: number) => {
-					return <div className={style.valueCell}>{fs(supplied)}</div>;
+				render: (supplied: number, row: LendTableRow) => {
+					return <div className={style.valueCell}>{fs(supplied, row.formatDecimals)}</div>;
 				}
 			},
 			{
@@ -222,8 +222,8 @@ const Lend: NextPage = () => {
 				},
 				dataIndex: 'available',
 				sorter: (a, b) => a.available - b.available,
-				render: (available: number) => {
-					return <div className={style.availableCell}>{fs(available)}</div>;
+				render: (available: number, row: LendTableRow) => {
+					return <div className={style.availableCell}>{fs(available, row.formatDecimals)}</div>;
 				}
 			},
 			{
@@ -283,9 +283,9 @@ const Lend: NextPage = () => {
 							/>
 
 							<HoneyTableRow>
-								<div className={c(style.rateCell, style.lendRate)}>{fp(row.rate)}</div>
-								<div className={style.valueCell}>{fs(row.supplied)}</div>
-								<div className={style.availableCell}>{fs(row.available)}</div>
+								<div className={c(style.rateCell, style.lendRate)}>{fp(row.rate, 2)}</div>
+								<div className={style.valueCell}>{fs(row.supplied, row.formatDecimals)}</div>
+								<div className={style.availableCell}>{fs(row.available, row.formatDecimals)}</div>
 							</HoneyTableRow>
 						</>
 					);
