@@ -115,8 +115,10 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 		document.body.classList.add('disable-scroll');
 	};
 
-	const borrowedPositions = borrowPositions.filter((position) => position.debt !== '0');
-	const debtFreeBorrowedPositions = borrowPositions.filter((position) => position.debt === '0');
+	const borrowedPositions = displayedBorrowPositions.filter((position) => position.debt !== '0');
+	const debtFreeBorrowedPositions = displayedBorrowPositions.filter(
+		(position) => position.debt === '0'
+	);
 
 	return (
 		<div className={styles.honeyCardsGrid}>
@@ -174,7 +176,7 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 			<div className={styles.gridContent}>
 				<div className={styles.cardsGrid}>
 					{positionType === 'borrow'
-						? displayedBorrowPositions.map((position) => {
+						? borrowedPositions.map((position) => {
 								return (
 									<BorrowPositionCard
 										position={position}
