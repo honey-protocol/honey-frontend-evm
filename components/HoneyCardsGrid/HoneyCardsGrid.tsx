@@ -47,27 +47,19 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 		});
 	};
 
-	const debouncedSearch = useCallback(
-		_.debounce((criteria: string) => {
+	const debouncedSearch = (criteria: string) => {
+		setSearchValue(criteria);
 			if (positionType == 'borrow') {
 				setDisplayedBorrowPositions(onSearch(criteria));
 			} else if (positionType === 'lend') {
 				setDisplayedLendPositions(onSearch(criteria));
 			}
-			setSearchValue(criteria);
-		}, 500),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[displayedData]
-	);
+	};
 
-	const handleSearchInputChange = useCallback(
-		(e: ChangeEvent<HTMLInputElement>) => {
+	const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 			const value = e.target.value;
 			debouncedSearch(value);
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[displayedData]
-	);
+	};
 
 	useEffect(() => {
 		setDisplayedBorrowPositions(borrowPositions);
