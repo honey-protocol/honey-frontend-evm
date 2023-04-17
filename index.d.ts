@@ -53,6 +53,7 @@ type collection = {
 	ERC721ContractAddress: string;
 	ERC20ContractAddress: string;
 	HERC20ContractAddress: string;
+	formatDecimals: number;
 };
 
 type helperContract = {
