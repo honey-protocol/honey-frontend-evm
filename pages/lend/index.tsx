@@ -187,7 +187,7 @@ const Lend: NextPage = () => {
 				render: (rate: number) => {
 					return (
 						<div className={c(style.rateCell, style.lendRate)}>
-							{fp(rate / (showWeeklyRates ? 52 : 1), 2)}
+							{fp(rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 						</div>
 					);
 				}
@@ -283,7 +283,9 @@ const Lend: NextPage = () => {
 							/>
 
 							<HoneyTableRow>
-								<div className={c(style.rateCell, style.lendRate)}>{fp(row.rate, 2)}</div>
+								<div className={c(style.rateCell, style.lendRate)}>
+									{fp(row.rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
+								</div>
 								<div className={style.valueCell}>{fs(row.supplied, row.formatDecimals)}</div>
 								<div className={style.availableCell}>{fs(row.available, row.formatDecimals)}</div>
 							</HoneyTableRow>
