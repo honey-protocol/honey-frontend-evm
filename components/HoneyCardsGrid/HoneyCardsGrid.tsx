@@ -49,16 +49,16 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 
 	const debouncedSearch = (criteria: string) => {
 		setSearchValue(criteria);
-			if (positionType == 'borrow') {
-				setDisplayedBorrowPositions(onSearch(criteria));
-			} else if (positionType === 'lend') {
-				setDisplayedLendPositions(onSearch(criteria));
-			}
+		if (positionType == 'borrow') {
+			setDisplayedBorrowPositions(onSearch(criteria));
+		} else if (positionType === 'lend') {
+			setDisplayedLendPositions(onSearch(criteria));
+		}
 	};
 
 	const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-			const value = e.target.value;
-			debouncedSearch(value);
+		const value = e.target.value;
+		debouncedSearch(value);
 	};
 
 	useEffect(() => {
@@ -85,7 +85,7 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 
 	const sortLendPositions = (sortValue: lendPositionByValue) => {
 		setSearchValue(undefined);
-		let sortedResult = lendPositions.sort((a, b) => Number(a[sortValue]) - Number(b[sortValue]));
+		let sortedResult = lendPositions.sort((a, b) => Number(b[sortValue]) - Number(a[sortValue]));
 		console.log({ sortedResult }, '@www');
 		setDisplayedLendPositions(sortedResult);
 	};
