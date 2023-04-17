@@ -62,7 +62,8 @@ const BorrowForm = (props: BorrowProps) => {
 		htokenHelperContractAddress,
 		hivemindContractAddress,
 		erc20Name,
-		unit
+		unit,
+		formatDecimals
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
 
 	const [valueUSD, setValueUSD] = useState<number>(0);
@@ -233,7 +234,7 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fsn(nftValue)}
+							value={fsn(nftValue, formatDecimals)}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
@@ -254,14 +255,15 @@ const BorrowForm = (props: BorrowProps) => {
 
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(userAllowance)}
+							value={fs(userAllowance, formatDecimals)}
 							title={
 								<span className={hAlign}>
 									Allowance <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
-								40
+								40,
+								0
 							)}`}
 						/>
 					</div>
@@ -288,7 +290,7 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={fp(((borrowedValue + newAdditionalDebt) / nftValue) * 100)}
+							value={fp(((borrowedValue + newAdditionalDebt) / nftValue) * 100, 2)}
 							isDisabled={newTotalDebt > 0 ? false : true}
 						/>
 						<HoneySlider
@@ -324,7 +326,7 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={fs(newTotalDebt < 0 ? 0 : newTotalDebt)}
+							value={fs(newTotalDebt < 0 ? 0 : newTotalDebt, formatDecimals)}
 							isDisabled={newTotalDebt > 0 ? false : true}
 						/>
 					</div>
@@ -348,7 +350,7 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={`${fs(newLiquidationPrice)} ${
+							value={`${fs(newLiquidationPrice, formatDecimals)} ${
 								borrowedValue ? `(-${newLiqPercent.toFixed(0)}%)` : ''
 							}`}
 							valueSize="normal"
@@ -379,7 +381,7 @@ const BorrowForm = (props: BorrowProps) => {
 										</a>
 									</span>
 								}
-								value={fp(5)}
+								value={fp(5, 2)}
 							/>
 						</div>
 						<div className={cs(stylesBorrow.balance, styles.col)}>
@@ -389,7 +391,7 @@ const BorrowForm = (props: BorrowProps) => {
 										Borrow Fee <div className={questionIcon} />
 									</span>
 								}
-								value={fs(valueUnderlying * borrowFee)}
+								value={fs(valueUnderlying * borrowFee, formatDecimals)}
 								//TODO: add link to docs
 								toolTipLabel={
 									<span>

@@ -60,7 +60,7 @@ const Liquidate: NextPage = () => {
 		setNFTId,
 		setCouponId
 	} = useLiquidationFlowStore((state) => state);
-	const { htokenHelperContractAddress, hivemindContractAddress, unit } =
+	const { htokenHelperContractAddress, hivemindContractAddress, unit, formatDecimals } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
 
 	/*    Begin insert data into table */
@@ -180,7 +180,7 @@ const Liquidate: NextPage = () => {
 			// 	dataIndex: 'risk',
 			// 	sorter: (a, b) => a.risk - b.risk,
 			// 	render: (rate: number) => {
-			// 		return <div className={style.rateCell}>{fp(rate * 100)}</div>;
+			// 		return <div className={style.rateCell}>{fp(rate * 100, 2)}</div>;
 			// 	}
 			// },
 			{
@@ -197,7 +197,7 @@ const Liquidate: NextPage = () => {
 				dataIndex: 'liqThreshold',
 				sorter: (a, b) => a.liqThreshold - b.liqThreshold,
 				render: (rate: number) => {
-					return <div className={style.rateCell}>{fp(rate * 100)}</div>;
+					return <div className={style.rateCell}>{fp(rate * 100, 2)}</div>;
 				}
 			},
 			{
@@ -213,8 +213,8 @@ const Liquidate: NextPage = () => {
 				},
 				dataIndex: 'totalDebt',
 				sorter: (a, b) => a.totalDebt - b.totalDebt,
-				render: (available: number) => {
-					return <div className={style.availableCell}>{fs(available)}</div>;
+				render: (available: number, row: LiquidateTableRow) => {
+					return <div className={style.availableCell}>{fs(available, row.formatDecimals)}</div>;
 				}
 			},
 			{
@@ -230,8 +230,8 @@ const Liquidate: NextPage = () => {
 				},
 				dataIndex: 'tvl',
 				sorter: (a, b) => a.tvl - b.tvl,
-				render: (value: number) => {
-					return <div className={style.valueCell}>{fs(value)}</div>;
+				render: (value: number, row: LiquidateTableRow) => {
+					return <div className={style.valueCell}>{fs(value, row.formatDecimals)}</div>;
 				}
 			},
 			{
@@ -301,8 +301,8 @@ const Liquidate: NextPage = () => {
 
 							<HoneyTableRow>
 								<div className={style.rateCell}>{fp(row.risk * 100)}</div>
-								<div className={style.rateCell}>{fs(row.totalDebt)}</div>
-								<div className={style.availableCell}>{fs(row.tvl)}</div>
+								<div className={style.rateCell}>{fs(row.totalDebt, formatDecimals)}</div>
+								<div className={style.availableCell}>{fs(row.tvl, formatDecimals)}</div>
 							</HoneyTableRow>
 						</>
 					);
@@ -350,7 +350,7 @@ const Liquidate: NextPage = () => {
 								return (
 									<div className={style.expandSection}>
 										<div className={style.dashedDivider} />
-										<LiquidateExpandTable data={positions} />
+										<LiquidateExpandTable data={positions} formatDecimals={record.formatDecimals} />
 									</div>
 								);
 							}
@@ -391,7 +391,11 @@ const Liquidate: NextPage = () => {
 								return (
 									<div className={style.expandSection} onClick={showMobileSidebar}>
 										<div className={style.dashedDivider} />
-										<LiquidateExpandTableMobile data={positions} onPlaceBid={showMobileSidebar} />
+										<LiquidateExpandTableMobile
+											data={positions}
+											onPlaceBid={showMobileSidebar}
+											formatDecimals={record.formatDecimals}
+										/>
 									</div>
 								);
 							}
