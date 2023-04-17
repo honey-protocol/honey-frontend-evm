@@ -42,6 +42,16 @@ function getCollections() {
 				ERC721ContractAddress: '0x72c3205acf3eb2b37b0082240bf0b909a46c0993',
 				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
 				HERC20ContractAddress: '0xb2585c40bbafb8a09637194ae478696d35e7e1a3'
+			},
+			{
+				name: 'Federal Frens',
+				icon: '/nfts/fedfrens.png',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x00e3Dcb7fd5946DdE80D627b0723AF78249D7d49',
+				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+				HERC20ContractAddress: '0x4216b7e2560bac4a3b438455a3facc904b07d9ef'
 			}
 		] as collection[];
 	} else if (envName == 'prod') {
@@ -86,6 +96,16 @@ function getCollections() {
 				ERC721ContractAddress: '0x72c3205acf3eb2b37b0082240bf0b909a46c0993',
 				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
 				HERC20ContractAddress: '0xb2585c40bbafb8a09637194ae478696d35e7e1a3'
+			},
+			{
+				name: 'Federal Frens',
+				icon: '/nfts/fedfrens.png',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x00e3Dcb7fd5946DdE80D627b0723AF78249D7d49',
+				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+				HERC20ContractAddress: '0x4216b7e2560bac4a3b438455a3facc904b07d9ef'
 			}
 		] as collection[];
 	} else {
@@ -96,7 +116,7 @@ function getCollections() {
 function getHelperContract() {
 	if (envName == 'dev') {
 		const contract: helperContract = {
-			htokenHelperContractAddress: '0xADd6a063ACC059D3e5045B377822479Da9298DDf',
+			htokenHelperContractAddress: '0x25A50Bf4b67f9A3F9f81Ef346f60E6c1EE5BE59D',
 			controllerContractAddress: '0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d',
 			hivemindContractAddress: '0xB3d108BD30C564181bCcdF419f34f87b10F5c76d',
 			marketContractAddress: '0x9a1EDb903B058298dd0b06f52876d9D45358B7cB'
@@ -104,7 +124,7 @@ function getHelperContract() {
 		return contract;
 	} else if (envName == 'prod') {
 		const contract: helperContract = {
-			htokenHelperContractAddress: '0xADd6a063ACC059D3e5045B377822479Da9298DDf',
+			htokenHelperContractAddress: '0x25A50Bf4b67f9A3F9f81Ef346f60E6c1EE5BE59D',
 			controllerContractAddress: '0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d',
 			hivemindContractAddress: '0xB3d108BD30C564181bCcdF419f34f87b10F5c76d',
 			marketContractAddress: '0x9a1EDb903B058298dd0b06f52876d9D45358B7cB'
