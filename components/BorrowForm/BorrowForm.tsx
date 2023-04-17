@@ -244,12 +244,8 @@ const BorrowForm = (props: BorrowProps) => {
 								<span>
 									The worth of your collateral according to the market’s oracle. Learn more about
 									this market’s{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://switchboard.xyz/explorer"
-									>
-										Switchboard data-feed.
+									<a className={styles.extLink} target="blank" href="https://hivemind.sh">
+										Hivemind data-feed.
 									</a>
 								</span>
 							}
