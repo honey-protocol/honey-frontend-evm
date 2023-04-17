@@ -166,23 +166,23 @@ const Liquidate: NextPage = () => {
 					);
 				}
 			},
-			{
-				width: columnsWidth[1],
-				title: ({ sortColumns }) => {
-					const sortOrder = getColumnSortStatus(sortColumns, 'risk');
-					return (
-						<div className={style.headerCell[sortOrder === 'disabled' ? 'disabled' : 'active']}>
-							<span>Risk</span>
-							<div className={style.sortIcon[sortOrder]} />
-						</div>
-					);
-				},
-				dataIndex: 'risk',
-				sorter: (a, b) => a.risk - b.risk,
-				render: (rate: number) => {
-					return <div className={style.rateCell}>{fp(rate * 100, 2)}</div>;
-				}
-			},
+			// {
+			// 	width: columnsWidth[1],
+			// 	title: ({ sortColumns }) => {
+			// 		const sortOrder = getColumnSortStatus(sortColumns, 'risk');
+			// 		return (
+			// 			<div className={style.headerCell[sortOrder === 'disabled' ? 'disabled' : 'active']}>
+			// 				<span>Risk</span>
+			// 				<div className={style.sortIcon[sortOrder]} />
+			// 			</div>
+			// 		);
+			// 	},
+			// 	dataIndex: 'risk',
+			// 	sorter: (a, b) => a.risk - b.risk,
+			// 	render: (rate: number) => {
+			// 		return <div className={style.rateCell}>{fp(rate * 100, 2)}</div>;
+			// 	}
+			// },
 			{
 				width: columnsWidth[2],
 				title: ({ sortColumns }) => {
