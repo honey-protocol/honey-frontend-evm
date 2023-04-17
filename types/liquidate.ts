@@ -7,6 +7,7 @@ export type LiquidateTableRow = {
 	liqThreshold: number;
 	totalDebt: number;
 	tvl: number;
+	formatDecimals: number;
 };
 
 export type LiquidateTablePosition = {

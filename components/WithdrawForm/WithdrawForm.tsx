@@ -46,8 +46,15 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 	const walletPublicKey: string = currentUser?.address || '';
 	const HERC20ContractAddress = useLendFlowStore((state) => state.HERC20ContractAddr);
 
-	const { htokenHelperContractAddress, ERC20ContractAddress, name, icon, erc20Name, unit } =
-		getContractsByHTokenAddr(HERC20ContractAddress);
+	const {
+		htokenHelperContractAddress,
+		ERC20ContractAddress,
+		name,
+		icon,
+		erc20Name,
+		unit,
+		formatDecimals
+	} = getContractsByHTokenAddr(HERC20ContractAddress);
 	const setWorkflow = useLendFlowStore((state) => state.setWorkflow);
 	const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(
 		htokenHelperContractAddress,
@@ -231,7 +238,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fp(fetchInterestRate(lendData, HERC20ContractAddress))}
+							value={fp(fetchInterestRate(lendData, HERC20ContractAddress), 2)}
 							valueSize="big"
 							toolTipLabel="APY is measured by compounding the weekly interest rate"
 							footer={
@@ -243,7 +250,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fp(utilizationRate)}
+							value={fp(utilizationRate, 2)}
 							valueSize="big"
 							toolTipLabel=" Amount of supplied liquidity currently being borrowed"
 							footer={

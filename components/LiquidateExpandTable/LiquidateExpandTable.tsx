@@ -21,7 +21,10 @@ const { formatPercent: fp, formatERC20: fs } = formatNumber;
 
 type FilterType = 'most_critical' | 'max_debt' | 'most_valuable';
 
-export const LiquidateExpandTable: FC<{ data: LiquidateTablePosition[] }> = ({ data }) => {
+export const LiquidateExpandTable: FC<{
+	data: LiquidateTablePosition[];
+	formatDecimals: number;
+}> = ({ data, formatDecimals }) => {
 	const { setWorkflow, setNFTId, setCouponId } = useLiquidationFlowStore((state) => state);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const [filter, setFilter] = useState<FilterType>('most_critical');
@@ -67,7 +70,7 @@ export const LiquidateExpandTable: FC<{ data: LiquidateTablePosition[] }> = ({ d
 				dataIndex: 'untilLiquidation',
 				render: (untilLiquidation) => (
 					<div className={sharedStyles.expandedRowCell}>
-						<InfoBlock title={'Until liquidation:'} value={fs(untilLiquidation)} />
+						<InfoBlock title={'Until liquidation:'} value={fs(untilLiquidation, formatDecimals)} />
 					</div>
 				)
 			},
@@ -77,7 +80,7 @@ export const LiquidateExpandTable: FC<{ data: LiquidateTablePosition[] }> = ({ d
 				sorter: (a, b) => a.debt - b.debt,
 				render: (debt) => (
 					<div className={sharedStyles.expandedRowCell}>
-						<InfoBlock title={'Debt:'} value={fs(debt)} />
+						<InfoBlock title={'Debt:'} value={fs(debt, formatDecimals)} />
 					</div>
 				)
 			},
@@ -87,7 +90,7 @@ export const LiquidateExpandTable: FC<{ data: LiquidateTablePosition[] }> = ({ d
 				sorter: (a, b) => a.estimatedValue - b.estimatedValue,
 				render: (estimatedValue) => (
 					<div className={sharedStyles.expandedRowCell}>
-						<InfoBlock title={'Estimated value:'} value={fs(estimatedValue)} />
+						<InfoBlock title={'Estimated value:'} value={fs(estimatedValue, formatDecimals)} />
 					</div>
 				)
 			},
