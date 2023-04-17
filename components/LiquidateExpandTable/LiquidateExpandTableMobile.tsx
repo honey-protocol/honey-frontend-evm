@@ -23,7 +23,8 @@ const { formatPercent: fp, formatERC20: fs } = formatNumber;
 export const LiquidateExpandTableMobile: FC<{
 	data: LiquidateTablePosition[];
 	onPlaceBid: Function;
-}> = ({ data, onPlaceBid }) => {
+	formatDecimals: number;
+}> = ({ data, onPlaceBid, formatDecimals }) => {
 	const { setWorkflow, setNFTId, setCouponId } = useLiquidationFlowStore((state) => state);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	/*    begin sidebar interaction function          */
@@ -61,7 +62,7 @@ export const LiquidateExpandTableMobile: FC<{
 			dataIndex: 'untilLiquidation',
 			render: (untilLiquidation) => (
 				<div className={sharedStyles.expandedRowCell}>
-					<InfoBlock title={'Until liquidation:'} value={fs(untilLiquidation)} />
+					<InfoBlock title={'Until liquidation:'} value={fs(untilLiquidation, formatDecimals)} />
 				</div>
 			)
 		},

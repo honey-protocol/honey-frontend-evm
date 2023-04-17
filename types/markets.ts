@@ -8,6 +8,7 @@ export type MarketTableRow = {
 	rate: number;
 	available: number;
 	supplied: number;
+	formatDecimals: number;
 };
 
 export type MarketTablePosition = {
