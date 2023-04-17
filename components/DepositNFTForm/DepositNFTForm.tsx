@@ -27,7 +27,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 	const queryClient = useQueryClient();
 	const walletPublicKey: string = currentUser?.address || '';
 	const HERC20ContractAddress = useLoanFlowStore((state) => state.HERC20ContractAddr);
-	const { nftContractAddress, htokenHelperContractAddress, hivemindContractAddress, erc20Name } =
+	const { nftContractAddress, htokenHelperContractAddress, controllerContractAddress, erc20Name } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
 	const setWorkflow = useLoanFlowStore((state) => state.setWorkflow);
 	const [selectedNft, setSelectedNft] = useState<NFT | null>(null);
@@ -47,7 +47,7 @@ const DepositNFTForm = (props: DepositNFTProps) => {
 	const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
-		hivemindContractAddress
+		controllerContractAddress
 	);
 
 	useEffect(() => {

@@ -57,7 +57,7 @@ type collection = {
 
 type helperContract = {
 	htokenHelperContractAddress: string;
-	hivemindContractAddress: string;
+	controllerContractAddress: string;
 	oracleContractAddress: string;
 	marketContractAddress: string;
 };

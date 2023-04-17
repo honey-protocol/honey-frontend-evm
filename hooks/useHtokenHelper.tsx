@@ -325,7 +325,7 @@ export function useGetUnderlyingPriceInUSD(
 export async function getMaxBorrowableAmount(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
-	hivemindContractAddress: string
+	controllerContractAddress: string
 ) {
 	const ABI = await (await fetch(`${basePath}/abi/htokenHelper.json`)).json();
 	const options = {
@@ -333,7 +333,7 @@ export async function getMaxBorrowableAmount(
 		address: htokenHelperContractAddress,
 		functionName: 'getMaxBorrowableAmountInUnderlying',
 		abi: ABI,
-		params: { _hToken: HERC20ContractAddress, _controller: hivemindContractAddress }
+		params: { _hToken: HERC20ContractAddress, _controller: controllerContractAddress }
 	};
 
 	// @ts-ignore
@@ -345,7 +345,7 @@ export async function getMaxBorrowableAmount(
 export function useGetMaxBorrowableAmount(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
-	hivemindContractAddress: string
+	controllerContractAddress: string
 ): [number, boolean] {
 	const onSuccess = (data: number) => {
 		return data;
@@ -364,12 +364,12 @@ export function useGetMaxBorrowableAmount(
 			if (
 				htokenHelperContractAddress != '' &&
 				HERC20ContractAddress != '' &&
-				hivemindContractAddress != ''
+				controllerContractAddress != ''
 			) {
 				return getMaxBorrowableAmount(
 					htokenHelperContractAddress,
 					HERC20ContractAddress,
-					hivemindContractAddress
+					controllerContractAddress
 				);
 			} else {
 				return 0;

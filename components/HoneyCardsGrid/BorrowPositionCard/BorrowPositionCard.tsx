@@ -11,7 +11,7 @@ import { BorrowPositionCardSlider } from '../../BorrowPositionCardSlider/BorrowP
 import useLoanFlowStore from 'store/loanFlowStore';
 import { useGetMaxBorrowableAmount, useGetNFTPrice } from 'hooks/useHtokenHelper';
 import { getContractsByHTokenAddr } from 'helpers/generalHelper';
-import { useGetCollateralFactor } from 'hooks/useHivemind';
+import { useGetCollateralFactor } from 'hooks/useController';
 
 const { formatShortName: fsn, formatPercent: fp } = formatNumber;
 
@@ -21,13 +21,13 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 	const {
 		nftContractAddress,
 		htokenHelperContractAddress,
-		hivemindContractAddress,
+		controllerContractAddress,
 		erc20Name,
 		unit
 	} = getContractsByHTokenAddr(position.HERC20ContractAddr);
 
 	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
-		hivemindContractAddress,
+		controllerContractAddress,
 		position.HERC20ContractAddr,
 		unit
 	);
@@ -38,7 +38,7 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 	const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(
 		htokenHelperContractAddress,
 		position.HERC20ContractAddr,
-		hivemindContractAddress
+		controllerContractAddress
 	);
 	const nftValue = nftPrice.price;
 	const MAX_LTV = maxBorrow / nftValue;

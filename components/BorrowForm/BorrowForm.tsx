@@ -21,7 +21,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LoanWorkFlowType } from '../../types/workflows';
-import { useGetCollateralFactor } from '../../hooks/useHivemind';
+import { useGetCollateralFactor } from '../../hooks/useController';
 import { useGetMetaDataFromNFTId } from '../../hooks/useNFT';
 import {
 	useGetMarketBorrowFee,
@@ -60,7 +60,7 @@ const BorrowForm = (props: BorrowProps) => {
 	const {
 		nftContractAddress,
 		htokenHelperContractAddress,
-		hivemindContractAddress,
+		controllerContractAddress,
 		erc20Name,
 		unit
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
@@ -75,12 +75,12 @@ const BorrowForm = (props: BorrowProps) => {
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
 		nftContractAddress,
-		hivemindContractAddress,
+		controllerContractAddress,
 		currentUser,
 		unit
 	);
 	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
-		hivemindContractAddress,
+		controllerContractAddress,
 		HERC20ContractAddress,
 		unit
 	);
@@ -102,7 +102,7 @@ const BorrowForm = (props: BorrowProps) => {
 	const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
-		hivemindContractAddress
+		controllerContractAddress
 	);
 	/* initial all financial value here */
 	const nftValue = nftPrice.price;

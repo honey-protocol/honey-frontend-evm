@@ -11,7 +11,7 @@ export function getContractsByHTokenAddr(HERC20ContractAddr: string) {
 	);
 
 	const ERC20ContractAddress = collection?.ERC20ContractAddress || '';
-	const hivemindContractAddress = helperContract.hivemindContractAddress;
+	const controllerContractAddress = helperContract.controllerContractAddress;
 	const nftContractAddress = collection?.ERC721ContractAddress || '';
 	const htokenHelperContractAddress = helperContract.htokenHelperContractAddress;
 	const marketContractAddress = helperContract.marketContractAddress;
@@ -26,7 +26,7 @@ export function getContractsByHTokenAddr(HERC20ContractAddr: string) {
 		erc20Name: erc20Name,
 		erc20Icon: erc20Icon,
 		ERC20ContractAddress: ERC20ContractAddress,
-		hivemindContractAddress: hivemindContractAddress,
+		controllerContractAddress: controllerContractAddress,
 		nftContractAddress: nftContractAddress,
 		htokenHelperContractAddress: htokenHelperContractAddress,
 		marketContractAddress: marketContractAddress,

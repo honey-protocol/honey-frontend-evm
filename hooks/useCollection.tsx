@@ -19,7 +19,7 @@ import { TimestampPoint } from '../components/HoneyChart/types';
 import { LiquidateTablePosition, LiquidateTableRow } from '../types/liquidate';
 import { getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
 import { interestRateLend } from 'helpers/utils';
-import { getCollateralFactor } from './useHivemind';
+import { getCollateralFactor } from './useController';
 import { getContractsByHTokenAddr } from '../helpers/generalHelper';
 import { TCurrentUser } from 'contexts/userContext';
 
@@ -124,7 +124,7 @@ export function usePositions(
 	htokenHelperContractAddress: string,
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
-	hivemindContractAddress: string,
+	controllerContractAddress: string,
 	user: TCurrentUser | null,
 	unit: Unit
 ): [MarketTablePosition[], boolean] {
@@ -176,8 +176,8 @@ export function usePositions(
 	} = useQuery(
 		queryKeys.collateralFactor(HERC20ContractAddress),
 		() => {
-			if (hivemindContractAddress != '' && HERC20ContractAddress != '') {
-				return getCollateralFactor(hivemindContractAddress, HERC20ContractAddress, unit);
+			if (controllerContractAddress != '' && HERC20ContractAddress != '') {
+				return getCollateralFactor(controllerContractAddress, HERC20ContractAddress, unit);
 			} else {
 				return 0;
 			}
@@ -460,7 +460,7 @@ export function useLiquidation(
 
 export function useLiquidationPositions(
 	htokenHelperContractAddress: string,
-	hivemindContractAddress: string,
+	controllerContractAddress: string,
 	HERC20ContractAddress: string,
 	unit: Unit
 ): [LiquidateTablePosition[], boolean] {
@@ -477,8 +477,8 @@ export function useLiquidationPositions(
 	} = useQuery(
 		queryKeys.collateralFactor(HERC20ContractAddress),
 		() => {
-			if (hivemindContractAddress != '' && HERC20ContractAddress != '') {
-				return getCollateralFactor(hivemindContractAddress, HERC20ContractAddress, unit);
+			if (controllerContractAddress != '' && HERC20ContractAddress != '') {
+				return getCollateralFactor(controllerContractAddress, HERC20ContractAddress, unit);
 			} else {
 				return 0;
 			}

@@ -26,7 +26,7 @@ import {
 	useGetUnderlyingPriceInUSD
 } from '../../hooks/useHtokenHelper';
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
-import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from '../../hooks/useHivemind';
+import { useGetCollateralFactor, useGetMaxBorrowAmountFromNFT } from '../../hooks/useController';
 import { getUnlimitedApproval, useCheckApproval, useGetUserBalance } from '../../hooks/useERC20';
 import { withdrawCollateral } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
@@ -60,14 +60,14 @@ const RepayForm = (props: RepayProps) => {
 	const {
 		nftContractAddress,
 		htokenHelperContractAddress,
-		hivemindContractAddress,
+		controllerContractAddress,
 		ERC20ContractAddress,
 		erc20Name,
 		unit
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
 	const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId);
 	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
-		hivemindContractAddress,
+		controllerContractAddress,
 		HERC20ContractAddress,
 		unit
 	);
@@ -75,7 +75,7 @@ const RepayForm = (props: RepayProps) => {
 	const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
-		hivemindContractAddress
+		controllerContractAddress
 	);
 	const [nftPrice, isLoadingNFTPrice] = useGetNFTPrice(
 		htokenHelperContractAddress,
@@ -90,7 +90,7 @@ const RepayForm = (props: RepayProps) => {
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
 		nftContractAddress,
-		hivemindContractAddress,
+		controllerContractAddress,
 		currentUser,
 		unit
 	);

@@ -7,17 +7,17 @@ import Moralis from 'moralis';
 import { TCurrentUser } from 'contexts/userContext';
 
 export async function getMaxBorrowFromNFT(
-	hivemindContractAddress: string,
+	controllerContractAddress: string,
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
 	userAddress: string,
 	NFTTokenId: string,
 	unit: Unit
 ) {
-	const ABI = await (await fetch(`${basePath}/abi/hivemind.json`)).json();
+	const ABI = await (await fetch(`${basePath}/abi/controller.json`)).json();
 	const options = {
 		chain: chain,
-		address: hivemindContractAddress,
+		address: controllerContractAddress,
 		functionName: 'getHypotheticalAccountLiquidity',
 		abi: ABI,
 		params: {
@@ -36,7 +36,7 @@ export async function getMaxBorrowFromNFT(
 }
 
 export function useGetMaxBorrowAmountFromNFT(
-	hivemindContractAddress: string,
+	controllerContractAddress: string,
 	HERC20ContractAddress: string,
 	ERC721ContractAddress: string,
 	user: TCurrentUser | null,
@@ -65,12 +65,12 @@ export function useGetMaxBorrowAmountFromNFT(
 			if (
 				NFTId != '' &&
 				walletPublicKey != '' &&
-				hivemindContractAddress != '' &&
+				controllerContractAddress != '' &&
 				HERC20ContractAddress != '' &&
 				ERC721ContractAddress != ''
 			) {
 				return getMaxBorrowFromNFT(
-					hivemindContractAddress,
+					controllerContractAddress,
 					HERC20ContractAddress,
 					ERC721ContractAddress,
 					walletPublicKey,
@@ -92,14 +92,14 @@ export function useGetMaxBorrowAmountFromNFT(
 }
 
 export async function getCollateralFactor(
-	hivemindContractAddress: string,
+	controllerContractAddress: string,
 	HERC20ContractAddress: string,
 	unit: Unit
 ) {
-	const ABI = await (await fetch(`${basePath}/abi/hivemind.json`)).json();
+	const ABI = await (await fetch(`${basePath}/abi/controller.json`)).json();
 	const options = {
 		chain: chain,
-		address: hivemindContractAddress,
+		address: controllerContractAddress,
 		functionName: 'getMarketData',
 		abi: ABI,
 		params: {
@@ -113,7 +113,7 @@ export async function getCollateralFactor(
 }
 
 export function useGetCollateralFactor(
-	hivemindContractAddress: string,
+	controllerContractAddress: string,
 	HERC20ContractAddress: string,
 	unit: Unit
 ): [number, boolean] {
@@ -130,8 +130,8 @@ export function useGetCollateralFactor(
 	} = useQuery(
 		queryKeys.collateralFactor(HERC20ContractAddress),
 		() => {
-			if (hivemindContractAddress != '' && HERC20ContractAddress != '') {
-				return getCollateralFactor(hivemindContractAddress, HERC20ContractAddress, unit);
+			if (controllerContractAddress != '' && HERC20ContractAddress != '') {
+				return getCollateralFactor(controllerContractAddress, HERC20ContractAddress, unit);
 			} else {
 				return 0;
 			}

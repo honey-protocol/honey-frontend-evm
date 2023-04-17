@@ -54,7 +54,7 @@ const Markets: NextPage = () => {
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { width: windowWidth } = useWindowSize();
-	const { htokenHelperContractAddress, hivemindContractAddress, nftContractAddress, unit } =
+	const { htokenHelperContractAddress, controllerContractAddress, nftContractAddress, unit } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
 
 	const { chain } = useNetwork();
@@ -74,7 +74,7 @@ const Markets: NextPage = () => {
 		htokenHelperContractAddress,
 		HERC20ContractAddress,
 		nftContractAddress,
-		hivemindContractAddress,
+		controllerContractAddress,
 		currentUser,
 		unit
 	);
