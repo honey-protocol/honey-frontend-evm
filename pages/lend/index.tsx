@@ -356,10 +356,10 @@ const Lend: NextPage = () => {
 				</div>
 				<div className={style.showTablet}>
 					<div className={c(style.mobileTableHeader, style.mobileSearchAndToggleContainer)}>
-						<div className={style.mobileRow}>
+						<div className={c(style.mobileRow, style.mobileSearchContainer)}>
 							<SearchForm />
 						</div>
-						<div className={style.mobileRow}>
+						<div className={c(style.mobileToggleContainer)}>
 							<WeeklyToggle />
 						</div>
 					</div>

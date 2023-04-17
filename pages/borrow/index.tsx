@@ -293,7 +293,7 @@ const Markets: NextPage = () => {
 										</div>
 										<div className={style.nameCellMobile}>
 											<div className={style.collectionName}>{row['name']}</div>
-											<div className={style.rateCellMobile}>{fp(row.rate, 2)}</div>
+											{/* <div className={style.rateCellMobile}>{fp(row.rate)}</div> */}
 										</div>
 									</>
 								}
@@ -545,10 +545,10 @@ const Markets: NextPage = () => {
 
 				<div className={style.showTablet}>
 					<div className={c(style.mobileTableHeader, style.mobileSearchAndToggleContainer)}>
-						<div className={style.mobileRow}>
+						<div className={c(style.mobileRow, style.mobileSearchContainer)}>
 							<SearchForm />
 						</div>
-						<div className={style.mobileRow}>
+						<div className={c(style.mobileToggleContainer)}>
 							<WeeklyToggle />
 						</div>
 					</div>
