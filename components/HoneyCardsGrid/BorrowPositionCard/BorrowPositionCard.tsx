@@ -12,6 +12,7 @@ import useLoanFlowStore from 'store/loanFlowStore';
 import { useGetMaxBorrowableAmount, useGetNFTPrice } from 'hooks/useHtokenHelper';
 import { getContractsByHTokenAddr } from 'helpers/generalHelper';
 import { useGetCollateralFactor } from 'hooks/useHivemind';
+import { useGetBorrowAmount } from 'hooks/useCoupon';
 
 const { formatShortName: fsn, formatPercent: fp } = formatNumber;
 
@@ -35,6 +36,13 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 		htokenHelperContractAddress,
 		position.HERC20ContractAddr
 	);
+
+	const [borrowAmount, isLoadingBorrowAmount] = useGetBorrowAmount(
+		position.HERC20ContractAddr,
+		position.tokenId,
+		unit
+	);
+
 	const [maxBorrow, isLoadingMaxBorrow] = useGetMaxBorrowableAmount(
 		htokenHelperContractAddress,
 		position.HERC20ContractAddr,
@@ -61,12 +69,12 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 			</div>
 			<div className={styles.positionValues}>
 				<InfoBlock title="Floor price" value={`${fsn(position.value)} ${position.erc20Name}`} />
-				<InfoBlock title="Debt" value={`${fsn(parseFloat(position.debt))} ${position.erc20Name}`} />
+				<InfoBlock title="Debt" value={`${fsn(parseFloat(borrowAmount))} ${position.erc20Name}`} />
 				<InfoBlock title="IR" value={fp(5)} />
 			</div>
 			<div className={styles.divider} />
 			<BorrowPositionCardSlider
-				debt={parseFloat(position.debt)}
+				debt={parseFloat(borrowAmount)}
 				collateralValue={position.value ?? 0}
 				liquidationThreshold={collateralFactor}
 				maxLoanToValue={MAX_LTV}
