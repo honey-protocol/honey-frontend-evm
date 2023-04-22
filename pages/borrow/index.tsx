@@ -101,7 +101,6 @@ const Markets: NextPage = () => {
 	const debouncedSearch = useCallback(
 		_.debounce((criteria: string) => {
 			setTableDataFiltered(onSearch(criteria));
-			setSearchQuery(criteria);
 		}, 500),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[tableData]
@@ -110,6 +109,7 @@ const Markets: NextPage = () => {
 	const handleSearchInputChange = useCallback(
 		(e: ChangeEvent<HTMLInputElement>) => {
 			const value = e.target.value;
+			setSearchQuery(value);
 			debouncedSearch(value);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,9 +157,15 @@ const Markets: NextPage = () => {
 		</div>
 	);
 
-	const SearchForm = () => {
-		return <SearchInput onChange={handleSearchInputChange} placeholder="Search by name" />;
-	};
+	const SearchForm = useCallback(() => {
+		return (
+			<SearchInput
+				value={searchQuery}
+				onChange={handleSearchInputChange}
+				placeholder="Search by name"
+			/>
+		);
+	}, [searchQuery]);
 
 	const columnsWidth: Array<number | string> = [240, 150, 150, 150, 150];
 
@@ -546,7 +552,11 @@ const Markets: NextPage = () => {
 				<div className={style.showTablet}>
 					<div className={c(style.mobileTableHeader, style.mobileSearchAndToggleContainer)}>
 						<div className={c(style.mobileRow, style.mobileSearchContainer)}>
-							<SearchForm />
+							<SearchInput
+								value={searchQuery}
+								onChange={handleSearchInputChange}
+								placeholder="Search by name"
+							/>
 						</div>
 						<div className={c(style.mobileToggleContainer)}>
 							<WeeklyToggle />
