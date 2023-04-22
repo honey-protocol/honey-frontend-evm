@@ -394,7 +394,9 @@ const Liquidate: NextPage = () => {
 						expandable={{
 							// we use our own custom expand column
 							showExpandColumn: false,
-							onExpand: (expanded, row) => {},
+							onExpand: (expanded, row) => {
+								setExpandedRowKeys(expanded ? [row.key] : []);
+							},
 							expandedRowKeys,
 							expandedRowRender: (record) => {
 								return (
