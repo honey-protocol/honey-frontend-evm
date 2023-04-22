@@ -213,7 +213,7 @@ const Markets: NextPage = () => {
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
 					render: (rate: number) => {
 						return (
-							<div className={c(style.rateCell, style.lendRate)}>
+							<div className={c(style.rateCell, style.borrowRate)}>
 								{fp(rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 							</div>
 						);
@@ -313,7 +313,7 @@ const Markets: NextPage = () => {
 							/>
 
 							<HoneyTableRow>
-								<div className={style.rateCell}>
+								<div className={c(style.rateCell, style.borrowRate)}>
 									{fp(row.rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 								</div>
 								<div className={style.availableCell}>{fs(row.supplied)}</div>
