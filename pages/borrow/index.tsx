@@ -42,7 +42,7 @@ const Markets: NextPage = () => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const [showWeeklyRates, setShowWeeklyRates] = useState(true);
 	const [tableData, setTableData] = useState<MarketTableRow[]>([]);
-	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(true);
+	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
 	const {
 		HERC20ContractAddr: HERC20ContractAddress,
