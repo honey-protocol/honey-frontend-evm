@@ -372,7 +372,11 @@ const Liquidate: NextPage = () => {
 				<div className={showTablet}>
 					<div className={classNames(style.mobileSearchAndToggleContainer)}>
 						<div className={style.mobileRow}>
-							<SearchForm />
+							<SearchInput
+								onChange={handleSearchInputChange}
+								placeholder="Search by name"
+								value={searchQuery}
+							/>
 						</div>
 					</div>
 
