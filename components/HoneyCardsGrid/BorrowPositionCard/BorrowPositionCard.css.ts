@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { typography, vars } from '../../../styles/theme.css';
 
 export const positionCard = style({
@@ -66,4 +66,11 @@ export const divider = style({
 	width: '100%',
 	marginBottom: 8,
 	marginTop: 16
+});
+
+export const infoRow = style({
+	display: 'flex',
+	justifyContent: 'space-between',
+	alignItems: 'center',
+	gap: 5
 });

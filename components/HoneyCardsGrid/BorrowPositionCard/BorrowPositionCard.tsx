@@ -24,6 +24,8 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 		htokenHelperContractAddress,
 		hivemindContractAddress,
 		erc20Name,
+		erc20Icon,
+		formatDecimals,
 		unit
 	} = getContractsByHTokenAddr(position.HERC20ContractAddr);
 
@@ -68,9 +70,37 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 				<div className={styles.arrowIcon} />
 			</div>
 			<div className={styles.positionValues}>
-				<InfoBlock title="Floor price" value={`${fsn(position.value)} ${position.erc20Name}`} />
-				<InfoBlock title="Debt" value={`${fsn(parseFloat(borrowAmount))} ${position.erc20Name}`} />
-				<InfoBlock title="IR" value={fp(5)} />
+				<InfoBlock
+					title="Floor price"
+					value={
+						<div className={styles.infoRow}>
+							{fsn(position.value, formatDecimals)}
+							<Image
+								src={erc20Icon}
+								alt={position.erc20Name}
+								layout="fixed"
+								width="20px"
+								height="20px"
+							/>
+						</div>
+					}
+				/>
+				<InfoBlock
+					title="Debt"
+					value={
+						<div className={styles.infoRow}>
+							{fsn(parseFloat(borrowAmount), formatDecimals)}
+							<Image
+								src={erc20Icon}
+								alt={position.erc20Name}
+								layout="fixed"
+								width="20px"
+								height="20px"
+							/>
+						</div>
+					}
+				/>
+				<InfoBlock title="IR" value={fp(5, 2)} />
 			</div>
 			<div className={styles.divider} />
 			<BorrowPositionCardSlider
