@@ -325,7 +325,7 @@ const Markets: NextPage = () => {
 			}
 		],
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isMyCollectionsFilterEnabled, tableData, searchQuery]
+		[isMyCollectionsFilterEnabled, tableData, searchQuery, showWeeklyRates]
 	);
 
 	const expandColumns: ColumnType<MarketTablePosition>[] = [
