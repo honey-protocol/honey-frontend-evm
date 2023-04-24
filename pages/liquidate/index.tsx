@@ -32,6 +32,7 @@ import { collections } from '../../constants/NFTCollections';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { LiquidationWorkFlowType } from '../../types/workflows';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
+import c from 'classnames';
 
 const { formatPercent: fp, formatERC20: fs, formatRoundDown: fd } = formatNumber;
 const Liquidate: NextPage = () => {
@@ -127,15 +128,15 @@ const Liquidate: NextPage = () => {
 	};
 	/* end sidebar interaction function          */
 
-	const SearchForm = () => {
+	const SearchForm = useCallback(() => {
 		return (
 			<SearchInput
+				value={searchQuery}
 				onChange={handleSearchInputChange}
 				placeholder="Search by name"
-				value={searchQuery}
 			/>
 		);
-	};
+	}, [searchQuery]);
 
 	const columnsWidth: Array<number | string> = [200, 100, 150, 150, 100, 70];
 
@@ -371,7 +372,7 @@ const Liquidate: NextPage = () => {
 				</div>
 				<div className={showTablet}>
 					<div className={classNames(style.mobileSearchAndToggleContainer)}>
-						<div className={style.mobileRow}>
+						<div className={c(style.mobileRow, style.mobileSearchContainer)}>
 							<SearchInput
 								onChange={handleSearchInputChange}
 								placeholder="Search by name"
