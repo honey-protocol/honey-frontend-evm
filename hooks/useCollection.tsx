@@ -386,7 +386,7 @@ export function useLend(
 			name: `${name}/${erc20Name}`,
 			icon: icon,
 			erc20Icon: erc20Icon,
-			formatDecimals: formatDecimals ?? 1,
+			formatDecimals: formatDecimals ?? 3,
 			available: parseFloat(marketData.available),
 			supplied: parseFloat(marketData.supplied),
 			rate: interestRateLend(marketData.interestRate, marketData.supplied, marketData.available)
