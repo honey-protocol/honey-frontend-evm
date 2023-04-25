@@ -308,7 +308,7 @@ const Liquidate: NextPage = () => {
 							/>
 
 							<HoneyTableRow>
-								<div className={style.rateCell}>{fp(row.risk * 100)}</div>
+								<div className={style.rateCell}>{fp(row.liqThreshold * 100, 2)}</div>
 								<div className={style.rateCell}>{fs(row.totalDebt, formatDecimals)}</div>
 								<div className={style.availableCell}>{fs(row.tvl, formatDecimals)}</div>
 							</HoneyTableRow>
@@ -381,7 +381,7 @@ const Liquidate: NextPage = () => {
 					</div>
 
 					<div className={style.mobileTableHeader}>
-						<div className={style.tableCell}>Risk</div>
+						<div className={style.tableCell}>LIQ %</div>
 						<div className={style.tableCell}>Debt</div>
 						<div className={style.tableCell}>TVL</div>
 					</div>
