@@ -42,7 +42,7 @@ const Markets: NextPage = () => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const [showWeeklyRates, setShowWeeklyRates] = useState(true);
 	const [tableData, setTableData] = useState<MarketTableRow[]>([]);
-	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(true);
+	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
 	const {
 		HERC20ContractAddr: HERC20ContractAddress,
@@ -101,7 +101,6 @@ const Markets: NextPage = () => {
 	const debouncedSearch = useCallback(
 		_.debounce((criteria: string) => {
 			setTableDataFiltered(onSearch(criteria));
-			setSearchQuery(criteria);
 		}, 500),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[tableData]
@@ -110,6 +109,7 @@ const Markets: NextPage = () => {
 	const handleSearchInputChange = useCallback(
 		(e: ChangeEvent<HTMLInputElement>) => {
 			const value = e.target.value;
+			setSearchQuery(value);
 			debouncedSearch(value);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,9 +157,15 @@ const Markets: NextPage = () => {
 		</div>
 	);
 
-	const SearchForm = () => {
-		return <SearchInput onChange={handleSearchInputChange} placeholder="Search by name" />;
-	};
+	const SearchForm = useCallback(() => {
+		return (
+			<SearchInput
+				value={searchQuery}
+				onChange={handleSearchInputChange}
+				placeholder="Search by name"
+			/>
+		);
+	}, [searchQuery]);
 
 	const columnsWidth: Array<number | string> = [240, 150, 150, 150, 150];
 
@@ -207,7 +213,7 @@ const Markets: NextPage = () => {
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
 					render: (rate: number) => {
 						return (
-							<div className={c(style.rateCell, style.lendRate)}>
+							<div className={c(style.rateCell, style.borrowRate)}>
 								{fp(rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 							</div>
 						);
@@ -293,7 +299,7 @@ const Markets: NextPage = () => {
 										</div>
 										<div className={style.nameCellMobile}>
 											<div className={style.collectionName}>{row['name']}</div>
-											<div className={style.rateCellMobile}>{fp(row.rate, 2)}</div>
+											{/* <div className={style.rateCellMobile}>{fp(row.rate)}</div> */}
 										</div>
 									</>
 								}
@@ -307,7 +313,7 @@ const Markets: NextPage = () => {
 							/>
 
 							<HoneyTableRow>
-								<div className={style.rateCell}>
+								<div className={c(style.rateCell, style.borrowRate)}>
 									{fp(row.rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 								</div>
 								<div className={style.availableCell}>{fs(row.supplied)}</div>
@@ -319,7 +325,7 @@ const Markets: NextPage = () => {
 			}
 		],
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isMyCollectionsFilterEnabled, tableData, searchQuery]
+		[isMyCollectionsFilterEnabled, tableData, searchQuery, showWeeklyRates]
 	);
 
 	const expandColumns: ColumnType<MarketTablePosition>[] = [
@@ -545,10 +551,14 @@ const Markets: NextPage = () => {
 
 				<div className={style.showTablet}>
 					<div className={c(style.mobileTableHeader, style.mobileSearchAndToggleContainer)}>
-						<div className={style.mobileRow}>
-							<SearchForm />
+						<div className={c(style.mobileRow, style.mobileSearchContainer)}>
+							<SearchInput
+								value={searchQuery}
+								onChange={handleSearchInputChange}
+								placeholder="Search by name"
+							/>
 						</div>
-						<div className={style.mobileRow}>
+						<div className={c(style.mobileToggleContainer)}>
 							<WeeklyToggle />
 						</div>
 					</div>

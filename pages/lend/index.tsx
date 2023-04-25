@@ -132,15 +132,15 @@ const Lend: NextPage = () => {
 		</div>
 	);
 
-	const SearchForm = () => {
+	const SearchForm = useCallback(() => {
 		return (
 			<SearchInput
+				value={searchQuery}
 				onChange={handleSearchInputChange}
 				placeholder="Search by name"
-				value={searchQuery}
 			/>
 		);
-	};
+	}, [searchQuery]);
 
 	const columnsWidth: Array<number | string> = [240, 150, 150, 150, 150];
 
@@ -356,10 +356,14 @@ const Lend: NextPage = () => {
 				</div>
 				<div className={style.showTablet}>
 					<div className={c(style.mobileTableHeader, style.mobileSearchAndToggleContainer)}>
-						<div className={style.mobileRow}>
-							<SearchForm />
+						<div className={c(style.mobileRow, style.mobileSearchContainer)}>
+							<SearchInput
+								value={searchQuery}
+								onChange={handleSearchInputChange}
+								placeholder="Search by name"
+							/>
 						</div>
-						<div className={style.mobileRow}>
+						<div className={c(style.mobileToggleContainer)}>
 							<WeeklyToggle />
 						</div>
 					</div>

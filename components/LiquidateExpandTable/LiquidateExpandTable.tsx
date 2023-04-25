@@ -2,7 +2,7 @@ import { HoneyButtonTabs } from '../HoneyButtonTabs/HoneyButtonTabs';
 import HoneyTable from '../HoneyTable/HoneyTable';
 import * as sharedStyles from '../../styles/markets.css';
 import * as styles from './LiquidateExpandTable.css';
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useContext, useMemo, useState } from 'react';
 import { ColumnType } from 'antd/lib/table';
 import { LiquidateTablePosition } from '../../types/liquidate';
 import HexaBoxContainer from '../HexaBoxContainer/HexaBoxContainer';
@@ -16,6 +16,10 @@ import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import useDisplayStore from '../../store/displayStore';
 import * as style from '../../styles/markets.css';
 import HoneyButton from '../HoneyButton/HoneyButton';
+import { Empty, Spin } from 'antd';
+import { UserContext } from 'contexts/userContext';
+import c from 'classnames';
+import { spinner } from '../../styles/common.css';
 
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 
@@ -23,10 +27,12 @@ type FilterType = 'most_critical' | 'max_debt' | 'most_valuable';
 
 export const LiquidateExpandTable: FC<{
 	data: LiquidateTablePosition[];
+	isLoadingPositions: boolean;
 	formatDecimals: number;
-}> = ({ data, formatDecimals }) => {
+}> = ({ data, isLoadingPositions, formatDecimals }) => {
 	const { setWorkflow, setNFTId, setCouponId } = useLiquidationFlowStore((state) => state);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
+	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const [filter, setFilter] = useState<FilterType>('most_critical');
 	/*    begin sidebar interaction function          */
 	const initCollateralBidFlow = (tokenId: string, couponId: string) => {
@@ -104,7 +110,7 @@ export const LiquidateExpandTable: FC<{
 							variant="text"
 							onClick={(e) => initCollateralBidFlow(row['tokenId'], row['couponId'])}
 						>
-							Manage <div className={style.arrowRightIcon} />
+							Bid <div className={style.arrowRightIcon} />
 						</HoneyButton>
 					</div>
 				)
@@ -138,6 +144,18 @@ export const LiquidateExpandTable: FC<{
 				dataSource={data}
 				pagination={false}
 				showHeader={false}
+				locale={{
+					emptyText: !isLoadingPositions ? (
+						<Empty
+							image={Empty.PRESENTED_IMAGE_SIMPLE}
+							description={currentUser?.address ? 'No loan positions' : 'Connect wallet'}
+						/>
+					) : (
+						<div className={c(style.emptyTableSpinner, spinner)}>
+							<Spin />
+						</div>
+					)
+				}}
 			/>
 		</>
 	);

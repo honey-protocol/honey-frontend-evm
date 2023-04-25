@@ -77,12 +77,13 @@ const WalletMenu = () => {
 						options={supportedChains.map((_chain) => ({
 							value: _chain.value,
 							label: (
-								<Space align="center">
+								<Space align="center" className={styles.chainLabel}>
 									{_chain.icon}
-									<span>{_chain.name}</span>
+									<span className={styles.chainLabelName}>{_chain.name}</span>
 								</Space>
 							)
 						}))}
+						// open
 						defaultValue="solana"
 						onChange={(value) => {
 							const href = supportedChains.find((_chain) => _chain.value === value)?.href;
@@ -90,7 +91,12 @@ const WalletMenu = () => {
 						}}
 						className={styles.dropdownSelect}
 						popupClassName={styles.selectDropdownList}
-						suffixIcon={<DownIcon fill={'black'} />}
+						suffixIcon={
+							<div className={styles.selectSuffixIcon}>
+								<DownIcon fill={'black'} />
+							</div>
+						}
+						// suffixIcon={<></>}
 					/>
 				)}
 				<ConnectButton showBalance={false} />

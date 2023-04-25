@@ -15,7 +15,7 @@ const Header: FC = () => {
 			<HoneyCardYellowShadow>
 				<div className={cs(styles.content, { ['open']: showMobileMenu })}>
 					<div className={styles.main}>
-						<Space size="small">
+						<Space className={styles.logoToggleContainer}>
 							<div
 								onClick={() => setShowMobileMenu(!showMobileMenu)}
 								className={cs(
