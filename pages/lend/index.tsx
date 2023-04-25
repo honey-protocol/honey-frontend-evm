@@ -15,6 +15,7 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import { getColumnSortStatus } from '../../helpers/tableUtils';
 import HoneySider from '../../components/HoneySider/HoneySider';
 import HoneyContent from '../../components/HoneyContent/HoneyContent';
+import EmptyStateDetails from '../../components/EmptyStateDetails/EmptyStateDetails';
 import { Typography, Space } from 'antd';
 import { pageDescription, pageTitle } from 'styles/common.css';
 import HoneyTableNameCell from 'components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell';
@@ -30,6 +31,7 @@ import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LendTableRow } from 'types/lend';
 import HoneyToggle from 'components/HoneyToggle/HoneyToggle';
 const { format: f, formatPercent: fp, formatERC20: fs } = formatNumber;
+import classNames from 'classnames';
 
 const Lend: NextPage = () => {
 	const calculatedInterestRate = 0.1;
@@ -328,7 +330,9 @@ const Lend: NextPage = () => {
 						columns={columns}
 						dataSource={tableDataFiltered}
 						pagination={false}
-						className={style.table}
+						className={classNames(style.table, {
+							[style.emptyTable]: !tableDataFiltered.length
+						})}
 						onRow={(record, rowIndex) => {
 							return {
 								onClick: (event) => initLendOrWithdrawFlow(event, record)
@@ -378,7 +382,9 @@ const Lend: NextPage = () => {
 						dataSource={tableDataFiltered}
 						pagination={false}
 						showHeader={false}
-						className={style.table}
+						className={classNames(style.table, {
+							[style.emptyTable]: !tableDataFiltered.length
+						})}
 						onRow={(record, rowIndex) => {
 							return {
 								onClick: (event) => initLendOrWithdrawFlow(event, record)
@@ -386,6 +392,24 @@ const Lend: NextPage = () => {
 						}}
 					/>
 				</div>
+				{!tableDataFiltered.length &&
+					(isMyCollectionsFilterEnabled ? (
+						<div className={style.emptyStateContainer}>
+							<EmptyStateDetails
+								icon={<div className={style.docIcon} />}
+								title="You have no open positions"
+								description="Turn off the filter to view other markets"
+							/>
+						</div>
+					) : (
+						<div className={style.emptyStateContainer}>
+							<EmptyStateDetails
+								icon={<div className={style.docIcon} />}
+								title="No collections to display"
+								description="Turn off all filters and clear search inputs"
+							/>
+						</div>
+					))}
 			</HoneyContent>
 		</LayoutRedesign>
 	);
