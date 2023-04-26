@@ -37,8 +37,8 @@ const NftCard = (props: NftCardProps) => {
           </div> */}
 				</div>
 				<HoneyButton variant="text">
-					Up to {buttonText}
-					<div className={styles.arrowRight} />
+					Borrow {buttonText}
+					<div className={styles.placeHolder} />
 				</HoneyButton>
 			</div>
 		</div>

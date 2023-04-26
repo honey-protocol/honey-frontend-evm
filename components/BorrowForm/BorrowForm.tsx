@@ -238,7 +238,7 @@ const BorrowForm = (props: BorrowProps) => {
 							valueSize="big"
 							title={
 								<span className={hAlign}>
-									Estimated value <div className={questionIcon} />
+									Floor price <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
@@ -258,7 +258,7 @@ const BorrowForm = (props: BorrowProps) => {
 							value={fs(userAllowance, formatDecimals)}
 							title={
 								<span className={hAlign}>
-									Allowance <div className={questionIcon} />
+									Borrow up to <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
@@ -358,14 +358,14 @@ const BorrowForm = (props: BorrowProps) => {
 						/>
 					</div>
 				</div>
-				<div className={styles.row}></div>
+				{/* <div className={styles.row}></div> */}
 				<div className={styles.inputs}>
 					<div className={styles.row}>
 						<div className={cs(stylesBorrow.balance, styles.col)}>
 							<InfoBlock
 								title={
 									<span className={hAlign}>
-										Interest Rate
+										Yearly Interest Rate
 										<div className={questionIcon} />
 									</span>
 								}
