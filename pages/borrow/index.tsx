@@ -385,7 +385,7 @@ const Markets: NextPage = () => {
 						variant="text"
 						onClick={(e) => initLoanOrBorrowFlow(row['tokenId'], row['couponId'])}
 					>
-						Manage <div className={style.arrowRightIcon} />
+						Manage <div className={style.placeHolder} />
 					</HoneyButton>
 				</div>
 			)
@@ -423,7 +423,7 @@ const Markets: NextPage = () => {
 						onClick={(e) => initLoanOrBorrowFlow(row['tokenId'], row['couponId'])}
 					>
 						{'Manage'}
-						<div className={style.arrowRightIcon} />
+						<div className={style.placeHolder} />
 					</HoneyButton>
 				</div>
 			)

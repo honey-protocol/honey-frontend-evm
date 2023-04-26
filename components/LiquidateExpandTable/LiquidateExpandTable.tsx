@@ -96,7 +96,7 @@ export const LiquidateExpandTable: FC<{
 				sorter: (a, b) => a.estimatedValue - b.estimatedValue,
 				render: (estimatedValue) => (
 					<div className={sharedStyles.expandedRowCell}>
-						<InfoBlock title={'Estimated value:'} value={fs(estimatedValue, formatDecimals)} />
+						<InfoBlock title={'Floor price:'} value={fs(estimatedValue, formatDecimals)} />
 					</div>
 				)
 			},
@@ -110,7 +110,7 @@ export const LiquidateExpandTable: FC<{
 							variant="text"
 							onClick={(e) => initCollateralBidFlow(row['tokenId'], row['couponId'])}
 						>
-							Bid <div className={style.arrowRightIcon} />
+							Bid <div className={style.placeHolder} />
 						</HoneyButton>
 					</div>
 				)
