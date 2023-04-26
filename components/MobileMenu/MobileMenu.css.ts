@@ -5,7 +5,8 @@ export const mobileMenu = style({
 	padding: '30px 35px',
 	gap: '22px',
 	display: 'flex',
-	flexDirection: 'column'
+	flexDirection: 'column',
+	margin: '0 auto'
 });
 
 export const visible = style({});
@@ -38,7 +39,9 @@ export const link = style({
 	animationFillMode: 'both',
 	animationTimingFunction: 'ease-in-out',
 	animationDelay: `calc(${linkOrder} * 70ms)`,
-	opacity: '0'
+	opacity: '0',
+	display: 'flex',
+	justifyContent: 'center'
 });
 
 globalStyle(`${visible} ${link}`, {

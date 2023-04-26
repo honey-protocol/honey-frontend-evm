@@ -62,3 +62,9 @@ export const positionValues = style({
 export const irValue = style({
 	color: vars.colors.green
 });
+
+export const infoRow = style({
+	display: 'flex',
+	alignItems: 'center',
+	gap: 5
+});

@@ -51,7 +51,8 @@ export const collectionNameMobile = style([
 		textOverflow: 'ellipsis',
 		'@media': {
 			[`screen and (max-width: ${breakpoints.mobile}px)`]: {
-				fontSize: 12
+				fontSize: 12,
+				lineHeight: '14px'
 			}
 		}
 	}
@@ -339,14 +340,16 @@ export const riskText = style([
 ]);
 export const expandedRowIcon = style({
 	background: 'url(/images/direct-left.svg) center no-repeat',
-	width: 40,
-	height: 40,
+	width: 24,
+	height: 24,
 	marginRight: 11,
 	flexShrink: 0,
 	backgroundSize: '20px',
 	'@media': {
 		[`screen and (min-width: ${breakpoints.tablet}px)`]: {
-			marginRight: 4
+			marginRight: 4,
+			width: 40,
+			height: 40
 		}
 	}
 });
@@ -503,8 +506,17 @@ export const tableCell = style([
 
 export const mobileSearchAndToggleContainer = style({
 	marginBottom: vars.space.medium,
+	justifyContent: 'space-between',
+	paddingRight: '10px',
+	gap: 15
+});
+
+export const mobileSearchContainer = style({
+	background: vars.colors.grayMiddle,
 	borderRadius: '12px',
 	minHeight: '40px',
-	background: vars.colors.grayMiddle,
-	paddingRight: '10px'
+	display: 'flex',
+	alignItems: 'center'
 });
+
+export const mobileToggleContainer = style({});

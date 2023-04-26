@@ -20,6 +20,8 @@ export const toastRemoveDelay = 5000;
 const HoneyToast = (props: HoneyToastProps) => {
 	const PrefixIcon = () => {
 		switch (props.state) {
+			case 'success':
+				return <CheckOutlined />;
 			case 'error':
 				return <WarningOutlined />;
 			default:
@@ -31,8 +33,16 @@ const HoneyToast = (props: HoneyToastProps) => {
 			case 'loading':
 				return <Loading3QuartersOutlined spin />;
 			case 'success':
-				return <CheckOutlined />;
-			case 'error':
+				// return <CheckOutlined />;
+				return (
+					<div
+						className={styles.toastCloseBtn}
+						onClick={() => (props.clearToast ? props.clearToast() : null)}
+					>
+						<CloseIcon color={vars.colors.green} />
+					</div>
+				);
+			case 'error' || 'success':
 				return (
 					<div
 						className={styles.toastCloseBtn}

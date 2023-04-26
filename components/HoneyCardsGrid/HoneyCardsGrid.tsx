@@ -1,7 +1,7 @@
-import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
+import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import * as styles from './HoneyCardsGrid.css';
 import c from 'classnames';
-import { HoneyCardGridProps } from './types';
+import { BorrowUserPosition, HoneyCardGridProps, LendUserPosition } from './types';
 import { BorrowPositionCard } from './BorrowPositionCard/BorrowPositionCard';
 import { HoneyButtonTabs } from '../HoneyButtonTabs/HoneyButtonTabs';
 import SearchInput from '../SearchInput/SearchInput';
@@ -11,22 +11,86 @@ import { LendWorkFlowType, LoanWorkFlowType } from 'types/workflows';
 import useDisplayStore from 'store/displayStore';
 import useLendFlowStore from 'store/lendFlowStore';
 import useLoanFlowStore from 'store/loanFlowStore';
+import _ from 'lodash';
 
+type borrowPositionByValue = 'riskLvl' | 'debt';
+type lendPositionByValue = 'rate' | 'deposit';
 export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 	borrowPositions,
 	lendPositions,
 	positionType,
 	onChangePositionType
 }) => {
-	type PositionByValue = 'high_risk' | 'high_ir' | 'high_debt';
-	const [positionByValue, setPositionByValue] = useState<PositionByValue>('high_risk');
+	const [borrowPositionByValue, setBorrowPositionByValue] =
+		useState<borrowPositionByValue>('riskLvl');
+	const [lendPositionByValue, setLendPositionByValue] = useState<lendPositionByValue>('rate');
 
+	/*    Begin filter function       */
 	const [searchValue, setSearchValue] = useState<string | undefined>();
+	const [displayedBorrowPositions, setDisplayedBorrowPositions] = useState<BorrowUserPosition[]>(
+		[]
+	);
+	const [displayedLendPositions, setDisplayedLendPositions] = useState<LendUserPosition[]>([]);
 
-	const handleSearchInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+	const displayedData = useMemo(
+		() => (positionType === 'borrow' ? borrowPositions : lendPositions),
+		[positionType, borrowPositions, lendPositions]
+	);
+
+	const onSearch = (searchTerm: string): any[] => {
+		if (!searchTerm) {
+			return [...displayedData];
+		}
+		return [...displayedData].filter((row) => {
+			return row.name.toLowerCase().includes(searchTerm.toLowerCase());
+		});
+	};
+
+	const debouncedSearch = (criteria: string) => {
+		setSearchValue(criteria);
+		if (positionType == 'borrow') {
+			setDisplayedBorrowPositions(onSearch(criteria));
+		} else if (positionType === 'lend') {
+			setDisplayedLendPositions(onSearch(criteria));
+		}
+	};
+
+	const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
-		setSearchValue(value);
-	}, []);
+		debouncedSearch(value);
+	};
+
+	useEffect(() => {
+		setDisplayedBorrowPositions(borrowPositions);
+		setDisplayedLendPositions(lendPositions); // eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [borrowPositions, lendPositions]);
+
+	const sortBorrowPositions = (sortValue: borrowPositionByValue) => {
+		setSearchValue(undefined);
+		if (sortValue === 'riskLvl') {
+			let sortedResult = borrowPositions.sort((a, b) => {
+				return Number(b.debt) / b.value - Number(a.debt) / a.value;
+			});
+			console.log({ sortedResult }, '@www');
+			setDisplayedBorrowPositions(sortedResult);
+		} else {
+			let sortedResult = borrowPositions.sort(
+				(a, b) => Number(b[sortValue]) - Number(a[sortValue])
+			);
+			console.log({ sortedResult }, '@www');
+			setDisplayedBorrowPositions(sortedResult);
+		}
+	};
+
+	const sortLendPositions = (sortValue: lendPositionByValue) => {
+		setSearchValue(undefined);
+		let sortedResult = lendPositions.sort((a, b) => Number(b[sortValue]) - Number(a[sortValue]));
+		console.log({ sortedResult }, '@www');
+		setDisplayedLendPositions(sortedResult);
+	};
+
+	/*    End filter function  */
+
 	const { setWorkflow, setNFTId, setHERC20ContractAddr, setCouponId } = useLoanFlowStore(
 		(state) => state
 	);
@@ -50,8 +114,10 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 		document.body.classList.add('disable-scroll');
 	};
 
-	const borrowedPositions = borrowPositions.filter((position) => position.debt !== '0');
-	const debtFreeBorrowedPositions = borrowPositions.filter((position) => position.debt === '0');
+	const borrowedPositions = displayedBorrowPositions.filter((position) => position.debt !== '0');
+	const debtFreeBorrowedPositions = displayedBorrowPositions.filter(
+		(position) => position.debt === '0'
+	);
 
 	return (
 		<div className={styles.honeyCardsGrid}>
@@ -78,16 +144,33 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 					/>
 				</div>
 
-				<HoneyButtonTabs
-					items={[
-						{ name: 'High risk', slug: 'high_risk' },
-						{ name: 'High IR', slug: 'high_ir' },
-						{ name: 'High Debt', slug: 'high_debt' }
-					]}
-					isFullWidth
-					activeItemSlug={positionByValue}
-					onClick={(slug) => setPositionByValue(slug as PositionByValue)}
-				/>
+				{positionType === 'borrow' ? (
+					<HoneyButtonTabs
+						items={[
+							{ name: 'High risk', slug: 'riskLvl' },
+							{ name: 'High Debt', slug: 'debt' }
+						]}
+						isFullWidth
+						activeItemSlug={borrowPositionByValue}
+						onClick={(slug) => {
+							setBorrowPositionByValue(slug as borrowPositionByValue);
+							sortBorrowPositions(slug as borrowPositionByValue);
+						}}
+					/>
+				) : (
+					<HoneyButtonTabs
+						items={[
+							{ name: 'High IR', slug: 'rate' },
+							{ name: 'High deposit', slug: 'deposit' }
+						]}
+						isFullWidth
+						activeItemSlug={lendPositionByValue}
+						onClick={(slug) => {
+							setLendPositionByValue(slug as lendPositionByValue);
+							sortLendPositions(slug as lendPositionByValue);
+						}}
+					/>
+				)}
 			</div>
 			<div className={styles.gridContent}>
 				<div className={styles.cardsGrid}>
@@ -101,7 +184,7 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 									/>
 								);
 						  })
-						: lendPositions.map((position) => (
+						: displayedLendPositions.map((position) => (
 								<LendPositionCard position={position} key={position.id} onSelect={initLendFlow} />
 						  ))}
 				</div>
