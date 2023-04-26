@@ -16,18 +16,15 @@ const Header: FC = () => {
 				<div className={cs(styles.content, { ['open']: showMobileMenu })}>
 					<div className={styles.main}>
 						<Space className={styles.logoToggleContainer}>
-							<div
-								onClick={() => setShowMobileMenu(!showMobileMenu)}
-								className={cs(
-									styles.menuToggle,
-									showMobileMenu ? styles.menuClose : styles.menuOpen
-								)}
-							/>
-
 							<div className={styles.logo} />
 						</Space>
 						<HeaderLinks />
 						<WalletMenu />
+
+						<div
+							onClick={() => setShowMobileMenu(!showMobileMenu)}
+							className={cs(styles.menuToggle, showMobileMenu ? styles.menuClose : styles.menuOpen)}
+						/>
 					</div>
 					<MobileMenu isVisible={showMobileMenu} />
 				</div>
