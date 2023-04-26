@@ -371,6 +371,11 @@ export const arrowRightIcon = style({
 	width: 20,
 	height: 20
 });
+export const placeHolder = style({
+	background: '',
+	width: 20,
+	height: 20
+});
 export const nameCellText = style({
 	display: 'flex',
 	flexDirection: 'column',
