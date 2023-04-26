@@ -22,6 +22,7 @@ import { getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/r
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygon, bsc, arbitrum, polygonMumbai, fantom } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import { Analytics } from '@vercel/analytics/react';
 
 const initializeMoralis = async () => {
 	try {
@@ -93,6 +94,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 						<UserProvider>
 							{/* {children} */}
 							{showPopup ? <SecPopup setShowPopup={setShowPopup} /> : <Component {...pageProps} />}
+							<Analytics />
 							<ToastContainer theme="dark" position="top-right" />
 						</UserProvider>
 					</RainbowKitProvider>
