@@ -391,7 +391,8 @@ const BorrowForm = (props: BorrowProps) => {
 										Borrow Fee <div className={questionIcon} />
 									</span>
 								}
-								value={fs(valueUnderlying * borrowFee, formatDecimals)}
+								value={`${fs(valueUnderlying * borrowFee, formatDecimals)} 
+								${`(${fp(borrowFee * 100, 2)})`}`}
 								//TODO: add link to docs
 								toolTipLabel={
 									<span>
