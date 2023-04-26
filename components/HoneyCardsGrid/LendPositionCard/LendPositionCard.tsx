@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { LendPositionCardProps } from '../types';
 import * as styles from './LendPositionCard.css';
 import HexaBoxContainer from '../../HexaBoxContainer/HexaBoxContainer';
@@ -9,13 +9,27 @@ import c from 'classnames';
 import HoneyTooltip from '../../HoneyTooltip/HoneyTooltip';
 import useLendFlowStore from 'store/lendFlowStore';
 import { getContractsByHTokenAddr } from 'helpers/generalHelper';
+import { useGetUserUnderlyingBalance } from 'hooks/useHtokenHelper';
+import { UserContext } from 'contexts/userContext';
 
 const { formatShortName: fsn, formatPercent: fp } = formatNumber;
 
 export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect }) => {
 	const selectedMarket = useLendFlowStore((state) => state.HERC20ContractAddr);
 
-	const { erc20Name, erc20Icon, formatDecimals } = getContractsByHTokenAddr(position.id);
+	const { currentUser, setCurrentUser } = useContext(UserContext);
+
+	const { erc20Name, erc20Icon, formatDecimals, htokenHelperContractAddress, unit } =
+		getContractsByHTokenAddr(position.id);
+
+	const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(
+		htokenHelperContractAddress,
+		position.id,
+		currentUser,
+		unit
+	);
+
+	const userTotalDeposits = parseFloat(userUnderlyingBalance);
 	return (
 		<div
 			className={c(styles.positionCard, {
@@ -36,7 +50,7 @@ export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect
 				<InfoBlock title="IR" value={<span className={styles.irValue}>{fp(position.rate)}</span>} />
 				<InfoBlock
 					title="Your Deposit"
-					value={fsn(parseFloat(position.deposit < '0' ? '0' : position.deposit))}
+					value={fsn(userTotalDeposits < 0 ? 0 : userTotalDeposits, formatDecimals)}
 				/>
 				<InfoBlock
 					title="Supplied"
