@@ -23,7 +23,6 @@ const Header: FC = () => {
 									showMobileMenu ? styles.menuClose : styles.menuOpen
 								)}
 							/>
-
 							<div className={styles.logo} />
 						</Space>
 						<HeaderLinks />

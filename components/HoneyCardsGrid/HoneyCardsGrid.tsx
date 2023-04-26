@@ -41,9 +41,8 @@ export const HoneyCardsGrid: FC<HoneyCardGridProps> = ({
 		if (!searchTerm) {
 			return [...displayedData];
 		}
-		const r = new RegExp(searchTerm, 'gmi');
 		return [...displayedData].filter((row) => {
-			return r.test(row.name);
+			return row.name.toLowerCase().includes(searchTerm.toLowerCase());
 		});
 	};
 
