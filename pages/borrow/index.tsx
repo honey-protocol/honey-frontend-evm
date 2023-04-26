@@ -626,7 +626,7 @@ const Markets: NextPage = () => {
 						<div className={style.emptyStateContainer}>
 							<EmptyStateDetails
 								icon={<div className={style.docIcon} />}
-								title="You didn’t use any collections yet"
+								title="You have no open positions"
 								description="Turn off the filter my collection and choose any collection to borrow tokens"
 							/>
 						</div>
