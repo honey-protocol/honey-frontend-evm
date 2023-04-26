@@ -32,6 +32,7 @@ import { collections } from '../../constants/NFTCollections';
 import useLiquidationFlowStore from '../../store/liquidationFlowStore';
 import { LiquidationWorkFlowType } from '../../types/workflows';
 import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
+import c from 'classnames';
 
 const { formatPercent: fp, formatERC20: fs, formatRoundDown: fd } = formatNumber;
 const Liquidate: NextPage = () => {
@@ -93,9 +94,8 @@ const Liquidate: NextPage = () => {
 		if (!searchTerm) {
 			return [...tableData];
 		}
-		const r = new RegExp(searchTerm, 'gmi');
 		return [...tableData].filter((row) => {
-			return r.test(row.name);
+			return row.name.toLowerCase().includes(searchTerm.toLowerCase());
 		});
 	};
 
@@ -127,15 +127,15 @@ const Liquidate: NextPage = () => {
 	};
 	/* end sidebar interaction function          */
 
-	const SearchForm = () => {
+	const SearchForm = useCallback(() => {
 		return (
 			<SearchInput
+				value={searchQuery}
 				onChange={handleSearchInputChange}
 				placeholder="Search by name"
-				value={searchQuery}
 			/>
 		);
-	};
+	}, [searchQuery]);
 
 	const columnsWidth: Array<number | string> = [200, 100, 150, 150, 100, 70];
 
@@ -292,15 +292,23 @@ const Liquidate: NextPage = () => {
 								}
 								rightSide={
 									<div className={style.buttonsCell}>
-										<HoneyButton variant="text">
-											View <div className={style.arrowIcon} />
+										<HoneyButton
+											variant="text"
+											onClick={() => {
+												expandedRowKeys.length && expandedRowKeys[0] === row.key
+													? setExpandedRowKeys([])
+													: setExpandedRowKeys([row.key]);
+											}}
+										>
+											{expandedRowKeys.length && expandedRowKeys[0] === row.key ? 'Hide' : 'View'}
+											<div className={style.arrowIcon} />
 										</HoneyButton>
 									</div>
 								}
 							/>
 
 							<HoneyTableRow>
-								<div className={style.rateCell}>{fp(row.risk * 100)}</div>
+								<div className={style.rateCell}>{fp(row.liqThreshold * 100, 2)}</div>
 								<div className={style.rateCell}>{fs(row.totalDebt, formatDecimals)}</div>
 								<div className={style.availableCell}>{fs(row.tvl, formatDecimals)}</div>
 							</HoneyTableRow>
@@ -310,7 +318,7 @@ const Liquidate: NextPage = () => {
 			}
 		],
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isMyBidsFilterEnabled, tableData, searchQuery]
+		[isMyBidsFilterEnabled, tableData, searchQuery, expandedRowKeys]
 	);
 
 	const liquidateSidebar = () => (
@@ -350,7 +358,11 @@ const Liquidate: NextPage = () => {
 								return (
 									<div className={style.expandSection}>
 										<div className={style.dashedDivider} />
-										<LiquidateExpandTable data={positions} formatDecimals={record.formatDecimals} />
+										<LiquidateExpandTable
+											data={positions}
+											isLoadingPositions={isLoadingPositions}
+											formatDecimals={record.formatDecimals}
+										/>
 									</div>
 								);
 							}
@@ -359,13 +371,17 @@ const Liquidate: NextPage = () => {
 				</div>
 				<div className={showTablet}>
 					<div className={classNames(style.mobileSearchAndToggleContainer)}>
-						<div className={style.mobileRow}>
-							<SearchForm />
+						<div className={c(style.mobileRow, style.mobileSearchContainer)}>
+							<SearchInput
+								onChange={handleSearchInputChange}
+								placeholder="Search by name"
+								value={searchQuery}
+							/>
 						</div>
 					</div>
 
 					<div className={style.mobileTableHeader}>
-						<div className={style.tableCell}>Risk</div>
+						<div className={style.tableCell}>LIQ %</div>
 						<div className={style.tableCell}>Debt</div>
 						<div className={style.tableCell}>TVL</div>
 					</div>
@@ -383,18 +399,18 @@ const Liquidate: NextPage = () => {
 							// we use our own custom expand column
 							showExpandColumn: false,
 							onExpand: (expanded, row) => {
-								initCollectionBidFlow(row.key);
 								setExpandedRowKeys(expanded ? [row.key] : []);
 							},
 							expandedRowKeys,
 							expandedRowRender: (record) => {
 								return (
-									<div className={style.expandSection} onClick={showMobileSidebar}>
+									<div className={style.expandSection}>
 										<div className={style.dashedDivider} />
 										<LiquidateExpandTableMobile
 											data={positions}
-											onPlaceBid={showMobileSidebar}
+											isLoadingPositions={isLoadingPositions}
 											formatDecimals={record.formatDecimals}
+											onBidCollection={() => initCollectionBidFlow(record.key)}
 										/>
 									</div>
 								);

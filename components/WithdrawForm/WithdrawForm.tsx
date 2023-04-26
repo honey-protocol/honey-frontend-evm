@@ -231,7 +231,7 @@ const WithdrawForm = (props: WithdrawFormProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fsn(userTotalDeposits)}
+							value={fs(userTotalDeposits, formatDecimals)}
 							valueSize="big"
 							footer={<span>Your Deposits</span>}
 						/>
