@@ -94,9 +94,8 @@ const Liquidate: NextPage = () => {
 		if (!searchTerm) {
 			return [...tableData];
 		}
-		const r = new RegExp(searchTerm, 'gmi');
 		return [...tableData].filter((row) => {
-			return r.test(row.name);
+			return row.name.toLowerCase().includes(searchTerm.toLowerCase());
 		});
 	};
 
