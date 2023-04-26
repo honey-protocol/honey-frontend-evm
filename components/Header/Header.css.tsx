@@ -47,6 +47,10 @@ export const leftContainer = style({
 	alignItems: 'center'
 });
 
+export const logoToggleContainer = style({
+	gap: '0 !important'
+});
+
 export const menuToggle = style({
 	display: 'none',
 	width: 20,

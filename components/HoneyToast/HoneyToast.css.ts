@@ -89,7 +89,7 @@ export const success = getStylesForMovingBorder(vars.colors.green);
 
 globalStyle(`${success} .${primaryText}, ${success} .anticon`, {
 	color: vars.colors.green,
-	fontSize: '16px'
+	fontSize: '14px'
 });
 
 export const error = getStylesForMovingBorder(vars.colors.red);
