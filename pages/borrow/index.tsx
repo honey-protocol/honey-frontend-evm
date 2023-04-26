@@ -370,7 +370,7 @@ const Markets: NextPage = () => {
 			width: columnsWidth[3],
 			render: (value) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Value:'} value={fs(value, formatDecimals)} />
+					<InfoBlock title={'Floor price:'} value={fs(value, formatDecimals)} />
 				</div>
 			)
 		},
