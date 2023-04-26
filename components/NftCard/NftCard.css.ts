@@ -68,3 +68,9 @@ export const arrowRight = style([
 		transform: 'rotate(-90deg)'
 	}
 ]);
+
+export const placeHolder = style({
+	background: '',
+	width: 20,
+	height: 20
+});

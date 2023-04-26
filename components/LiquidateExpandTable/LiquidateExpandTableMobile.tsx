@@ -84,7 +84,7 @@ export const LiquidateExpandTableMobile: FC<{
 						variant="text"
 						onClick={(e) => initCollateralBidFlow(row['tokenId'], row['couponId'])}
 					>
-						Bid <div className={style.arrowRightIcon} />
+						Bid <div className={style.placeHolder} />
 					</HoneyButton>
 				</div>
 			)
@@ -98,7 +98,7 @@ export const LiquidateExpandTableMobile: FC<{
 					<span className={styles.positionsCount}>{data.length}</span>
 				</div>
 				<HoneyButton variant="text" onClick={() => onBidCollection()}>
-					Bid all <div className={sharedStyles.arrowRightIcon} />
+					Collection Bid <div className={sharedStyles.arrowRightIcon} />
 				</HoneyButton>
 			</div>
 			<HoneyTable

@@ -324,7 +324,7 @@ const RepayForm = (props: RepayProps) => {
 							valueSize="big"
 							title={
 								<span className={hAlign}>
-									Estimated value <div className={questionIcon} />
+									Floor price <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
@@ -343,7 +343,7 @@ const RepayForm = (props: RepayProps) => {
 							value={fsn(userAllowance, formatDecimals)}
 							title={
 								<span className={hAlign}>
-									Allowance <div className={questionIcon} />
+									Borrow up to <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
