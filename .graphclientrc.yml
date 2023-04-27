@@ -1,9 +1,9 @@
 # .graphclientrc.yml
 sources:
-  - name: honey-dashboard-arbitrum
+  - name: honey-dashboard-polygon
     handler:
       graphql:
-        endpoint: https://api.thegraph.com/subgraphs/name/tomjpandolfi/honey-dashboard-arbitrum
+        endpoint: https://api.thegraph.com/subgraphs/name/tomjpandolfi/honey-dashboard-polygon
 
 documents:
   - ./graphql/**/*.graphql
