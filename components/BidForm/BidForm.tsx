@@ -43,6 +43,7 @@ import {
 	weiToDecimal
 } from '../../helpers/liquidationHelper';
 import { fromWei } from 'web3-utils';
+import ValueWithIcon from 'components/ValueWithIcon/ValueWithIcon';
 
 const {
 	format: f,
@@ -68,6 +69,7 @@ const BidForm = (props: BidFormProps) => {
 		name,
 		icon,
 		erc20Name,
+		erc20Icon,
 		unit,
 		formatDecimals
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
@@ -388,7 +390,14 @@ const BidForm = (props: BidFormProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(parseFloat(fromWei(bidInfo.highestBid, unit)), formatDecimals)}
+							value={
+								<ValueWithIcon
+									erc20Icon={erc20Icon}
+									erc20Name={erc20Name}
+									formatDecimals={formatDecimals}
+									value={parseFloat(fromWei(bidInfo.highestBid, unit))}
+								/>
+							}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
@@ -404,7 +413,14 @@ const BidForm = (props: BidFormProps) => {
 									Minimal bid <div className={questionIcon} />
 								</span>
 							}
-							value={fs(minBid, formatDecimals)}
+							value={
+								<ValueWithIcon
+									erc20Icon={erc20Icon}
+									erc20Name={erc20Name}
+									formatDecimals={formatDecimals}
+									value={minBid}
+								/>
+							}
 							valueSize="big"
 						/>
 					</div>
@@ -412,7 +428,14 @@ const BidForm = (props: BidFormProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(parseFloat(userBalance), formatDecimals)}
+							value={
+								<ValueWithIcon
+									erc20Icon={erc20Icon}
+									erc20Name={erc20Name}
+									formatDecimals={formatDecimals}
+									value={parseFloat(userBalance)}
+								/>
+							}
 							valueSize="big"
 							title="Your token balance"
 						/>

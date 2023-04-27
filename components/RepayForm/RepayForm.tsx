@@ -36,6 +36,7 @@ import { fetchAllowance } from '../../helpers/utils';
 import imagePlaceholder from 'public/images/imagePlaceholder.png';
 import { Space } from 'antd';
 import HoneyWarning from 'components/HoneyWarning/HoneyWarning';
+import ValueWithIcon from 'components/ValueWithIcon/ValueWithIcon';
 
 const {
 	format: f,
@@ -63,6 +64,7 @@ const RepayForm = (props: RepayProps) => {
 		hivemindContractAddress,
 		ERC20ContractAddress,
 		erc20Name,
+		erc20Icon,
 		unit,
 		formatDecimals
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
@@ -314,7 +316,14 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(nftValue, formatDecimals)}
+							value={
+								<ValueWithIcon
+									erc20Icon={erc20Icon}
+									erc20Name={erc20Name}
+									formatDecimals={formatDecimals}
+									value={nftValue}
+								/>
+							}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
@@ -334,7 +343,14 @@ const RepayForm = (props: RepayProps) => {
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fsn(userAllowance, formatDecimals)}
+							value={
+								<ValueWithIcon
+									erc20Icon={erc20Icon}
+									erc20Name={erc20Name}
+									formatDecimals={formatDecimals}
+									value={userAllowance}
+								/>
+							}
 							title={
 								<span className={hAlign}>
 									Borrow up to <div className={questionIcon} />
@@ -386,7 +402,7 @@ const RepayForm = (props: RepayProps) => {
 					</div>
 				</div>
 
-				<div className={styles.row}>
+				<div className={cs(styles.row, styles.rowBotMargSmall)}>
 					<div className={styles.col}>
 						<InfoBlock
 							title={
@@ -447,14 +463,28 @@ const RepayForm = (props: RepayProps) => {
 						<div className={cs(styles.balance, styles.col)}>
 							<InfoBlock
 								title={'Your underlying balance'}
-								value={fs(underlyingBalance, formatDecimals)}
+								value={
+									<ValueWithIcon
+										erc20Icon={erc20Icon}
+										erc20Name={erc20Name}
+										formatDecimals={formatDecimals}
+										value={underlyingBalance}
+									/>
+								}
 							/>
 						</div>
 						<div className={cs(styles.balance, styles.col)}>
 							<InfoBlock
 								isDisabled
 								title={'NEW Underlying balance'}
-								value={fs(underlyingBalance - (valueUnderlying || 0), formatDecimals)}
+								value={
+									<ValueWithIcon
+										erc20Icon={erc20Icon}
+										erc20Name={erc20Name}
+										formatDecimals={formatDecimals}
+										value={underlyingBalance - (valueUnderlying || 0)}
+									/>
+								}
 							/>
 						</div>
 					</div>

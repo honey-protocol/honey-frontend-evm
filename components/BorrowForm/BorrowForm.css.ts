@@ -23,6 +23,10 @@ export const row = style([
 	}
 ]);
 
+export const rowBotMargSmall = style({
+	marginBottom: 15
+});
+
 export const col = style({
 	flex: '100% 0 0',
 	paddingRight: 8
@@ -102,4 +106,11 @@ export const extLink = style({
 
 export const balance = style({
 	marginBottom: 0
+});
+
+export const valueWithIcon = style({
+	display: 'flex',
+	// justifyContent: 'space-between',
+	alignItems: 'center',
+	gap: 5
 });

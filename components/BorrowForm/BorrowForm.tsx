@@ -34,6 +34,7 @@ import { borrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
 import { usePositions } from '../../hooks/useCollection';
 import { fetchAllowance } from 'helpers/utils';
+import ValueWithIcon from 'components/ValueWithIcon/ValueWithIcon';
 
 const {
 	format: f,
@@ -62,6 +63,7 @@ const BorrowForm = (props: BorrowProps) => {
 		htokenHelperContractAddress,
 		hivemindContractAddress,
 		erc20Name,
+		erc20Icon,
 		unit,
 		formatDecimals
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
@@ -234,7 +236,14 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fsn(nftValue, formatDecimals)}
+							value={
+								<ValueWithIcon
+									erc20Icon={erc20Icon}
+									erc20Name={erc20Name}
+									formatDecimals={formatDecimals}
+									value={nftValue}
+								/>
+							}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
@@ -255,7 +264,14 @@ const BorrowForm = (props: BorrowProps) => {
 
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(userAllowance, formatDecimals)}
+							value={
+								<ValueWithIcon
+									erc20Icon={erc20Icon}
+									erc20Name={erc20Name}
+									formatDecimals={formatDecimals}
+									value={userAllowance}
+								/>
+							}
 							title={
 								<span className={hAlign}>
 									Borrow up to <div className={questionIcon} />
@@ -305,7 +321,7 @@ const BorrowForm = (props: BorrowProps) => {
 					</div>
 				</div>
 
-				<div className={styles.row}>
+				<div className={cs(styles.row, styles.rowBotMargSmall)}>
 					<div className={styles.col}>
 						<InfoBlock
 							title={

@@ -29,6 +29,7 @@ import { queryKeys } from '../../helpers/queryHelper';
 import { useLend } from '../../hooks/useCollection';
 import { collections } from '../../constants/NFTCollections';
 import { fetchInterestRate } from '../../helpers/utils';
+import ValueWithIcon from 'components/ValueWithIcon/ValueWithIcon';
 
 const {
 	format: f,
@@ -276,7 +277,14 @@ const DepositForm = (props: DepositFormProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fsn(userTotalDeposits, formatDecimals)}
+							value={
+								<ValueWithIcon
+									erc20Icon={erc20Icon}
+									erc20Name={erc20Name}
+									formatDecimals={formatDecimals}
+									value={userTotalDeposits}
+								/>
+							}
 							valueSize="big"
 							footer={<span>Your Deposits</span>}
 						/>

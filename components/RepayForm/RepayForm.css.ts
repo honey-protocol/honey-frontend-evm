@@ -23,6 +23,10 @@ export const row = style([
 	}
 ]);
 
+export const rowBotMargSmall = style({
+	marginBottom: 15
+});
+
 export const col = style({
 	flex: '100% 0 0',
 	paddingRight: 8
