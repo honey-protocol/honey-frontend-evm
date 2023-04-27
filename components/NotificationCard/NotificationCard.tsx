@@ -11,7 +11,11 @@ const NotificationCard = (props: NotificationCardProps) => {
 			<div className={styles.notificationDescription}>
 				<p className={styles.notificationText}>{notification.description}</p>
 
-				<span className={styles.notificationShow}>more</span>
+				<span className={styles.notificationShow}>
+					<a href="https://discord.gg/honeydefi" target="_blank" rel="noreferrer">
+						more
+					</a>
+				</span>
 			</div>
 
 			<div className={styles.important} />

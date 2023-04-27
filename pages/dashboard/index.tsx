@@ -63,7 +63,7 @@ const Dashboard: NextPage = () => {
 						<NotificationsList notifications={notificationList} />
 					</div>
 				</div>
-				<HoneyPositionsSlider positions={sliderPositions} />
+				{/* <HoneyPositionsSlider positions={sliderPositions} /> */}
 			</HoneyContent>
 			<HoneyContent sidebar={dashboardSidebar()}>
 				<div className={styles.pageContentElements}>
