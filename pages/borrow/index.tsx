@@ -5,7 +5,15 @@ import { ColumnType } from 'antd/lib/table';
 import * as style from '../../styles/markets.css';
 import useLoanFlowStore from '../../store/loanFlowStore';
 import { HoneyTableColumnType, MarketTablePosition, MarketTableRow } from '../../types/markets';
-import React, { ChangeEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+	ChangeEvent,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useRef,
+	useState
+} from 'react';
 import _ from 'lodash';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import Image from 'next/image';
@@ -48,6 +56,7 @@ const Markets: NextPage = () => {
 		HERC20ContractAddr: HERC20ContractAddress,
 		setHERC20ContractAddr,
 		setWorkflow,
+		workflow,
 		setNFTId,
 		setCouponId
 	} = useLoanFlowStore((state) => state);
@@ -83,6 +92,23 @@ const Markets: NextPage = () => {
 		currentUser,
 		unit
 	);
+
+	//Check for new position after deposit and initialise borrow/repay for it
+	const userPositions = useRef(positions);
+	useEffect(() => {
+		if (workflow === LoanWorkFlowType.depositNFT) {
+			for (let i = 0; i < positions.length; i++) {
+				const isOldPosition = userPositions.current.find(
+					(position) => position.couponId === positions[i].couponId
+				);
+				if (!isOldPosition) {
+					initLoanOrBorrowFlow(positions[i].tokenId, positions[i].couponId);
+				}
+			}
+		}
+		userPositions.current = positions;
+	}, [positions, workflow]);
+	//end check
 
 	/*   End insert data into table */
 	/*    Begin filter function       */
