@@ -37,6 +37,10 @@ import HealthLvl from 'components/HealthLvl/HealthLvl';
 import c from 'classnames';
 import { useNetwork } from 'wagmi';
 
+import { useGetTotalBorrow } from 'hooks/useHerc20';
+import { useGetUserUnderlyingBalance } from 'hooks/useHtokenHelper';
+import { useGetTotalUnderlyingBalance } from 'hooks/useHtokenHelper';
+
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 const Markets: NextPage = () => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -212,8 +216,9 @@ const Markets: NextPage = () => {
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
 					render: (rate: number) => {
 						return (
-							<div className={c(style.rateCell, style.borrowRate)}>
-								{fp(rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
+							<div className={c(style.rateCell, style.borrowRate)}> 
+							{/* TODO: inject util based rate  */}
+								{fp(73 / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 							</div>
 						);
 					}
