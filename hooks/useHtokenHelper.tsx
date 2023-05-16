@@ -536,7 +536,7 @@ export function useGetUserCoupons(
 
 export interface marketData {
 	HERC20ContractAddress: string;
-	interestRate: number;
+	interestRate: string;
 	supplied: string;
 	available: string;
 }
@@ -558,13 +558,13 @@ export async function getMarketData(
 	// @ts-ignore
 	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
-	const supplyInterestRate = result[2] as number;
-	const borrowInterestRate = result[3] as number;
+	const supplyInterestRate = result[2] as string;
+	const borrowInterestRate = result[3] as string;
 	const supplied = result[4] as string;
 	const available = result[5] as string;
 	const resultData: marketData = {
 		HERC20ContractAddress: HERC20ContractAddress,
-		interestRate: borrowInterestRate / 1000000000000000000.0,
+		interestRate: fromWei(borrowInterestRate, unit),
 		supplied: fromWei(supplied, unit),
 		available: fromWei(available, unit)
 	};
