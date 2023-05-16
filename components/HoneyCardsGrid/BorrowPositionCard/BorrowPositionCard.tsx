@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { BorrowPositionCardProps } from '../types';
 import * as styles from './BorrowPositionCard.css';
 import HexaBoxContainer from '../../HexaBoxContainer/HexaBoxContainer';
@@ -13,11 +13,15 @@ import { useGetMaxBorrowableAmount, useGetNFTPrice } from 'hooks/useHtokenHelper
 import { getContractsByHTokenAddr } from 'helpers/generalHelper';
 import { useGetCollateralFactor } from 'hooks/useHivemind';
 import { useGetBorrowAmount } from 'hooks/useCoupon';
+import { collections } from 'constants/NFTCollections';
+import { useMarket } from 'hooks/useCollection';
+import { UserContext } from 'contexts/userContext';
 
 const { formatShortName: fsn, formatPercent: fp } = formatNumber;
 
 export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSelect }) => {
 	const selectedNFTId = useLoanFlowStore((state) => state.NFTId);
+	const { currentUser } = useContext(UserContext);
 
 	const {
 		nftContractAddress,
@@ -52,6 +56,16 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 	);
 	const nftValue = nftPrice.price;
 	const MAX_LTV = maxBorrow / nftValue;
+
+	const collection = collections.find(
+		(collection) => collection.HERC20ContractAddress === position.HERC20ContractAddr
+	);
+
+	const [marketData, isLoadingMarketData] = useMarket(
+		currentUser,
+		collection ? [collection] : [],
+		htokenHelperContractAddress
+	);
 
 	return (
 		<div
@@ -105,7 +119,7 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 						</div>
 					}
 				/>
-				<InfoBlock title="IR" value={fp(5, 2)} />
+				<InfoBlock title="IR" value={fp(marketData[0].borrowRate, 2)} />
 			</div>
 			<div className={styles.divider} />
 			<BorrowPositionCardSlider
