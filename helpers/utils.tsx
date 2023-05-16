@@ -69,7 +69,7 @@ export const fetchAllowance = (positions: MarketTablePosition[], NFTId: string) 
 export const fetchInterestRate = (lendDatas: LendTableRow[], HERC20ContractAddress: string) => {
 	const lendData = lendDatas.filter((lendData) => lendData.key === HERC20ContractAddress);
 	if (lendData.length) {
-		return lendData[0].rate <= 0 ? 0 : 0;
+		return lendData[0].rate <= 0 ? 0 : lendData[0].rate;
 	} else {
 		return 0;
 	}

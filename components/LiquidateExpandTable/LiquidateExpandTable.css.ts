@@ -7,7 +7,12 @@ export const expandTableHeader = style({
 	marginTop: 12,
 	display: 'flex',
 	justifyContent: 'space-between',
-	alignItems: 'center'
+	alignItems: 'center',
+	'@media': {
+		[`screen and (max-width: ${breakpoints.mobile}px)`]: {
+			paddingRight: 10
+		}
+	}
 });
 
 export const positionsCounterContainer = style({

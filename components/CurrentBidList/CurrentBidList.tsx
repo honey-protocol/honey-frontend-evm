@@ -6,10 +6,11 @@ type CurrentBidListProps = {
 	bids: Bid[];
 	underlyingPrice: number;
 	unit: Unit;
+	formatDecimals: number;
 };
 
 const CurrentBidList = (props: CurrentBidListProps) => {
-	const { bids, underlyingPrice, unit } = props;
+	const { bids, underlyingPrice, unit, formatDecimals } = props;
 
 	return (
 		<>
@@ -21,6 +22,7 @@ const CurrentBidList = (props: CurrentBidListProps) => {
 							underlyingPrice={underlyingPrice}
 							hasBorder={index !== bids.length - 1}
 							unit={unit}
+							formatDecimals={formatDecimals}
 						/>
 					</div>
 				))}

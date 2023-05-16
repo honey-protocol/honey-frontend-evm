@@ -11,7 +11,7 @@ const NFTBidsList = () => {
 	const { HERC20ContractAddr: HERC20ContractAddress, NFTId } = useLiquidationFlowStore(
 		(state) => state
 	);
-	const { htokenHelperContractAddress, marketContractAddress, unit } =
+	const { htokenHelperContractAddress, marketContractAddress, unit, formatDecimals } =
 		getContractsByHTokenAddr(HERC20ContractAddress);
 	const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(
 		htokenHelperContractAddress,
@@ -30,6 +30,7 @@ const NFTBidsList = () => {
 					bids={sortBids(bidInfo.bids)}
 					underlyingPrice={underlyingPrice}
 					unit={unit}
+					formatDecimals={formatDecimals ?? 0}
 				/>
 			</div>
 		</SidebarScroll>

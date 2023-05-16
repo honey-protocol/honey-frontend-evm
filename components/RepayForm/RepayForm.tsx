@@ -63,7 +63,8 @@ const RepayForm = (props: RepayProps) => {
 		hivemindContractAddress,
 		ERC20ContractAddress,
 		erc20Name,
-		unit
+		unit,
+		formatDecimals
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
 	const [nft, isLoadingNFT] = useGetMetaDataFromNFTId(nftContractAddress, NFTId);
 	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
@@ -319,23 +320,19 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(nftValue)}
+							value={fs(nftValue, formatDecimals)}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
-									Estimated value <div className={questionIcon} />
+									Floor price <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
 								<span>
 									The worth of your collateral according to the market’s oracle. Learn more about
 									this market’s{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://switchboard.xyz/explorer"
-									>
-										Switchboard data-feed.
+									<a className={styles.extLink} target="blank" href="https://www.hivemind.sh/">
+										Hivemind data-feed.
 									</a>
 								</span>
 							}
@@ -343,14 +340,15 @@ const RepayForm = (props: RepayProps) => {
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fsn(userAllowance)}
+							value={fsn(userAllowance, formatDecimals)}
 							title={
 								<span className={hAlign}>
-									Allowance <div className={questionIcon} />
+									Borrow up to <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
-								40
+								40,
+								0
 							)}`}
 						/>
 					</div>
@@ -365,7 +363,7 @@ const RepayForm = (props: RepayProps) => {
 									<div className={questionIcon} />
 								</span>
 							}
-							value={fp((newDebt / nftValue) * 100)}
+							value={fp((newDebt / nftValue) * 100, 2)}
 							isDisabled={true}
 							toolTipLabel={
 								<span>
@@ -403,7 +401,7 @@ const RepayForm = (props: RepayProps) => {
 									<div className={questionIcon} />
 								</span>
 							}
-							value={fs(newDebt < 0 ? 0 : newDebt)}
+							value={fs(newDebt < 0 ? 0 : newDebt, formatDecimals)}
 							isDisabled={newDebt > 0 ? false : true}
 							toolTipLabel={
 								<span>
@@ -441,7 +439,7 @@ const RepayForm = (props: RepayProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={`${fs(newLiquidationPrice)} ${
+							value={`${fs(newLiquidationPrice, formatDecimals)} ${
 								newDebt ? `(-${newLiqPercent.toFixed(0)}%)` : ''
 							}`}
 							valueSize="normal"
@@ -453,13 +451,16 @@ const RepayForm = (props: RepayProps) => {
 				<div className={styles.inputs}>
 					<div className={styles.row}>
 						<div className={cs(styles.balance, styles.col)}>
-							<InfoBlock title={'Your underlying balance'} value={fs(underlyingBalance)} />
+							<InfoBlock
+								title={'Your underlying balance'}
+								value={fs(underlyingBalance, formatDecimals)}
+							/>
 						</div>
 						<div className={cs(styles.balance, styles.col)}>
 							<InfoBlock
 								isDisabled
 								title={'NEW Underlying balance'}
-								value={fs(underlyingBalance - (valueUnderlying || 0))}
+								value={fs(underlyingBalance - (valueUnderlying || 0), formatDecimals)}
 							/>
 						</div>
 					</div>

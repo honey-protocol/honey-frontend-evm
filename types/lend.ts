@@ -8,4 +8,5 @@ export type LendTableRow = {
 	rate: number;
 	available: number;
 	supplied: number;
+	formatDecimals: number;
 };

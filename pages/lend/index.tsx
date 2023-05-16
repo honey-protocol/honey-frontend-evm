@@ -15,6 +15,7 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import { getColumnSortStatus } from '../../helpers/tableUtils';
 import HoneySider from '../../components/HoneySider/HoneySider';
 import HoneyContent from '../../components/HoneyContent/HoneyContent';
+import EmptyStateDetails from '../../components/EmptyStateDetails/EmptyStateDetails';
 import { Typography, Space } from 'antd';
 import { pageDescription, pageTitle } from 'styles/common.css';
 import HoneyTableNameCell from 'components/HoneyTable/HoneyTableNameCell/HoneyTableNameCell';
@@ -30,6 +31,7 @@ import { getContractsByHTokenAddr } from '../../helpers/generalHelper';
 import { LendTableRow } from 'types/lend';
 import HoneyToggle from 'components/HoneyToggle/HoneyToggle';
 const { format: f, formatPercent: fp, formatERC20: fs } = formatNumber;
+import classNames from 'classnames';
 
 const Lend: NextPage = () => {
 	const calculatedInterestRate = 0.1;
@@ -44,7 +46,7 @@ const Lend: NextPage = () => {
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 
-	const { htokenHelperContractAddress, nftContractAddress, unit } =
+	const { htokenHelperContractAddress, nftContractAddress, unit, formatDecimals } =
 		getContractsByHTokenAddr(HERC20ContractAddr);
 
 	/*    Begin insert data into table */
@@ -69,9 +71,8 @@ const Lend: NextPage = () => {
 		if (!searchTerm) {
 			return [...tableData];
 		}
-		const r = new RegExp(searchTerm, 'gmi');
 		return [...tableData].filter((row) => {
-			return r.test(row.name);
+			return row.name.toLowerCase().includes(searchTerm.toLowerCase());
 		});
 	};
 
@@ -132,15 +133,15 @@ const Lend: NextPage = () => {
 		</div>
 	);
 
-	const SearchForm = () => {
+	const SearchForm = useCallback(() => {
 		return (
 			<SearchInput
+				value={searchQuery}
 				onChange={handleSearchInputChange}
 				placeholder="Search by name"
-				value={searchQuery}
 			/>
 		);
-	};
+	}, [searchQuery]);
 
 	const columnsWidth: Array<number | string> = [240, 150, 150, 150, 150];
 
@@ -187,7 +188,7 @@ const Lend: NextPage = () => {
 				render: (rate: number) => {
 					return (
 						<div className={c(style.rateCell, style.lendRate)}>
-							{fp(rate / (showWeeklyRates ? 52 : 1))}
+							{fp(rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 						</div>
 					);
 				}
@@ -205,8 +206,8 @@ const Lend: NextPage = () => {
 				},
 				dataIndex: 'supplied',
 				sorter: (a, b) => a.supplied - b.supplied,
-				render: (supplied: number) => {
-					return <div className={style.valueCell}>{fs(supplied)}</div>;
+				render: (supplied: number, row: LendTableRow) => {
+					return <div className={style.valueCell}>{fs(supplied, row.formatDecimals)}</div>;
 				}
 			},
 			{
@@ -222,8 +223,8 @@ const Lend: NextPage = () => {
 				},
 				dataIndex: 'available',
 				sorter: (a, b) => a.available - b.available,
-				render: (available: number) => {
-					return <div className={style.availableCell}>{fs(available)}</div>;
+				render: (available: number, row: LendTableRow) => {
+					return <div className={style.availableCell}>{fs(available, row.formatDecimals)}</div>;
 				}
 			},
 			{
@@ -233,7 +234,7 @@ const Lend: NextPage = () => {
 					return (
 						<div className={style.buttonsCell}>
 							<HoneyButton variant="text">
-								Manage <div className={style.arrowRightIcon} />
+								Manage <div className={style.placeHolder} />
 							</HoneyButton>
 						</div>
 					);
@@ -276,16 +277,18 @@ const Lend: NextPage = () => {
 								rightSide={
 									<div className={style.buttonsCell}>
 										<HoneyButton variant="text">
-											Manage <div className={style.arrowRightIcon} />
+											Manage <div className={style.placeHolder} />
 										</HoneyButton>
 									</div>
 								}
 							/>
 
 							<HoneyTableRow>
-								<div className={c(style.rateCell, style.lendRate)}>{fp(row.rate)}</div>
-								<div className={style.valueCell}>{fs(row.supplied)}</div>
-								<div className={style.availableCell}>{fs(row.available)}</div>
+								<div className={c(style.rateCell, style.lendRate)}>
+									{fp(row.rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
+								</div>
+								<div className={style.valueCell}>{fs(row.supplied, row.formatDecimals)}</div>
+								<div className={style.availableCell}>{fs(row.available, row.formatDecimals)}</div>
 							</HoneyTableRow>
 						</>
 					);
@@ -327,7 +330,9 @@ const Lend: NextPage = () => {
 						columns={columns}
 						dataSource={tableDataFiltered}
 						pagination={false}
-						className={style.table}
+						className={classNames(style.table, {
+							[style.emptyTable]: !tableDataFiltered.length
+						})}
 						onRow={(record, rowIndex) => {
 							return {
 								onClick: (event) => initLendOrWithdrawFlow(event, record)
@@ -354,10 +359,14 @@ const Lend: NextPage = () => {
 				</div>
 				<div className={style.showTablet}>
 					<div className={c(style.mobileTableHeader, style.mobileSearchAndToggleContainer)}>
-						<div className={style.mobileRow}>
-							<SearchForm />
+						<div className={c(style.mobileRow, style.mobileSearchContainer)}>
+							<SearchInput
+								value={searchQuery}
+								onChange={handleSearchInputChange}
+								placeholder="Search by name"
+							/>
 						</div>
-						<div className={style.mobileRow}>
+						<div className={c(style.mobileToggleContainer)}>
 							<WeeklyToggle />
 						</div>
 					</div>
@@ -373,7 +382,9 @@ const Lend: NextPage = () => {
 						dataSource={tableDataFiltered}
 						pagination={false}
 						showHeader={false}
-						className={style.table}
+						className={classNames(style.table, {
+							[style.emptyTable]: !tableDataFiltered.length
+						})}
 						onRow={(record, rowIndex) => {
 							return {
 								onClick: (event) => initLendOrWithdrawFlow(event, record)
@@ -381,6 +392,24 @@ const Lend: NextPage = () => {
 						}}
 					/>
 				</div>
+				{!tableDataFiltered.length &&
+					(isMyCollectionsFilterEnabled ? (
+						<div className={style.emptyStateContainer}>
+							<EmptyStateDetails
+								icon={<div className={style.docIcon} />}
+								title="You have no open positions"
+								description="Turn off the filter to view other markets"
+							/>
+						</div>
+					) : (
+						<div className={style.emptyStateContainer}>
+							<EmptyStateDetails
+								icon={<div className={style.docIcon} />}
+								title="No collections to display"
+								description="Turn off all filters and clear search inputs"
+							/>
+						</div>
+					))}
 			</HoneyContent>
 		</LayoutRedesign>
 	);

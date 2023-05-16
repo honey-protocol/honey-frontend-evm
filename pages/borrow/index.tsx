@@ -42,7 +42,7 @@ const Markets: NextPage = () => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const [showWeeklyRates, setShowWeeklyRates] = useState(true);
 	const [tableData, setTableData] = useState<MarketTableRow[]>([]);
-	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(true);
+	const [isMyCollectionsFilterEnabled, setIsMyCollectionsFilterEnabled] = useState(false);
 	const [expandedRowKeys, setExpandedRowKeys] = useState<readonly antdKey[]>([]);
 	const {
 		HERC20ContractAddr: HERC20ContractAddress,
@@ -54,8 +54,13 @@ const Markets: NextPage = () => {
 	const isSidebarVisibleInMobile = useDisplayStore((state) => state.isSidebarVisibleInMobile);
 	const setIsSidebarVisibleInMobile = useDisplayStore((state) => state.setIsSidebarVisibleInMobile);
 	const { width: windowWidth } = useWindowSize();
-	const { htokenHelperContractAddress, hivemindContractAddress, nftContractAddress, unit } =
-		getContractsByHTokenAddr(HERC20ContractAddress);
+	const {
+		htokenHelperContractAddress,
+		hivemindContractAddress,
+		nftContractAddress,
+		unit,
+		formatDecimals
+	} = getContractsByHTokenAddr(HERC20ContractAddress);
 
 	const { chain } = useNetwork();
 
@@ -87,16 +92,14 @@ const Markets: NextPage = () => {
 		if (!searchTerm) {
 			return [...tableData];
 		}
-		const r = new RegExp(searchTerm, 'gmi');
 		return [...tableData].filter((row) => {
-			return r.test(row.name);
+			return row.name.toLowerCase().includes(searchTerm.toLowerCase());
 		});
 	};
 
 	const debouncedSearch = useCallback(
 		_.debounce((criteria: string) => {
 			setTableDataFiltered(onSearch(criteria));
-			setSearchQuery(criteria);
 		}, 500),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[tableData]
@@ -105,6 +108,7 @@ const Markets: NextPage = () => {
 	const handleSearchInputChange = useCallback(
 		(e: ChangeEvent<HTMLInputElement>) => {
 			const value = e.target.value;
+			setSearchQuery(value);
 			debouncedSearch(value);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -152,9 +156,15 @@ const Markets: NextPage = () => {
 		</div>
 	);
 
-	const SearchForm = () => {
-		return <SearchInput onChange={handleSearchInputChange} placeholder="Search by name" />;
-	};
+	const SearchForm = useCallback(() => {
+		return (
+			<SearchInput
+				value={searchQuery}
+				onChange={handleSearchInputChange}
+				placeholder="Search by name"
+			/>
+		);
+	}, [searchQuery]);
 
 	const columnsWidth: Array<number | string> = [240, 150, 150, 150, 150];
 
@@ -202,8 +212,8 @@ const Markets: NextPage = () => {
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
 					render: (rate: number) => {
 						return (
-							<div className={c(style.rateCell, style.lendRate)}>
-								{fp(rate / (showWeeklyRates ? 52 : 1))}
+							<div className={c(style.rateCell, style.borrowRate)}>
+								{fp(rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 							</div>
 						);
 					}
@@ -222,8 +232,8 @@ const Markets: NextPage = () => {
 					},
 					dataIndex: 'supplied',
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.supplied - b.supplied,
-					render: (supplied: number) => {
-						return <div className={style.valueCell}>{fs(supplied)}</div>;
+					render: (supplied: number, row: MarketTableRow) => {
+						return <div className={style.valueCell}>{fs(supplied, row.formatDecimals)}</div>;
 					}
 				},
 				{
@@ -240,8 +250,8 @@ const Markets: NextPage = () => {
 					dataIndex: 'available',
 					hidden: windowWidth < TABLET_BP,
 					sorter: (a: MarketTableRow, b: MarketTableRow) => a.available - b.available,
-					render: (available: number) => {
-						return <div className={style.availableCell}>{fs(available)}</div>;
+					render: (available: number, row: MarketTableRow) => {
+						return <div className={style.availableCell}>{fs(available, row.formatDecimals)}</div>;
 					}
 				},
 				{
@@ -288,7 +298,7 @@ const Markets: NextPage = () => {
 										</div>
 										<div className={style.nameCellMobile}>
 											<div className={style.collectionName}>{row['name']}</div>
-											<div className={style.rateCellMobile}>{fp(row.rate)}</div>
+											{/* <div className={style.rateCellMobile}>{fp(row.rate)}</div> */}
 										</div>
 									</>
 								}
@@ -302,7 +312,9 @@ const Markets: NextPage = () => {
 							/>
 
 							<HoneyTableRow>
-								<div className={style.rateCell}>{fp(row.rate)}</div>
+								<div className={c(style.rateCell, style.borrowRate)}>
+									{fp(row.rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
+								</div>
 								<div className={style.availableCell}>{fs(row.supplied)}</div>
 								<div className={style.availableCell}>{fs(row.available)}</div>
 							</HoneyTableRow>
@@ -312,7 +324,7 @@ const Markets: NextPage = () => {
 			}
 		],
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[isMyCollectionsFilterEnabled, tableData, searchQuery]
+		[isMyCollectionsFilterEnabled, tableData, searchQuery, showWeeklyRates]
 	);
 
 	const expandColumns: ColumnType<MarketTablePosition>[] = [
@@ -344,7 +356,7 @@ const Markets: NextPage = () => {
 			width: columnsWidth[1],
 			render: (debt) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Debt:'} value={fs(debt)} />
+					<InfoBlock title={'Debt:'} value={fs(debt, formatDecimals)} />
 				</div>
 			)
 		},
@@ -353,7 +365,7 @@ const Markets: NextPage = () => {
 			width: columnsWidth[2],
 			render: (allowance) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Allowance:'} value={fs(allowance)} />
+					<InfoBlock title={'Allowance:'} value={fs(allowance, formatDecimals)} />
 				</div>
 			)
 		},
@@ -362,7 +374,7 @@ const Markets: NextPage = () => {
 			width: columnsWidth[3],
 			render: (value) => (
 				<div className={style.expandedRowCell}>
-					<InfoBlock title={'Value:'} value={fs(value)} />
+					<InfoBlock title={'Floor price:'} value={fs(value, formatDecimals)} />
 				</div>
 			)
 		},
@@ -377,7 +389,7 @@ const Markets: NextPage = () => {
 						variant="text"
 						onClick={(e) => initLoanOrBorrowFlow(row['tokenId'], row['couponId'])}
 					>
-						Manage <div className={style.arrowRightIcon} />
+						Manage <div className={style.placeHolder} />
 					</HoneyButton>
 				</div>
 			)
@@ -419,7 +431,7 @@ const Markets: NextPage = () => {
 						onClick={(e) => initLoanOrBorrowFlow(row['tokenId'], row['couponId'])}
 					>
 						{'Manage'}
-						<div className={style.arrowRightIcon} />
+						<div className={style.placeHolder} />
 					</HoneyButton>
 				</div>
 			)
@@ -546,10 +558,14 @@ const Markets: NextPage = () => {
 
 				<div className={style.showTablet}>
 					<div className={c(style.mobileTableHeader, style.mobileSearchAndToggleContainer)}>
-						<div className={style.mobileRow}>
-							<SearchForm />
+						<div className={c(style.mobileRow, style.mobileSearchContainer)}>
+							<SearchInput
+								value={searchQuery}
+								onChange={handleSearchInputChange}
+								placeholder="Search by name"
+							/>
 						</div>
-						<div className={style.mobileRow}>
+						<div className={c(style.mobileToggleContainer)}>
 							<WeeklyToggle />
 						</div>
 					</div>
@@ -618,7 +634,7 @@ const Markets: NextPage = () => {
 						<div className={style.emptyStateContainer}>
 							<EmptyStateDetails
 								icon={<div className={style.docIcon} />}
-								title="You didn’t use any collections yet"
+								title="You have no open positions"
 								description="Turn off the filter my collection and choose any collection to borrow tokens"
 							/>
 						</div>

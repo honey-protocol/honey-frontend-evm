@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { LendPositionCardProps } from '../types';
 import * as styles from './LendPositionCard.css';
 import HexaBoxContainer from '../../HexaBoxContainer/HexaBoxContainer';
@@ -8,11 +8,28 @@ import { formatNumber, formatNFTName as fnn } from '../../../helpers/format';
 import c from 'classnames';
 import HoneyTooltip from '../../HoneyTooltip/HoneyTooltip';
 import useLendFlowStore from 'store/lendFlowStore';
+import { getContractsByHTokenAddr } from 'helpers/generalHelper';
+import { useGetUserUnderlyingBalance } from 'hooks/useHtokenHelper';
+import { UserContext } from 'contexts/userContext';
 
 const { formatShortName: fsn, formatPercent: fp } = formatNumber;
 
 export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect }) => {
 	const selectedMarket = useLendFlowStore((state) => state.HERC20ContractAddr);
+
+	const { currentUser, setCurrentUser } = useContext(UserContext);
+
+	const { erc20Name, erc20Icon, formatDecimals, htokenHelperContractAddress, unit } =
+		getContractsByHTokenAddr(position.id);
+
+	const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(
+		htokenHelperContractAddress,
+		position.id,
+		currentUser,
+		unit
+	);
+
+	const userTotalDeposits = parseFloat(userUnderlyingBalance);
 	return (
 		<div
 			className={c(styles.positionCard, {
@@ -36,9 +53,28 @@ export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect
 			</div>
 			<div className={styles.positionValues}>
 				<InfoBlock title="IR" value={<span className={styles.irValue}>{fp(position.rate)}</span>} />
-				<InfoBlock title="Your Deposit" value={fsn(parseFloat(position.deposit))} />
-				<InfoBlock title="Supplied" value={fsn(position.supplied)} />
-				<InfoBlock title="Available" value={fsn(position.available)} />
+				<InfoBlock
+					title="Your Deposit"
+					value={fsn(userTotalDeposits < 0 ? 0 : userTotalDeposits, formatDecimals)}
+				/>
+				<InfoBlock
+					title="Supplied"
+					value={
+						<div className={styles.infoRow}>
+							{fsn(position.supplied, formatDecimals)}
+							<Image src={erc20Icon} alt={erc20Name} layout="fixed" width="16px" height="16px" />
+						</div>
+					}
+				/>
+				<InfoBlock
+					title="Available"
+					value={
+						<div className={styles.infoRow}>
+							{fsn(position.available, formatDecimals)}
+							<Image src={erc20Icon} alt={erc20Name} layout="fixed" width="16px" height="16px" />
+						</div>
+					}
+				/>
 			</div>
 		</div>
 	);

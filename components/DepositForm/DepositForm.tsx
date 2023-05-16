@@ -53,7 +53,8 @@ const DepositForm = (props: DepositFormProps) => {
 		erc20Icon,
 		name,
 		icon,
-		unit
+		unit,
+		formatDecimals
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
 	const setWorkflow = useLendFlowStore((state) => state.setWorkflow);
 	const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(
@@ -275,14 +276,14 @@ const DepositForm = (props: DepositFormProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fsn(userTotalDeposits)}
+							value={fsn(userTotalDeposits, formatDecimals)}
 							valueSize="big"
 							footer={<span>Your Deposits</span>}
 						/>
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fp(fetchInterestRate(lendData, HERC20ContractAddress))}
+							value={fp(fetchInterestRate(lendData, HERC20ContractAddress), 2)}
 							valueSize="big"
 							toolTipLabel="APY is measured by compounding the weekly interest rate"
 							footer={
@@ -294,7 +295,7 @@ const DepositForm = (props: DepositFormProps) => {
 					</div>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fp(utilizationRate)}
+							value={fp(utilizationRate, 2)}
 							valueSize="big"
 							toolTipLabel=" Amount of supplied liquidity currently being borrowed"
 							footer={

@@ -69,7 +69,8 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 		name,
 		icon,
 		erc20Name,
-		unit
+		unit,
+		formatDecimals
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
 	const setWorkflow = useLiquidationFlowStore((state) => state.setWorkflow);
 	const [underlyingPrice, isLoadingUnderlyingPrice] = useGetUnderlyingPriceInUSD(
@@ -384,6 +385,7 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 						<div className={styles.col}>
 							<CurrentBid
 								disabled={isButtonDisable}
+								formatDecimals={formatDecimals ?? 0}
 								value={currentBid().value}
 								title={currentBidTile()}
 								buttonText={currentBidButtonText()}
@@ -396,7 +398,7 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(parseFloat(fromWei(bidInfo.highestBid, unit)))}
+							value={fs(parseFloat(fromWei(bidInfo.highestBid, unit)), formatDecimals)}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
@@ -412,7 +414,7 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 									Minimal bid <div className={questionIcon} />
 								</span>
 							}
-							value={fs(minBid)}
+							value={fs(minBid, formatDecimals)}
 							valueSize="big"
 						/>
 					</div>
@@ -420,7 +422,7 @@ const BidCollateralForm = (props: BidCollateralFormProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(parseFloat(userBalance))}
+							value={fs(parseFloat(userBalance), formatDecimals)}
 							valueSize="big"
 							title="Your token balance"
 						/>

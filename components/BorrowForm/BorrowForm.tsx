@@ -62,7 +62,8 @@ const BorrowForm = (props: BorrowProps) => {
 		htokenHelperContractAddress,
 		hivemindContractAddress,
 		erc20Name,
-		unit
+		unit,
+		formatDecimals
 	} = getContractsByHTokenAddr(HERC20ContractAddress);
 
 	const [valueUSD, setValueUSD] = useState<number>(0);
@@ -239,23 +240,19 @@ const BorrowForm = (props: BorrowProps) => {
 				<div className={styles.row}>
 					<div className={styles.col}>
 						<InfoBlock
-							value={fsn(nftValue)}
+							value={fsn(nftValue, formatDecimals)}
 							valueSize="big"
 							title={
 								<span className={hAlign}>
-									Estimated value <div className={questionIcon} />
+									Floor price <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={
 								<span>
 									The worth of your collateral according to the market’s oracle. Learn more about
 									this market’s{' '}
-									<a
-										className={styles.extLink}
-										target="blank"
-										href="https://switchboard.xyz/explorer"
-									>
-										Switchboard data-feed.
+									<a className={styles.extLink} target="blank" href="https://www.hivemind.sh/">
+										Hivemind data-feed.
 									</a>
 								</span>
 							}
@@ -264,14 +261,15 @@ const BorrowForm = (props: BorrowProps) => {
 
 					<div className={styles.col}>
 						<InfoBlock
-							value={fs(userAllowance)}
+							value={fs(userAllowance, formatDecimals)}
 							title={
 								<span className={hAlign}>
-									Allowance <div className={questionIcon} />
+									Borrow up to <div className={questionIcon} />
 								</span>
 							}
 							toolTipLabel={`Allowance determines how much debt is available to a borrower. This market supports no more than ${fp(
-								40
+								40,
+								0
 							)}`}
 						/>
 					</div>
@@ -298,7 +296,7 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={fp(((borrowedValue + newAdditionalDebt) / nftValue) * 100)}
+							value={fp(((borrowedValue + newAdditionalDebt) / nftValue) * 100, 2)}
 							isDisabled={newTotalDebt > 0 ? false : true}
 						/>
 						<HoneySlider
@@ -334,7 +332,7 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={fs(newTotalDebt < 0 ? 0 : newTotalDebt)}
+							value={fs(newTotalDebt < 0 ? 0 : newTotalDebt, formatDecimals)}
 							isDisabled={newTotalDebt > 0 ? false : true}
 						/>
 					</div>
@@ -358,7 +356,7 @@ const BorrowForm = (props: BorrowProps) => {
 									after the requested changes to the loan are approved.
 								</span>
 							}
-							value={`${fs(newLiquidationPrice)} ${
+							value={`${fs(newLiquidationPrice, formatDecimals)} ${
 								borrowedValue ? `(-${newLiqPercent.toFixed(0)}%)` : ''
 							}`}
 							valueSize="normal"
@@ -366,14 +364,14 @@ const BorrowForm = (props: BorrowProps) => {
 						/>
 					</div>
 				</div>
-				<div className={styles.row}></div>
+				{/* <div className={styles.row}></div> */}
 				<div className={styles.inputs}>
 					<div className={styles.row}>
 						<div className={cs(stylesBorrow.balance, styles.col)}>
 							<InfoBlock
 								title={
 									<span className={hAlign}>
-										Interest Rate
+										Yearly Interest Rate
 										<div className={questionIcon} />
 									</span>
 								}
@@ -389,7 +387,7 @@ const BorrowForm = (props: BorrowProps) => {
 										</a>
 									</span>
 								}
-								value={fp(5)}
+								value={fp(5, 2)}
 							/>
 						</div>
 						<div className={cs(stylesBorrow.balance, styles.col)}>
@@ -399,7 +397,8 @@ const BorrowForm = (props: BorrowProps) => {
 										Borrow Fee <div className={questionIcon} />
 									</span>
 								}
-								value={fs(valueUnderlying * borrowFee)}
+								value={`${fs(valueUnderlying * borrowFee, formatDecimals)} 
+								${`(${fp(borrowFee * 100, 2)})`}`}
 								//TODO: add link to docs
 								toolTipLabel={
 									<span>

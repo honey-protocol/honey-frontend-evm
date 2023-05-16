@@ -13,10 +13,11 @@ type BidListItemProps = {
 	bid: Bid;
 	underlyingPrice: number;
 	unit: Unit;
+	formatDecimals: number;
 };
 
 const BidListItem = (props: BidListItemProps) => {
-	const { bid, underlyingPrice, unit, hasBorder = true } = props;
+	const { bid, underlyingPrice, unit, hasBorder = true, formatDecimals } = props;
 	return (
 		<div className={c(styles.bidCard, { [styles.hasBorder]: hasBorder })}>
 			<div className={styles.bidCardLeft}>
@@ -31,7 +32,7 @@ const BidListItem = (props: BidListItemProps) => {
 				/>
 			</div>
 			<div className={styles.bidCardRight}>
-				<p className={styles.bidCardPrice}>{fs(bidToFloat(bid.bid, unit))}</p>
+				<p className={styles.bidCardPrice}>{fs(bidToFloat(bid.bid, unit), formatDecimals)}</p>
 				<p className={styles.bidCardUsdcCounts}>
 					{f(underlyingPrice * bidToFloat(bid.bid, unit))} USD
 				</p>

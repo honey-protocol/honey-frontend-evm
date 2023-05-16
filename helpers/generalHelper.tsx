@@ -30,6 +30,7 @@ export function getContractsByHTokenAddr(HERC20ContractAddr: string) {
 		nftContractAddress: nftContractAddress,
 		htokenHelperContractAddress: htokenHelperContractAddress,
 		marketContractAddress: marketContractAddress,
+		formatDecimals: collection?.formatDecimals,
 		unit: unit
 	};
 }
