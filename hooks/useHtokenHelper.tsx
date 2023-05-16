@@ -558,9 +558,9 @@ export async function getMarketData(
 	// @ts-ignore
 	const response = await Moralis.EvmApi.utils.runContractFunction(options);
 	const result: any = response.result;
-	const interestRate = result[0] as number;
-	const supplied = result[1] as string;
-	const available = result[2] as string;
+	const interestRate = result[3] as number;
+	const supplied = result[4] as string;
+	const available = result[5] as string;
 	const resultData: marketData = {
 		HERC20ContractAddress: HERC20ContractAddress,
 		interestRate: interestRate / 1000.0,
