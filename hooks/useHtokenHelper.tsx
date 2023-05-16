@@ -536,7 +536,8 @@ export function useGetUserCoupons(
 
 export interface marketData {
 	HERC20ContractAddress: string;
-	interestRate: string;
+	borrowInterestRate: string;
+	supplyInterestRate: string;
 	supplied: string;
 	available: string;
 }
@@ -564,7 +565,8 @@ export async function getMarketData(
 	const available = result[5] as string;
 	const resultData: marketData = {
 		HERC20ContractAddress: HERC20ContractAddress,
-		interestRate: fromWei(borrowInterestRate, unit),
+		borrowInterestRate: fromWei(borrowInterestRate, unit),
+		supplyInterestRate: fromWei(supplyInterestRate, unit),
 		supplied: fromWei(supplied, unit),
 		available: fromWei(available, unit)
 	};

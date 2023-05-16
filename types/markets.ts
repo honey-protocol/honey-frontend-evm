@@ -5,7 +5,8 @@ export type MarketTableRow = {
 	name: string;
 	icon: string;
 	erc20Icon: string;
-	rate: string;
+	borrowRate: number;
+	lendRate: number;
 	available: number;
 	supplied: number;
 	formatDecimals: number;
