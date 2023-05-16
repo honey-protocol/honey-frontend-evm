@@ -142,7 +142,8 @@ export function useLendUserPositions(
 	const walletPublicKey: string = user?.address || '';
 	const defaultMarket: marketData = {
 		HERC20ContractAddress: '',
-		interestRate: 0,
+		borrowInterestRate: '0',
+		supplyInterestRate: '0',
 		supplied: '0',
 		available: '0'
 	};
@@ -203,7 +204,8 @@ export function useLendUserPositions(
 							console.error(e);
 							const result: marketData = {
 								HERC20ContractAddress: HERC20ContractAddress,
-								interestRate: 0,
+								borrowInterestRate: '0',
+								supplyInterestRate: '0',
 								supplied: '0',
 								available: '0'
 							};
@@ -229,7 +231,11 @@ export function useLendUserPositions(
 			const data = lendData[0];
 			position.supplied = parseFloat(data.supplied);
 			position.available = parseFloat(data.available);
-			position.rate = interestRateLend(data.interestRate, data.supplied, data.available);
+			position.rate = interestRateLend(
+				parseFloat(data.supplyInterestRate),
+				data.supplied,
+				data.available
+			);
 		}
 		return position;
 	});

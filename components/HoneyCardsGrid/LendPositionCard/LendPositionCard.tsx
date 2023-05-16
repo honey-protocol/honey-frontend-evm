@@ -47,7 +47,10 @@ export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect
 				<div className={styles.arrowIcon} />
 			</div>
 			<div className={styles.positionValues}>
-				<InfoBlock title="IR" value={<span className={styles.irValue}>{fp(position.rate)}</span>} />
+				<InfoBlock
+					title="IR"
+					value={<span className={styles.irValue}>{fp(position.rate, 2)}</span>}
+				/>
 				<InfoBlock
 					title="Your Deposit"
 					value={fsn(userTotalDeposits < 0 ? 0 : userTotalDeposits, formatDecimals)}

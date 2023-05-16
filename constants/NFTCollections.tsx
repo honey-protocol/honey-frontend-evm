@@ -126,7 +126,7 @@ function getCollections() {
 function getHelperContract() {
 	if (envName == 'dev') {
 		const contract: helperContract = {
-			htokenHelperContractAddress: '0x25A50Bf4b67f9A3F9f81Ef346f60E6c1EE5BE59D',
+			htokenHelperContractAddress: '0x80478086f9fb2462e7a35eec6e9a683b25153b37',
 			hivemindContractAddress: '0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d',
 			oracleContractAddress: '0xB3d108BD30C564181bCcdF419f34f87b10F5c76d',
 			marketContractAddress: '0x9a1EDb903B058298dd0b06f52876d9D45358B7cB'
@@ -134,7 +134,7 @@ function getHelperContract() {
 		return contract;
 	} else if (envName == 'prod') {
 		const contract: helperContract = {
-			htokenHelperContractAddress: '0x25A50Bf4b67f9A3F9f81Ef346f60E6c1EE5BE59D',
+			htokenHelperContractAddress: '0x80478086f9fb2462e7a35eec6e9a683b25153b37',
 			hivemindContractAddress: '0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d',
 			oracleContractAddress: '0xB3d108BD30C564181bCcdF419f34f87b10F5c76d',
 			marketContractAddress: '0x9a1EDb903B058298dd0b06f52876d9D45358B7cB'

@@ -211,14 +211,13 @@ const Markets: NextPage = () => {
 							</div>
 						);
 					},
-					dataIndex: 'rate',
+					dataIndex: 'borrowRate',
 					hidden: windowWidth < TABLET_BP,
-					sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
-					render: (rate: number) => {
+					sorter: (a: MarketTableRow, b: MarketTableRow) => a.borrowRate - b.borrowRate,
+					render: (borrowRate: number, row: MarketTableRow) => {
 						return (
-							<div className={c(style.rateCell, style.borrowRate)}> 
-							{/* TODO: inject util based rate  */}
-								{fp(73 / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
+							<div className={c(style.rateCell, style.borrowRate)}>
+								{fp(borrowRate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 							</div>
 						);
 					}
@@ -318,7 +317,7 @@ const Markets: NextPage = () => {
 
 							<HoneyTableRow>
 								<div className={c(style.rateCell, style.borrowRate)}>
-									{fp(row.rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
+									{fp(row.borrowRate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 								</div>
 								<div className={style.availableCell}>{fs(row.supplied)}</div>
 								<div className={style.availableCell}>{fs(row.available)}</div>
