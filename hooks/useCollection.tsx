@@ -40,7 +40,8 @@ const defaultMarketData: MarketTableRow = {
 	icon: '',
 	erc20Icon: '',
 	formatDecimals: 0,
-	rate: 0,
+	lendRate: 0,
+	borrowRate: 0,
 	available: 0,
 	supplied: 0
 };
@@ -59,7 +60,8 @@ const defaultLiquidationData: LiquidateTableRow = {
 
 const defaultMarket: marketData = {
 	HERC20ContractAddress: '',
-	interestRate: 0,
+	supplyInterestRate: '0',
+	borrowInterestRate: '0',
 	supplied: '0',
 	available: '0'
 };
@@ -87,7 +89,8 @@ export function useMarket(
 								icon: collection.icon,
 								erc20Icon: collection.erc20Icon,
 								formatDecimals: collection.formatDecimals,
-								rate: marketData.interestRate,
+								lendRate: parseFloat(marketData.supplyInterestRate),
+								borrowRate: parseFloat(marketData.borrowInterestRate),
 								available: parseFloat(marketData.available),
 								supplied: parseFloat(marketData.supplied)
 							};
@@ -101,7 +104,8 @@ export function useMarket(
 								icon: collection.icon,
 								erc20Icon: collection.erc20Icon,
 								formatDecimals: collection.formatDecimals,
-								rate: 0,
+								borrowRate: 0,
+								lendRate: 0,
 								available: 0,
 								supplied: 0
 							};
@@ -357,7 +361,8 @@ export function useLend(
 							console.error(e);
 							const result: marketData = {
 								HERC20ContractAddress: collection.HERC20ContractAddress,
-								interestRate: 0,
+								borrowInterestRate: '0',
+								supplyInterestRate: '0',
 								supplied: '0',
 								available: '0'
 							};
@@ -389,7 +394,11 @@ export function useLend(
 			formatDecimals: formatDecimals ?? 3,
 			available: parseFloat(marketData.available),
 			supplied: parseFloat(marketData.supplied),
-			rate: interestRateLend(marketData.interestRate, marketData.supplied, marketData.available)
+			rate: interestRateLend(
+				Number(marketData.supplyInterestRate),
+				marketData.supplied,
+				marketData.available
+			)
 		};
 		return result;
 	});

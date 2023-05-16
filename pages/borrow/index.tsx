@@ -37,6 +37,10 @@ import HealthLvl from 'components/HealthLvl/HealthLvl';
 import c from 'classnames';
 import { useNetwork } from 'wagmi';
 
+import { useGetTotalBorrow } from 'hooks/useHerc20';
+import { useGetUserUnderlyingBalance } from 'hooks/useHtokenHelper';
+import { useGetTotalUnderlyingBalance } from 'hooks/useHtokenHelper';
+
 const { formatPercent: fp, formatERC20: fs } = formatNumber;
 const Markets: NextPage = () => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -207,13 +211,13 @@ const Markets: NextPage = () => {
 							</div>
 						);
 					},
-					dataIndex: 'rate',
+					dataIndex: 'borrowRate',
 					hidden: windowWidth < TABLET_BP,
-					sorter: (a: MarketTableRow, b: MarketTableRow) => a.rate - b.rate,
-					render: (rate: number) => {
+					sorter: (a: MarketTableRow, b: MarketTableRow) => a.borrowRate - b.borrowRate,
+					render: (borrowRate: number, row: MarketTableRow) => {
 						return (
 							<div className={c(style.rateCell, style.borrowRate)}>
-								{fp(rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
+								{fp(borrowRate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 							</div>
 						);
 					}
@@ -313,7 +317,7 @@ const Markets: NextPage = () => {
 
 							<HoneyTableRow>
 								<div className={c(style.rateCell, style.borrowRate)}>
-									{fp(row.rate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
+									{fp(row.borrowRate / (showWeeklyRates ? 52 : 1), showWeeklyRates ? 3 : 2)}
 								</div>
 								<div className={style.availableCell}>{fs(row.supplied)}</div>
 								<div className={style.availableCell}>{fs(row.available)}</div>

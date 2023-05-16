@@ -32,8 +32,9 @@ import {
 import { useGetBorrowAmount } from '../../hooks/useCoupon';
 import { borrow } from '../../hooks/useHerc20';
 import { queryKeys } from '../../helpers/queryHelper';
-import { usePositions } from '../../hooks/useCollection';
+import { useMarket, usePositions } from '../../hooks/useCollection';
 import { fetchAllowance } from 'helpers/utils';
+import { collections } from '../../constants/NFTCollections';
 
 const {
 	format: f,
@@ -116,6 +117,17 @@ const BorrowForm = (props: BorrowProps) => {
 		HERC20ContractAddress,
 		unit
 	);
+
+	const collection = collections.find(
+		(collection) => collection.HERC20ContractAddress === HERC20ContractAddress
+	);
+
+	const [marketData, isLoadingMarketData] = useMarket(
+		currentUser,
+		collection ? [collection] : [],
+		htokenHelperContractAddress
+	);
+
 	const newAdditionalDebt = valueUnderlying * (1 + borrowFee);
 	const newTotalDebt = newAdditionalDebt ? borrowedValue + newAdditionalDebt : borrowedValue;
 	/* end initial all  financial value here */
@@ -387,7 +399,7 @@ const BorrowForm = (props: BorrowProps) => {
 										</a>
 									</span>
 								}
-								value={fp(5, 2)}
+								value={fp(marketData[0].borrowRate, 2)}
 							/>
 						</div>
 						<div className={cs(stylesBorrow.balance, styles.col)}>
