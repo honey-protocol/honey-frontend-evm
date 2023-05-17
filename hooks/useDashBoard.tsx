@@ -19,7 +19,6 @@ import {
 import { fromWei } from 'web3-utils';
 import { getMarketData, getNFTPrice, marketData } from './useHtokenHelper';
 import { getContractsByHTokenAddr } from '../helpers/generalHelper';
-import { interestRateLend } from '../helpers/utils';
 import { TCurrentUser } from 'contexts/userContext';
 
 const sdk = getBuiltGraphSDK();
@@ -231,11 +230,7 @@ export function useLendUserPositions(
 			const data = lendData[0];
 			position.supplied = parseFloat(data.supplied);
 			position.available = parseFloat(data.available);
-			position.rate = interestRateLend(
-				parseFloat(data.supplyInterestRate),
-				data.supplied,
-				data.available
-			);
+			position.rate = parseFloat(data.supplyInterestRate);
 		}
 		return position;
 	});
