@@ -37,15 +37,6 @@ export const formatAddress = (address: any) => {
 export const RoundHalfDown = (val: number, decimals: number = 2): number => {
 	return Math.floor(val * 10 ** decimals) / 10 ** decimals;
 };
-/**
- * @description calculates interest rate for lend market
- * @params baserate which is default rate provided by contract | total market supplied | total market available
- * @returns interest rate for lend market
- */
-export const interestRateLend = (baseRate: number, supplied: string, available: string) => {
-	const rate = baseRate * ((parseFloat(supplied) - parseFloat(available)) / parseFloat(supplied));
-	return rate > 0 ? rate : 0;
-};
 
 /**
  * @description filter selected position from positions array
