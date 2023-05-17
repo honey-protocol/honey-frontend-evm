@@ -18,7 +18,6 @@ import { generateMockHistoryData } from '../helpers/chartUtils';
 import { TimestampPoint } from '../components/HoneyChart/types';
 import { LiquidateTablePosition, LiquidateTableRow } from '../types/liquidate';
 import { getNFTDefaultImage, getNFTName } from '../helpers/collateralHelper';
-import { interestRateLend } from 'helpers/utils';
 import { getCollateralFactor } from './useHivemind';
 import { getContractsByHTokenAddr } from '../helpers/generalHelper';
 import { TCurrentUser } from 'contexts/userContext';
@@ -394,11 +393,7 @@ export function useLend(
 			formatDecimals: formatDecimals ?? 3,
 			available: parseFloat(marketData.available),
 			supplied: parseFloat(marketData.supplied),
-			rate: interestRateLend(
-				Number(marketData.supplyInterestRate),
-				marketData.supplied,
-				marketData.available
-			)
+			rate: parseFloat(marketData.supplyInterestRate)
 		};
 		return result;
 	});

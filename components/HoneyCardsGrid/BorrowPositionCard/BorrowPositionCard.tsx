@@ -119,7 +119,7 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 						</div>
 					}
 				/>
-				<InfoBlock title="IR" value={fp(marketData[0].borrowRate, 2)} />
+				<InfoBlock title="IR" value={fp(marketData[0]?.borrowRate, 2)} />
 			</div>
 			<div className={styles.divider} />
 			<BorrowPositionCardSlider
