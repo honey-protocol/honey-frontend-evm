@@ -42,8 +42,8 @@ export const RoundHalfDown = (val: number, decimals: number = 2): number => {
  * @params baserate which is default rate provided by contract | total market supplied | total market available
  * @returns interest rate for lend market
  */
-export const interestRateLend = (baseRate: number, supplied: string, available: string) => {
-	const rate = baseRate * ((parseFloat(supplied) - parseFloat(available)) / parseFloat(supplied));
+export const interestRateLend = (baseRate: number) => {
+	const rate = baseRate;
 	return rate > 0 ? rate : 0;
 };
 
