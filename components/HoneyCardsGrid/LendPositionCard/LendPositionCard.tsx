@@ -19,8 +19,14 @@ export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect
 
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 
-	const { erc20Name, erc20Icon, formatDecimals, htokenHelperContractAddress, unit } =
-		getContractsByHTokenAddr(position.id);
+	const {
+		erc20Name,
+		erc20Icon,
+		formatDecimals,
+		htokenHelperContractAddress,
+		unit,
+		ERC20ContractAddress
+	} = getContractsByHTokenAddr(position.id);
 
 	const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(
 		htokenHelperContractAddress,
@@ -30,6 +36,8 @@ export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect
 	);
 
 	const userTotalDeposits = parseFloat(userUnderlyingBalance);
+
+	if (!ERC20ContractAddress) return null;
 	return (
 		<div
 			className={c(styles.positionCard, {
