@@ -394,11 +394,7 @@ export function useLend(
 			formatDecimals: formatDecimals ?? 3,
 			available: parseFloat(marketData.available),
 			supplied: parseFloat(marketData.supplied),
-			rate: interestRateLend(
-				Number(marketData.supplyInterestRate),
-				marketData.supplied,
-				marketData.available
-			)
+			rate: interestRateLend(Number(marketData.supplyInterestRate))
 		};
 		return result;
 	});
