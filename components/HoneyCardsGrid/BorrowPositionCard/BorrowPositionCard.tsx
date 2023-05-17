@@ -79,12 +79,7 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 		>
 			<div className={styles.collectionIcon}>
 				<HexaBoxContainer>
-					<Image
-						width={46}
-						height={46}
-						src={`https://res.cloudinary.com/${process.env.CLOUDINARY_URI}/image/fetch/${position.image}`}
-						alt={'collection Icon'}
-					/>
+					<Image width={46} height={46} src={position.image} alt={'collection Icon'} />
 				</HexaBoxContainer>
 			</div>
 			<div className={styles.positionName}>
