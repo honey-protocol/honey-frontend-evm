@@ -30,8 +30,7 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 		erc20Name,
 		erc20Icon,
 		formatDecimals,
-		unit,
-		ERC20ContractAddress
+		unit
 	} = getContractsByHTokenAddr(position.HERC20ContractAddr);
 
 	const [collateralFactor, isLoadingCollateralFactor] = useGetCollateralFactor(
@@ -68,7 +67,7 @@ export const BorrowPositionCard: FC<BorrowPositionCardProps> = ({ position, onSe
 		htokenHelperContractAddress
 	);
 
-	if (!ERC20ContractAddress) return null;
+	if (!collection) return null;
 
 	return (
 		<div

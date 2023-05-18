@@ -11,6 +11,7 @@ import useLendFlowStore from 'store/lendFlowStore';
 import { getContractsByHTokenAddr } from 'helpers/generalHelper';
 import { useGetUserUnderlyingBalance } from 'hooks/useHtokenHelper';
 import { UserContext } from 'contexts/userContext';
+import { collections } from 'constants/NFTCollections';
 
 const { formatShortName: fsn, formatPercent: fp } = formatNumber;
 
@@ -19,14 +20,12 @@ export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect
 
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 
-	const {
-		erc20Name,
-		erc20Icon,
-		formatDecimals,
-		htokenHelperContractAddress,
-		unit,
-		ERC20ContractAddress
-	} = getContractsByHTokenAddr(position.id);
+	const { erc20Name, erc20Icon, formatDecimals, htokenHelperContractAddress, unit } =
+		getContractsByHTokenAddr(position.id);
+
+	const collection = collections.find(
+		(collection) => collection.HERC20ContractAddress === position.id
+	);
 
 	const [userUnderlyingBalance, isLoadingUserUnderlyingBalance] = useGetUserUnderlyingBalance(
 		htokenHelperContractAddress,
@@ -37,7 +36,8 @@ export const LendPositionCard: FC<LendPositionCardProps> = ({ position, onSelect
 
 	const userTotalDeposits = parseFloat(userUnderlyingBalance);
 
-	if (!ERC20ContractAddress) return null;
+	if (!collection) return null;
+
 	return (
 		<div
 			className={c(styles.positionCard, {
