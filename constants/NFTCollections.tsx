@@ -13,7 +13,7 @@ function getCollections() {
 				ERC721ContractAddress: '0x670fd103b1a08628e9557cD66B87DeD841115190',
 				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 				HERC20ContractAddress: '0x13e3b746e89fd9693222fd377521d874e0e1ae5b'
-			}
+			},
 			// ,
 			// {
 			// 	name: 'LAND',
@@ -25,26 +25,66 @@ function getCollections() {
 			// 	ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 			// 	HERC20ContractAddress: '0x9e826d1427c15ff6f41521e9811fd526f7717a2a'
 			// },
-			// {
-			// 	name: 'OWLPHA',
-			// 	icon: '/nfts/owlpha.png',
-			// 	erc20Name: 'MATIC',
-			// 	erc20Icon: '/erc20/MaticIcon.png',
-			// 	unit: 'ether',
-			// // 	ERC721ContractAddress: '',
-			// // 	ERC20ContractAddress: '',
-			// // 	HERC20ContractAddress: ''
-			// },
-			// {
-			// 	name: 'BROZO',
-			// 	icon: '/nfts/brozo.png',
-			// 	erc20Name: 'MATIC',
-			// 	erc20Icon: '/erc20/MaticIcon.png',
-			// 	unit: 'ether',
-			// 	// ERC721ContractAddress: '',
-			// 	// ERC20ContractAddress: '',
-			// 	// HERC20ContractAddress: ''
-			// }
+			{
+				name: 'OWLPHA',
+				icon: '/nfts/owlpha.png',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x12AA01F646fe5C993C66c9C86EddAd4e514f6cBc',
+				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+				HERC20ContractAddress: '0x0352931a93296407f2740549503d83fb9f66fc18'
+			},
+			{
+				name: 'Polygon Punks',
+				icon: '/nfts/polygonPunk.png',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x9498274B8C82B4a3127D67839F2127F2Ae9753f4',
+				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+				HERC20ContractAddress: '0x3a6BAdbF5420a5391477e45B73079ECA3B8Cb46B'
+			},
+			{
+				name: 'Chicken Derby',
+				icon: '/nfts/chickenDerby.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x8634666bA15AdA4bbC83B9DbF285F73D9e46e4C2',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+				HERC20ContractAddress: '0x6e72368737f628db71336eec98e99d8496257965'
+			},
+			{
+				name: 'BROZO',
+				icon: '/nfts/brozo.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x220fa5cCc9404802ED6DB0935EB4feeFC27C937e',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+				HERC20ContractAddress: '0x186bC464BdfE5eCc2aA100c6db0154C693020BAe'
+			},
+			{
+				name: 'Rekt Dogs',
+				icon: '/nfts/rektDogs.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0xAce8187B113a38F83Bd9C896C6878B175c234dCc',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+				HERC20ContractAddress: '0xfb2654bc0ff6e02ffe819d355b8b085e089eb483'
+			},
+			{
+				name: 'Arkadians',
+				icon: '/nfts/arkadian.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x3c178321f5BC73494046a46b5A065F9211b7C65E',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+				HERC20ContractAddress: '0xA0EAD431a7cF5ACF96C13880C426635222772683'
+			}
 		] as collection[];
 	} else if (envName == 'prod') {
 		// change this prod market when we go to prod
@@ -59,7 +99,7 @@ function getCollections() {
 				ERC721ContractAddress: '0x670fd103b1a08628e9557cD66B87DeD841115190',
 				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 				HERC20ContractAddress: '0x13e3b746e89fd9693222fd377521d874e0e1ae5b'
-			}
+			},
 			// ,
 			// {
 			// 	name: 'LAND',
@@ -71,26 +111,66 @@ function getCollections() {
 			// 	ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 			// 	HERC20ContractAddress: '0x9e826d1427c15ff6f41521e9811fd526f7717a2a'
 			// },
-			// {
-			// 	name: 'OWLPHA',
-			// 	icon: '/nfts/owlpha.png',
-			// 	erc20Name: 'MATIC',
-			// 	erc20Icon: '/erc20/MaticIcon.png',
-			// 	unit: 'ether',
-			// // 	ERC721ContractAddress: '',
-			// // 	ERC20ContractAddress: '',
-			// // 	HERC20ContractAddress: ''
-			// },
-			// {
-			// 	name: 'BROZO',
-			// 	icon: '/nfts/brozo.png',
-			// 	erc20Name: 'MATIC',
-			// 	erc20Icon: '/erc20/MaticIcon.png',
-			// 	unit: 'ether',
-			// 	// ERC721ContractAddress: '',
-			// 	// ERC20ContractAddress: '',
-			// 	// HERC20ContractAddress: ''
-			// }
+			{
+				name: 'OWLPHA',
+				icon: '/nfts/owlpha.png',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x12AA01F646fe5C993C66c9C86EddAd4e514f6cBc',
+				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+				HERC20ContractAddress: '0x0352931a93296407f2740549503d83fb9f66fc18'
+			},
+			{
+				name: 'Polygon Punks',
+				icon: '/nfts/polygonPunk.png',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x9498274B8C82B4a3127D67839F2127F2Ae9753f4',
+				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+				HERC20ContractAddress: '0x3a6BAdbF5420a5391477e45B73079ECA3B8Cb46B'
+			},
+			{
+				name: 'Chicken Derby',
+				icon: '/nfts/chickenDerby.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x8634666bA15AdA4bbC83B9DbF285F73D9e46e4C2',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+				HERC20ContractAddress: '0x6e72368737f628db71336eec98e99d8496257965'
+			},
+			{
+				name: 'BROZO',
+				icon: '/nfts/brozo.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x220fa5cCc9404802ED6DB0935EB4feeFC27C937e',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+				HERC20ContractAddress: '0x186bC464BdfE5eCc2aA100c6db0154C693020BAe'
+			},
+			{
+				name: 'Rekt Dogs',
+				icon: '/nfts/rektDogs.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0xAce8187B113a38F83Bd9C896C6878B175c234dCc',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+				HERC20ContractAddress: '0xfb2654bc0ff6e02ffe819d355b8b085e089eb483'
+			},
+			{
+				name: 'Arkadians',
+				icon: '/nfts/arkadian.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
+				unit: 'ether',
+				ERC721ContractAddress: '0x3c178321f5BC73494046a46b5A065F9211b7C65E',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+				HERC20ContractAddress: '0xA0EAD431a7cF5ACF96C13880C426635222772683'
+			}
 		] as collection[];
 	} else {
 		return [] as collection[];
