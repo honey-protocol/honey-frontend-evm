@@ -13,7 +13,18 @@ function getCollections() {
 				ERC721ContractAddress: '0x670fd103b1a08628e9557cD66B87DeD841115190',
 				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 				HERC20ContractAddress: '0x13e3b746e89fd9693222fd377521d874e0e1ae5b'
-			}
+			},
+			{
+				name: 'Polygon Punks',
+				icon: '/nfts/polygonPunk.png',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				// formatDecimals: 2,
+				unit: 'ether',
+				ERC721ContractAddress: '0x9498274B8C82B4a3127D67839F2127F2Ae9753f4',
+				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+				HERC20ContractAddress: '0x3a6BAdbF5420a5391477e45B73079ECA3B8Cb46B'
+			},
 			// ,
 			// {
 			// 	name: 'LAND',
@@ -59,7 +70,18 @@ function getCollections() {
 				ERC721ContractAddress: '0x670fd103b1a08628e9557cD66B87DeD841115190',
 				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 				HERC20ContractAddress: '0x13e3b746e89fd9693222fd377521d874e0e1ae5b'
-			}
+			},
+			{
+				name: 'Polygon Punks',
+				icon: '/nfts/polygonPunk.png',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				// formatDecimals: 2,
+				unit: 'ether',
+				ERC721ContractAddress: '0x9498274B8C82B4a3127D67839F2127F2Ae9753f4',
+				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+				HERC20ContractAddress: '0x3a6BAdbF5420a5391477e45B73079ECA3B8Cb46B'
+			},
 			// ,
 			// {
 			// 	name: 'LAND',
