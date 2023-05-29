@@ -13,6 +13,7 @@ import { SolanaCircleIcon } from 'icons/SolanaCircleIcon';
 import { PolygonIcon } from 'icons/PolygonIcon';
 import { ArbitrumIcon } from 'icons/ArbitrumIcon';
 import { DownIcon } from 'icons/DownIcon';
+import Image from 'next/image';
 
 const supportedChains = [
 	{
@@ -32,6 +33,12 @@ const supportedChains = [
 		value: 'solana',
 		icon: <SolanaCircleIcon />,
 		href: 'https://solana.honey.finance'
+	},
+	{
+		name: 'BSC',
+		value: '0x38',
+		icon: <Image src="/erc20/BNBCoin.png" width={22} height={22} alt="BNB" />,
+		href: 'https://bsc.honey.finance'
 	}
 ];
 
