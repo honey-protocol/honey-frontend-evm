@@ -20,7 +20,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 import { getDefaultWallets, lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { polygon, bsc, arbitrum, polygonMumbai, fantom } from 'wagmi/chains';
+import { bsc } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { Analytics } from '@vercel/analytics/react';
 
@@ -37,7 +37,7 @@ const initializeMoralis = async () => {
 	}
 };
 
-const { chains, provider } = configureChains([arbitrum], [publicProvider()]);
+const { chains, provider } = configureChains([bsc], [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
 	appName: 'Honey Finance',

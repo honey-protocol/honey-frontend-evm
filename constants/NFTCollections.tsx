@@ -4,118 +4,15 @@ function getCollections() {
 	if (envName == 'dev') {
 		return [
 			{
-				name: 'The Lost Donkey',
-				icon: '/nfts/theLostDonkeys.png',
-				erc20Name: 'MAGIC',
-				erc20Icon: '/erc20/magicIcon.png',
+				name: 'Pancake Squad',
+				icon: '/nfts/pancakeSquad.png',
+				erc20Name: 'WBNB',
+				erc20Icon: '/erc20/BNBCoin.png',
 				formatDecimals: 2,
 				unit: 'ether',
-				ERC721ContractAddress: '0x5e84c1a06e6ad1a8ed66bc48dbe5eb06bf2fe4aa',
-				ERC20ContractAddress: '0x539bdE0d7Dbd336b79148AA742883198BBF60342',
-				HERC20ContractAddress: '0x582be1f3d46b71c1c93b03b3cf195ebc4e13d8a2'
-			},
-			{
-				name: 'OreoChads',
-				icon: '/nfts/oreoChads.png',
-				erc20Name: 'WETH',
-				erc20Icon: '/erc20/EthIcon.png',
-				formatDecimals: 3,
-				unit: 'ether',
-				ERC721ContractAddress: '0xebfd7babc5db1ec60783fa6085791a7782ee6077',
-				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-				HERC20ContractAddress: '0x511e3d68774510fff856a62578820b369147df2e'
-			},
-			{
-				name: 'Blueberry',
-				icon: '/nfts/blueberry.png',
-				erc20Name: 'WETH',
-				erc20Icon: '/erc20/EthIcon.png',
-				formatDecimals: 3,
-				unit: 'ether',
-				ERC721ContractAddress: '0x17f4baa9d35ee54ffbcb2608e20786473c7aa49f',
-				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-				HERC20ContractAddress: '0xca19d36f203b97e11273c728881eb85e4f3658b5'
-			},
-			{
-				name: 'Primapes',
-				icon: '/nfts/primapes.png',
-				erc20Name: 'WETH',
-				erc20Icon: '/erc20/EthIcon.png',
-				formatDecimals: 3,
-				unit: 'ether',
-				ERC721ContractAddress: '0x72c3205acf3eb2b37b0082240bf0b909a46c0993',
-				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-				HERC20ContractAddress: '0xb2585c40bbafb8a09637194ae478696d35e7e1a3'
-			},
-			{
-				name: 'Federal Frens',
-				icon: '/nfts/fedfrens.png',
-				erc20Name: 'WETH',
-				erc20Icon: '/erc20/EthIcon.png',
-				formatDecimals: 3,
-				unit: 'ether',
-				ERC721ContractAddress: '0x00e3Dcb7fd5946DdE80D627b0723AF78249D7d49',
-				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-				HERC20ContractAddress: '0x4216b7e2560bac4a3b438455a3facc904b07d9ef'
-			}
-		] as collection[];
-	} else if (envName == 'prod') {
-		// change this prod market when we go to prod
-		return [
-			{
-				name: 'The Lost Donkey',
-				icon: '/nfts/theLostDonkeys.png',
-				erc20Name: 'MAGIC',
-				erc20Icon: '/erc20/magicIcon.png',
-				formatDecimals: 2,
-				unit: 'ether',
-				ERC721ContractAddress: '0x5e84c1a06e6ad1a8ed66bc48dbe5eb06bf2fe4aa',
-				ERC20ContractAddress: '0x539bdE0d7Dbd336b79148AA742883198BBF60342',
-				HERC20ContractAddress: '0x582be1f3d46b71c1c93b03b3cf195ebc4e13d8a2'
-			},
-			{
-				name: 'OreoChads',
-				icon: '/nfts/oreoChads.png',
-				erc20Name: 'WETH',
-				erc20Icon: '/erc20/EthIcon.png',
-				formatDecimals: 3,
-				unit: 'ether',
-				ERC721ContractAddress: '0xebfd7babc5db1ec60783fa6085791a7782ee6077',
-				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-				HERC20ContractAddress: '0x511e3d68774510fff856a62578820b369147df2e'
-			},
-			{
-				name: 'Blueberry',
-				icon: '/nfts/blueberry.png',
-				erc20Name: 'WETH',
-				erc20Icon: '/erc20/EthIcon.png',
-				formatDecimals: 3,
-				unit: 'ether',
-				ERC721ContractAddress: '0x17f4baa9d35ee54ffbcb2608e20786473c7aa49f',
-				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-				HERC20ContractAddress: '0xca19d36f203b97e11273c728881eb85e4f3658b5'
-			},
-			{
-				name: 'Primapes',
-				icon: '/nfts/primapes.png',
-				erc20Name: 'WETH',
-				erc20Icon: '/erc20/EthIcon.png',
-				formatDecimals: 3,
-				unit: 'ether',
-				ERC721ContractAddress: '0x72c3205acf3eb2b37b0082240bf0b909a46c0993',
-				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-				HERC20ContractAddress: '0xb2585c40bbafb8a09637194ae478696d35e7e1a3'
-			},
-			{
-				name: 'Federal Frens',
-				icon: '/nfts/fedfrens.png',
-				erc20Name: 'WETH',
-				erc20Icon: '/erc20/EthIcon.png',
-				formatDecimals: 3,
-				unit: 'ether',
-				ERC721ContractAddress: '0x00e3Dcb7fd5946DdE80D627b0723AF78249D7d49',
-				ERC20ContractAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-				HERC20ContractAddress: '0x4216b7e2560bac4a3b438455a3facc904b07d9ef'
+				ERC721ContractAddress: '0x0a8901b0E25DEb55A87524f0cC164E9644020EBA',
+				ERC20ContractAddress: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+				HERC20ContractAddress: '0x6a3ebf00bc0ff2ed527879559f69f8c907853678'
 			}
 		] as collection[];
 	} else {
@@ -126,18 +23,18 @@ function getCollections() {
 function getHelperContract() {
 	if (envName == 'dev') {
 		const contract: helperContract = {
-			htokenHelperContractAddress: '0xDC468ECec9eF55abc5d5Bf4154c76b705a2c21D0',
-			hivemindContractAddress: '0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d',
-			oracleContractAddress: '0xB3d108BD30C564181bCcdF419f34f87b10F5c76d',
-			marketContractAddress: '0x9a1EDb903B058298dd0b06f52876d9D45358B7cB'
+			htokenHelperContractAddress: '0x83836fb62851117487F8825B4A04f542808eED08',
+			hivemindContractAddress: '0xE5870FA96a4C1250AA928d0192f466A5CbAe5d13',
+			oracleContractAddress: '0x6414dd4c6b515a9a1404624d907a78da73f849b2',
+			marketContractAddress: '0x383D436fb922B5081DeBD35F1b3012D664100F33'
 		};
 		return contract;
 	} else if (envName == 'prod') {
 		const contract: helperContract = {
-			htokenHelperContractAddress: '0xDC468ECec9eF55abc5d5Bf4154c76b705a2c21D0',
-			hivemindContractAddress: '0xbE55638ACDdDe957fD934Ba1B37fA2Ef7A06425d',
-			oracleContractAddress: '0xB3d108BD30C564181bCcdF419f34f87b10F5c76d',
-			marketContractAddress: '0x9a1EDb903B058298dd0b06f52876d9D45358B7cB'
+			htokenHelperContractAddress: '0x83836fb62851117487F8825B4A04f542808eED08',
+			hivemindContractAddress: '0xE5870FA96a4C1250AA928d0192f466A5CbAe5d13',
+			oracleContractAddress: '0x6414dd4c6b515a9a1404624d907a78da73f849b2',
+			marketContractAddress: '0x383D436fb922B5081DeBD35F1b3012D664100F33'
 		};
 		return contract;
 	} else {
