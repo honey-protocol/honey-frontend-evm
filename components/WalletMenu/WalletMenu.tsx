@@ -23,6 +23,12 @@ const supportedChains = [
 		href: 'https://arbitrum.honey.finance'
 	},
 	{
+		name: 'BNB Chain',
+		value: '0x38',
+		icon: <Image src="/erc20/BNBCoin.png" width={22} height={22} alt="BNB" />,
+		href: 'https://bsc.honey.finance'
+	},
+	{
 		name: 'Polygon',
 		value: '0x89',
 		icon: <PolygonIcon />,
@@ -33,12 +39,6 @@ const supportedChains = [
 		value: 'solana',
 		icon: <SolanaCircleIcon />,
 		href: 'https://solana.honey.finance'
-	},
-	{
-		name: 'BSC',
-		value: '0x38',
-		icon: <Image src="/erc20/BNBCoin.png" width={22} height={22} alt="BNB" />,
-		href: 'https://bsc.honey.finance'
 	}
 ];
 
