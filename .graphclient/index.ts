@@ -20,7 +20,7 @@ import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { ImportFn } from '@graphql-mesh/types';
-import type { HoneyDashboardArbitrumTypes } from './sources/honey-dashboard-arbitrum/types';
+import type { HoneyDashboardBnbTypes } from './sources/honey-dashboard-bnb/types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -858,7 +858,7 @@ export type DirectiveResolvers<ContextType = MeshContext> = ResolversObject<{
   derivedFrom?: derivedFromDirectiveResolver<any, any, ContextType>;
 }>;
 
-export type MeshContext = HoneyDashboardArbitrumTypes.Context & BaseMeshContext;
+export type MeshContext = HoneyDashboardBnbTypes.Context & BaseMeshContext;
 
 
 import { fileURLToPath } from '@graphql-mesh/utils';
@@ -867,8 +867,8 @@ const baseDir = pathModule.join(pathModule.dirname(fileURLToPath(import.meta.url
 const importFn: ImportFn = <T>(moduleId: string) => {
   const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
   switch(relativeModuleId) {
-    case ".graphclient/sources/honey-dashboard-arbitrum/introspectionSchema":
-      return import("./sources/honey-dashboard-arbitrum/introspectionSchema") as T;
+    case ".graphclient/sources/honey-dashboard-bnb/introspectionSchema":
+      return import("./sources/honey-dashboard-bnb/introspectionSchema") as T;
     
     default:
       return Promise.reject(new Error(`Cannot find module '${relativeModuleId}'.`));
@@ -900,22 +900,22 @@ const cache = new (MeshCache as any)({
 const sources: MeshResolvedSource[] = [];
 const transforms: MeshTransform[] = [];
 const additionalEnvelopPlugins: MeshPlugin<any>[] = [];
-const honeyDashboardArbitrumTransforms = [];
+const honeyDashboardBnbTransforms = [];
 const additionalTypeDefs = [] as any[];
-const honeyDashboardArbitrumHandler = new GraphqlHandler({
-              name: "honey-dashboard-arbitrum",
-              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/tomjpandolfi/honey-dashboard-arbitrum"},
+const honeyDashboardBnbHandler = new GraphqlHandler({
+              name: "honey-dashboard-bnb",
+              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/tomjpandolfi/honey-dashboard-bnb"},
               baseDir,
               cache,
               pubsub,
-              store: sourcesStore.child("honey-dashboard-arbitrum"),
-              logger: logger.child("honey-dashboard-arbitrum"),
+              store: sourcesStore.child("honey-dashboard-bnb"),
+              logger: logger.child("honey-dashboard-bnb"),
               importFn,
             });
 sources[0] = {
-          name: 'honey-dashboard-arbitrum',
-          handler: honeyDashboardArbitrumHandler,
-          transforms: honeyDashboardArbitrumTransforms
+          name: 'honey-dashboard-bnb',
+          handler: honeyDashboardBnbHandler,
+          transforms: honeyDashboardBnbTransforms
         }
 const additionalResolvers = [] as any[]
 const merger = new(BareMerger as any)({
