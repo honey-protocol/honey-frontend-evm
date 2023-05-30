@@ -16,7 +16,19 @@ function getCollections() {
 			}
 		] as collection[];
 	} else {
-		return [] as collection[];
+		return [
+			{
+				name: 'Pancake Squad',
+				icon: '/nfts/pancakeSquad.png',
+				erc20Name: 'WBNB',
+				erc20Icon: '/erc20/BNBCoin.png',
+				formatDecimals: 2,
+				unit: 'ether',
+				ERC721ContractAddress: '0x0a8901b0E25DEb55A87524f0cC164E9644020EBA',
+				ERC20ContractAddress: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+				HERC20ContractAddress: '0x6a3ebf00bc0ff2ed527879559f69f8c907853678'
+			}
+		] as collection[];
 	}
 }
 
