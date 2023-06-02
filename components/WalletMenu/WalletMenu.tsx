@@ -26,7 +26,7 @@ const supportedChains = [
 		name: 'BNB Chain',
 		value: '0x38',
 		icon: <Image src="/erc20/BNBCoin.png" width={22} height={22} alt="BNB" />,
-		href: 'https://bsc.honey.finance'
+		href: 'https://bnb.honey.finance'
 	},
 	{
 		name: 'Polygon',
