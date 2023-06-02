@@ -35,8 +35,8 @@ function getCollections() {
 				HERC20ContractAddress: '0x186bC464BdfE5eCc2aA100c6db0154C693020BAe'
 			},
 			{
-				name: 'Rekt Dogs',
-				icon: '/nfts/rektDogs.png',
+				name: 'REKT DOGS',
+				icon: '/nfts/rektdogs.png',
 				erc20Name: 'WMATIC',
 				erc20Icon: '/erc20/MaticIcon.png',
 				unit: 'ether',
@@ -45,7 +45,7 @@ function getCollections() {
 				HERC20ContractAddress: '0xfb2654bc0ff6e02ffe819d355b8b085e089eb483'
 			},
 			{
-				name: 'Polygon Punks',
+				name: 'POLYGON PUNKS',
 				icon: '/nfts/polygonPunk.png',
 				erc20Name: 'WETH',
 				erc20Icon: '/erc20/EthIcon.png',
@@ -122,8 +122,8 @@ function getCollections() {
 				HERC20ContractAddress: '0x186bC464BdfE5eCc2aA100c6db0154C693020BAe'
 			},
 			{
-				name: 'Rekt Dogs',
-				icon: '/nfts/rektDogs.png',
+				name: 'REKT DOGS',
+				icon: '/nfts/rektdogs.png',
 				erc20Name: 'WMATIC',
 				erc20Icon: '/erc20/MaticIcon.png',
 				unit: 'ether',
@@ -132,7 +132,7 @@ function getCollections() {
 				HERC20ContractAddress: '0xfb2654bc0ff6e02ffe819d355b8b085e089eb483'
 			},
 			{
-				name: 'Polygon Punks',
+				name: 'POLYGON PUNKS',
 				icon: '/nfts/polygonPunk.png',
 				erc20Name: 'WETH',
 				erc20Icon: '/erc20/EthIcon.png',
