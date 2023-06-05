@@ -15,7 +15,7 @@ function getCollections() {
 				HERC20ContractAddress: '0x6a3ebf00bc0ff2ed527879559f69f8c907853678'
 			},
 			{
-				name: 'Monsta Pary',
+				name: 'Monsta Party',
 				icon: '/nfts/monsterParty.png',
 				erc20Name: 'WBNB',
 				erc20Icon: '/erc20/BNBCoin.png',
@@ -51,7 +51,7 @@ function getCollections() {
 				HERC20ContractAddress: '0x6a3ebf00bc0ff2ed527879559f69f8c907853678'
 			},
 			{
-				name: 'Monsta Pary',
+				name: 'Monsta Party',
 				icon: '/nfts/monsterParty.png',
 				erc20Name: 'WBNB',
 				erc20Icon: '/erc20/BNBCoin.png',
