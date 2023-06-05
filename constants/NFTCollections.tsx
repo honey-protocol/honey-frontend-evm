@@ -19,6 +19,7 @@ function getCollections() {
 				icon: '/nfts/owlpha.png',
 				erc20Name: 'WETH',
 				erc20Icon: '/erc20/EthIcon.png',
+				formatDecimals: 2,
 				unit: 'ether',
 				ERC721ContractAddress: '0x12AA01F646fe5C993C66c9C86EddAd4e514f6cBc',
 				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
@@ -29,6 +30,7 @@ function getCollections() {
 				icon: '/nfts/brozo.png',
 				erc20Name: 'WMATIC',
 				erc20Icon: '/erc20/MaticIcon.png',
+				formatDecimals: 2,
 				unit: 'ether',
 				ERC721ContractAddress: '0x220fa5cCc9404802ED6DB0935EB4feeFC27C937e',
 				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
@@ -39,6 +41,7 @@ function getCollections() {
 				icon: '/nfts/rektdogs.png',
 				erc20Name: 'WMATIC',
 				erc20Icon: '/erc20/MaticIcon.png',
+				formatDecimals: 2,
 				unit: 'ether',
 				ERC721ContractAddress: '0xAce8187B113a38F83Bd9C896C6878B175c234dCc',
 				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
@@ -49,7 +52,7 @@ function getCollections() {
 				icon: '/nfts/polygonPunk.png',
 				erc20Name: 'WETH',
 				erc20Icon: '/erc20/EthIcon.png',
-				// formatDecimals: 2,
+				// formatDecimals: 3,
 				unit: 'ether',
 				ERC721ContractAddress: '0x9498274B8C82B4a3127D67839F2127F2Ae9753f4',
 				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
@@ -65,27 +68,8 @@ function getCollections() {
 			// 	ERC721ContractAddress: '0x9d305a42A3975Ee4c1C57555BeD5919889DCE63F',
 			// 	ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 			// 	HERC20ContractAddress: '0x9e826d1427c15ff6f41521e9811fd526f7717a2a'
-			// },
-			// {
-			// 	name: 'OWLPHA',
-			// 	icon: '/nfts/owlpha.png',
-			// 	erc20Name: 'MATIC',
-			// 	erc20Icon: '/erc20/MaticIcon.png',
-			// 	unit: 'ether',
-			// // 	ERC721ContractAddress: '',
-			// // 	ERC20ContractAddress: '',
-			// // 	HERC20ContractAddress: ''
-			// },
-			// {
-			// 	name: 'BROZO',
-			// 	icon: '/nfts/brozo.png',
-			// 	erc20Name: 'MATIC',
-			// 	erc20Icon: '/erc20/MaticIcon.png',
-			// 	unit: 'ether',
-			// 	// ERC721ContractAddress: '',
-			// 	// ERC20ContractAddress: '',
-			// 	// HERC20ContractAddress: ''
 			// }
+			
 		] as collection[];
 	} else if (envName == 'prod') {
 		// change this prod market when we go to prod
@@ -106,6 +90,7 @@ function getCollections() {
 				icon: '/nfts/owlpha.png',
 				erc20Name: 'WETH',
 				erc20Icon: '/erc20/EthIcon.png',
+				formatDecimals: 2,
 				unit: 'ether',
 				ERC721ContractAddress: '0x12AA01F646fe5C993C66c9C86EddAd4e514f6cBc',
 				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
@@ -116,6 +101,7 @@ function getCollections() {
 				icon: '/nfts/brozo.png',
 				erc20Name: 'WMATIC',
 				erc20Icon: '/erc20/MaticIcon.png',
+				formatDecimals: 2,
 				unit: 'ether',
 				ERC721ContractAddress: '0x220fa5cCc9404802ED6DB0935EB4feeFC27C937e',
 				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
@@ -126,6 +112,7 @@ function getCollections() {
 				icon: '/nfts/rektdogs.png',
 				erc20Name: 'WMATIC',
 				erc20Icon: '/erc20/MaticIcon.png',
+				formatDecimals: 2,
 				unit: 'ether',
 				ERC721ContractAddress: '0xAce8187B113a38F83Bd9C896C6878B175c234dCc',
 				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
@@ -136,7 +123,7 @@ function getCollections() {
 				icon: '/nfts/polygonPunk.png',
 				erc20Name: 'WETH',
 				erc20Icon: '/erc20/EthIcon.png',
-				// formatDecimals: 2,
+				// formatDecimals: 3,
 				unit: 'ether',
 				ERC721ContractAddress: '0x9498274B8C82B4a3127D67839F2127F2Ae9753f4',
 				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
@@ -152,27 +139,8 @@ function getCollections() {
 			// 	ERC721ContractAddress: '0x9d305a42A3975Ee4c1C57555BeD5919889DCE63F',
 			// 	ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 			// 	HERC20ContractAddress: '0x9e826d1427c15ff6f41521e9811fd526f7717a2a'
-			// },
-			// {
-			// 	name: 'OWLPHA',
-			// 	icon: '/nfts/owlpha.png',
-			// 	erc20Name: 'MATIC',
-			// 	erc20Icon: '/erc20/MaticIcon.png',
-			// 	unit: 'ether',
-			// // 	ERC721ContractAddress: '',
-			// // 	ERC20ContractAddress: '',
-			// // 	HERC20ContractAddress: ''
-			// },
-			// {
-			// 	name: 'BROZO',
-			// 	icon: '/nfts/brozo.png',
-			// 	erc20Name: 'MATIC',
-			// 	erc20Icon: '/erc20/MaticIcon.png',
-			// 	unit: 'ether',
-			// 	// ERC721ContractAddress: '',
-			// 	// ERC20ContractAddress: '',
-			// 	// HERC20ContractAddress: ''
 			// }
+			
 		] as collection[];
 	} else {
 		return [] as collection[];
