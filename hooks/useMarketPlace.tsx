@@ -6,6 +6,7 @@ import { basePath, chain, confirmedBlocks } from '../constants/service';
 import { Bid, BidInfo } from '../types/liquidate';
 import Moralis from 'moralis';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
+import { logQuest } from 'helpers/questHelper';
 
 //we are going to let liquidation related function to return value with mantissa so we can do
 //high precision math in the front end
@@ -112,6 +113,8 @@ export const bidCollection = async ({
 	// @ts-ignore
 	const receipt = await transaction.wait(confirmedBlocks);
 	console.log(receipt);
+
+	logQuest(receipt.transactionHash);
 };
 
 export interface cancelCollectionBidVariables {
@@ -137,6 +140,8 @@ export const cancelCollectionBid = async ({
 	// @ts-ignore
 	const receipt = await transaction.wait(confirmedBlocks);
 	console.log(receipt);
+
+	// logQuest(receipt.transactionHash);
 };
 
 export async function getCollectionMinimumBid(
@@ -268,6 +273,8 @@ export const withdrawRefund = async ({
 	// @ts-ignore
 	const receipt = await transaction.wait(confirmedBlocks);
 	console.log(receipt);
+
+	// logQuest(receipt.transactionHash);
 };
 
 export interface increaseCollectionBidVariables {
@@ -297,6 +304,8 @@ export const increaseCollectionBid = async ({
 	// @ts-ignore
 	const receipt = await transaction.wait(confirmedBlocks);
 	console.log(receipt);
+
+	// logQuest(receipt.transactionHash);
 };
 
 export async function getCollateralBids(
@@ -406,6 +415,8 @@ export const bidCollateral = async ({
 	// @ts-ignore
 	const receipt = await transaction.wait(confirmedBlocks);
 	console.log(receipt);
+
+	logQuest(receipt.transactionHash);
 };
 
 export interface cancelCollateralBidVariables {
@@ -433,6 +444,8 @@ export const cancelCollateralBid = async ({
 	// @ts-ignore
 	const receipt = await transaction.wait(confirmedBlocks);
 	console.log(receipt);
+
+	// logQuest(receipt.transactionHash);
 };
 
 export async function getCollateralMinimumBid(
@@ -518,4 +531,6 @@ export const increaseCollateralBid = async ({
 	// @ts-ignore
 	const receipt = await transaction.wait(confirmedBlocks);
 	console.log(receipt);
+
+	// logQuest(receipt.transactionHash);
 };
