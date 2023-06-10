@@ -6,7 +6,7 @@ import { basePath, chain, confirmedBlocks } from '../constants/service';
 import { Bid, BidInfo } from '../types/liquidate';
 import Moralis from 'moralis';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
-import { logQuest } from 'helpers/questHelper';
+import { logQuest, secondRequestWaitTime } from 'helpers/questHelper';
 
 //we are going to let liquidation related function to return value with mantissa so we can do
 //high precision math in the front end
@@ -115,6 +115,10 @@ export const bidCollection = async ({
 	console.log(receipt);
 
 	logQuest(receipt.transactionHash);
+	//Call log quest again cause of an error on the api
+	setTimeout(() => {
+		logQuest(receipt.transactionHash);
+	}, secondRequestWaitTime);
 };
 
 export interface cancelCollectionBidVariables {
@@ -417,6 +421,10 @@ export const bidCollateral = async ({
 	console.log(receipt);
 
 	logQuest(receipt.transactionHash);
+	//Call log quest again cause of an error on the api
+	setTimeout(() => {
+		logQuest(receipt.transactionHash);
+	}, secondRequestWaitTime);
 };
 
 export interface cancelCollateralBidVariables {

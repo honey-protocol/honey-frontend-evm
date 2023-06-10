@@ -1,5 +1,7 @@
 import { PublicKey } from '@solana/web3.js';
 
+export const secondRequestWaitTime = 2000;
+
 export const logQuest = async (txId: string) => {
 	if (!txId) return;
 	console.log('Logging @quest...', txId);
@@ -13,6 +15,7 @@ export const logQuest = async (txId: string) => {
 			body: JSON.stringify({})
 		});
 		const result = await response.json();
+		console.log({ result });
 		return result;
 	} catch (error) {
 		console.log({ error });

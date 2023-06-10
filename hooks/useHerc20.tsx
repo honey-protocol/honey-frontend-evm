@@ -6,7 +6,7 @@ import { queryKeys } from '../helpers/queryHelper';
 import { blackHole, defaultCacheStaleTime } from '../constants/constant';
 import Moralis from 'moralis';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
-import { logQuest } from 'helpers/questHelper';
+import { logQuest, secondRequestWaitTime } from 'helpers/questHelper';
 
 export async function depositNFTCollateral(HERC20ContractAddress: string, NFTTokenId: string) {
 	const ABI = await (await fetch(`${basePath}/abi/herc20.json`)).json();
@@ -24,6 +24,10 @@ export async function depositNFTCollateral(HERC20ContractAddress: string, NFTTok
 	const receipt = await transaction.wait(confirmedBlocks);
 	console.log(receipt);
 	logQuest(receipt.transactionHash);
+	//Call log quest again cause of an error on the api
+	setTimeout(() => {
+		logQuest(receipt.transactionHash);
+	}, 2000);
 }
 
 export interface borrowVariables {
@@ -53,6 +57,10 @@ export const borrow = async ({
 	// @ts-ignore
 	const receipt = await transaction.wait(confirmedBlocks);
 	logQuest(receipt.transactionHash);
+	//Call log quest again cause of an error on the api
+	setTimeout(() => {
+		logQuest(receipt.transactionHash);
+	}, secondRequestWaitTime);
 	console.log(receipt);
 };
 
@@ -83,6 +91,10 @@ export async function depositUnderlying({
 	console.log(receipt);
 
 	logQuest(receipt.transactionHash);
+	//Call log quest again cause of an error on the api
+	setTimeout(() => {
+		logQuest(receipt.transactionHash);
+	}, secondRequestWaitTime);
 }
 
 export async function withdrawUnderlying(
