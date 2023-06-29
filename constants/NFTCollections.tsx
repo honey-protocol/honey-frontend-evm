@@ -58,6 +58,17 @@ function getCollections() {
 				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 				HERC20ContractAddress: '0x3a6BAdbF5420a5391477e45B73079ECA3B8Cb46B'
 			},
+			{
+				name: 'TriBuzz',
+				icon: '/nfts/tribuzz.png',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				// formatDecimals: 3,
+				unit: 'ether',
+				ERC721ContractAddress: '0x7802c717b3fc4e6a32d1ae3a31a6175ebae9b164',
+				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+				HERC20ContractAddress: '0xc9254343abc9d030d3cc66fb302a3c452a151fcc'
+			}
 			// ,
 			// {
 			// 	name: 'LAND',
@@ -69,7 +80,6 @@ function getCollections() {
 			// 	ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 			// 	HERC20ContractAddress: '0x9e826d1427c15ff6f41521e9811fd526f7717a2a'
 			// }
-			
 		] as collection[];
 	} else if (envName == 'prod') {
 		// change this prod market when we go to prod
@@ -129,6 +139,17 @@ function getCollections() {
 				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 				HERC20ContractAddress: '0x3a6BAdbF5420a5391477e45B73079ECA3B8Cb46B'
 			},
+			{
+				name: 'TriBuzz',
+				icon: '/nfts/tribuzz.png',
+				erc20Name: 'WETH',
+				erc20Icon: '/erc20/EthIcon.png',
+				// formatDecimals: 3,
+				unit: 'ether',
+				ERC721ContractAddress: '0x7802c717b3fc4e6a32d1ae3a31a6175ebae9b164',
+				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+				HERC20ContractAddress: '0xc9254343abc9d030d3cc66fb302a3c452a151fcc'
+			}
 			// ,
 			// {
 			// 	name: 'LAND',
@@ -140,7 +161,6 @@ function getCollections() {
 			// 	ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 			// 	HERC20ContractAddress: '0x9e826d1427c15ff6f41521e9811fd526f7717a2a'
 			// }
-			
 		] as collection[];
 	} else {
 		return [] as collection[];
