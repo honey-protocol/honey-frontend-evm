@@ -61,12 +61,12 @@ function getCollections() {
 			{
 				name: 'TriBuzz',
 				icon: '/nfts/tribuzz.png',
-				erc20Name: 'WETH',
-				erc20Icon: '/erc20/EthIcon.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
 				// formatDecimals: 3,
 				unit: 'ether',
 				ERC721ContractAddress: '0x7802c717b3fc4e6a32d1ae3a31a6175ebae9b164',
-				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
 				HERC20ContractAddress: '0xc9254343abc9d030d3cc66fb302a3c452a151fcc'
 			}
 			// ,
@@ -142,12 +142,12 @@ function getCollections() {
 			{
 				name: 'TriBuzz',
 				icon: '/nfts/tribuzz.png',
-				erc20Name: 'WETH',
-				erc20Icon: '/erc20/EthIcon.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
 				// formatDecimals: 3,
 				unit: 'ether',
 				ERC721ContractAddress: '0x7802c717b3fc4e6a32d1ae3a31a6175ebae9b164',
-				ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
 				HERC20ContractAddress: '0xc9254343abc9d030d3cc66fb302a3c452a151fcc'
 			}
 			// ,
