@@ -69,7 +69,17 @@ function getCollections() {
 			// 	ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 			// 	HERC20ContractAddress: '0x9e826d1427c15ff6f41521e9811fd526f7717a2a'
 			// }
-			
+			{
+				name: 'Arkadians',
+				icon: '/nfts/arkadian.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
+				formatDecimals: 2,
+				unit: 'ether',
+				ERC721ContractAddress: '0x3c178321f5BC73494046a46b5A065F9211b7C65E',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+				HERC20ContractAddress: '0xA0EAD431a7cF5ACF96C13880C426635222772683'
+			}
 		] as collection[];
 	} else if (envName == 'prod') {
 		// change this prod market when we go to prod
@@ -140,7 +150,17 @@ function getCollections() {
 			// 	ERC20ContractAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
 			// 	HERC20ContractAddress: '0x9e826d1427c15ff6f41521e9811fd526f7717a2a'
 			// }
-			
+			{
+				name: 'Arkadians',
+				icon: '/nfts/arkadian.png',
+				erc20Name: 'WMATIC',
+				erc20Icon: '/erc20/MaticIcon.png',
+				formatDecimals: 2,
+				unit: 'ether',
+				ERC721ContractAddress: '0x3c178321f5BC73494046a46b5A065F9211b7C65E',
+				ERC20ContractAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+				HERC20ContractAddress: '0xA0EAD431a7cF5ACF96C13880C426635222772683'
+			}
 		] as collection[];
 	} else {
 		return [] as collection[];
